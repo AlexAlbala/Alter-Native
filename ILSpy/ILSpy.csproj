@@ -80,9 +80,7 @@
     <Reference Include="PresentationCore">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="PresentationFramework">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
@@ -137,7 +135,9 @@
     <Compile Include="Commands\DecompileAllCommand.cs" />
     <Compile Include="Commands\ExportCommandAttribute.cs" />
     <Compile Include="Controls\ExtensionMethods.cs" />
-    <Compile Include="Controls\SearchBox.cs" />
+    <Compile Include="Controls\SearchBox.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Controls\SortableGridViewColumn.cs" />
     <Compile Include="CreateListDialog.xaml.cs">
       <DependentUpon>CreateListDialog.xaml</DependentUpon>
@@ -311,6 +311,7 @@
     <Page Include="Controls\ResourceStringTable.xaml" />
     <Page Include="Controls\SearchBoxStyle.xaml">
       <DependentUpon>SearchBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="CreateListDialog.xaml">
       <SubType>Designer</SubType>
