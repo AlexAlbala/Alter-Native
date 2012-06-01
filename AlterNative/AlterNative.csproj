@@ -52,6 +52,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BuildTools\CMakeGenerator.cs" />
     <Compile Include="Cpp\CppLanguage.cs" />
     <Compile Include="Cpp\CppTextOutputFormatter.cs" />
     <Compile Include="Cpp\ILSpyEnvironmentProvider.cs" />
