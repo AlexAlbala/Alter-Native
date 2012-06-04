@@ -139,6 +139,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controls\SortableGridViewColumn.cs" />
+    <Compile Include="Cpp\CppLanguage.cs" />
+    <Compile Include="Cpp\CppTextOutputFormatter.cs" />
+    <Compile Include="Cpp\ILSpyEnvironmentProvider.cs" />
     <Compile Include="CreateListDialog.xaml.cs">
       <DependentUpon>CreateListDialog.xaml</DependentUpon>
     </Compile>
