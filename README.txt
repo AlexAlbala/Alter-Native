@@ -1,20 +1,12 @@
-ILSpy is the open-source .NET assembly browser and decompiler.
-Website: http://www.ilspy.net/
-
-Copyright 2011-2012 AlphaSierraPapa for the SharpDevelop team
-License: ILSpy is distributed under the MIT License.
+Description of Alter-Native coming soon...
 
 Included open-source libraries:
- Mono.Cecil: MIT License (thanks to Jb Evain)
+ Mono.Cecil: MIT License
  AvalonEdit: LGPL
  SharpTreeView: LGPL
+ ILSpy: MIT License
  ICSharpCode.Decompiler: MIT License (developed as part of ILSpy)
 
-ILSpy Contributors:
-	Daniel Grunwald
-	David Srbecky
-	Ed Harvey
-	Siegfried Pammer
-	Artur Zgodzinski
-	Eusebiu Marcu
-	Pent Ploompuu
+Alter-Native Contributors:
+	Alex Albalá
+	Juan López
