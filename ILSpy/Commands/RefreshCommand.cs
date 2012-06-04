@@ -21,8 +21,8 @@ using System.Windows.Input;
 
 namespace ICSharpCode.ILSpy
 {
-	[ExportToolbarCommand(ToolTip = "Reload all assemblies", ToolbarIcon = "Images/Refresh.png", ToolbarCategory = "Open", ToolbarOrder = 2)]
-	[ExportMainMenuCommand(Menu = "_File", Header = "Reload", MenuIcon = "Images/Refresh.png", MenuCategory = "Open", MenuOrder = 2)]
+    [ExportToolbarCommand(ToolTip = "Reload all assemblies", ToolbarIcon = "ILSpy;component/Images/Refresh.png", ToolbarCategory = "Open", ToolbarOrder = 2)]
+    [ExportMainMenuCommand(Menu = "_File", Header = "Reload", MenuIcon = "ILSpy;component/Images/Refresh.png", MenuCategory = "Open", MenuOrder = 2)]
 	sealed class RefreshCommand : CommandWrapper
 	{
 		public RefreshCommand()
