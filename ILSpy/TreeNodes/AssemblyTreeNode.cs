@@ -255,7 +255,7 @@ namespace ICSharpCode.ILSpy.TreeNodes
 		}
 	}
 
-	[ExportContextMenuEntry(Header = "_Remove", Icon = "images/Delete.png")]
+    [ExportContextMenuEntry(Header = "_Remove", Icon = "ILSpy;component/images/Delete.png")]
 	sealed class RemoveAssembly : IContextMenuEntry
 	{
 		public bool IsVisible(SharpTreeNode[] selectedNodes)

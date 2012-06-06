@@ -108,7 +108,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\winphone_Release\</OutputPath>
-    <DefineConstants>TRACE;NET_3_5;NET_4_0;SILVERLIGHT;CF</DefineConstants>
+    <DefineConstants>TRACE;NET_3_5;NET_4_0;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TargetFrameworkProfile>WindowsPhone</TargetFrameworkProfile>

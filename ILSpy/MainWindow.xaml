@@ -73,7 +73,8 @@
             <!-- 'Open' toolbar category is inserted here -->
             <Separator />
             <CheckBox IsChecked="{Binding FilterSettings.ShowInternalApi}" ToolTip="Show internal types and members">
-                <Image Width="16" Height="16" Source="pack://application:,,,/ILSpy;component/Images/PrivateInternal.png" />
+                <Image Width="16" Height="16" Source="pack://application:,,,/ILSpy;component/
+PrivateInternal.png" />
             </CheckBox>
             <Separator />
             <ComboBox Name="languageComboBox" DisplayMemberPath="Name" Width="100"

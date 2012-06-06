@@ -23,7 +23,7 @@ using Mono.Cecil;
 
 namespace ICSharpCode.ILSpy.TreeNodes.Analyzer
 {
-	[ExportContextMenuEntry(Header = "Analyze", Icon = "images/Search.png")]
+    [ExportContextMenuEntry(Header = "Analyze", Icon = "ILSpy;component/images/Search.png")]
 	internal sealed class AnalyzeContextMenuEntry : IContextMenuEntry
 	{
 		public bool IsVisible(SharpTreeNode[] selectedNodes)
