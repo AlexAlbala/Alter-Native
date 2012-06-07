@@ -248,7 +248,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitIndexerExpression(CSharp.IndexerExpression indexerExpression, object data)
         {
-            throw new NotImplementedException();
+            var expr = new IndexerExpression((Expression)indexerExpression.Target.AcceptVisitor(this, data));
+            ConvertNodes(indexerExpression.Arguments, expr.Arguments);
+            return EndNode(indexerExpression, expr);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitInvocationExpression(CSharp.InvocationExpression invocationExpression, object data)
