@@ -97,6 +97,14 @@ namespace AlterNative
             //CONFIGURE OUTPUT LANGUAGE
             Language lang = OutputLanguage(args[2]);
 
+            //DECOMPILE FIRST TIME AND FILL THE TABLES
+            foreach (TypeDefinition tdef in adef.MainModule.Types)
+            {
+                if (tdef.Name != "<Module>")
+                {
+                    lang.DecompileType(tdef, textOutput, new DecompilationOptions() { FullDecompilation = true });
+                }
+            }
 
             //DECOMPILE
             foreach (TypeDefinition tdef in adef.MainModule.Types)
