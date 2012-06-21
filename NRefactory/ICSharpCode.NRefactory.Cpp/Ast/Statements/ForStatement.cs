@@ -61,6 +61,7 @@ namespace ICSharpCode.NRefactory.Cpp
 		
 		public AstNodeCollection<Statement> Iterators {
 			get { return GetChildrenByRole (IteratorRole); }
+            //set { SetChildByRole(IteratorRole, value); }
 		}
 		
 		public CppTokenNode RParToken {

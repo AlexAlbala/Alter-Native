@@ -48,7 +48,7 @@ namespace ICSharpCode.NRefactory.Cpp
         }
 
         public CppOutputVisitor(TextWriter textWriter, CppFormattingOptions formattingPolicy)
-        {            
+        {
             if (textWriter == null)
                 throw new ArgumentNullException("textWriter");
             if (formattingPolicy == null)
@@ -1260,7 +1260,7 @@ namespace ICSharpCode.NRefactory.Cpp
         private void TypeDeclarationCPP(TypeDeclaration typeDeclaration, object data)
         {
             formatter.ChangeFile(typeDeclaration.Name + ".cpp");
-            FileWritterManager.AddSourceFile(typeDeclaration.Name + ".cpp");            
+            FileWritterManager.AddSourceFile(typeDeclaration.Name + ".cpp");
 
             WriteKeyword("#include");
             Space();
@@ -1280,7 +1280,7 @@ namespace ICSharpCode.NRefactory.Cpp
         }
 
         private void TypeDeclarationHeader(TypeDeclaration typeDeclaration, object data)
-        {           
+        {
             formatter.ChangeFile(typeDeclaration.Name + ".h");
             FileWritterManager.AddSourceFile(typeDeclaration.Name + ".h");
 
@@ -2625,6 +2625,69 @@ namespace ICSharpCode.NRefactory.Cpp
             RPar();
             WriteEmbeddedStatement(fixedStatement.EmbeddedStatement);
             return EndNode(fixedStatement);
+        }
+
+        public object VisitForeachStatement(ForeachStatement foreachStatement, object data)
+        {
+            StartNode(foreachStatement);
+
+            /*CHANGE FOR ASSIGNMENTEXPRESSION!*/
+            WriteKeyword("auto");
+            WriteToken("&", ForeachStatement.Roles.DoubleColon);//TODO ROLES ??
+            WriteToken("&", ForeachStatement.Roles.DoubleColon);
+
+            WriteIdentifier("__range", ForeachStatement.Roles.Identifier);
+            WriteToken("=", ForeachStatement.Roles.Assign);
+            foreachStatement.InExpression.AcceptVisitor(this, data);
+            Semicolon();
+            NewLine();
+
+            MemberReferenceExpression mref_beg = new MemberReferenceExpression(
+               new IdentifierExpression("__range"),
+               "begin()");
+
+            AssignmentExpression aexpr_beg = new AssignmentExpression(
+                new ObjectCreateExpression(
+                    new PrimitiveType("auto"),
+                    new IdentifierExpression("__begin")
+                    ), mref_beg);
+            aexpr_beg.AcceptVisitor(this, data);
+
+
+            MemberReferenceExpression mref_end = new MemberReferenceExpression(
+                new IdentifierExpression("__range"),
+                "end()");
+
+            AssignmentExpression aexpr_end = new AssignmentExpression(
+                new ObjectCreateExpression(
+                    new PrimitiveType("auto"),
+                    new IdentifierExpression("__end")
+                    ), mref_end);
+            aexpr_end.AcceptVisitor(this, data);
+
+
+            //FOR STATEMENT            
+            ForStatement forstmt = new ForStatement();
+            StartNode(forstmt);
+            /*embedded statement*/
+            //MODIFY  STATEMENT TO ADD:   || var_type var_name = *__begin;  ||
+            //forstmt.EmbeddedStatement = foreachStatement.EmbeddedStatement;
+
+            /*condition*/
+            BinaryOperatorExpression bop = new BinaryOperatorExpression();
+            bop.Operator = BinaryOperatorType.InEquality;
+            bop.Left = new IdentifierExpression("__begin");
+            bop.Right = new IdentifierExpression("__end");
+            forstmt.Condition = bop;
+            /*iterators*/
+            UnaryOperatorExpression uop = new UnaryOperatorExpression();
+            uop.Operator = UnaryOperatorType.Increment;
+            uop.Expression = new IdentifierExpression("__begin");
+            //forstmt.Iterators = 
+
+            forstmt.AcceptVisitor(this, data);
+            EndNode(forstmt);
+            return EndNode(foreachStatement);
         }
 
         public object VisitForStatement(ForStatement forStatement, object data)

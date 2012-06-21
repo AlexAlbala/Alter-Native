@@ -653,7 +653,12 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitForeachStatement(CSharp.ForeachStatement foreachStatement, object data)
         {
-            throw new NotImplementedException();
+            ForeachStatement feach = new ForeachStatement();
+            feach.EmbeddedStatement = (Statement)foreachStatement.EmbeddedStatement.AcceptVisitor(this,data);
+            feach.InExpression = (Expression)foreachStatement.InExpression.AcceptVisitor(this, data); ;
+            feach.VariableName = foreachStatement.VariableName;
+            feach.VariableType = (AstType)foreachStatement.VariableType.AcceptVisitor(this,data);
+            return EndNode(foreachStatement, feach);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitForStatement(CSharp.ForStatement forStatement, object data)

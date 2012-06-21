@@ -24,6 +24,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using ICSharpCode.NRefactory.Cpp.Ast;
 namespace ICSharpCode.NRefactory.Cpp
 {
 	/// <summary>
@@ -31,11 +32,13 @@ namespace ICSharpCode.NRefactory.Cpp
 	/// </summary>
 	public class ForeachStatement : Statement
 	{
-		public CppTokenNode ForeachToken {
+        public CppTokenNode ForeachToken
+        {
 			get { return GetChildByRole (Roles.Keyword); }
 		}
-		
-		public CppTokenNode LParToken {
+
+        public CppTokenNode LParToken
+        {
 			get { return GetChildByRole (Roles.LPar); }
 		}
 		
@@ -70,8 +73,9 @@ namespace ICSharpCode.NRefactory.Cpp
 			get { return GetChildByRole (Roles.Expression); }
 			set { SetChildByRole (Roles.Expression, value); }
 		}
-		
-		public CppTokenNode RParToken {
+
+        public CppTokenNode RParToken
+        {
 			get { return GetChildByRole (Roles.RPar); }
 		}
 		

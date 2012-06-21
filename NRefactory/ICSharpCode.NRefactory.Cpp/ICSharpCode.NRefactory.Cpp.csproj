@@ -74,6 +74,7 @@
     </Compile>
     <Compile Include="Ast\Header\IncludeDeclaration.cs" />
     <Compile Include="Ast\GeneralScope\InterfaceMemberSpecifier.cs" />
+    <Compile Include="Ast\Statements\ForeachStatement.cs" />
     <Compile Include="Ast\TypeName\AstType.cs" />
     <Compile Include="Ast\ID.cs" />
     <Compile Include="Ast\IdentifierExpressionBackreference.cs" />

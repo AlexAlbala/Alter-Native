@@ -93,7 +93,7 @@ namespace ICSharpCode.NRefactory.Cpp
 		S VisitEmptyStatement(EmptyStatement emptyStatement, T data);
 		S VisitExpressionStatement(ExpressionStatement expressionStatement, T data);
 		S VisitFixedStatement(FixedStatement fixedStatement, T data);
-		//S VisitForeachStatement(ForeachStatement foreachStatement, T data);
+		S VisitForeachStatement(ForeachStatement foreachStatement, T data);
 		S VisitForStatement(ForStatement forStatement, T data);
 		S VisitGotoCaseStatement(GotoCaseStatement gotoCaseStatement, T data);
 		S VisitGotoDefaultStatement(GotoDefaultStatement gotoDefaultStatement, T data);
