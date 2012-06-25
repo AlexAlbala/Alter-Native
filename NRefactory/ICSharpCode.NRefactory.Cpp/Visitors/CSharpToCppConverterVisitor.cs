@@ -306,14 +306,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             if (type is PtrType)//Here we make the change
             {
                 PtrType ptr = type as PtrType;
-                SimpleType stype = new SimpleType();
-                stype.Identifier = (ptr.Target as SimpleType).Identifier;
-
-                type = stype;
-
+                type = (AstType)ptr.Target.Clone();
                 isGcPtr = true;
             }
-
 
             var expr = new ObjectCreateExpression(type);
             ConvertNodes(objectCreateExpression.Arguments, expr.Arguments);
@@ -654,10 +649,10 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitForeachStatement(CSharp.ForeachStatement foreachStatement, object data)
         {
             ForeachStatement feach = new ForeachStatement();
-            feach.EmbeddedStatement = (Statement)foreachStatement.EmbeddedStatement.AcceptVisitor(this,data);
+            feach.EmbeddedStatement = (Statement)foreachStatement.EmbeddedStatement.AcceptVisitor(this, data);
             feach.InExpression = (Expression)foreachStatement.InExpression.AcceptVisitor(this, data); ;
             feach.VariableName = foreachStatement.VariableName;
-            feach.VariableType = (AstType)foreachStatement.VariableType.AcceptVisitor(this,data);
+            feach.VariableType = (AstType)foreachStatement.VariableType.AcceptVisitor(this, data);
             return EndNode(foreachStatement, feach);
         }
 
@@ -888,7 +883,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitPropertyDeclaration(CSharp.PropertyDeclaration propertyDeclaration, object data)
         {
-            throw new NotImplementedException();
+           // throw new NotImplementedException();
+            return null;
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitVariableInitializer(CSharp.VariableInitializer variableInitializer, object data)
@@ -926,35 +922,41 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         {
             string id = simpleType.Identifier;
             bool isPtr = true;
-            //If the simpleType is of an include, we need to transform the name, and it is not marked as pointer
-            if (simpleType.Parent is CSharp.UsingDeclaration ||
-                ((simpleType.Parent is CSharp.ComposedType) && (simpleType.Parent.Parent is CSharp.UsingDeclaration)))
+
+            if(IsUsingChild(simpleType) && !IsMemberChild(simpleType))
             {
                 id = Resolver.GetCppName(simpleType.Identifier);
                 Resolver.AddNewLibrary(simpleType.Identifier);
                 isPtr = false;
             }
+
             var type = new SimpleType(id);
             ConvertNodes(simpleType.TypeArguments, type.TypeArguments);
+            
+            if (!IsUsingChild(simpleType))
+            {
+                //Add the visited type to the resolver in order to include it after
+                //Also this call adds the type to the include list for detecting forward declarations
+                //If its parent is null, is better to ignore :)
+                if (simpleType.Parent != null)
+                    Resolver.AddVistedType(type, simpleType.Identifier);
 
-            //Add the visited type to the resolver in order to include it after
-            //Also this call adds the type to the include list for detecting forward declarations
-            //If its parent is null, is better to ignore :)
-            if (simpleType.Parent != null)
-                Resolver.AddVistedType(type, simpleType.Identifier);
+                if (simpleType.Annotations.Count() > 0)
+                    Resolver.AddSymbol(id, simpleType.Annotations.ElementAt(0) as TypeReference);
 
-            if (simpleType.Annotations.Count() > 0)
-                Resolver.AddSymbol(id, simpleType.Annotations.ElementAt(0) as TypeReference);
 
-            //If the type is in the Visual Tree, the parent is null. 
-            //If its parent is a TypeReferenceExpression it is like Console::ReadLine                
-            if (simpleType.Parent == null || !isPtr || simpleType.Parent is CSharp.TypeReferenceExpression)
+                //If the type is in the Visual Tree, the parent is null. 
+                //If its parent is a TypeReferenceExpression it is like Console::ReadLine                
+                if (simpleType.Parent == null || !isPtr || simpleType.Parent is CSharp.TypeReferenceExpression)
+                    return EndNode(simpleType, type);
+
+                var ptrType = new PtrType(type);
+                return EndNode(simpleType, ptrType);
+            }
+            else
+            {
                 return EndNode(simpleType, type);
-
-            var ptrType = new PtrType(type);
-            ptrType.Target = type;
-
-            return EndNode(simpleType, ptrType);
+            }            
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitMemberType(CSharp.MemberType memberType, object data)
@@ -971,14 +973,13 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             var type = new QualifiedType(target, new Identifier(memberType.MemberName, TextLocation.Empty));
             ConvertNodes(memberType.TypeArguments, type.TypeArguments);
 
-            Resolver.AddVistedType(type, memberType.MemberName);
             return EndNode(memberType, type);
-        }
+        }       
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitComposedType(CSharp.ComposedType composedType, object data)
         {
             //If there is ArraySpecifier, get it and return the simpleType or primitiveType
-            if (composedType.ArraySpecifiers.Count > 0)
+            if (composedType.ArraySpecifiers.Any())
                 arraySpecifiers.AddRange(composedType.ArraySpecifiers);
 
             if (composedType.HasNullableSpecifier)
@@ -1180,6 +1181,34 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 }
             }
             foundAttribute = null;
+            return false;
+        }
+
+        private bool IsUsingChild(CSharp.AstNode member)
+        {
+            CSharp.AstNode m = (CSharp.AstNode)member;
+            while (m.Parent != null)
+            {
+                if (m.Parent is CSharp.UsingDeclaration)
+                {
+                    return true;
+                }
+                m = m.Parent;
+            }
+            return false;
+        }
+
+        private bool IsMemberChild(CSharp.AstNode member)
+        {
+            CSharp.AstNode m = (CSharp.AstNode)member;
+            while (m.Parent != null)
+            {
+                if (m.Parent is CSharp.MemberType)
+                {
+                    return true;
+                }
+                m = m.Parent;
+            }
             return false;
         }
     }

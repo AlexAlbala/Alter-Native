@@ -1435,11 +1435,16 @@ namespace ICSharpCode.NRefactory.Cpp
 
         private object VisitIncludeDeclarationHeader(IncludeDeclaration includeDeclaration, object data)
         {
-            //StartNode(usingDeclaration);
-            WriteKeyword("#include");
-            Space();
-            includeDeclaration.Import.AcceptVisitor(this, data);
-            NewLine();
+            //TODO If the user has implemented a qualified namespace ?
+            if (!(includeDeclaration.Import is QualifiedType))
+            {
+                //StartNode(usingDeclaration);
+                WriteKeyword("#include");
+                Space();
+
+                includeDeclaration.Import.AcceptVisitor(this, data);
+                NewLine();
+            }
             //return EndNode(usingDeclaration);
             return null;
         }
@@ -2631,62 +2636,68 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             StartNode(foreachStatement);
 
-            /*CHANGE FOR ASSIGNMENTEXPRESSION!*/
-            WriteKeyword("auto");
-            WriteToken("&", ForeachStatement.Roles.DoubleColon);//TODO ROLES ??
-            WriteToken("&", ForeachStatement.Roles.DoubleColon);
+            VariableDeclarationStatement vdecl_range = new VariableDeclarationStatement();
+            vdecl_range.Type = new PrimitiveType("auto");
+            VariableInitializer vinit_range = new VariableInitializer("&&__range", foreachStatement.InExpression.Clone());
+            vdecl_range.AddChild(vinit_range, FieldDeclaration.Roles.Variable);
+            vdecl_range.AcceptVisitor(this, data);
 
-            WriteIdentifier("__range", ForeachStatement.Roles.Identifier);
-            WriteToken("=", ForeachStatement.Roles.Assign);
-            foreachStatement.InExpression.AcceptVisitor(this, data);
-            Semicolon();
-            NewLine();
 
             MemberReferenceExpression mref_beg = new MemberReferenceExpression(
                new IdentifierExpression("__range"),
                "begin()");
 
-            AssignmentExpression aexpr_beg = new AssignmentExpression(
-                new ObjectCreateExpression(
-                    new PrimitiveType("auto"),
-                    new IdentifierExpression("__begin")
-                    ), mref_beg);
-            aexpr_beg.AcceptVisitor(this, data);
+            VariableDeclarationStatement vdecl_beg = new VariableDeclarationStatement();
+            vdecl_beg.Type = new PrimitiveType("auto");
+            VariableInitializer vinit_beg = new VariableInitializer("__begin", mref_beg);
+            vdecl_beg.AddChild(vinit_beg, FieldDeclaration.Roles.Variable);
+            vdecl_beg.AcceptVisitor(this, data);
 
 
             MemberReferenceExpression mref_end = new MemberReferenceExpression(
                 new IdentifierExpression("__range"),
                 "end()");
 
-            AssignmentExpression aexpr_end = new AssignmentExpression(
-                new ObjectCreateExpression(
-                    new PrimitiveType("auto"),
-                    new IdentifierExpression("__end")
-                    ), mref_end);
-            aexpr_end.AcceptVisitor(this, data);
+            VariableDeclarationStatement vdecl_end = new VariableDeclarationStatement();
+            vdecl_end.Type = new PrimitiveType("auto");
+            VariableInitializer vinit_end = new VariableInitializer("__end", mref_end);
+            vdecl_end.AddChild(vinit_end, FieldDeclaration.Roles.Variable);
+            vdecl_end.AcceptVisitor(this, data);
 
 
-            //FOR STATEMENT            
+            /***************************FOR*************************/
+            ////FOR STATEMENT            
             ForStatement forstmt = new ForStatement();
-            StartNode(forstmt);
-            /*embedded statement*/
-            //MODIFY  STATEMENT TO ADD:   || var_type var_name = *__begin;  ||
-            //forstmt.EmbeddedStatement = foreachStatement.EmbeddedStatement;
 
-            /*condition*/
+            ///*embedded statement*/
+            VariableDeclarationStatement vds = new VariableDeclarationStatement(
+                (AstType)foreachStatement.VariableType.Clone(),//TODO PTRTYPE TO ADD *
+                foreachStatement.VariableName,
+                new IdentifierExpression("*__begin"));//TODO CHANGE FOR POINTERIDENTIFIEREXPRESSION
+
+            BlockStatement blckstmt = new BlockStatement();
+            blckstmt.AddChild(vds, BlockStatement.StatementRole);
+            foreach (Statement st in foreachStatement.EmbeddedStatement.GetChildrenByRole(BlockStatement.StatementRole))
+                blckstmt.AddChild(st.Clone(), BlockStatement.StatementRole);
+
+            forstmt.EmbeddedStatement = blckstmt;
+
+            ///*condition*/
             BinaryOperatorExpression bop = new BinaryOperatorExpression();
             bop.Operator = BinaryOperatorType.InEquality;
             bop.Left = new IdentifierExpression("__begin");
             bop.Right = new IdentifierExpression("__end");
             forstmt.Condition = bop;
+
             /*iterators*/
             UnaryOperatorExpression uop = new UnaryOperatorExpression();
             uop.Operator = UnaryOperatorType.Increment;
             uop.Expression = new IdentifierExpression("__begin");
-            //forstmt.Iterators = 
+            ExpressionStatement est = new ExpressionStatement(uop);
+            forstmt.AddChild(est, ForStatement.IteratorRole);
 
             forstmt.AcceptVisitor(this, data);
-            EndNode(forstmt);
+            /***************************FOR*************************/
             return EndNode(foreachStatement);
         }
 
@@ -3006,6 +3017,9 @@ namespace ICSharpCode.NRefactory.Cpp
             //TODO INCLUDES !!!!
             StartNode(qualifiedType);
 
+            //if (IsIncludeChild(qualifiedType))
+            //    return EndNode(qualifiedType);
+
             qualifiedType.Target.AcceptVisitor(this, data);
             WriteToken(".", AstNode.Roles.Dot);
             WriteIdentifier(qualifiedType.Name);
@@ -3038,6 +3052,18 @@ namespace ICSharpCode.NRefactory.Cpp
             ptrType.Target.AcceptVisitor(this, data);
             WriteToken(">", PtrType.Roles.RChevron);
             return EndNode(ptrType);
+        }
+
+        private bool IsIncludeChild(AstNode member)
+        {
+            AstNode m = (AstNode)member;
+            while (m.Parent != null)
+            {
+                if (m.Parent is IncludeDeclaration)
+                    return true;
+                m = m.Parent;
+            }
+            return false;
         }
     }
 }

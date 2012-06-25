@@ -22,6 +22,7 @@ namespace ICSharpCode.NRefactory.Cpp
             libraryMap.Add("Console", "\"System/Console.h\"");
             libraryMap.Add("Random", "\"System/Random.h\"");
             libraryMap.Add("GC", "\"System/GC.h\"");
+            libraryMap.Add("List", "\"System/Collections/Generic/List.h\"");
         }
 
         /// <summary>
@@ -30,7 +31,7 @@ namespace ICSharpCode.NRefactory.Cpp
         /// <param name="included">The type included</param>
         private static void AddInclude(string included)
         {
-            if (included == "Program")
+            if (included == "Collections")
             {
             }
             string owner = "N/P";
@@ -184,7 +185,8 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public static void AddVistedType(Ast.AstType type, string name)
         {
-            visitedTypes.Add(type, name);
+            if (!visitedTypes.ContainsValue(name))
+                visitedTypes.Add(type, name);
             AddInclude(name);
         }
 

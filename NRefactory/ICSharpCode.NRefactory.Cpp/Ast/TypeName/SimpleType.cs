@@ -80,10 +80,9 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
             StringBuilder b = new StringBuilder(this.Identifier);
             if (this.TypeArguments.Any())
             {
-                b.Append('(');
-                b.Append("Of ");
+                b.Append('<');
                 b.Append(string.Join(", ", this.TypeArguments));
-                b.Append(')');
+                b.Append('>');
             }
             return b.ToString();
         }

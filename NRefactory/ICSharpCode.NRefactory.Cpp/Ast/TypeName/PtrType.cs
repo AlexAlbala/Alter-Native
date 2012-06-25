@@ -25,11 +25,6 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
             Target = target;
         }
 
-        public AstNodeCollection<AstType> TypeArguments
-        {
-            get { return GetChildrenByRole(Roles.TypeArgument); }
-        }
-
         public override S AcceptVisitor<T, S>(IAstVisitor<T, S> visitor, T data)
         {
             return visitor.VisitPtrType(this, data);
@@ -44,13 +39,7 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
         public override string ToString()
         {
             StringBuilder b = new StringBuilder();
-            b.Append(this.Target);
-            if (this.TypeArguments.Any())
-            {
-                b.Append('(');
-                b.Append(string.Join(", ", this.TypeArguments));
-                b.Append(')');
-            }
+            b.Append(this.Target);           
             return b.ToString();
         }
     }
