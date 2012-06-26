@@ -1,0 +1,19 @@
+#include "Program.h"
+	namespace CollectionsExample{
+
+		void Program::Main(String args[]){
+			gc_ptr<MyList<int>> myList (new(gc)MyList<int>(gc_ptr<List<int>> (new(gc)List<int>{
+				12,
+				25,
+				6
+			})));
+			auto &&__range = myList;
+			auto __begin = __range->begin();
+			auto __end = __range->end();
+			for (; __begin != __end; ++__begin) {
+				int i = *__begin;
+				Console::WriteLine(i);
+			}
+		}
+
+	}
