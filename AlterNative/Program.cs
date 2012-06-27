@@ -7,6 +7,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using ICSharpCode.NRefactory.Cpp.Formatters;
 using ICSharpCode.ILSpy;
+using AlterNative.BuildTools;
 
 namespace AlterNative
 {
@@ -37,7 +38,7 @@ namespace AlterNative
             //LOAD TARGET ASSEMBLY            
             ReaderParameters readerParams = new ReaderParameters() { ReadSymbols = true };
             AssemblyDefinition adef = AssemblyDefinition.ReadAssembly(path, readerParams);
-            WriteToConsole("Loaded Assembly " + adef.Name);
+            Utils.WriteToConsole("Loaded Assembly " + adef.Name);
             return adef;
         }
 
@@ -63,7 +64,7 @@ namespace AlterNative
                     throw new InvalidOperationException("");
             }
 
-            WriteToConsole("Output language is " + lang.Name);
+            Utils.WriteToConsole("Output language is " + lang.Name);
             return lang;
         }
 
@@ -73,7 +74,7 @@ namespace AlterNative
         /// <param name="args">{ assembly, destinationPath, language, Params } (In CPP: Params is the path of the library)</param>
         public void ConsoleMain(string[] args)
         {
-            WriteToConsole("\n");
+            Utils.WriteToConsole("\n");
 
             //LOAD TARGET ASSEMBLY
             AssemblyDefinition adef = LoadAssembly(args[0].Replace('\\', '/'));
@@ -86,7 +87,7 @@ namespace AlterNative
 
             if (!Directory.Exists(outputDir))
             {
-                WriteToConsole(outputDir + " does not exists. Created");
+                Utils.WriteToConsole(outputDir + " does not exists. Created");
                 Directory.CreateDirectory(outputDir);
             }
 
@@ -112,7 +113,7 @@ namespace AlterNative
                 if (tdef.Name != "<Module>")
                 {
                     lang.DecompileType(tdef, textOutput, new DecompilationOptions() { FullDecompilation = true });
-                    WriteToConsole("Decompiled: " + tdef.FullName);
+                    Utils.WriteToConsole("Decompiled: " + tdef.FullName);
                 }
             }
 
@@ -121,10 +122,10 @@ namespace AlterNative
                 CopyAll(new DirectoryInfo(args[3].Replace('\\', '/')), new DirectoryInfo(outputDir));
 
             string name = adef.MainModule.Name.TrimEnd(new char[] { '.', 'e', 'x', 'e' });
-            GenerateCMakeLists(name + "Proj",name, outputDir, FileWritterManager.GetSourceFiles());
+            CMakeGenerator.GenerateCMakeLists(name + "Proj",name, outputDir, FileWritterManager.GetSourceFiles());
 
             Console.ForegroundColor = ConsoleColor.Green;
-            WriteToConsole("Done");
+            Utils.WriteToConsole("Done");
             Console.ResetColor();
         }
 
@@ -133,7 +134,7 @@ namespace AlterNative
             // Copy each file into it’s new directory.
             foreach (FileInfo fi in source.GetFiles())
             {
-                WriteToConsole(@"Copying: " + target.FullName + "/" + fi.Name);
+                Utils.WriteToConsole(@"Copying: " + target.FullName + "/" + fi.Name);
                 fi.CopyTo(System.IO.Path.Combine(target.ToString(), fi.Name), true);
             }
 
@@ -145,47 +146,6 @@ namespace AlterNative
                 CopyAll(diSourceSubDir, nextTargetSubDir);
             }
         }
-
-        private void GenerateCMakeLists(string projectName, string execName, string workingDir, string[] sourceFiles)
-        {
-            WriteToConsole("Generating CMakeLists.txt for project " + projectName + " and executable " + execName);
-
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("CMAKE_MINIMUM_REQUIRED(VERSION 2.8)");
-            sb.AppendLine("PROJECT(" + projectName + " CXX)");
-            sb.AppendLine("ADD_SUBDIRECTORY(System)");
-            sb.Append("SET(EXECPATH");
-
-            foreach (string s in sourceFiles)
-            {
-                WriteToConsole("Source file: " + s + " added");
-                sb.Append(" " + s);
-            }
-
-            sb.AppendLine(")");
-            sb.AppendLine("ADD_EXECUTABLE(" + execName + " ${EXECPATH})");
-            sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " LIB)");
-            sb.AppendLine("IF(UNIX)");
-            sb.AppendLine("IF(!ANDROID)");
-            sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " pthread)");
-            sb.AppendLine("ENDIF()");
-            sb.AppendLine("ENDIF(UNIX)");
-
-            StreamWriter sw = new StreamWriter(workingDir + "CMakeLists.txt");
-            sw.Write(sb.ToString());
-            sw.Flush();
-            sw.Close();
-        }
-
-        public void WriteToConsole(string message)
-        {
-            AttachConsole(-1);
-            Console.WriteLine(message);
-        }
-
-        [DllImport("Kernel32.dll")]
-        public static extern bool AttachConsole(int processId);
-
         #endregion
 
     }
