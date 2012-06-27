@@ -1,5 +1,6 @@
 #include "Program.h"
 using namespace System;
+using namespace ForwardDeclaration;
 
 int main(int argc, char *argv[])
 {

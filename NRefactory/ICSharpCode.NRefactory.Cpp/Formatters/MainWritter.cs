@@ -9,12 +9,13 @@ namespace ICSharpCode.NRefactory.Cpp
 {
     public class MainWritter
     {
-        public static void GenerateMain(string entryType)
+        public static void GenerateMain(string entryType, string entryNamespace)
         {
             StreamWriter writer = new StreamWriter(FileWritterManager.WorkingPath + "main.cpp");
 
             writer.WriteLine("#include \"Program.h\"");
             writer.WriteLine("using namespace System;");
+            writer.WriteLine("using namespace " + entryNamespace + ";");
             writer.WriteLine();
             writer.WriteLine("int main(int argc, char *argv[])");
             writer.WriteLine("{");

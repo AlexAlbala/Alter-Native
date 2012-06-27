@@ -1,5 +1,6 @@
 #include "Program.h"
 using namespace System;
+using namespace CollectionsExample;
 
 int main(int argc, char *argv[])
 {

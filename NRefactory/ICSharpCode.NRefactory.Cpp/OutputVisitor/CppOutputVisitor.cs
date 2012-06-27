@@ -1757,7 +1757,8 @@ namespace ICSharpCode.NRefactory.Cpp
 
             if (methodDeclaration.Name == "Main")
             {
-                MainWritter.GenerateMain((methodDeclaration.Parent as TypeDeclaration).Name);
+                MainWritter.GenerateMain((methodDeclaration.Parent as TypeDeclaration).Name,
+                   (methodDeclaration.Parent.Parent as NamespaceDeclaration).Name);
                 //<ÑAPA>
                 //Force the Main to be public because it will be called from main.cpp and has to be accessible
                 WriteKeyword("public:");

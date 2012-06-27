@@ -9,12 +9,9 @@ namespace For
     {
         static void Main(string[] args)
         {
-            int size = 50;
-            int[] value = new int[size];
-
-            for (int i = 0; i < size; i++)
+            for (int i = 0; i < 500; i++)
             {
-                value[i] = i;
+                Console.WriteLine(i);
             }
         }
     }
