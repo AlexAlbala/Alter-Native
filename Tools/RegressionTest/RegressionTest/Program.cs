@@ -26,7 +26,7 @@ namespace RegressionTest
             {
                 if (ContainsDirectory(di, "Target") &&
                     ContainsDirectory(di, "src") &&
-                    ContainsDirectory(di, "Output") &&
+                    /*ContainsDirectory(di, "Output") &&*/
                     ContainsDirectory(di, "bin"))
                 {
                     Tests.Add(di);
