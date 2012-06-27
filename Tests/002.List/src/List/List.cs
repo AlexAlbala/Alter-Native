@@ -5,12 +5,12 @@ using System.Text;
 
 namespace List
 {
-    class List
+    class MyList
     {
         Node first;
         int length;
 
-        public List()
+        public MyList()
         {
             first = null;
             length = 0;

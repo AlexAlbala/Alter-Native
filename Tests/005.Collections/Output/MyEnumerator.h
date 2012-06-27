@@ -10,14 +10,14 @@
 		using namespace System.Collections;
 		namespace CollectionsExample{
 
-			class MyEnumerator : public gc_ptr<IEnumerator<gc_ptr<T>>>, gc_ptr<IDisposable>, gc_ptr<IEnumerator>
+			class MyEnumerator : public IEnumerator<T*>*, IDisposable*, IEnumerator*
 			{
 				private:
-					gc_ptr<List<gc_ptr<T>>> values;
+					List<T*>* values;
 				private:
 					int currentIndex;
 				public:
-					MyEnumerator(gc_ptr<List<gc_ptr<T>>> values);
+					MyEnumerator(List<T*>* values);
 				public:
 					void Dispose();
 				public:

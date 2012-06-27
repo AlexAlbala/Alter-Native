@@ -2,12 +2,12 @@
 namespace ForwardDeclaration{
 
 	void Program::Main(String args[]){
-		gc_ptr<Program> p (new(gc)Program());
+		Program* p = new Program();
 		p->Run();
 	}
 	void Program::Run()
 	{
-		gc_ptr<ClassA> a (new(gc)ClassA());
+		ClassA* a = new ClassA();
 		String hello = a->SayHello();
 		Console::WriteLine(hello);
 	}

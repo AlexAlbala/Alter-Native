@@ -9,9 +9,9 @@ namespace ForwardDeclaration{
 
 	class ClassB : public Object{
 		private:
-			gc_ptr<ClassA> a;
+			ClassA* a;
 		public:
-			ClassB(gc_ptr<ClassA> a);
+			ClassB(ClassA* a);
 		public:
 			String SayHello();
 	};

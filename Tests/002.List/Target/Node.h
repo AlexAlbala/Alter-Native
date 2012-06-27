@@ -8,7 +8,7 @@ namespace List{
 	class Node : public Object
 	{
 		public:
-			gc_ptr<Node> next;
+			Node* next;
 		public:
 			int value;
 		public:

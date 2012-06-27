@@ -1,7 +1,7 @@
 #include "ClassB.h"
 namespace ForwardDeclaration{
 
-	ClassB::ClassB(gc_ptr<ClassA> a){
+	ClassB::ClassB(ClassA* a){
 		this->a = a;
 	}
 	String ClassB::SayHello()

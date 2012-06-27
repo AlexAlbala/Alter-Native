@@ -35,6 +35,7 @@ namespace ICSharpCode.NRefactory.Cpp
 	public class ObjectCreateExpression : Expression
 	{
 		public readonly static Role<ArrayInitializerExpression> InitializerRole = ArrayCreateExpression.InitializerRole;
+        public readonly static Role<AstNode> MallocRole = new Role<AstNode>("Malloc", AstNode.Null);
 
         public bool isGCPtr { 
             get; 

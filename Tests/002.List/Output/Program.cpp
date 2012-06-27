@@ -2,7 +2,7 @@
 namespace List{
 
 	void Program::Main(String args[]){
-		gc_ptr<Program> p (new(gc)Program());
+		Program* p = new Program();
 		p->Run();
 		p->printList();
 		p->Sort();
@@ -10,9 +10,9 @@ namespace List{
 	}
 	void Program::Run()
 	{
-		this->list = gc_ptr<List> (new(gc)List());
+		this->list = new MyList();
 		for (int i = 0; i < 100; i += 1) {
-			this->list->Add(gc_ptr<Node> (new(gc)Node()));
+			this->list->Add(new Node());
 		}
 	}
 	void Program::Sort()

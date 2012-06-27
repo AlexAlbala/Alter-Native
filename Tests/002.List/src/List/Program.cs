@@ -8,7 +8,7 @@ namespace List
 {
     class Program
     {
-        List list;
+        MyList list;
 
         static void Main(string[] args)
         {
@@ -21,7 +21,7 @@ namespace List
 
         void Run()
         {
-            list = new List();
+            list = new MyList();
 
             for (int i = 0; i < 100; i++)
                 list.Add(new Node());

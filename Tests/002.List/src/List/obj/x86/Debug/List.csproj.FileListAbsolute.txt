@@ -1,0 +1,5 @@
+C:\Users\Alex\Desktop\AlterNative\Tests\002.List\src\List\bin\Debug\List.exe
+C:\Users\Alex\Desktop\AlterNative\Tests\002.List\src\List\bin\Debug\List.pdb
+C:\Users\Alex\Desktop\AlterNative\Tests\002.List\src\List\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Alex\Desktop\AlterNative\Tests\002.List\src\List\obj\x86\Debug\List.exe
+C:\Users\Alex\Desktop\AlterNative\Tests\002.List\src\List\obj\x86\Debug\List.pdb

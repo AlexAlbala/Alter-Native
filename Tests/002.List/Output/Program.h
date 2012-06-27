@@ -1,6 +1,6 @@
 #pragma once
 #include "System/System.h"
-#include "System/Collections/Generic/List.h"
+#include "MyList.h"
 #include "Program.h"
 #include "Node.h"
 #include "System/Console.h"
@@ -11,7 +11,7 @@ namespace List{
 	class Program : public Object
 	{
 		private:
-			gc_ptr<List> list;
+			MyList* list;
 		public:
 			static void Main(String args[]);
 		private:

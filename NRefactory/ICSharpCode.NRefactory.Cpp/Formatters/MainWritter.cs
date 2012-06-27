@@ -15,7 +15,6 @@ namespace ICSharpCode.NRefactory.Cpp
 
             writer.WriteLine("#include \"Program.h\"");
             writer.WriteLine("using namespace System;");
-            writer.WriteLine("using namespace List;");
             writer.WriteLine();
             writer.WriteLine("int main(int argc, char *argv[])");
             writer.WriteLine("{");

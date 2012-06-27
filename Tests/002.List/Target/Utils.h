@@ -8,6 +8,6 @@ namespace List{
 	class Utils : public Object
 	{
 		public:
-		static gc_ptr<Random> random;
+		static Random* random;
 	};
 }

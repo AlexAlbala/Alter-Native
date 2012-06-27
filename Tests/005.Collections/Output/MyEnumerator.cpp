@@ -1,8 +1,8 @@
 #include "MyEnumerator.h"
 		namespace CollectionsExample{
 
-			MyEnumerator::MyEnumerator(gc_ptr<List<gc_ptr<T>>> values){
-				this->values = gc_ptr<List<gc_ptr<T>>> (new(gc)List<gc_ptr<T>>(values));
+			MyEnumerator::MyEnumerator(List<T*>* values){
+				this->values = new List<T*>(values);
 				this->Reset();
 			}
 			void MyEnumerator::Dispose()

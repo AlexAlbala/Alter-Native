@@ -2,11 +2,11 @@
 	namespace CollectionsExample{
 
 		void Program::Main(String args[]){
-			gc_ptr<MyList<int>> myList (new(gc)MyList<int>(gc_ptr<List<int>> (new(gc)List<int>{
+			MyList<int>* myList = new MyList<int>(new List<int>{
 				12,
 				25,
 				6
-			})));
+			});
 			auto &&__range = myList;
 			auto __begin = __range->begin();
 			auto __end = __range->end();

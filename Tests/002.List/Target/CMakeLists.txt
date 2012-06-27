@@ -1,7 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 PROJECT(ListProj CXX)
 ADD_SUBDIRECTORY(System)
-SET(EXECPATH Node.cpp Node.h List.cpp List.h Utils.cpp Utils.h Program.cpp Program.h main.cpp Node.cpp Node.h List.cpp List.h Utils.cpp Utils.h Program.cpp Program.h main.cpp)
+SET(EXECPATH Utils.cpp Utils.h Node.cpp Node.h MyList.cpp MyList.h Program.cpp Program.h main.cpp Utils.cpp Utils.h Node.cpp Node.h MyList.cpp MyList.h Program.cpp Program.h main.cpp)
 ADD_EXECUTABLE(List ${EXECPATH})
 TARGET_LINK_LIBRARIES(List LIB)
 IF(UNIX)

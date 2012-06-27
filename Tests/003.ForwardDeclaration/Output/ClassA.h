@@ -9,7 +9,7 @@ namespace ForwardDeclaration{
 
 	class ClassA : public Object{
 		private:
-			gc_ptr<ClassB> b;
+			ClassB* b;
 		public:
 			ClassA();
 		public:

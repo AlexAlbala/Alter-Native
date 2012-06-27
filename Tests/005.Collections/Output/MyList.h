@@ -10,15 +10,15 @@
 	using namespace System.Collections;
 	namespace CollectionsExample{
 
-		class MyList : public gc_ptr<IEnumerable<gc_ptr<T>>>, gc_ptr<IEnumerable>
+		class MyList : public IEnumerable<T*>*, IEnumerable*
 		{
 			private:
-				gc_ptr<List<gc_ptr<T>>> mylist;
+				List<T*>* mylist;
 			public:
-				MyList(gc_ptr<List<gc_ptr<T>>> values);
+				MyList(List<T*>* values);
 			public:
-				gc_ptr<IEnumerator<gc_ptr<T>>> GetEnumerator();
+				IEnumerator<T*>* GetEnumerator();
 			private:
-					gc_ptr<IEnumerator> GetEnumerator();
+					IEnumerator* GetEnumerator();
 			};
 		}

@@ -689,24 +689,7 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitObjectCreateExpression(ObjectCreateExpression objectCreateExpression, object data)
         {
             StartNode(objectCreateExpression);
-
-            if (objectCreateExpression.isGCPtr)
-            {
-                if (!(objectCreateExpression.Parent is VariableInitializer))
-                {
-                    WriteIdentifier("gc_ptr", ObjectCreateExpression.Roles.Identifier);
-                    WriteToken("<", ObjectCreateExpression.Roles.LChevron);
-                    objectCreateExpression.Type.AcceptVisitor(this, data);
-                    WriteToken(">", ObjectCreateExpression.Roles.RChevron);
-                    Space();
-                }
-                WriteToken("(", ObjectCreateExpression.Roles.LBrace);
-                WriteKeyword("new", ObjectCreateExpression.Roles.Keyword);
-                WriteToken("(", ObjectCreateExpression.Roles.LBrace);
-                WriteIdentifier("gc", ObjectCreateExpression.Roles.Identifier);
-                WriteToken(")", ObjectCreateExpression.Roles.RBrace);
-            }
-
+            WriteKeyword("new");
             objectCreateExpression.Type.AcceptVisitor(this, data);
             bool useParenthesis = objectCreateExpression.Arguments.Any() || objectCreateExpression.Initializer.IsNull;
             // also use parenthesis if there is an '(' token
@@ -718,8 +701,6 @@ namespace ICSharpCode.NRefactory.Cpp
                 WriteCommaSeparatedListInParenthesis(objectCreateExpression.Arguments, policy.SpaceWithinMethodCallParentheses);
             }
             objectCreateExpression.Initializer.AcceptVisitor(this, data);
-            if (objectCreateExpression.isGCPtr)
-                WriteToken(")", ObjectCreateExpression.Roles.RBrace);//GC_PTR parenthesis
             return EndNode(objectCreateExpression);
         }
 
@@ -1915,21 +1896,13 @@ namespace ICSharpCode.NRefactory.Cpp
 
             if (!variableInitializer.Initializer.IsNull)
             {
-                if (needsEqualToken(variableInitializer))
-                {
-                    Space(policy.SpaceAroundAssignment);
-                    WriteToken("=", VariableInitializer.Roles.Assign);
-                }
+                Space(policy.SpaceAroundAssignment);
+                WriteToken("=", VariableInitializer.Roles.Assign);
 
                 Space(policy.SpaceAroundAssignment);
                 variableInitializer.Initializer.AcceptVisitor(this, data);
             }
             return EndNode(variableInitializer);
-        }
-
-        private bool needsEqualToken(VariableInitializer variableInitializer)
-        {
-            return !(variableInitializer.Initializer is ObjectCreateExpression);
         }
 
         public object VisitCompilationUnit(CompilationUnit compilationUnit, object data)
@@ -3047,10 +3020,11 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitPtrType(PtrType ptrType, object data)
         {
             StartNode(ptrType);
-            WriteKeyword("gc_ptr", PtrType.Roles.Keyword);
-            WriteToken("<", PtrType.Roles.LChevron);
+            //WriteKeyword("gc_ptr", PtrType.Roles.Keyword);
+            //WriteToken("<", PtrType.Roles.LChevron);
             ptrType.Target.AcceptVisitor(this, data);
-            WriteToken(">", PtrType.Roles.RChevron);
+            WriteToken("*", PtrType.Roles.RChevron);//TODO PTRROLE
+            //WriteToken(">", PtrType.Roles.RChevron);
             return EndNode(ptrType);
         }
 
