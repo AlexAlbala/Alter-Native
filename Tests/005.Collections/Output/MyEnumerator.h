@@ -10,7 +10,7 @@
 		using namespace System.Collections;
 		namespace CollectionsExample{
 
-			class MyEnumerator : public IEnumerator<T*>*, IDisposable*, IEnumerator*, Object, gc_cleanup
+			class MyEnumerator : public IEnumerator<T*>*, public IDisposable*, public IEnumerator*, public Object, public gc_cleanup
 			{
 				private:
 					List<T*>* values;

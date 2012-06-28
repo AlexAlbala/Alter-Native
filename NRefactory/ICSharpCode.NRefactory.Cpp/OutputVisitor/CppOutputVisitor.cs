@@ -1286,7 +1286,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 NewLine();
             }
             NewLine();
-
+            
             //WRITE NAMESPACES
             foreach (string s in Resolver.GetNeededNamespaces())
             {
@@ -1338,8 +1338,7 @@ namespace ICSharpCode.NRefactory.Cpp
             Space();
             WriteToken(":", TypeDeclaration.ColonRole);
             Space();
-            WriteModifiers(typeDeclaration.ModifierTokens);
-            WriteCommaSeparatedList(typeDeclaration.BaseTypes);
+            WriteCommaSeparatedListWithModifiers(typeDeclaration.BaseTypes, typeDeclaration.ModifierTokens);
 
 
             //foreach (Constraint constraint in typeDeclaration.Constraints)
@@ -2415,6 +2414,26 @@ namespace ICSharpCode.NRefactory.Cpp
                 {
                     Comma(node);
                 }
+                node.AcceptVisitor(this, null);
+            }
+        }
+
+        void WriteCommaSeparatedListWithModifiers(IEnumerable<AstNode> list, IEnumerable<CppModifierToken> modifiers)
+        {
+            //ÑAPA Crear nodo BaseType con un Modifier, ahora mismo se pone siempre el modifier de la clase principal,
+            //pero i.e. class List : public Object, public virtual gc_cleanup { no se puede !
+            bool isFirst = true;
+            foreach (AstNode node in list)
+            {
+                if (isFirst)
+                {
+                    isFirst = false;
+                }
+                else
+                {
+                    Comma(node);
+                }
+                WriteModifiers(modifiers);
                 node.AcceptVisitor(this, null);
             }
         }

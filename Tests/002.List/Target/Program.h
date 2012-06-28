@@ -8,7 +8,7 @@
 using namespace System;
 namespace List{
 
-	class Program : public Object
+	class Program : public Object, public gc_cleanup
 	{
 		private:
 			MyList* list;

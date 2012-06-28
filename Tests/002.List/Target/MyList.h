@@ -4,7 +4,7 @@
 
 namespace List{
 
-	class MyList : public Object
+	class MyList : public Object, public gc_cleanup
 	{
 		private:
 			Node* first;

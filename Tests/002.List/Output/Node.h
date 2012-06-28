@@ -5,7 +5,7 @@
 
 namespace List{
 
-	class Node : public Object, gc_cleanup
+	class Node : public Object, public gc_cleanup
 	{
 		public:
 			Node* next;

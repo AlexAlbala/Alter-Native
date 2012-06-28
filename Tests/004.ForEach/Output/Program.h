@@ -7,7 +7,7 @@ using namespace System;
 using namespace System.Collections.Generic;
 namespace ForEach{
 
-	class Program : public Object, gc_cleanup
+	class Program : public Object, public gc_cleanup
 	{
 		public:
 			static void Main(String args[]);
