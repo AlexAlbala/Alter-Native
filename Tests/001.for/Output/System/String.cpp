@@ -12,6 +12,11 @@ String::String(const char* txt) {
 	strncpy(Data,txt,Length);
 }
 
+String* String::operator=(char* text) {
+	String* s = new String(text);
+	return s;
+}
+
 String::~String() {
 	if(Data!=null) {
 		delete Data;
@@ -19,8 +24,8 @@ String::~String() {
 	}
 }
 
-gc_ptr<String> String::Concat(Object* elements) {
-	gc_ptr<String> newstring (new(gc)String("String::Concat NotImplemented"));
+String* String::Concat(Object* elements) {
+	String* newstring = new String("String::Concat NotImplemented");
 	delete elements;
 	return newstring;
 }

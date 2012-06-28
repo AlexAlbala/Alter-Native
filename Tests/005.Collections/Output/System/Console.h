@@ -10,11 +10,11 @@ public:
 
 	static void Write(char* txt);
 	static void Write(int i);
-	static void Write(gc_ptr<String> s);
+	static void Write(String* s);
 
 	static void WriteLine(char* txt);
 	static void WriteLine(int i);
-	static void WriteLine(gc_ptr<String> s);
+	static void WriteLine(String* s);
 
 	static char* ReadLine();
 };

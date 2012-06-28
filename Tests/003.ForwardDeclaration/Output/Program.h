@@ -7,7 +7,7 @@
 using namespace System;
 namespace ForwardDeclaration{
 
-	class Program : public Object
+	class Program : public Object, gc_cleanup
 	{
 		public:
 			static void Main(String args[]);

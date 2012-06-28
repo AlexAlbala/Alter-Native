@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.IO;
 
 namespace AlterNative.BuildTools
 {
@@ -12,6 +13,8 @@ namespace AlterNative.BuildTools
         {
             AttachConsole(-1);
             Console.WriteLine(message);
+            //TextWriter stdWriter = Console.Out;
+            //stdWriter.WriteLine(message);            
         }
 
         [DllImport("Kernel32.dll")]

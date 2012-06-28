@@ -53,6 +53,7 @@ namespace RegressionTest
 
             foreach (FileInfo fi in d.GetFiles())
                 fi.Delete();
+            d.Delete();
         }
 
         public void Run()

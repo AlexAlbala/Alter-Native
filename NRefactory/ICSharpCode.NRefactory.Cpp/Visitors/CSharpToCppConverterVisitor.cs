@@ -580,6 +580,10 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             types.Pop();
 
             Resolver.ProcessIncludes(type.Name);
+
+            type.AddChild(new SimpleType("Object"), TypeDeclaration.BaseTypeRole);
+            type.AddChild(new SimpleType("gc_cleanup"), TypeDeclaration.BaseTypeRole);
+
             return EndNode(typeDeclaration, type);
         }
 

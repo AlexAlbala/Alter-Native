@@ -1333,23 +1333,15 @@ namespace ICSharpCode.NRefactory.Cpp
                     break;
             }
             WriteIdentifier(typeDeclaration.Name);
-            WriteTypeParameters(typeDeclaration.TypeParameters);
-            if (typeDeclaration.BaseTypes.Any())
-            {
-                Space();
-                WriteToken(":", TypeDeclaration.ColonRole);
-                Space();
-                WriteModifiers(typeDeclaration.ModifierTokens);
-                WriteCommaSeparatedList(typeDeclaration.BaseTypes);
-            }
-            else
-            {
-                Space();
-                WriteToken(":", TypeDeclaration.ColonRole);
-                Space();
-                WriteModifiers(typeDeclaration.ModifierTokens);
-                WriteKeyword("Object");
-            }
+            WriteTypeParameters(typeDeclaration.TypeParameters);           
+
+            Space();
+            WriteToken(":", TypeDeclaration.ColonRole);
+            Space();
+            WriteModifiers(typeDeclaration.ModifierTokens);
+            WriteCommaSeparatedList(typeDeclaration.BaseTypes);
+
+
             //foreach (Constraint constraint in typeDeclaration.Constraints)
             //{
             //    constraint.AcceptVisitor(this, data);

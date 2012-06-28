@@ -16,6 +16,7 @@ namespace AlterNative.BuildTools
             sb.AppendLine("CMAKE_MINIMUM_REQUIRED(VERSION 2.8)");
             sb.AppendLine("PROJECT(" + projectName + " CXX)");
             sb.AppendLine("ADD_SUBDIRECTORY(System)");
+            sb.AppendLine("ADD_SUBDIRECTORY(gc)");
             sb.Append("SET(EXECPATH");
 
             foreach (string s in sourceFiles)
@@ -27,6 +28,7 @@ namespace AlterNative.BuildTools
             sb.AppendLine(")");
             sb.AppendLine("ADD_EXECUTABLE(" + execName + " ${EXECPATH})");
             sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " LIB)");
+            sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " gc-lib)");
             sb.AppendLine("IF(UNIX)");
             sb.AppendLine("IF(!ANDROID)");
             sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " pthread)");

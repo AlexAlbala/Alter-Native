@@ -1,5 +1,5 @@
 #pragma once
 
-#include "gcptr.h"
+#include "GC.h"
 
 #define null (0)
