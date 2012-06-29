@@ -579,8 +579,12 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             ConvertNodes(typeDeclaration.Members, type.Members);
             types.Pop();
 
+            if (typeDeclaration.TypeParameters.Any())
+                ConvertNodes(typeDeclaration.TypeParameters, type.TypeParameters);
+
             Resolver.ProcessIncludes(type.Name);
 
+            //HERE SHOULD BE BaseType or InheritedType or something similar
             type.AddChild(new SimpleType("Object"), TypeDeclaration.BaseTypeRole);
             type.AddChild(new SimpleType("gc_cleanup"), TypeDeclaration.BaseTypeRole);
 
@@ -887,7 +891,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitPropertyDeclaration(CSharp.PropertyDeclaration propertyDeclaration, object data)
         {
-           // throw new NotImplementedException();
+            // throw new NotImplementedException();
             return null;
         }
 
@@ -927,7 +931,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             string id = simpleType.Identifier;
             bool isPtr = true;
 
-            if(IsUsingChild(simpleType) && !IsMemberChild(simpleType))
+            if(IsChildOf(simpleType,typeof(CSharp.UsingDeclaration)) && !IsChildOf(simpleType,typeof(CSharp.MemberType)) 
+                && !IsChildOf(simpleType,typeof(CSharp.TypeParameterDeclaration)))
             {
                 id = Resolver.GetCppName(simpleType.Identifier);
                 Resolver.AddNewLibrary(simpleType.Identifier);
@@ -936,8 +941,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
             var type = new SimpleType(id);
             ConvertNodes(simpleType.TypeArguments, type.TypeArguments);
-            
-            if (!IsUsingChild(simpleType))
+
+            if (!IsChildOf(simpleType, typeof(CSharp.UsingDeclaration)) && simpleType.Role != CSharp.SimpleType.Roles.TypeArgument)
             {
                 //Add the visited type to the resolver in order to include it after
                 //Also this call adds the type to the include list for detecting forward declarations
@@ -951,9 +956,10 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
                 //If the type is in the Visual Tree, the parent is null. 
                 //If its parent is a TypeReferenceExpression it is like Console::ReadLine                
-                if (simpleType.Parent == null || !isPtr || simpleType.Parent is CSharp.TypeReferenceExpression)
+                if (simpleType.Parent == null || !isPtr || IsChildOf(simpleType,typeof(CSharp.TypeReferenceExpression))
+                    || simpleType.Role == CSharp.TypeDeclaration.BaseTypeRole)                    
                     return EndNode(simpleType, type);
-
+               
                 var ptrType = new PtrType(type);
                 return EndNode(simpleType, ptrType);
             }
@@ -978,7 +984,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             ConvertNodes(memberType.TypeArguments, type.TypeArguments);
 
             return EndNode(memberType, type);
-        }       
+        }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitComposedType(CSharp.ComposedType composedType, object data)
         {
@@ -1063,7 +1069,11 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitTypeParameterDeclaration(CSharp.TypeParameterDeclaration typeParameterDeclaration, object data)
         {
-            throw new NotImplementedException();
+            TypeParameterDeclaration t = new TypeParameterDeclaration();
+            t.Name = typeParameterDeclaration.Name;
+            t.NameToken = (Identifier)typeParameterDeclaration.NameToken.AcceptVisitor(this, data);
+
+            return EndNode(typeParameterDeclaration, t);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitConstraint(CSharp.Constraint constraint, object data)
@@ -1188,26 +1198,12 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             return false;
         }
 
-        private bool IsUsingChild(CSharp.AstNode member)
+        private bool IsChildOf(CSharp.AstNode member, Type type)
         {
             CSharp.AstNode m = (CSharp.AstNode)member;
             while (m.Parent != null)
             {
-                if (m.Parent is CSharp.UsingDeclaration)
-                {
-                    return true;
-                }
-                m = m.Parent;
-            }
-            return false;
-        }
-
-        private bool IsMemberChild(CSharp.AstNode member)
-        {
-            CSharp.AstNode m = (CSharp.AstNode)member;
-            while (m.Parent != null)
-            {
-                if (m.Parent is CSharp.MemberType)
+                if (m.Parent.GetType() == type)
                 {
                     return true;
                 }

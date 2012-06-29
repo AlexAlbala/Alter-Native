@@ -48,12 +48,15 @@ namespace RegressionTest
 
         private void CleanDirectory(DirectoryInfo d)
         {
-            foreach (DirectoryInfo di in d.GetDirectories())
-                CleanDirectory(di);
+            if (d.Exists)
+            {
+                foreach (DirectoryInfo di in d.GetDirectories())
+                    CleanDirectory(di);
 
-            foreach (FileInfo fi in d.GetFiles())
-                fi.Delete();
-            d.Delete();
+                foreach (FileInfo fi in d.GetFiles())
+                    fi.Delete();
+                d.Delete();
+            }
         }
 
         public void Run()

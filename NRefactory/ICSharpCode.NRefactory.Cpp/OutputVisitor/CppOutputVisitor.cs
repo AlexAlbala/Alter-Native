@@ -1209,7 +1209,7 @@ namespace ICSharpCode.NRefactory.Cpp
             delegateDeclaration.ReturnType.AcceptVisitor(this, data);
             Space();
             WriteIdentifier(delegateDeclaration.Name);
-            WriteTypeParameters(delegateDeclaration.TypeParameters);
+            WriteTypeParameters(delegateDeclaration.TypeParameters, false);
             Space(policy.SpaceBeforeDelegateDeclarationParentheses);
             WriteCommaSeparatedListInParenthesis(delegateDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
             //foreach (Constraint constraint in delegateDeclaration.Constraints)
@@ -1230,12 +1230,139 @@ namespace ICSharpCode.NRefactory.Cpp
         }
 
         public object VisitTypeDeclaration(TypeDeclaration typeDeclaration, object data)
-        {
+        {            
             //WRITE FIRST CPP AND THEN .H
             StartNode(typeDeclaration);
-            TypeDeclarationCPP(typeDeclaration, data);
-            TypeDeclarationHeader(typeDeclaration, data);
+            if (typeDeclaration.TypeParameters.Any())
+            {
+                TypeDeclarationTemplates(typeDeclaration, data);
+            }
+            else
+            {
+                TypeDeclarationCPP(typeDeclaration, data);
+                TypeDeclarationHeader(typeDeclaration, data);
+            }
             return EndNode(typeDeclaration);
+        }
+
+        private void TypeDeclarationTemplates(TypeDeclaration typeDeclaration, object data)
+        {
+            formatter.ChangeFile(typeDeclaration.Name + ".h");
+            FileWritterManager.AddSourceFile(typeDeclaration.Name + ".h");
+
+            WriteKeyword("#pragma", TypeDeclaration.Roles.Keyword);
+            WriteKeyword("once", TypeDeclaration.Roles.Keyword);
+            NewLine();
+
+            //Write using declarations in header file
+            foreach (AstNode n in headerNodes)
+            {
+                if (n is IncludeDeclaration)
+                {
+                    VisitIncludeDeclarationHeader(n as IncludeDeclaration, data);
+                }
+            }
+
+            //WRITE RESOLVED TYPE DEPENDENCES
+            foreach (string s in Resolver.GetTypeIncludes())
+            {
+                WriteKeyword("#include");
+                WriteIdentifier(s);
+                NewLine();
+            }
+            NewLine();
+
+            //WRITE NAMESPACES
+            foreach (string s in Resolver.GetNeededNamespaces())
+            {
+                if (s == currNamespaceString)
+                    continue;
+                WriteKeyword("using");
+                WriteKeyword("namespace");
+                WriteIdentifier(s, IncludeDeclaration.Roles.Identifier);
+                Semicolon();
+            }
+
+            Resolver.Restart();
+
+
+            WriteKeyword("namespace");
+            WriteIdentifier(currNamespaceString, IncludeDeclaration.Roles.Identifier);
+            OpenBrace(BraceStyle.EndOfLineWithoutSpace);
+            NewLine();
+
+            string type2 = String.Empty;
+            if (Resolver.NeedsForwardDeclaration(typeDeclaration.Name, out type2))
+                WriteForwardDeclaration(type2);
+
+            WriteAttributes(typeDeclaration.Attributes);
+
+            WriteTypeParameters(typeDeclaration.TypeParameters,true);
+            // HERE GOES THE TEMPLATE !
+            BraceStyle braceStyle;
+            switch (typeDeclaration.ClassType)
+            {
+                case ClassType.Enum:
+                    WriteKeyword("enum");
+                    braceStyle = policy.EnumBraceStyle;
+                    break;
+                case ClassType.Interface:
+                    WriteKeyword("interface");
+                    braceStyle = policy.InterfaceBraceStyle;
+                    break;
+                case ClassType.Struct:
+                    WriteKeyword("struct");
+                    braceStyle = policy.StructBraceStyle;
+                    break;
+                default:
+                    WriteKeyword("class");
+                    braceStyle = policy.ClassBraceStyle;
+                    break;
+            }
+            WriteIdentifier(typeDeclaration.Name);
+
+            Space();
+            WriteToken(":", TypeDeclaration.ColonRole);
+            Space();
+            WriteCommaSeparatedListWithModifiers(typeDeclaration.BaseTypes, typeDeclaration.ModifierTokens);
+
+
+            //foreach (Constraint constraint in typeDeclaration.Constraints)
+            //{
+            //    constraint.AcceptVisitor(this, data);
+            //}
+            OpenBrace(braceStyle);
+
+            if (typeDeclaration.ClassType == ClassType.Enum)
+            {
+                bool first = true;
+                foreach (var member in typeDeclaration.Members)
+                {
+                    if (first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        Comma(member, noSpaceAfterComma: true);
+                        NewLine();
+                    }
+                    member.AcceptVisitor(this, data);
+                }
+                //OptionalComma();
+                NewLine();
+            }
+            else
+            {
+                foreach (var member in typeDeclaration.Members)
+                    member.AcceptVisitor(this, data);
+            }
+            CloseBrace(braceStyle);//END OF TYPE
+            Semicolon();
+            CloseBrace(BraceStyle.NextLine);//END OF NAMESPACE
+            headerNodes.Clear();
+
+            formatter.ChangeFile("tmp");
         }
 
         private void TypeDeclarationCPP(TypeDeclaration typeDeclaration, object data)
@@ -1333,7 +1460,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     break;
             }
             WriteIdentifier(typeDeclaration.Name);
-            WriteTypeParameters(typeDeclaration.TypeParameters);           
+            WriteTypeParameters(typeDeclaration.TypeParameters,false);           
 
             Space();
             WriteToken(":", TypeDeclaration.ColonRole);
@@ -1729,7 +1856,7 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteIdentifier(tdecl != null ? tdecl.Name : String.Empty, MethodDeclaration.Roles.Identifier);
             WriteToken("::", MethodDeclaration.Roles.DoubleColon);
             WriteIdentifier(methodDeclaration.Name);
-            WriteTypeParameters(methodDeclaration.TypeParameters);
+            WriteTypeParameters(methodDeclaration.TypeParameters,false);
             Space(policy.SpaceBeforeMethodDeclarationParentheses);
             WriteCommaSeparatedListInParenthesis(methodDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
             //foreach (Constraint constraint in methodDeclaration.Constraints)
@@ -1771,7 +1898,7 @@ namespace ICSharpCode.NRefactory.Cpp
             WritePrivateImplementationType(methodDeclaration.PrivateImplementationType);
 
             WriteIdentifier(methodDeclaration.Name);
-            WriteTypeParameters(methodDeclaration.TypeParameters);
+            WriteTypeParameters(methodDeclaration.TypeParameters, false);
             Space(policy.SpaceBeforeMethodDeclarationParentheses);
             WriteCommaSeparatedListInParenthesis(methodDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
             //foreach (Constraint constraint in methodDeclaration.Constraints)
@@ -2250,13 +2377,25 @@ namespace ICSharpCode.NRefactory.Cpp
             }
         }
 
-        public void WriteTypeParameters(IEnumerable<TypeParameterDeclaration> typeParameters)
+        public void WriteTypeParameters(IEnumerable<TypeParameterDeclaration> typeParameters,bool declaration)
         {
             if (typeParameters.Any())
             {
-                WriteToken("<", AstNode.Roles.LChevron);
-                WriteCommaSeparatedList(typeParameters);
-                WriteToken(">", AstNode.Roles.RChevron);
+                if (declaration)
+                {
+                    WriteKeyword("template");
+                    WriteToken("<", AstNode.Roles.LChevron);
+                    WriteKeyword("typename");
+                    WriteCommaSeparatedList(typeParameters);
+                    WriteToken(">", AstNode.Roles.RChevron);
+                    NewLine();
+                }
+                else
+                {
+                    WriteToken("<", AstNode.Roles.LChevron);
+                    WriteCommaSeparatedList(typeParameters);
+                    WriteToken(">", AstNode.Roles.RChevron);
+                }
             }
         }
 

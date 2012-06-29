@@ -1,24 +1,26 @@
 #pragma once
-	#include "System/System.h"
-	#include "T.h"
-	#include "IEnumerable.h"
-	#include "System/Collections/Generic/List.h"
-	#include "IEnumerator.h"
-	#include "MyEnumerator.h"
+#include "System/System.h"
+#include "IEnumerable.h"
+#include "System/Collections/Generic/List.h"
+#include "IEnumerator.h"
+#include "MyEnumerator.h"
 
-	using namespace System.Collections.Generic;
-	using namespace System.Collections;
-	namespace CollectionsExample{
+using namespace System.Collections.Generic;
+using namespace System.Collections;
+namespace CollectionsExample{
 
-		class MyList : public IEnumerable<T*>*, public IEnumerable*, public Object, public gc_cleanup
-		{
-			private:
-				List<T*>* mylist;
-			public:
-				MyList(List<T*>* values);
-			public:
-				IEnumerator<T*>* GetEnumerator();
-			private:
-					IEnumerator* GetEnumerator();
-			};
+	template<typename T>
+	class MyList : public IEnumerable<T>, public IEnumerable, public Object, public gc_cleanup{
+		MyList::MyList(List<T>* values){
+			this->mylist = values;
 		}
+		IEnumerator<T>* MyList::GetEnumerator()
+		{
+			return new MyEnumerator<T>(this->mylist);
+		}
+		IEnumerator* MyList::GetEnumerator()
+		{
+			return this->GetEnumerator();
+		}
+	};
+}
