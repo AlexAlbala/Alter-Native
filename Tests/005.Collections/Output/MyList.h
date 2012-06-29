@@ -11,15 +11,15 @@ namespace CollectionsExample{
 
 	template<typename T>
 	class MyList : public IEnumerable<T>, public IEnumerable, public Object, public gc_cleanup{
-		List<T>* MyList::mylist;
-		MyList::MyList(List<T>* values){
+		List<T>* mylist;
+		MyList(List<T>* values){
 			this->mylist = values;
 		}
-		IEnumerator<T>* MyList::GetEnumerator()
+		IEnumerator<T>* GetEnumerator()
 		{
 			return new MyEnumerator<T>(this->mylist);
 		}
-		IEnumerator* MyList::GetEnumerator()
+		IEnumerator* GetEnumerator()
 		{
 			return this->GetEnumerator();
 		}

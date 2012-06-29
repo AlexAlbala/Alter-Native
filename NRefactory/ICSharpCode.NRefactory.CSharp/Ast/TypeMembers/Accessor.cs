@@ -33,7 +33,7 @@ namespace ICSharpCode.NRefactory.CSharp
 	/// </summary>
 	public class Accessor : AttributedNode
 	{
-		public static readonly new Accessor Null = new NullAccessor ();
+        public static readonly new Accessor Null = new NullAccessor();
 		sealed class NullAccessor : Accessor
 		{
 			public override bool IsNull {

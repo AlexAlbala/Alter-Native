@@ -24,6 +24,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
     {
         //Auxiliar list to change the array specifiers from one branch to another
         private List<CSharp.ArraySpecifier> arraySpecifiers = new List<CSharp.ArraySpecifier>();
+        private List<CSharp.PropertyDeclaration> properties = new List<CSharp.PropertyDeclaration>();
 
         IEnvironmentProvider provider;
         Stack<BlockStatement> blocks;
@@ -789,7 +790,42 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitAccessor(CSharp.Accessor accessor, object data)
         {
-            throw new NotImplementedException();
+            var method = new MethodDeclaration();
+            ConvertNodes(accessor.ModifierTokens, method.ModifierTokens);
+            string acc = "";
+            if (accessor.Role == CSharp.PropertyDeclaration.GetterRole)
+            {
+                acc = "get";
+            }
+            else if (accessor.Role == CSharp.PropertyDeclaration.SetterRole)
+            {
+                acc = "set";
+            }
+            else if (accessor.Role == CSharp.CustomEventDeclaration.AddAccessorRole)
+            {
+                throw new NotImplementedException();
+            }
+            else if (accessor.Role == CSharp.CustomEventDeclaration.RemoveAccessorRole)
+            {
+                throw new NotImplementedException();
+            }
+
+            //ÑAPA ?
+            method.NameToken = new Identifier(acc + (accessor.Parent as CSharp.PropertyDeclaration).Name, TextLocation.Empty);
+            if (acc == "get")
+                method.ReturnType = (AstType)(accessor.Parent as CSharp.PropertyDeclaration).ReturnType.AcceptVisitor(this, data);
+            else if (acc == "set")
+            {
+                method.ReturnType = new PrimitiveType("void");
+                ParameterDeclaration pd = new ParameterDeclaration((AstType)method.ReturnType.Clone(), "value");
+            }
+            else
+                throw new NotImplementedException();
+
+            method.Body = (BlockStatement)accessor.Body.AcceptVisitor(this, data);
+            //EndÑAPA
+
+            return EndNode(accessor, method);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitConstructorDeclaration(CSharp.ConstructorDeclaration constructorDeclaration, object data)
@@ -891,9 +927,14 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitPropertyDeclaration(CSharp.PropertyDeclaration propertyDeclaration, object data)
         {
-            // throw new NotImplementedException();
-            //TODO ignored for debugging other components
-            return null;
+            properties.Add(propertyDeclaration);
+            PropertyDeclaration pdecl = new PropertyDeclaration();
+            pdecl.Getter = (MethodDeclaration)propertyDeclaration.Getter.AcceptVisitor(this, data);
+            pdecl.Setter = (MethodDeclaration)propertyDeclaration.Setter.AcceptVisitor(this, data);
+            pdecl.NameToken = (Identifier)propertyDeclaration.NameToken.AcceptVisitor(this, data);
+            pdecl.Name = propertyDeclaration.Name;
+            ConvertNodes(propertyDeclaration.ModifierTokens, pdecl.ModifierTokens);
+            return EndNode(propertyDeclaration, pdecl);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitVariableInitializer(CSharp.VariableInitializer variableInitializer, object data)
@@ -932,8 +973,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             string id = simpleType.Identifier;
             bool isPtr = true;
 
-            if(IsChildOf(simpleType,typeof(CSharp.UsingDeclaration)) && !IsChildOf(simpleType,typeof(CSharp.MemberType)) 
-                && !IsChildOf(simpleType,typeof(CSharp.TypeParameterDeclaration)))
+            if (IsChildOf(simpleType, typeof(CSharp.UsingDeclaration)) && !IsChildOf(simpleType, typeof(CSharp.MemberType))
+                && !IsChildOf(simpleType, typeof(CSharp.TypeParameterDeclaration)))
             {
                 id = Resolver.GetCppName(simpleType.Identifier);
                 Resolver.AddNewLibrary(simpleType.Identifier);
@@ -956,18 +997,19 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
 
                 //If the type is in the Visual Tree, the parent is null. 
-                //If its parent is a TypeReferenceExpression it is like Console::ReadLine                
-                if (simpleType.Parent == null || !isPtr || IsChildOf(simpleType,typeof(CSharp.TypeReferenceExpression))
-                    || simpleType.Role == CSharp.TypeDeclaration.BaseTypeRole)                    
+                //If its parent is a TypeReferenceExpression it is like Console::ReadLine          
+                //If the Role is BaseTypeRole it means that it is a inherited class (i.e. MyClass : public MyInheritedClass)
+                if (simpleType.Parent == null || !isPtr || IsChildOf(simpleType, typeof(CSharp.TypeReferenceExpression))
+                    || simpleType.Role == CSharp.TypeDeclaration.BaseTypeRole)
                     return EndNode(simpleType, type);
-               
+
                 var ptrType = new PtrType(type);
                 return EndNode(simpleType, ptrType);
             }
             else
             {
                 return EndNode(simpleType, type);
-            }            
+            }
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitMemberType(CSharp.MemberType memberType, object data)

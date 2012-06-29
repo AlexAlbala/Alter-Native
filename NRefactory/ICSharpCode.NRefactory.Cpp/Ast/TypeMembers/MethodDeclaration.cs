@@ -32,6 +32,29 @@ namespace ICSharpCode.NRefactory.Cpp
 {
     public class MethodDeclaration : MemberDeclaration
     {
+        public static readonly new MethodDeclaration Null = new NullMethodDeclaration();
+
+        sealed class NullMethodDeclaration : MethodDeclaration
+        {
+            public override bool IsNull
+            {
+                get
+                {
+                    return true;
+                }
+            }
+
+            public override S AcceptVisitor<T, S>(IAstVisitor<T, S> visitor, T data = default(T))
+            {
+                return default(S);
+            }
+
+            protected internal override bool DoMatch(AstNode other, PatternMatching.Match match)
+            {
+                return other == null || other.IsNull;
+            }
+        }
+
         public AstNodeCollection<TypeParameterDeclaration> TypeParameters
         {
             get { return GetChildrenByRole(Roles.TypeParameter); }

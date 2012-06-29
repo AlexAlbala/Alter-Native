@@ -1592,8 +1592,11 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteAttributes(constructorDeclaration.Attributes);
             //WriteAccesorModifier(constructorDeclaration.ModifierTokens);
             TypeDeclaration type = constructorDeclaration.Parent as TypeDeclaration;
-            WriteIdentifier(type != null ? type.Name : constructorDeclaration.Name);
-            WriteToken("::", MethodDeclaration.Roles.Dot);
+            if (!isTemplateType)
+            {                
+                WriteIdentifier(type != null ? type.Name : constructorDeclaration.Name);
+                WriteToken("::", MethodDeclaration.Roles.Dot);
+            }
             WriteIdentifier(type != null ? type.Name : constructorDeclaration.Name);
             Space(policy.SpaceBeforeConstructorDeclarationParentheses);
             WriteCommaSeparatedListInParenthesis(constructorDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
@@ -1652,10 +1655,12 @@ namespace ICSharpCode.NRefactory.Cpp
             StartNode(destructorDeclaration);
             WriteAttributes(destructorDeclaration.Attributes);
             //WriteAccesorModifier(destructorDeclaration.ModifierTokens);
-
             TypeDeclaration type = destructorDeclaration.Parent as TypeDeclaration;
-            WriteIdentifier(type != null ? type.Name : destructorDeclaration.Name);
-            WriteToken("::", MethodDeclaration.Roles.Dot);
+            if (!isTemplateType)
+            {               
+                WriteIdentifier(type != null ? type.Name : destructorDeclaration.Name);
+                WriteToken("::", MethodDeclaration.Roles.Dot);
+            }
 
             WriteToken("~", DestructorDeclaration.TildeRole);
             WriteIdentifier(type != null ? type.Name : destructorDeclaration.Name);
@@ -1761,9 +1766,12 @@ namespace ICSharpCode.NRefactory.Cpp
             fieldDeclaration.ReturnType.AcceptVisitor(this, data);
             Space();
 
-            TypeDeclaration tdecl = fieldDeclaration.Parent as TypeDeclaration;
-            WriteIdentifier(tdecl != null ? tdecl.Name : String.Empty, MethodDeclaration.Roles.Identifier);
-            WriteToken("::", MethodDeclaration.Roles.DoubleColon);
+            if (!isTemplateType)
+            {
+                TypeDeclaration tdecl = fieldDeclaration.Parent as TypeDeclaration;
+                WriteIdentifier(tdecl != null ? tdecl.Name : String.Empty, MethodDeclaration.Roles.Identifier);
+                WriteToken("::", MethodDeclaration.Roles.DoubleColon);
+            }
 
             WriteCommaSeparatedList(fieldDeclaration.Variables);
             Semicolon();
@@ -1857,10 +1865,13 @@ namespace ICSharpCode.NRefactory.Cpp
             Space();
 
             WritePrivateImplementationType(methodDeclaration.PrivateImplementationType);
-            TypeDeclaration tdecl = methodDeclaration.Parent as TypeDeclaration;
-            WriteIdentifier(tdecl != null ? tdecl.Name : String.Empty, MethodDeclaration.Roles.Identifier);
-            WriteToken("::", MethodDeclaration.Roles.DoubleColon);
-            WriteIdentifier(methodDeclaration.Name);
+            if (!isTemplateType)
+            {
+                TypeDeclaration tdecl = methodDeclaration.Parent as TypeDeclaration;
+                WriteIdentifier(tdecl != null ? tdecl.Name : String.Empty, MethodDeclaration.Roles.Identifier);
+                WriteToken("::", MethodDeclaration.Roles.DoubleColon);
+            }
+            methodDeclaration.NameToken.AcceptVisitor(this, data);
             WriteTypeParameters(methodDeclaration.TypeParameters,false);
             Space(policy.SpaceBeforeMethodDeclarationParentheses);
             WriteCommaSeparatedListInParenthesis(methodDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
@@ -1988,15 +1999,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitPropertyDeclaration(PropertyDeclaration propertyDeclaration, object data)
         {
-            StartNode(propertyDeclaration);
-            WriteAttributes(propertyDeclaration.Attributes);
-            WriteModifiers(propertyDeclaration.ModifierTokens);
-            propertyDeclaration.ReturnType.AcceptVisitor(this, data);
-            Space();
-            WritePrivateImplementationType(propertyDeclaration.PrivateImplementationType);
-            WriteIdentifier(propertyDeclaration.Name);
-            OpenBrace(policy.PropertyBraceStyle);
-            // output get/set in their original order
+            StartNode(propertyDeclaration);           
             foreach (AstNode node in propertyDeclaration.Children)
             {
                 if (node.Role == IndexerDeclaration.GetterRole || node.Role == IndexerDeclaration.SetterRole)
@@ -2004,8 +2007,6 @@ namespace ICSharpCode.NRefactory.Cpp
                     node.AcceptVisitor(this, data);
                 }
             }
-            CloseBrace(policy.PropertyBraceStyle);
-            NewLine();
             return EndNode(propertyDeclaration);
         }
 

@@ -31,8 +31,8 @@ namespace ICSharpCode.NRefactory.Cpp
 {
 	public class IndexerDeclaration : MemberDeclaration
 	{
-		public static readonly Role<Accessor> GetterRole = PropertyDeclaration.GetterRole;
-		public static readonly Role<Accessor> SetterRole = PropertyDeclaration.SetterRole;
+        public static readonly Role<MethodDeclaration> GetterRole = PropertyDeclaration.GetterRole;
+        public static readonly Role<MethodDeclaration> SetterRole = PropertyDeclaration.SetterRole;
 		
 		public CppTokenNode LBracketToken {
 			get { return GetChildByRole (Roles.LBracket); }
@@ -49,13 +49,15 @@ namespace ICSharpCode.NRefactory.Cpp
 		public CppTokenNode LBraceToken {
 			get { return GetChildByRole (Roles.LBrace); }
 		}
-		
-		public Accessor Getter {
+
+        public MethodDeclaration Getter
+        {
 			get { return GetChildByRole(GetterRole); }
 			set { SetChildByRole(GetterRole, value); }
 		}
-		
-		public Accessor Setter {
+
+        public MethodDeclaration Setter
+        {
 			get { return GetChildByRole(SetterRole); }
 			set { SetChildByRole(SetterRole, value); }
 		}

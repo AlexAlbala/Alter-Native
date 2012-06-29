@@ -28,19 +28,20 @@ namespace ICSharpCode.NRefactory.Cpp
 {
 	public class PropertyDeclaration : MemberDeclaration
 	{
-		public static readonly Role<Accessor> GetterRole = new Role<Accessor>("Getter", Accessor.Null);
-		public static readonly Role<Accessor> SetterRole = new Role<Accessor>("Setter", Accessor.Null);
+        public static readonly Role<MethodDeclaration> GetterRole = new Role<MethodDeclaration>("Getter",MethodDeclaration.Null);
+        public static readonly Role<MethodDeclaration> SetterRole = new Role<MethodDeclaration>("Setter", MethodDeclaration.Null);
 		
 		public CppTokenNode LBraceToken {
 			get { return GetChildByRole (Roles.LBrace); }
 		}
 		
-		public Accessor Getter {
+		public MethodDeclaration Getter {
 			get { return GetChildByRole(GetterRole); }
 			set { SetChildByRole(GetterRole, value); }
 		}
-		
-		public Accessor Setter {
+
+        public MethodDeclaration Setter
+        {
 			get { return GetChildByRole(SetterRole); }
 			set { SetChildByRole(SetterRole, value); }
 		}
