@@ -11,6 +11,7 @@ namespace CollectionsExample{
 
 	template<typename T>
 	class MyList : public IEnumerable<T>, public IEnumerable, public Object, public gc_cleanup{
+		List<T>* MyList::mylist;
 		MyList::MyList(List<T>* values){
 			this->mylist = values;
 		}

@@ -11,6 +11,8 @@ namespace CollectionsExample{
 
 	template<typename T>
 	class MyEnumerator : public IEnumerator<T>, public IDisposable, public IEnumerator, public Object, public gc_cleanup{
+		List<T>* MyEnumerator::values;
+		int MyEnumerator::currentIndex;
 		MyEnumerator::MyEnumerator(List<T>* values){
 			this->values = new List<T>(values);
 			this->Reset();

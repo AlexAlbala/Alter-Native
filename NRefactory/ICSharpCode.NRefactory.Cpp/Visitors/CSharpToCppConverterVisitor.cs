@@ -892,6 +892,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitPropertyDeclaration(CSharp.PropertyDeclaration propertyDeclaration, object data)
         {
             // throw new NotImplementedException();
+            //TODO ignored for debugging other components
             return null;
         }
 

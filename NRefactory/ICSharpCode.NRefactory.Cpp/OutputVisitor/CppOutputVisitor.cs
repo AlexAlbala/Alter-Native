@@ -28,6 +28,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
         private string currNamespaceString;
         public static string WorkingPath;
+        private bool isTemplateType;
 
 
         /// <summary>
@@ -55,6 +56,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 throw new ArgumentNullException("formattingPolicy");
             this.formatter = new TextWriterOutputFormatter(textWriter);
             this.policy = formattingPolicy;
+            this.isTemplateType = false;
         }
 
         public CppOutputVisitor(IOutputFormatter formatter, CppFormattingOptions formattingPolicy)
@@ -65,6 +67,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 throw new ArgumentNullException("formattingPolicy");
             this.formatter = formatter;
             this.policy = formattingPolicy;
+            this.isTemplateType = false;
         }
 
         void StartNode(AstNode node)
@@ -1235,10 +1238,12 @@ namespace ICSharpCode.NRefactory.Cpp
             StartNode(typeDeclaration);
             if (typeDeclaration.TypeParameters.Any())
             {
+                isTemplateType = true;
                 TypeDeclarationTemplates(typeDeclaration, data);
             }
             else
             {
+                isTemplateType = false;
                 TypeDeclarationCPP(typeDeclaration, data);
                 TypeDeclarationHeader(typeDeclaration, data);
             }
@@ -1747,8 +1752,8 @@ namespace ICSharpCode.NRefactory.Cpp
             //WriteModifiers(fieldDeclaration.ModifierTokens);   
 
             //If is a variable like int a; It will be writted in Header
-            if (fieldDeclaration.Variables.Count == 1 && fieldDeclaration.Variables.ElementAt(0).Initializer.IsNull)
-            {
+            if (fieldDeclaration.Variables.Count == 1 && fieldDeclaration.Variables.ElementAt(0).Initializer.IsNull && !isTemplateType)
+            {                
                 headerNodes.Add(fieldDeclaration);
                 return EndNode(fieldDeclaration);
             }
