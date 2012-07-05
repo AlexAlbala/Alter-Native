@@ -2,11 +2,11 @@
 namespace CollectionsExample{
 
 	void Program::Main(String args[]){
-		MyList<int>* myList = new MyList<int>(new List<int>{
-			12,
-			25,
-			6
-		});
+		List<int>* l = new List<int>();
+		l->Add(12);
+		l->Add(25);
+		l->Add(6);
+		MyList<int>* myList = new MyList<int>(l);
 		auto &&__range = myList;
 		auto __begin = __range->begin();
 		auto __end = __range->end();

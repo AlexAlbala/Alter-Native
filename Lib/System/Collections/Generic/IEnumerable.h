@@ -1,11 +1,14 @@
-#define _IENUMERABLE_H_
 #pragma once
 
+#include "../IEnumerable.h"
 #include "MyIterator.h"
 #include <iterator>
 using namespace std;
+using namespace System::Collections;
 
-template<typename T> class IEnumerable{
+namespace System::Collections::Generic{
+
+template<typename T> class IEnumerable : public IEnumerable{
 public:
 	virtual IEnumerator<T>* GetEnumerator()=0;
 
@@ -18,3 +21,4 @@ public:
 		return myiterator<T>(0);
 	}
 };
+}

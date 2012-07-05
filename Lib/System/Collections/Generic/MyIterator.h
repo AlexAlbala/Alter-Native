@@ -8,6 +8,8 @@
 
 using namespace std;
 
+namespace System::Collections::Generic{
+
 template<typename T> 
 class myiterator : public iterator<input_iterator_tag, T>
 {
@@ -121,3 +123,4 @@ public:
 	  return *p;
   }*/
 };
+}

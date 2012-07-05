@@ -14,6 +14,7 @@ namespace ICSharpCode.NRefactory.Cpp
         private static List<string> namespaces = new List<string>();
         private static Dictionary<string, TypeReference> symbols = new Dictionary<string, TypeReference>();
         private static Dictionary<string, List<string>> includes = new Dictionary<string, List<string>>();
+        private static List<string> excluded = new List<string>();
         private static List<string> ltmp = new List<string>();
 
         static Resolver()
@@ -22,7 +23,12 @@ namespace ICSharpCode.NRefactory.Cpp
             libraryMap.Add("Console", "\"System/Console.h\"");
             libraryMap.Add("Random", "\"System/Random.h\"");
             libraryMap.Add("GC", "\"System/GC.h\"");
-            libraryMap.Add("List", "\"System/Collections/Generic/List.h\"");
+            libraryMap.Add("List_T", "\"System/Collections/Generic/List.h\"");
+            libraryMap.Add("IEnumerable_T", "\"System/Collections/Generic/IEnumerable.h\"");
+            libraryMap.Add("IEnumerator_T", "\"System/Collections/Generic/IEnumeratorCXX.h\"");
+            libraryMap.Add("IEnumerable", "\"System/Collections/IEnumerable.h\"");
+            libraryMap.Add("IEnumerator", "\"System/Collections/IEnumeratorCXX.h\"");
+            libraryMap.Add("IDisposable", "\"System/IDisposable.h\"");
         }
 
         /// <summary>
@@ -31,9 +37,6 @@ namespace ICSharpCode.NRefactory.Cpp
         /// <param name="included">The type included</param>
         private static void AddInclude(string included)
         {
-            if (included == "Collections")
-            {
-            }
             string owner = "N/P";
             if (includes.ContainsKey(owner))
             {
@@ -185,9 +188,15 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public static void AddVistedType(Ast.AstType type, string name)
         {
-            if (!visitedTypes.ContainsValue(name))
+            if (!visitedTypes.ContainsValue(name) && !visitedTypes.ContainsKey(type))
                 visitedTypes.Add(type, name);
             AddInclude(name);
+        }
+
+        public static void AddExcludedType(string type)
+        {
+            if (!excluded.Contains(type))
+                excluded.Add(type);
         }
 
         public static string[] GetTypeIncludes()
@@ -197,7 +206,7 @@ namespace ICSharpCode.NRefactory.Cpp
             {
                 if (!kvp.Key.IsBasicType)
                 {
-                    if (!addedLibraries.Contains(kvp.Value))
+                    if (!addedLibraries.Contains(kvp.Value) && !excluded.Contains(kvp.Value))
                     {
                         addedLibraries.Add(kvp.Value);
                         tmp.Add(GetCppName(kvp.Value));
@@ -220,8 +229,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 symbols.Add(type, reference);
 
             string namesp = reference.Namespace;
-            if (!namespaces.Contains(namesp))
-                namespaces.Add(namesp);
+            AddNamespace(namesp);
         }
 
         private static string ResolveNamespaceFromType(string type)
@@ -231,6 +239,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
         private static void AddNamespace(string nameSpace)
         {
+            nameSpace = nameSpace.Replace(".", "::");
             if (!namespaces.Contains(nameSpace))
                 namespaces.Add(nameSpace);
         }

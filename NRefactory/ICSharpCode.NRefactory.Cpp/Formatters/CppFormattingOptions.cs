@@ -778,7 +778,7 @@ namespace ICSharpCode.NRefactory.Cpp
 			NamespaceBraceStyle = BraceStyle.NextLine;
 			ClassBraceStyle = InterfaceBraceStyle = StructBraceStyle = EnumBraceStyle = BraceStyle.NextLine;
 			MethodBraceStyle = ConstructorBraceStyle = DestructorBraceStyle = BraceStyle.NextLine;
-			AnonymousMethodBraceStyle = BraceStyle.EndOfLine;
+			AnonymousMethodBraceStyle = BraceStyle.NextLine;
 
 			PropertyBraceStyle = PropertyGetBraceStyle = PropertySetBraceStyle = BraceStyle.EndOfLine;
 			AllowPropertyGetBlockInline = AllowPropertySetBlockInline = true;

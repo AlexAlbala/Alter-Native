@@ -1360,7 +1360,10 @@ namespace ICSharpCode.NRefactory.Cpp
             else
             {
                 foreach (var member in typeDeclaration.Members)
+                {
+                    WriteAccesorModifier(member.ModifierTokens);
                     member.AcceptVisitor(this, data);
+                }
             }
             CloseBrace(braceStyle);//END OF TYPE
             Semicolon();
@@ -1999,7 +2002,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitPropertyDeclaration(PropertyDeclaration propertyDeclaration, object data)
         {
-            StartNode(propertyDeclaration);           
+            StartNode(propertyDeclaration);
             foreach (AstNode node in propertyDeclaration.Children)
             {
                 if (node.Role == IndexerDeclaration.GetterRole || node.Role == IndexerDeclaration.SetterRole)
@@ -2335,7 +2338,7 @@ namespace ICSharpCode.NRefactory.Cpp
             "do", "double", "else", "enum", "event", "explicit", "extern", "false",
             "finally", "fixed", "float", "for", "foreach", "goto", "if", "implicit",
             "in", "int", "interface", "lock", "long", "namespace",
-            "new", "null", "object", "operator", "out", "override", "params", "private",
+            "new", "null", "operator", "out", "override", "params", "private",
             "protected", "public", "readonly", "ref", "return", "sbyte", "sealed", "short",
             "sizeof", "stackalloc", "static", "string", "struct", "switch", "this", "throw",
             "true", "try", "typeof", "uint", "ulong", "unchecked", "unsafe", "ushort",
@@ -2490,7 +2493,7 @@ namespace ICSharpCode.NRefactory.Cpp
             {
                 formatter.WriteComment(CommentType.SingleLine, "Deleted attribute");
                 continue;
-                attr.AcceptVisitor(this, null);
+                //attr.AcceptVisitor(this, null);
             }
         }
 
@@ -2499,7 +2502,7 @@ namespace ICSharpCode.NRefactory.Cpp
             if (!privateImplementationType.IsNull)
             {
                 privateImplementationType.AcceptVisitor(this, null);
-                WriteToken(".", AstNode.Roles.Dot);
+                WriteToken("::", AstNode.Roles.Dot);
             }
         }
 
