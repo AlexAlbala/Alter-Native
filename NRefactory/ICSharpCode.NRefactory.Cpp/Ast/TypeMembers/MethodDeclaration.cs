@@ -27,12 +27,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using ICSharpCode.NRefactory.Cpp.Ast;
+using System;
 
 namespace ICSharpCode.NRefactory.Cpp
 {
     public class MethodDeclaration : MemberDeclaration
     {
         public static readonly new MethodDeclaration Null = new NullMethodDeclaration();
+        public static readonly Role<Identifier> TypeRole = new Role<Identifier>("type", Identifier.Null);
 
         sealed class NullMethodDeclaration : MethodDeclaration
         {
@@ -64,6 +66,11 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             get { return GetChildByRole(Roles.LPar); }
         }
+
+        public Identifier TypeMember
+        {
+            get { return GetChildByRole(TypeRole); }
+        }        
 
         public AstNodeCollection<ParameterDeclaration> Parameters
         {

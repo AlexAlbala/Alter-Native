@@ -4,7 +4,7 @@
 #include "System/Collections/Generic/List.h"
 
 using namespace System;
-using namespace System.Collections.Generic;
+using namespace System::Collections::Generic;
 namespace ForEach{
 
 	class Program : public Object, public gc_cleanup

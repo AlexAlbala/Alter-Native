@@ -2,7 +2,7 @@
 namespace ForEach{
 
 	void Program::Main(String args[]){
-		auto &&__range = new List<float>{
+		auto &&__range = new List_T<float>{
 			5.6f,
 			5.7f,
 			5.2f,

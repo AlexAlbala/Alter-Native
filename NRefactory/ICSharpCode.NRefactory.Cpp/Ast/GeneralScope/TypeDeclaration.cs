@@ -44,9 +44,31 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
 	/// </summary>
 	public class TypeDeclaration : AttributedNode
 	{
+        public static readonly new TypeDeclaration Null = new NullTypeDeclaration();
 		public readonly static Role<CppTokenNode> ColonRole = Roles.Colon;
 		public readonly static Role<AstType> BaseTypeRole = new Role<AstType>("BaseType", AstType.Null);
 		public readonly static Role<AttributedNode> MemberRole = new Role<AttributedNode>("Member");
+
+        sealed class NullTypeDeclaration : TypeDeclaration
+        {
+            public override bool IsNull
+            {
+                get
+                {
+                    return true;
+                }
+            }
+
+            public override S AcceptVisitor<T, S>(IAstVisitor<T, S> visitor, T data = default(T))
+            {
+                return default(S);
+            }
+
+            protected internal override bool DoMatch(AstNode other, PatternMatching.Match match)
+            {
+                return other == null || other.IsNull;
+            }
+        }
 		
         //public override NodeType NodeType {
         //    get {

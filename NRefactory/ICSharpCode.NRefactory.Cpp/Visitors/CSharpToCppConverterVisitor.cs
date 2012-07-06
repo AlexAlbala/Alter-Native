@@ -110,6 +110,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     InvocationExpression m = new InvocationExpression(
                         new MemberReferenceExpression(l.Target.Clone(), "set" + l.MemberName), new Expression[1] { right.Clone() });
                     left = m;
+
+                    return EndNode(assignmentExpression, m);
                 }
             }
 
@@ -122,6 +124,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     InvocationExpression m = new InvocationExpression(
                         new MemberReferenceExpression(r.Target.Clone(), "get" + r.MemberName), new Expression[1] { new EmptyExpression() });
                     right = m;
+
+                    return EndNode(assignmentExpression, m);
                 }
             }
 
@@ -332,7 +336,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitNamedExpression(CSharp.NamedExpression namedExpression, object data)
         {
-            throw new NotImplementedException();
+            NamedExpression nexpr = new NamedExpression(namedExpression.Identifier, (Expression)namedExpression.Expression.AcceptVisitor(this, data));
+            return EndNode(namedExpression, nexpr);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitNullReferenceExpression(CSharp.NullReferenceExpression nullReferenceExpression, object data)
@@ -765,8 +770,11 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 {
                     //GET
                     InvocationExpression m = new InvocationExpression(
-                        new MemberReferenceExpression(r.Target.Clone(),"get" + r.MemberName),new Expression[1]{new EmptyExpression()});
-                    expr = m;
+                        new MemberReferenceExpression(r.Target.Clone(),"get" + r.MemberName),new Expression[1]{new EmptyExpression()});                 
+
+                    ExpressionStatement exprs = new ExpressionStatement(m);
+
+                    return EndNode(returnStatement, exprs);
                 }
             }
 
@@ -873,13 +881,14 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
             //Create method declaration node
             method.NameToken = CSharp.Identifier.Create(acc + (accessor.Parent as CSharp.PropertyDeclaration).Name);
+           CSharp.AstType returnType = (CSharp.AstType)(accessor.Parent as CSharp.PropertyDeclaration).ReturnType;
 
             if (acc == "get")
-                method.ReturnType = (CSharp.AstType)(accessor.Parent as CSharp.PropertyDeclaration).ReturnType.Clone();
+                method.ReturnType = returnType.Clone();
             else if (acc == "set")
             {
                 method.ReturnType = new CSharp.PrimitiveType("void");
-                CSharp.ParameterDeclaration pd = new CSharp.ParameterDeclaration((CSharp.AstType)method.ReturnType.Clone(), "value");
+                CSharp.ParameterDeclaration pd = new CSharp.ParameterDeclaration(returnType.Clone(), "value");
                 method.AddChild(pd, CSharp.MethodDeclaration.Roles.Parameter);
             }
             else
@@ -970,6 +979,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             result.Body = (BlockStatement)methodDeclaration.Body.AcceptVisitor(this, data);            
             result.PrivateImplementationType = (AstType)methodDeclaration.PrivateImplementationType.AcceptVisitor(this, data);
 
+            result.AddChild((Identifier)currentType.NameToken.AcceptVisitor(this,data), MethodDeclaration.TypeRole);
+
             if (result.PrivateImplementationType is PtrType)
                 result.PrivateImplementationType = (AstType)(result.PrivateImplementationType as PtrType).Target.Clone();
 
@@ -995,8 +1006,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitPropertyDeclaration(CSharp.PropertyDeclaration propertyDeclaration, object data)
-        {
-            //TODO: Return type overload properties !!!!!
+        {            
+            //TODO: If the property is clicked in the TreeView panel, the code crashes (cause its parent is not a TypeDeclaration) 
             if (!properties.ContainsKey(propertyDeclaration.Name))
                 properties.Add(propertyDeclaration.Name, (propertyDeclaration.Parent as CSharp.TypeDeclaration).Name);
 
@@ -1017,6 +1028,19 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             var vi = new VariableInitializer();
 
             vi.Initializer = (Expression)variableInitializer.Initializer.AcceptVisitor(this, data);
+
+            if (vi.Initializer is MemberReferenceExpression)
+            {
+                MemberReferenceExpression mre = vi.Initializer as MemberReferenceExpression;
+                if (IsPropertyCall(mre))
+                {
+                    //GET
+                    InvocationExpression m = new InvocationExpression(
+                        new MemberReferenceExpression(mre.Target.Clone(), "get" + mre.MemberName), new Expression[1] { new EmptyExpression() });
+                    vi.Initializer = m;                    
+                }
+            }
+
             vi.Name = variableInitializer.Name;
             vi.NameToken = (Identifier)variableInitializer.NameToken.AcceptVisitor(this, data);
 

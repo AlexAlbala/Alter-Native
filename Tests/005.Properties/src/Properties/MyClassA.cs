@@ -20,11 +20,21 @@ namespace Properties
             }
         }
 
+        public int EmptyProperty
+        {
+            get;
+            set;
+        }
+
         public void CallProperties()
         {            
             data = 6;
             int value = data;
             Console.WriteLine(value);
+
+            EmptyProperty = 9;
+            int emptyValue = EmptyProperty;
+            Console.WriteLine(emptyValue);
 
             MyClassB b = new MyClassB();
             b.data = 5;

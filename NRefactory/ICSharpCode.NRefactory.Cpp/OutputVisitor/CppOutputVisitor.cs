@@ -1870,7 +1870,7 @@ namespace ICSharpCode.NRefactory.Cpp
             WritePrivateImplementationType(methodDeclaration.PrivateImplementationType);
             if (!isTemplateType)
             {
-                TypeDeclaration tdecl = methodDeclaration.Parent as TypeDeclaration;
+                Identifier tdecl = methodDeclaration.TypeMember;
                 WriteIdentifier(tdecl != null ? tdecl.Name : String.Empty, MethodDeclaration.Roles.Identifier);
                 WriteToken("::", MethodDeclaration.Roles.DoubleColon);
             }
