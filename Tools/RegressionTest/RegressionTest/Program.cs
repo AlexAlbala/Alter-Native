@@ -27,7 +27,7 @@ namespace RegressionTest
                 if (ContainsDirectory(di, "Target") &&
                     ContainsDirectory(di, "src") &&
                     /*ContainsDirectory(di, "Output") &&*/
-                    ContainsDirectory(di, "bin"))
+                    ContainsDirectory(di, "NETbin"))
                 {
                     Tests.Add(di);
                     Console.WriteLine("Found test " + di.Name);
@@ -71,7 +71,7 @@ namespace RegressionTest
                 CleanDirectory(outd);
 
                 Process runAlt = new Process();
-                runAlt.StartInfo = new ProcessStartInfo(Environment.CurrentDirectory + "/../AlterNative/bin/Debug/AlterNative.exe", di.FullName + "/bin/" + di.Name + ".exe" + " "
+                runAlt.StartInfo = new ProcessStartInfo(Environment.CurrentDirectory + "/../AlterNative/bin/Debug/AlterNative.exe", di.FullName + "/NETbin/" + di.Name + ".exe" + " "
                                                         + di.FullName + "/Output/" + " "
                                                         + "CXX" + " "
                                                         + di.FullName + "/../../Lib/");
