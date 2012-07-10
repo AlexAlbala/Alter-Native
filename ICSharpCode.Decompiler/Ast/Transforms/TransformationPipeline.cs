@@ -30,7 +30,7 @@ namespace ICSharpCode.Decompiler.Ast.Transforms
 	public static class TransformationPipeline
 	{
 		public static IAstTransform[] CreatePipeline(DecompilerContext context)
-		{
+		{           
 			return new IAstTransform[] {
 				new PushNegation(),
 				new DelegateConstruction(context),

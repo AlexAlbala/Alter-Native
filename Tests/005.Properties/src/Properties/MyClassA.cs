@@ -38,7 +38,8 @@ namespace Properties
 
             MyClassB b = new MyClassB();
             b.data = 5;
-            int valueB = b.data;
+            int valueB = b.data;           
+
             Console.WriteLine(valueB);
         }
     }

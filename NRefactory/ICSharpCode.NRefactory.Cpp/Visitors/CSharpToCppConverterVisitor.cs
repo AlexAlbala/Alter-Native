@@ -347,7 +347,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitObjectCreateExpression(CSharp.ObjectCreateExpression objectCreateExpression, object data)
         {
-            //When a variable is initialized gc_ptr<List> list (new(gc)(List)); first List is pointer type, second List is SimpleType
+            //When a variable is initialized List* list = new List(); first List is pointer type, second List is SimpleType
             bool isGcPtr = false;
             var type = (AstType)objectCreateExpression.Type.AcceptVisitor(this, data);
             if (type is PtrType)//Here we make the change
