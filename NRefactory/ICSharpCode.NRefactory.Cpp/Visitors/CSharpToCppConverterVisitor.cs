@@ -22,9 +22,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
     public class CSharpToCppConverterVisitor : CSharp.IAstVisitor<object, Cpp.AstNode>
     {
-        //Auxiliar list to change the array specifiers from one branch to another
-        private List<CSharp.ArraySpecifier> arraySpecifiers = new List<CSharp.ArraySpecifier>();
-        private Dictionary<string, string> properties = new Dictionary<string, string>();
+        //Auxiliar list to change the array specifiers from one branch to another        
         private CSharp.TypeDeclaration currentType;
 
         IEnvironmentProvider provider;
@@ -80,14 +78,22 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         private bool IsPropertyCall(MemberReferenceExpression memberReferenceExpression)
         {
+            Dictionary<string, List<string>> properties = Cache.GetPropertiesList();
+
             //The member reference is a property reference ?
             if (properties.ContainsKey(memberReferenceExpression.MemberName))
             {
                 if (memberReferenceExpression.Target is ThisReferenceExpression)
-                {//TODO IF NOT ?
-                    if (properties[memberReferenceExpression.MemberName] == currentType.Name)
+                {
+                    return (properties[memberReferenceExpression.MemberName].Contains(currentType.Name));
+                }
+                else
+                {
+                    if (memberReferenceExpression.Target is IdentifierExpression)
                     {
-                        return true;
+                        IdentifierExpression tmp = memberReferenceExpression.Target as IdentifierExpression;
+                        ICSharpCode.Decompiler.Ast.TypeInformation ann = (ICSharpCode.Decompiler.Ast.TypeInformation)tmp.Annotation(typeof(ICSharpCode.Decompiler.Ast.TypeInformation));
+                        return (properties[memberReferenceExpression.MemberName].Contains(ann.InferredType.Name));
                     }
                 }
             }
@@ -304,7 +310,27 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         {
             var expr = new InvocationExpression(
                 (Expression)invocationExpression.Target.AcceptVisitor(this, data));
+
             ConvertNodes(invocationExpression.Arguments, expr.Arguments);
+            for (int i = 0; i < expr.Arguments.Count; i++)
+            {
+                Expression ex = expr.Arguments.ElementAt(i);
+                if (ex is MemberReferenceExpression)
+                {
+                    MemberReferenceExpression mre = ex as MemberReferenceExpression;
+
+                    if (IsPropertyCall(mre))
+                    {
+                        //GET
+                        InvocationExpression m = new InvocationExpression(
+                            new MemberReferenceExpression(mre.Target.Clone(), "get" + mre.MemberName), new Expression[1] { new EmptyExpression() });
+
+                        expr.Arguments.InsertAfter(expr.Arguments.ElementAt(i), m);
+                        expr.Arguments.Remove(expr.Arguments.ElementAt(i));
+                    }
+                }
+
+            }
 
             return EndNode(invocationExpression, expr);
         }
@@ -324,8 +350,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             var mref = new MemberReferenceExpression();
             mref.Target = (Expression)memberReferenceExpression.Target.AcceptVisitor(this, data);
             mref.MemberName = memberReferenceExpression.MemberName;
-            ConvertNodes(memberReferenceExpression.TypeArguments, mref.TypeArguments);           
-            
+            ConvertNodes(memberReferenceExpression.TypeArguments, mref.TypeArguments);
+
             return EndNode(memberReferenceExpression, mref);
         }
 
@@ -550,12 +576,21 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitAttribute(CSharp.Attribute attribute, object data)
         {
-            throw new NotImplementedException();
+            var attr = new Cpp.Ast.Attribute();
+            //AttributeTarget target;
+            //attr.A = target;
+            attr.Type = (AstType)attribute.Type.AcceptVisitor(this, data);
+            ConvertNodes(attribute.Arguments, attr.Arguments);
+
+            return EndNode(attribute, attr);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitAttributeSection(CSharp.AttributeSection attributeSection, object data)
         {
-            throw new NotImplementedException();
+            AttributeSection attrSection = new AttributeSection();
+            ConvertNodes(attributeSection.Attributes, attrSection.Attributes);
+            attrSection.AttributeTargetToken = (Identifier)attributeSection.AttributeTargetToken.AcceptVisitor(this, data);
+            return EndNode(attributeSection, attrSection);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitDelegateDeclaration(CSharp.DelegateDeclaration delegateDeclaration, object data)
@@ -627,6 +662,46 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             ConvertNodes(typeDeclaration.Members, type.Members);
             types.Pop();
 
+            //Add auxiliar variables for emptyproperties
+            foreach (KeyValuePair<string, AstType> kvp in Cache.GetAuxVariables())
+            {
+                FieldDeclaration fdecl = new FieldDeclaration();
+                fdecl.ReturnType = (AstType)kvp.Value.Clone();
+                fdecl.AddChild(new VariableInitializer(kvp.Key), FieldDeclaration.Roles.Variable);
+                type.AddChild(fdecl, TypeDeclaration.MemberRole);
+                Cache.AddConstructorStatement(new ExpressionStatement(
+                    new AssignmentExpression(
+                        new IdentifierExpression(kvp.Key), new PrimitiveExpression(0))));
+            }
+
+            //Add constructor if there is no added yet and it is necessary to initialize some variables
+            if (Cache.GetConstructorStatements().Any())
+            {
+
+                IEnumerable<ConstructorDeclaration> tmpList = type.Members.OfType<ConstructorDeclaration>();
+                //Is there any constructor ?
+                if (tmpList.Any())
+                {
+                    //Take the constructor and add the satements
+                    foreach (Statement st in Cache.GetConstructorStatements())
+                        tmpList.ElementAt(0).Body.Statements.InsertBefore(tmpList.ElementAt(0).Body.FirstOrDefault(), (Statement)st.Clone());
+                }
+                else //CONSTRUCTOR DOES NOT EXIST
+                {
+                    ConstructorDeclaration result = new ConstructorDeclaration();
+                    result.ModifierTokens.Add(new CppModifierToken(TextLocation.Empty, Modifiers.Public));
+                    BlockStatement blck = new BlockStatement();
+                    foreach (Statement st in Cache.GetConstructorStatements())
+                        blck.AddChild((Statement)st.Clone(), BlockStatement.StatementRole);
+                    result.Body = blck;
+                    Cache.ClearConstructorStatements();
+
+                    type.AddChild(result, TypeDeclaration.MemberRole);
+                }
+            }
+
+            Cache.ClearTmpVariables();
+
             if (typeDeclaration.TypeParameters.Any())
                 ConvertNodes(typeDeclaration.TypeParameters, type.TypeParameters);
 
@@ -635,7 +710,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             //HERE SHOULD BE BaseType or InheritedType or something similar
             type.AddChild(new SimpleType("Object"), TypeDeclaration.BaseTypeRole);
             type.AddChild(new SimpleType("gc_cleanup"), TypeDeclaration.BaseTypeRole);
-           
+
             return EndNode(typeDeclaration, type);
         }
 
@@ -770,7 +845,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 {
                     //GET
                     InvocationExpression m = new InvocationExpression(
-                        new MemberReferenceExpression(r.Target.Clone(),"get" + r.MemberName),new Expression[1]{new EmptyExpression()});                 
+                        new MemberReferenceExpression(r.Target.Clone(), "get" + r.MemberName), new Expression[1] { new EmptyExpression() });
 
                     ExpressionStatement exprs = new ExpressionStatement(m);
 
@@ -856,11 +931,11 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitAccessor(CSharp.Accessor accessor, object data)
         {
             var method = new CSharp.MethodDeclaration();
-            foreach (CSharp.CSharpModifierToken mt in accessor.ModifierTokens)
-                method.AddChild(mt, CSharp.MethodDeclaration.ModifierRole);
+            foreach (CSharp.CSharpModifierToken mt in (accessor.Parent as CSharp.PropertyDeclaration).ModifierTokens)
+                method.AddChild((CSharp.CSharpModifierToken)mt.Clone(), CSharp.MethodDeclaration.ModifierRole);
 
             method.PrivateImplementationType = (CSharp.AstType)(accessor.Parent as CSharp.PropertyDeclaration).PrivateImplementationType.Clone();
-            
+
             string acc = "";
             if (accessor.Role == CSharp.PropertyDeclaration.GetterRole)
             {
@@ -880,24 +955,54 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             }
 
             //Create method declaration node
-            method.NameToken = CSharp.Identifier.Create(acc + (accessor.Parent as CSharp.PropertyDeclaration).Name);
-           CSharp.AstType returnType = (CSharp.AstType)(accessor.Parent as CSharp.PropertyDeclaration).ReturnType;
+            bool isEmptyProperty = false;
+            string propName = (accessor.Parent as CSharp.PropertyDeclaration).Name;
+            method.NameToken = CSharp.Identifier.Create(acc + propName);
+            CSharp.AstType returnType = (CSharp.AstType)(accessor.Parent as CSharp.PropertyDeclaration).ReturnType;
+            method.Body = (CSharp.BlockStatement)accessor.Body.Clone();
+            isEmptyProperty = !method.Body.Statements.Any();
 
             if (acc == "get")
+            {
                 method.ReturnType = returnType.Clone();
+                if (isEmptyProperty)
+                {
+                    string varName = propName + "_var";
+                    CSharp.BlockStatement blck = new CSharp.BlockStatement();
+                    blck.AddChild(new CSharp.ReturnStatement(
+                            new CSharp.MemberReferenceExpression(
+                                new CSharp.ThisReferenceExpression(), varName)), CSharp.BlockStatement.StatementRole);
+                    method.Body = blck;
+
+                    Cache.AddAuxVariable((AstType)returnType.AcceptVisitor(this, data).Clone(), varName);
+                }
+            }
             else if (acc == "set")
             {
                 method.ReturnType = new CSharp.PrimitiveType("void");
                 CSharp.ParameterDeclaration pd = new CSharp.ParameterDeclaration(returnType.Clone(), "value");
                 method.AddChild(pd, CSharp.MethodDeclaration.Roles.Parameter);
+
+                if (isEmptyProperty)
+                {
+                    string varName = propName + "_var";
+                    CSharp.BlockStatement blck = new CSharp.BlockStatement();
+                    blck.AddChild(new CSharp.ExpressionStatement(
+                        new CSharp.AssignmentExpression(
+                            new CSharp.MemberReferenceExpression(
+                                new CSharp.ThisReferenceExpression(), varName), new CSharp.IdentifierExpression("value"))), CSharp.BlockStatement.StatementRole);
+                    method.Body = blck;
+
+                    Cache.AddAuxVariable((AstType)returnType.AcceptVisitor(this, data).Clone(), varName);
+                }
             }
             else
                 throw new NotImplementedException();
 
-            method.Body = (CSharp.BlockStatement)accessor.Body.Clone();
+
             //End method declaration
 
-            //CONVERT TO CPP METHOD
+            //CONVERT TO CPP METHOD        
             var cppMethod = method.AcceptVisitor(this, data);
             return EndNode(accessor, cppMethod);
         }
@@ -910,8 +1015,11 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             ConvertNodes(constructorDeclaration.ModifierTokens, result.ModifierTokens);
             ConvertNodes(constructorDeclaration.Parameters, result.Parameters);
             result.Body = (BlockStatement)constructorDeclaration.Body.AcceptVisitor(this, data);
+
             if (!constructorDeclaration.Initializer.IsNull)
                 result.Body.Statements.InsertBefore(result.Body.FirstOrDefault(), (Statement)constructorDeclaration.Initializer.AcceptVisitor(this, data));
+
+
 
             return EndNode(constructorDeclaration, result);
         }
@@ -956,6 +1064,30 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             ConvertNodes(fieldDeclaration.Attributes, decl.Attributes);
             ConvertNodes(fieldDeclaration.Variables, decl.Variables);
 
+            if (!fieldDeclaration.HasModifier(CSharp.Modifiers.Static))
+            {
+                foreach (VariableInitializer vi in decl.Variables)
+                {
+                    if (!vi.Initializer.IsNull)
+                    {
+                        Statement st = new ExpressionStatement(
+                            new AssignmentExpression(
+                                new IdentifierExpression(vi.Name), vi.Initializer.Clone()));
+
+                        Cache.AddConstructorStatement(st);
+                    }
+                }
+
+                //Reset the variable initializer befor add to header ndoes
+                for (int i = 0; i < fieldDeclaration.Variables.Count; i++)
+                {
+                    VariableInitializer vi = decl.Variables.ElementAt(i);
+                    decl.Variables.Remove(vi);
+                    vi = new VariableInitializer(vi.Name);
+                    decl.Variables.Add(vi);
+                }
+            }
+
             return EndNode(fieldDeclaration, decl);
         }
 
@@ -976,10 +1108,10 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             ConvertNodes(methodDeclaration.TypeParameters, result.TypeParameters);
 
             result.ReturnType = (AstType)methodDeclaration.ReturnType.AcceptVisitor(this, data);
-            result.Body = (BlockStatement)methodDeclaration.Body.AcceptVisitor(this, data);            
+            result.Body = (BlockStatement)methodDeclaration.Body.AcceptVisitor(this, data);
             result.PrivateImplementationType = (AstType)methodDeclaration.PrivateImplementationType.AcceptVisitor(this, data);
 
-            result.AddChild((Identifier)currentType.NameToken.AcceptVisitor(this,data), MethodDeclaration.TypeRole);
+            result.AddChild((Identifier)currentType.NameToken.AcceptVisitor(this, data), MethodDeclaration.TypeRole);
 
             if (result.PrivateImplementationType is PtrType)
                 result.PrivateImplementationType = (AstType)(result.PrivateImplementationType as PtrType).Target.Clone();
@@ -1006,10 +1138,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitPropertyDeclaration(CSharp.PropertyDeclaration propertyDeclaration, object data)
-        {            
+        {
             //TODO: If the property is clicked in the TreeView panel, the code crashes (cause its parent is not a TypeDeclaration) 
-            if (!properties.ContainsKey(propertyDeclaration.Name))
-                properties.Add(propertyDeclaration.Name, (propertyDeclaration.Parent as CSharp.TypeDeclaration).Name);
+            Cache.AddProperty(propertyDeclaration.Name, currentType.Name);
 
             PropertyDeclaration pdecl = new PropertyDeclaration();
             pdecl.Getter = (MethodDeclaration)propertyDeclaration.Getter.AcceptVisitor(this, data);
@@ -1037,7 +1168,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     //GET
                     InvocationExpression m = new InvocationExpression(
                         new MemberReferenceExpression(mre.Target.Clone(), "get" + mre.MemberName), new Expression[1] { new EmptyExpression() });
-                    vi.Initializer = m;                    
+                    vi.Initializer = m;
                 }
             }
 
@@ -1076,7 +1207,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 && !IsChildOf(simpleType, typeof(CSharp.TypeParameterDeclaration)))
             {
                 id = Resolver.GetCppName(simpleType.Identifier);
-                Resolver.AddNewLibrary(simpleType.Identifier);
+                Resolver.AddInclude(simpleType.Identifier);
                 isPtr = false;
             }
 
@@ -1085,7 +1216,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             if (simpleType.TypeArguments.Any())
             {
                 type.Identifier += "_T";
-                Resolver.AddVistedType(type,type.Identifier);
+                Resolver.AddVistedType(type, type.Identifier);
             }
 
             if (!IsChildOf(simpleType, typeof(CSharp.UsingDeclaration)) && simpleType.Role != CSharp.SimpleType.Roles.TypeArgument)
@@ -1139,7 +1270,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         {
             //If there is ArraySpecifier, get it and return the simpleType or primitiveType
             if (composedType.ArraySpecifiers.Any())
-                arraySpecifiers.AddRange(composedType.ArraySpecifiers);
+                Cache.AddRangeArraySpecifiers(composedType.ArraySpecifiers);
 
             if (composedType.HasNullableSpecifier)
             {
@@ -1251,8 +1382,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitIdentifier(CSharp.Identifier identifier, object data)
         {
-            if (arraySpecifiers.Count > 0)
+            if (Cache.ArraySpecifiersAny())
             {
+                List<CSharp.ArraySpecifier> arraySpecifiers = Cache.GetArraySpecifiers();
                 var compIdent = new ComposedIdentifier(identifier.Name, TextLocation.Empty);
                 ConvertNodes(arraySpecifiers, compIdent.ArraySpecifiers);
                 arraySpecifiers.Clear();

@@ -8,17 +8,10 @@ namespace ICSharpCode.NRefactory.Cpp
 {
     public class Resolver
     {
-        private static Dictionary<string, string> libraryMap = new Dictionary<string, string>();
-        private static Dictionary<Ast.AstType, string> visitedTypes = new Dictionary<Ast.AstType, string>();
-        private static List<string> addedLibraries = new List<string>();
-        private static List<string> namespaces = new List<string>();
-        private static Dictionary<string, TypeReference> symbols = new Dictionary<string, TypeReference>();
-        private static Dictionary<string, List<string>> includes = new Dictionary<string, List<string>>();
-        private static List<string> excluded = new List<string>();
         private static List<string> ltmp = new List<string>();
-
         static Resolver()
         {
+            Dictionary<string, string> libraryMap = new Dictionary<string, string>();
             libraryMap.Add("System", "\"System/System.h\""); //ADD CONSOLE, STRING AND SUPPORT            
             libraryMap.Add("Console", "\"System/Console.h\"");
             libraryMap.Add("Random", "\"System/Random.h\"");
@@ -29,25 +22,17 @@ namespace ICSharpCode.NRefactory.Cpp
             libraryMap.Add("IEnumerable", "\"System/Collections/IEnumerable.h\"");
             libraryMap.Add("IEnumerator", "\"System/Collections/IEnumeratorCXX.h\"");
             libraryMap.Add("IDisposable", "\"System/IDisposable.h\"");
+            Cache.InitLibrary(libraryMap);
         }
 
         /// <summary>
         /// Adds a new include definition
         /// </summary>        
         /// <param name="included">The type included</param>
-        private static void AddInclude(string included)
-        {
+        public static void AddInclude(string included)
+        {            
             string owner = "N/P";
-            if (includes.ContainsKey(owner))
-            {
-                if (!includes[owner].Contains(included))
-                    includes[owner].Add(included);
-            }
-            else
-            {
-                includes.Add(owner, new List<string>());
-                includes[owner].Add(included);
-            }
+            Cache.AddInclude(owner, included);
         }
 
         /// <summary>
@@ -56,6 +41,8 @@ namespace ICSharpCode.NRefactory.Cpp
         /// <param name="typeDeclarationName"></param>
         public static void ProcessIncludes(string typeDeclarationName)
         {
+            Dictionary<string, List<string>> includes = Cache.GetIncludes();
+
             for (int i = 0; i < includes.Count; i++)
             {
                 KeyValuePair<string, List<string>> kvp = includes.ElementAt(i);
@@ -74,7 +61,9 @@ namespace ICSharpCode.NRefactory.Cpp
                 if (kvp.Value.Contains(kvp.Key))
                     kvp.Value.Remove(kvp.Key);
             }
+            Cache.SaveIncludes(includes);
         }
+
 
         ///// <summary>
         ///// Returns if a forward declaration is needed between two types
@@ -123,6 +112,8 @@ namespace ICSharpCode.NRefactory.Cpp
         public static bool NeedsForwardDeclaration(string fw_dcl_type1, out string fw_dcl_type2)
         {
             ltmp.Clear();
+
+            Dictionary<string, List<string>> includes = Cache.GetIncludes();
             //The type is included ?
             //If not... we have a problem !
             if (includes.ContainsKey(fw_dcl_type1))
@@ -130,7 +121,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 //if one of the types is declared in includes...
                 foreach (string type2_s in includes[fw_dcl_type1])
                 {
-                    bool tmp = Reaches(type2_s, fw_dcl_type1);
+                    bool tmp = Reaches(type2_s, fw_dcl_type1, includes);
                     if (tmp)
                     {
                         fw_dcl_type2 = type2_s;
@@ -145,7 +136,7 @@ namespace ICSharpCode.NRefactory.Cpp
             return false;
         }
 
-        private static bool Reaches(string type1, string type2)
+        private static bool Reaches(string type1, string type2, Dictionary<string,List<string>> includes)
         {
             if (includes.ContainsKey(type1))
             {
@@ -160,7 +151,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     if (_t2 == type2)
                         return true;
 
-                    bool tmp = Reaches(_t2, type2);
+                    bool tmp = Reaches(_t2, type2, includes);
                     if (tmp)
                         return true;
                 }
@@ -171,82 +162,66 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public static string GetCppName(string CSharpName)
         {
+            Dictionary<string, string> libraryMap = Cache.GetLibraryMap();
             if (libraryMap.ContainsKey(CSharpName))
                 return libraryMap[CSharpName];
             else
                 return "\"" + CSharpName.Replace('.', '/') + ".h\"";
         }
 
-        public static void AddNewLibrary(string library)
-        {
-            if (!addedLibraries.Contains(library))
-            {
-                addedLibraries.Add(library);
-                AddInclude(library);
-            }
-        }
-
         public static void AddVistedType(Ast.AstType type, string name)
         {
-            if (!visitedTypes.ContainsValue(name) && !visitedTypes.ContainsKey(type))
-                visitedTypes.Add(type, name);
+            Cache.AddVisitedType(type, name);
             AddInclude(name);
         }
 
         public static void AddExcludedType(string type)
         {
-            if (!excluded.Contains(type))
-                excluded.Add(type);
+            Cache.AddExcludedType(type);
         }
 
         public static string[] GetTypeIncludes()
         {
+            Dictionary<Ast.AstType, string> visitedTypes = Cache.GetVisitedTypes();
             List<string> tmp = new List<string>();
             foreach (KeyValuePair<Ast.AstType, string> kvp in visitedTypes)
             {
                 if (!kvp.Key.IsBasicType)
                 {
-                    if (!addedLibraries.Contains(kvp.Value) && !excluded.Contains(kvp.Value))
-                    {
-                        addedLibraries.Add(kvp.Value);
-                        tmp.Add(GetCppName(kvp.Value));
-                    }
+                    if (!Cache.GetExcluded().Contains(kvp.Value) && !tmp.Contains(GetCppName(kvp.Value)))                    
+                        tmp.Add(GetCppName(kvp.Value));                    
                 }
-            }
+            }   
             return tmp.ToArray();
         }
 
         public static void Restart()
         {
-            addedLibraries.Clear();
-            visitedTypes.Clear();
-            namespaces.Clear();
+            Cache.ClearResolver();
         }
 
         public static void AddSymbol(string type, TypeReference reference)
         {
-            if (!symbols.ContainsKey(type))
-                symbols.Add(type, reference);
+            Cache.AddSymbol(type, reference);
 
             string namesp = reference.Namespace;
             AddNamespace(namesp);
         }
 
-        private static string ResolveNamespaceFromType(string type)
-        {
-            return symbols[type].Namespace;
-        }
+        //private static string ResolveNamespaceFromType(string type)
+        //{
+        //    return symbols[type].Namespace;
+        //}
 
         private static void AddNamespace(string nameSpace)
         {
             nameSpace = nameSpace.Replace(".", "::");
-            if (!namespaces.Contains(nameSpace))
-                namespaces.Add(nameSpace);
+            Cache.AddNamespace(nameSpace);
         }
 
         public static string[] GetNeededNamespaces()
         {
-            return namespaces.ToArray();
+            return Cache.GetNamespaces().ToArray();
         }
     }
 }

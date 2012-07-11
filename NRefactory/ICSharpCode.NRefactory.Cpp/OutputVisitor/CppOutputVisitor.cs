@@ -1755,40 +1755,34 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitFieldDeclaration(FieldDeclaration fieldDeclaration, object data)
         {
-            StartNode(fieldDeclaration);
-            WriteAttributes(fieldDeclaration.Attributes);
-            //WriteModifiers(fieldDeclaration.ModifierTokens);   
-
-            //If is a variable like int a; It will be writted in Header
-            if (fieldDeclaration.Variables.Count == 1 && fieldDeclaration.Variables.ElementAt(0).Initializer.IsNull && !isTemplateType)
-            {                
-                headerNodes.Add(fieldDeclaration);
-                return EndNode(fieldDeclaration);
-            }
-
-            fieldDeclaration.ReturnType.AcceptVisitor(this, data);
-            Space();
-
-            if (!isTemplateType)
+            StartNode(fieldDeclaration);           
+            
+            if (fieldDeclaration.HasModifier(Modifiers.Static))
             {
-                TypeDeclaration tdecl = fieldDeclaration.Parent as TypeDeclaration;
-                WriteIdentifier(tdecl != null ? tdecl.Name : String.Empty, MethodDeclaration.Roles.Identifier);
-                WriteToken("::", MethodDeclaration.Roles.DoubleColon);
-            }
+                fieldDeclaration.ReturnType.AcceptVisitor(this, data);
+                Space();
 
-            WriteCommaSeparatedList(fieldDeclaration.Variables);
-            Semicolon();
+                if (!isTemplateType)
+                {
+                    TypeDeclaration tdecl = fieldDeclaration.Parent as TypeDeclaration;
+                    WriteIdentifier(tdecl != null ? tdecl.Name : String.Empty, MethodDeclaration.Roles.Identifier);
+                    WriteToken("::", MethodDeclaration.Roles.DoubleColon);
+                }
 
-            //Reset the variable initializer befor add to header ndoes
-            for (int i = 0; i < fieldDeclaration.Variables.Count; i++)
-            {
-                VariableInitializer vi = fieldDeclaration.Variables.ElementAt(i);
-                fieldDeclaration.Variables.Remove(vi);
-                vi = new VariableInitializer(vi.Name);
-                fieldDeclaration.Variables.Add(vi);
+                WriteCommaSeparatedList(fieldDeclaration.Variables);
+                Semicolon();
+
+                //Reset the variable initializer befor add to header ndoes
+                for (int i = 0; i < fieldDeclaration.Variables.Count; i++)
+                {
+                    VariableInitializer vi = fieldDeclaration.Variables.ElementAt(i);
+                    fieldDeclaration.Variables.Remove(vi);
+                    vi = new VariableInitializer(vi.Name);
+                    fieldDeclaration.Variables.Add(vi);
+                }
             }
             headerNodes.Add(fieldDeclaration);
-            return EndNode(fieldDeclaration);
+            return EndNode(fieldDeclaration);            
         }
 
         private object VisitFieldDeclarationHeader(FieldDeclaration fieldDeclaration, object data)
@@ -2419,12 +2413,11 @@ namespace ICSharpCode.NRefactory.Cpp
         void WriteAccesorModifier(IEnumerable<CppModifierToken> modifierTokens)
         {
             bool isFirst = true;
-            if (modifierTokens.Count<CppModifierToken>() == 0)
+            if (!modifierTokens.Any())
             {
                 WriteKeyword("private", CppModifierToken.Roles.Keyword);
                 WriteToken(":", CppModifierToken.Roles.Colon);
                 NewLine();
-                formatter.Indent();
             }
             else
                 foreach (CppModifierToken modifier in modifierTokens)

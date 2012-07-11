@@ -108,8 +108,8 @@ namespace ICSharpCode.Decompiler.ILAst
 			if (abortBeforeStep == ILAstOptimizationStep.YieldReturn) return;
 			YieldReturnDecompiler.Run(context, method);
 			
-			if (abortBeforeStep == ILAstOptimizationStep.PropertyAccessInstructions) return;
-			IntroducePropertyAccessInstructions(method);
+            //if (abortBeforeStep == ILAstOptimizationStep.PropertyAccessInstructions) return;
+            //IntroducePropertyAccessInstructions(method);
 			
 			if (abortBeforeStep == ILAstOptimizationStep.SplitToMovableBlocks) return;
 			foreach(ILBlock block in method.GetSelfAndChildrenRecursive<ILBlock>()) {
@@ -161,8 +161,8 @@ namespace ICSharpCode.Decompiler.ILAst
 					if (abortBeforeStep == ILAstOptimizationStep.TransformMultidimensionalArrayInitializers) return;
 					modified |= block.RunOptimization(TransformMultidimensionalArrayInitializers);
 					
-					if (abortBeforeStep == ILAstOptimizationStep.TransformObjectInitializers) return;
-					modified |= block.RunOptimization(TransformObjectInitializers);
+                    //if (abortBeforeStep == ILAstOptimizationStep.TransformObjectInitializers) return;
+                    //modified |= block.RunOptimization(TransformObjectInitializers);
 					
 					if (abortBeforeStep == ILAstOptimizationStep.MakeAssignmentExpression) return;
 					modified |= block.RunOptimization(MakeAssignmentExpression);

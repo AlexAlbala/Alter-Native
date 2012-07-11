@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Boxing", "Boxing\Boxing.csproj", "{173D6D1E-0413-435C-B365-94D786EBE84C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{173D6D1E-0413-435C-B365-94D786EBE84C}.Debug|x86.ActiveCfg = Debug|x86
+		{173D6D1E-0413-435C-B365-94D786EBE84C}.Debug|x86.Build.0 = Debug|x86
+		{173D6D1E-0413-435C-B365-94D786EBE84C}.Release|x86.ActiveCfg = Release|x86
+		{173D6D1E-0413-435C-B365-94D786EBE84C}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
