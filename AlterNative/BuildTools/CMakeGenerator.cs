@@ -29,8 +29,8 @@ namespace AlterNative.BuildTools
             sb.AppendLine("ADD_EXECUTABLE(" + execName + " ${EXECPATH})");
             sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " System)");
             sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " gc-lib)");
-            sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " System_Collections)");
-            sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " System_Collections_Generic)");
+            //sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " System_Collections)");
+            //sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " System_Collections_Generic)");
             sb.AppendLine("IF(UNIX)");
             sb.AppendLine("IF(!ANDROID)");
             sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " pthread)");

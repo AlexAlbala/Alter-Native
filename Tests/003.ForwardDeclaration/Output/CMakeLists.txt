@@ -6,8 +6,6 @@ SET(EXECPATH Program.cpp Program.h main.cpp ClassA.cpp ClassA.h ClassB.cpp Class
 ADD_EXECUTABLE(ForwardDeclaration ${EXECPATH})
 TARGET_LINK_LIBRARIES(ForwardDeclaration System)
 TARGET_LINK_LIBRARIES(ForwardDeclaration gc-lib)
-TARGET_LINK_LIBRARIES(ForwardDeclaration System_Collections)
-TARGET_LINK_LIBRARIES(ForwardDeclaration System_Collections_Generic)
 IF(UNIX)
 IF(!ANDROID)
 TARGET_LINK_LIBRARIES(ForwardDeclaration pthread)

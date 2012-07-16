@@ -1,16 +1,15 @@
 #pragma once
 
-#include "../IEnumerable.h"
 #include "MyIterator.h"
 #include <iterator>
 using namespace std;
-using namespace System::Collections;
+using namespace System_Collections;
 
-namespace System::Collections::Generic{
+namespace System_Collections_Generic{
 
-template<typename T> class IEnumerable : public IEnumerable{
+template<typename T> class IEnumerable_T /*: public IEnumerable*/{
 public:
-	virtual IEnumerator<T>* GetEnumerator()=0;
+	virtual IEnumerator_T<T>* GetEnumerator()=0;
 
 	myiterator<T> begin()
 	{

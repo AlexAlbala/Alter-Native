@@ -1,6 +1,7 @@
 #pragma once
+#include "../System.h"
 
-namespace System::Collections{
+namespace System_Collections{
 class IEnumerator{
 
 public:

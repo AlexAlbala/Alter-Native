@@ -87,9 +87,13 @@ namespace RegressionTest
             {
                 Process diff = new Process();
                 diff.StartInfo = new ProcessStartInfo("diff", "-qr " + di.Name + "/Output " + di.Name + "/Target");
-                
+                diff.StartInfo.RedirectStandardOutput = true;
+                diff.StartInfo.CreateNoWindow = true;
+                diff.StartInfo.UseShellExecute = false;
                 diff.Start();
                 diff.WaitForExit();
+                
+                Console.Out.Write(diff.StandardOutput.ReadToEnd());
 
                 if (diff.ExitCode == 0)
                 {

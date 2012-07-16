@@ -1,7 +1,8 @@
 #pragma once
+#include "../System.h"
 
-namespace System::Collections{
-class IEnumerator{
+namespace System_Collections{
+class IEnumerator: public Object{
 
 public:
 	virtual void Reset() = 0;

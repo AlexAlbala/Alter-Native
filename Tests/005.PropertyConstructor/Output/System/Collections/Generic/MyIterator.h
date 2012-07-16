@@ -8,18 +8,18 @@
 
 using namespace std;
 
-namespace System::Collections::Generic{
+namespace System_Collections_Generic{
 
 template<typename T> 
 class myiterator : public iterator<input_iterator_tag, T>
 {
 private:
   //T* p;
-  IEnumerator<T> *it;
+  IEnumerator_T<T> *it;
   bool is_end_iterator;
   bool is_end;
 public:
-	myiterator(IEnumerator<T> *_it){
+	myiterator(IEnumerator_T<T> *_it){
 		this->it = _it;
 		this->is_end_iterator = false;
 		this->is_end = false;

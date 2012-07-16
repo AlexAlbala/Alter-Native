@@ -208,14 +208,9 @@ namespace ICSharpCode.NRefactory.Cpp
             AddNamespace(namesp);
         }
 
-        //private static string ResolveNamespaceFromType(string type)
-        //{
-        //    return symbols[type].Namespace;
-        //}
-
         private static void AddNamespace(string nameSpace)
         {
-            nameSpace = nameSpace.Replace(".", "::");
+            nameSpace = nameSpace.Replace(".", "_");
             Cache.AddNamespace(nameSpace);
         }
 

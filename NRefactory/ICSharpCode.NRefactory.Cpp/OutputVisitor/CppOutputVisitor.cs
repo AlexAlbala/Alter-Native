@@ -1757,17 +1757,17 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             StartNode(fieldDeclaration);           
             
-            if (fieldDeclaration.HasModifier(Modifiers.Static))
+            if (fieldDeclaration.HasModifier(Modifiers.Static) || isTemplateType)
             {
                 fieldDeclaration.ReturnType.AcceptVisitor(this, data);
                 Space();
 
-                if (!isTemplateType)
-                {
-                    TypeDeclaration tdecl = fieldDeclaration.Parent as TypeDeclaration;
-                    WriteIdentifier(tdecl != null ? tdecl.Name : String.Empty, MethodDeclaration.Roles.Identifier);
-                    WriteToken("::", MethodDeclaration.Roles.DoubleColon);
-                }
+                //if (!isTemplateType)
+                //{
+                //    TypeDeclaration tdecl = fieldDeclaration.Parent as TypeDeclaration;
+                //    WriteIdentifier(tdecl != null ? tdecl.Name : String.Empty, MethodDeclaration.Roles.Identifier);
+                //    WriteToken("::", MethodDeclaration.Roles.DoubleColon);
+                //}
 
                 WriteCommaSeparatedList(fieldDeclaration.Variables);
                 Semicolon();

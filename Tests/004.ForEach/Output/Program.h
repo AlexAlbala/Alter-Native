@@ -1,10 +1,10 @@
 #pragma once
 #include "System/System.h"
-#include "System/Console.h"
 #include "System/Collections/Generic/List.h"
+#include "System/Console.h"
 
+using namespace System_Collections_Generic;
 using namespace System;
-using namespace System::Collections::Generic;
 namespace ForEach{
 
 	class Program : public Object, public gc_cleanup

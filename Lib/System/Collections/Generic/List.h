@@ -1,11 +1,11 @@
+#pragma once
 #include "IEnumerable.h"
 #include <stdlib.h>
 
-using namespace System::Collections;
-namespace System::Collections::Generic{
+namespace System_Collections_Generic{
 
 template<typename T>
-class MyEnumerator : IEnumerator<T>
+class ListEnumerator_T : public IEnumerator_T<T>, public gc_cleanup
 {
 private:
 	T* initialPos;
@@ -14,7 +14,7 @@ private:
 	int position;
 
 public:
-	MyEnumerator(T* elements, int count)
+	ListEnumerator_T(T* elements, int count)
 	{
 		this->elements = elements;
 		this->initialPos = elements;
@@ -37,14 +37,14 @@ public:
 		return;
 	}
 
-	virtual T* Current()
+	virtual Box_T<T>* getCurrent()
 	{		
-		return elements;
+		return new Box_T<T>(elements);
 	}
 };
 
 template<typename T>
-class List_T : public IEnumerable<T> /*, public IList*/ //TODO Implement IList(<T>) and inherit from it
+class List_T : public IEnumerable_T<T>, public gc_cleanup /*, public IList*/ //TODO Implement IList(<T>) and inherit from it
 {
 
 private:
@@ -52,22 +52,21 @@ private:
 	T *elements;
 
 public:
-	List()
+	List_T()
 	{
 		count = 0;		
 	}
 
-	~List()
+	~List_T()
 	{
 		count = 0;
 		delete(elements);
 	}
 
-	virtual IEnumerator<T>* GetEnumerator()
+	virtual IEnumerator_T<T>* GetEnumerator()
 	{
-		//When we free this memory ????
-		MyEnumerator<T>* enumerator = new MyEnumerator<T>(elements,count);
-		return (IEnumerator<T>*)enumerator;
+		ListEnumerator_T<T>* enumerator = new ListEnumerator_T<T>(elements,count);
+		return (IEnumerator_T<T>*)enumerator;
 	}
 
 	void Add(T element)

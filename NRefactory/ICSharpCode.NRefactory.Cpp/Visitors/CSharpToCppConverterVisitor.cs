@@ -657,6 +657,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 ConvertNodes(typeDeclaration.BaseTypes, type.BaseTypes);
 
             type.Name = typeDeclaration.Name;
+            if (typeDeclaration.TypeParameters.Any())
+                type.Name += "_T";
 
             types.Push(type);
             ConvertNodes(typeDeclaration.Members, type.Members);
@@ -1064,7 +1066,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             ConvertNodes(fieldDeclaration.Attributes, decl.Attributes);
             ConvertNodes(fieldDeclaration.Variables, decl.Variables);
 
-            if (!fieldDeclaration.HasModifier(CSharp.Modifiers.Static))
+            if (!fieldDeclaration.HasModifier(CSharp.Modifiers.Static) && !currentType.TypeParameters.Any())
             {
                 foreach (VariableInitializer vi in decl.Variables)
                 {
@@ -1111,7 +1113,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             result.Body = (BlockStatement)methodDeclaration.Body.AcceptVisitor(this, data);
             result.PrivateImplementationType = (AstType)methodDeclaration.PrivateImplementationType.AcceptVisitor(this, data);
 
-            result.AddChild((Identifier)currentType.NameToken.AcceptVisitor(this, data), MethodDeclaration.TypeRole);
+            if (currentType != null)
+                result.AddChild((Identifier)currentType.NameToken.AcceptVisitor(this, data), MethodDeclaration.TypeRole);
 
             if (result.PrivateImplementationType is PtrType)
                 result.PrivateImplementationType = (AstType)(result.PrivateImplementationType as PtrType).Target.Clone();

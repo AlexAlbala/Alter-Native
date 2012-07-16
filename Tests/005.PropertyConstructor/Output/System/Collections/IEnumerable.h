@@ -1,10 +1,12 @@
 #pragma once
-
-#include "MyIterator.h"
+#include "../System.h"
+#include "Generic/MyIterator.h"
 #include <iterator>
 using namespace std;
+using namespace System;
+using namespace System_Collections_Generic;
 
-namespace System::Collections{
+namespace System_Collections{
 
 class IEnumerable{
 public:
@@ -12,11 +14,11 @@ public:
 
 	myiterator<Object>* begin()
 	{
-		return myiterator<T>(GetEnumerator());
+		return new myiterator<Object>(GetEnumerator());
 	}
 	myiterator<Object>* end()
 	{
-		return myiterator<T>(0);
+		return new myiterator<Object>(0);
 	}
 };
 }
