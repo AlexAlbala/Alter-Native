@@ -8,6 +8,6 @@ namespace System_Collections_Generic{
 template<typename T> class IEnumerator_T : public IEnumerator{
 
 public:	
-	virtual T* getCurrent() = 0;
+	virtual Box_T<T>* getCurrent() = 0;
 };
 }

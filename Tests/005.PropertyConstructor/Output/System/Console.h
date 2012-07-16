@@ -14,6 +14,7 @@ public:
 
 	static void WriteLine(char* txt);
 	static void WriteLine(int i);
+	static void WriteLine(float i);
 	static void WriteLine(String* s);
 
 	static char* ReadLine();

@@ -2,7 +2,7 @@
 #include "../System.h"
 
 namespace System_Collections{
-class IEnumerator{
+class IEnumerator: public Object{
 
 public:
 	virtual void Reset() = 0;

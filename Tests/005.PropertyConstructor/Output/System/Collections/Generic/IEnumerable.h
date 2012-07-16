@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../IEnumerable.h"
-#include "MyIterator.h"
+#include "IteratorCXX.h"
 #include <iterator>
 using namespace std;
 using namespace System_Collections;
@@ -12,13 +12,13 @@ template<typename T> class IEnumerable_T : public IEnumerable{
 public:
 	virtual IEnumerator_T<T>* GetEnumerator()=0;
 
-	myiterator<T> begin()
+	iteratorcxx<T> begin()
 	{
-		return myiterator<T>(GetEnumerator());
+		return iteratorcxx<T>(GetEnumerator());
 	}
-	myiterator<T> end()
+	iteratorcxx<T> end()
 	{
-		return myiterator<T>(0);
+		return iteratorcxx<T>(0);
 	}
 };
 }

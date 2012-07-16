@@ -25,6 +25,10 @@ void Console::WriteLine(int i) {
 	std::cout << i << std::endl;
 }
 
+void Console::WriteLine(float f) {
+	std::cout << f << std::endl;
+}
+
 void Console::WriteLine(String* s) {
 	std::cout << s->Data << std::endl;
 }

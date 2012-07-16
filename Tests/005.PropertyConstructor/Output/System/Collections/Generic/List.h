@@ -37,9 +37,9 @@ public:
 		return;
 	}
 
-	virtual T* Current()
+	virtual Box_T<T>* getCurrent()
 	{		
-		return elements;
+		return new Box_T<T>(elements);
 	}
 };
 

@@ -11,7 +11,7 @@ using namespace std;
 namespace System_Collections_Generic{
 
 template<typename T> 
-class myiterator : public iterator<input_iterator_tag, T>
+class iteratorcxx : public iterator<input_iterator_tag, T>
 {
 private:
   //T* p;
@@ -19,47 +19,47 @@ private:
   bool is_end_iterator;
   bool is_end;
 public:
-	myiterator(IEnumerator_T<T> *_it){
+	iteratorcxx(IEnumerator_T<T> *_it){
 		this->it = _it;
 		this->is_end_iterator = false;
 		this->is_end = false;
 	}
 
-	myiterator(int n){
+	iteratorcxx(int n){
 		if(!n)
 			this->is_end_iterator = true;
 	}
 
 	T* operator()(){
-		return it->Current();
+		return it->getCurrent();
 	}
 
 	T& operator*(){
-		return *(it->Current());
+		return *(it->getCurrent());
 	}
 
-	myiterator& operator++(){
+	iteratorcxx& operator++(){
 		is_end = it->MoveNext();
 		return *this;
 	}
 
-	myiterator operator++(int){
+	iteratorcxx operator++(int){
 		is_end = it->MoveNext();
 		return *this;
 	}
 
-	myiterator operator+(int value){
+	iteratorcxx operator+(int value){
 	  for(int i=0; i < value;i++)
 		  is_end = it->MoveNext();
 
 	  return *this;
 	}
 
-	myiterator operator+=(int value){	
+	iteratorcxx operator+=(int value){	
 		  return operator+(value);
 	}
 
-	bool operator==(const myiterator& rhs){
+	bool operator==(const iteratorcxx& rhs){
 		if(!rhs.is_end && !this->is_end) throw;
 		else{
 			if(rhs.is_end_iterator)
@@ -71,7 +71,7 @@ public:
 		}
 	}
 
-	bool operator!=(const myiterator& rhs){
+	bool operator!=(const iteratorcxx& rhs){
 		return !(operator==(rhs));
 	}
 
