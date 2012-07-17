@@ -1,4 +1,4 @@
-#include "Program.h"
+#include "A.h"
 using namespace System;
 using namespace PropertyConstructor;
 
