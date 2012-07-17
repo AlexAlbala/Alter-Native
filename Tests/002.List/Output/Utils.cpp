@@ -1,6 +1,6 @@
 #include "Utils.h"
 namespace List{
 
-	Random* random = new Random();
+	Random* Utils::random = new Random();
 
 }

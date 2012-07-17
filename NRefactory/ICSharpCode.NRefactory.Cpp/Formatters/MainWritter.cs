@@ -13,7 +13,7 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             StreamWriter writer = new StreamWriter(FileWritterManager.WorkingPath + "main.cpp");
 
-            writer.WriteLine("#include \"Program.h\"");
+            writer.WriteLine("#include \"" + entryType + ".h\"");
             writer.WriteLine("using namespace System;");
             writer.WriteLine("using namespace " + entryNamespace + ";");
             writer.WriteLine();

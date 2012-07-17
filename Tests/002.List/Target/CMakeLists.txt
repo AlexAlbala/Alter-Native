@@ -6,8 +6,6 @@ SET(EXECPATH Utils.cpp Utils.h Node.cpp Node.h MyList.cpp MyList.h Program.cpp P
 ADD_EXECUTABLE(List ${EXECPATH})
 TARGET_LINK_LIBRARIES(List System)
 TARGET_LINK_LIBRARIES(List gc-lib)
-TARGET_LINK_LIBRARIES(List System_Collections)
-TARGET_LINK_LIBRARIES(List System_Collections_Generic)
 IF(UNIX)
 IF(!ANDROID)
 TARGET_LINK_LIBRARIES(List pthread)

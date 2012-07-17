@@ -1,22 +1,23 @@
 #pragma once
-
-#include "MyIterator.h"
+#include "../System.h"
+#include "IteratorCXX.h"
 #include <iterator>
 using namespace std;
+using namespace System;
 
-namespace System::Collections{
+namespace System_Collections{
 
 class IEnumerable{
 public:
 	virtual IEnumerator* GetEnumerator()=0;
 
-	myiterator<Object>* begin()
+	iteratorcxx* begin()
 	{
-		return myiterator<T>(GetEnumerator());
+		return new iteratorcxx(GetEnumerator());
 	}
-	myiterator<Object>* end()
+	iteratorcxx* end()
 	{
-		return myiterator<T>(0);
+		return new iteratorcxx(0);
 	}
 };
 }

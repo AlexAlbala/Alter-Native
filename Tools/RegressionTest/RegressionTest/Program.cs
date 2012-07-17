@@ -9,7 +9,7 @@ namespace RegressionTest
 {
     class Program
     {
-        List<DirectoryInfo> Tests = new List<DirectoryInfo>();
+        Dictionary<DirectoryInfo, TestResult> Tests = new Dictionary<DirectoryInfo, TestResult>();
 
         static void Main(string[] args)
         {
@@ -29,7 +29,7 @@ namespace RegressionTest
                     /*ContainsDirectory(di, "Output") &&*/
                     ContainsDirectory(di, "NETbin"))
                 {
-                    Tests.Add(di);
+                    Tests.Add(di, new TestResult());
                     Console.WriteLine("Found test " + di.Name);
                 }
             }
@@ -59,10 +59,97 @@ namespace RegressionTest
             }
         }
 
+        private void Cmake(TestResult res)
+        {
+            //Run cmake
+            Process runCmake = new Process();
+            runCmake.StartInfo = new ProcessStartInfo("cmake", "..");
+            runCmake.StartInfo.RedirectStandardOutput = true;
+            runCmake.StartInfo.CreateNoWindow = true;
+            runCmake.StartInfo.UseShellExecute = false;
+            runCmake.OutputDataReceived += (sender, args) => Console.WriteLine(args.Data);
+            runCmake.Start();
+            runCmake.BeginOutputReadLine();
+            runCmake.WaitForExit();
+
+            res.cmakeCode = (short)runCmake.ExitCode;
+        }
+
+        private void msbuild(DirectoryInfo di, TestResult res)
+        {
+            //Compile the code
+            string msbuildPath = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
+            msbuildPath += @"msbuild.exe";
+
+            //Run msbuild
+            Process msbuild = new Process();
+            msbuild.StartInfo = new ProcessStartInfo(msbuildPath, di.Name.Split('.')[1] + "Proj.sln");
+            msbuild.StartInfo.RedirectStandardOutput = true;
+            msbuild.StartInfo.CreateNoWindow = true;
+            msbuild.StartInfo.UseShellExecute = false;
+            msbuild.OutputDataReceived += (sender, args) => Console.WriteLine(args.Data);
+            msbuild.Start();
+            msbuild.BeginOutputReadLine();
+            msbuild.WaitForExit();
+
+            res.msbuildCode = (short)msbuild.ExitCode;
+        }
+
+        private void compareOutput(DirectoryInfo di, TestResult res)
+        {
+            //Run original app
+            Process orig = new Process();
+            orig.StartInfo = new ProcessStartInfo(di.FullName + @"/NETbin/" + di.Name + ".exe");
+            orig.StartInfo.RedirectStandardOutput = true;
+            orig.StartInfo.CreateNoWindow = true;
+            orig.StartInfo.UseShellExecute = false;
+            orig.Start();
+            orig.WaitForExit();
+            String originalOutput = orig.StandardOutput.ReadToEnd();
+
+            Process final = new Process();
+            final.StartInfo = new ProcessStartInfo(di.FullName + @"/Output/build/Debug/" + di.Name.Split('.')[1] + ".exe");
+            final.StartInfo.RedirectStandardOutput = true;
+            final.StartInfo.CreateNoWindow = true;
+            final.StartInfo.UseShellExecute = false;
+            final.Start();
+            final.WaitForExit();
+            String finalOutput = final.StandardOutput.ReadToEnd();
+
+            res.output = string.Compare(originalOutput, finalOutput) == 0;
+        }
+
+        private void diff(DirectoryInfo di, TestResult res)
+        {
+            Process diff = new Process();
+            diff.StartInfo = new ProcessStartInfo("diff", "-qr " + di.Name + "/Output " + di.Name + "/Target");
+            diff.StartInfo.RedirectStandardOutput = true;
+            diff.StartInfo.CreateNoWindow = true;
+            diff.StartInfo.UseShellExecute = false;
+            diff.OutputDataReceived += (sender, args) => Console.WriteLine(args.Data);
+            diff.Start();
+            diff.BeginOutputReadLine();
+            diff.WaitForExit();
+
+            if (diff.ExitCode == 0)
+                res.fileDiff = false;
+
+            else if (diff.ExitCode == 1)
+                res.fileDiff = true;
+
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Something was wrong with diff command. Exit code was: " + diff.ExitCode);
+                Console.ResetColor();
+            }
+        }
+
         public void Run()
         {
-            foreach (DirectoryInfo di in Tests)
-            {               
+            foreach (KeyValuePair<DirectoryInfo, TestResult> kvp in Tests)
+            {
+                DirectoryInfo di = kvp.Key;
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("Running test " + di.Name);
                 Console.ResetColor();
@@ -79,45 +166,48 @@ namespace RegressionTest
                 runAlt.WaitForExit();
             }
 
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("************************ TEST ************************");
-            Console.ResetColor();
-
-            foreach(DirectoryInfo di in Tests)
+            foreach (KeyValuePair<DirectoryInfo, TestResult> kvp in Tests)
             {
-                Process diff = new Process();
-                diff.StartInfo = new ProcessStartInfo("diff", "-qr " + di.Name + "/Output " + di.Name + "/Target");
-                diff.StartInfo.RedirectStandardOutput = true;
-                diff.StartInfo.CreateNoWindow = true;
-                diff.StartInfo.UseShellExecute = false;
-                diff.Start();
-                diff.WaitForExit();
+                DirectoryInfo di = kvp.Key;
+                TestResult res = kvp.Value;
+
+                //Diff files
+                diff(di, res);
+
+                //Create folder and run cmake                
+                Directory.CreateDirectory(di.FullName + "/Output/build");
+                Directory.SetCurrentDirectory(di.FullName + "/Output/build");
+
                 
-                Console.Out.Write(diff.StandardOutput.ReadToEnd());
-
-                if (diff.ExitCode == 0)
-                {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("TEST " + di.Name + " OK");
-                    Console.ResetColor();
-                }
-
-                else if (diff.ExitCode == 1)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("TEST " + di.Name + " FAIL");
-                    Console.ResetColor();
-                }
-
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Something was wrong with diff command");
-                    Console.ResetColor();
-                }
+                Cmake(res);
+                if (res.cmakeCode == 0)
+                    msbuild(di, res);                
+                if (kvp.Value.msbuildCode == 0)
+                    compareOutput(di, res);
             }
 
-            //Console.ReadLine();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("******************************************* TEST RESULTS *****************************************");
+            Console.ResetColor();
+
+            string[,] arr = new string[Tests.Count + 1, 5];
+            arr[0, 0] = "NAME";
+            arr[0, 1] = "CMAKE CODE";
+            arr[0, 2] = "MSBUILD CODE";
+            arr[0, 3] = "FILE DIFFER";
+            arr[0, 4] = "OUTPUT";
+            int i = 1;
+            foreach (KeyValuePair<DirectoryInfo, TestResult> kvp in Tests)
+            {
+                arr[i, 0] = kvp.Key.Name;
+                arr[i, 1] = kvp.Value.cmakeCode == 0 ? "SUCCESS": "FAIL. Code: " + kvp.Value.cmakeCode;
+                arr[i, 2] = kvp.Value.msbuildCode == 0 ? "BUILD SUCCEEDED" : "FAIL. Code: " + kvp.Value.msbuildCode;
+                arr[i, 3] = (kvp.Value.fileDiff ? "Differ" : "No differ");
+                arr[i, 4] = (kvp.Value.output ? "OK" : "FAIL");
+
+                i++;
+            }
+            ArrayPrinter.PrintToConsole(arr);
         }
     }
 }
