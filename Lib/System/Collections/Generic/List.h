@@ -17,9 +17,9 @@ public:
 	ListEnumerator_T(T* elements, int count)
 	{
 		this->elements = elements;
-		this->initialPos = elements;
+		this->initialPos = elements-1;
 		this->count = count;
-		position = 0;
+		this->Reset();
 	}
 
 	virtual bool MoveNext()
@@ -27,12 +27,12 @@ public:
 		position++;
 		elements++;
 		
-		return (position == count);
+		return (position < count);
 	}
 
 	virtual void Reset()
 	{
-		position = 0;
+		position = -1;
 		elements = initialPos;
 		return;
 	}
@@ -47,36 +47,45 @@ template<typename T>
 class List_T : public IEnumerable_T<T>, public gc_cleanup /*, public IList*/ //TODO Implement IList(<T>) and inherit from it
 {
 
-private:
-	int count;
+private:	
 	T *elements;
 
 public:
+	int Count;
 	List_T()
 	{
-		count = 0;		
+		Count = 0;		
+	}
+
+	List_T(List_T<T>* values)
+	{
+		for(int i=0; i<values->Count;i++)
+		{
+			T* val = values->ElementAt(i);
+			this->Add(*val);
+		}
 	}
 
 	~List_T()
 	{
-		count = 0;
+		Count = 0;
 		delete(elements);
 	}
 
 	virtual IEnumerator_T<T>* GetEnumerator()
 	{
-		ListEnumerator_T<T>* enumerator = new ListEnumerator_T<T>(elements,count);
+		ListEnumerator_T<T>* enumerator = new ListEnumerator_T<T>(elements,Count);
 		return (IEnumerator_T<T>*)enumerator;
 	}
 
 	void Add(T element)
 	{
-		if (count == 0)
+		if (Count == 0)
 			elements = (T*)malloc(sizeof(T));
 		else
-			elements = (T*)realloc(elements, (count+1)*sizeof(T));
+			elements = (T*)realloc(elements, (Count+1)*sizeof(T));
 
-		elements[count++] = element;
+		elements[Count++] = element;
 	}
 
 	T* ElementAt(int index)
@@ -84,9 +93,19 @@ public:
 		return (T*)(elements+index);
 	}
 
+	T& operator[](int index)
+	{
+		return *this->ElementAt(index);
+	}
+
+	const T& operator[](int index) const
+	{
+		return *this->ElementAt(index);
+	}
+
 	int IndexOf(T* element)
 	{
-		for(int i = 0; i <count; i++)
+		for(int i = 0; i <Count; i++)
 		{
 			if((T*)(elements + i) == element)
 				return i;
@@ -98,27 +117,27 @@ public:
 	{		
 		int i = IndexOf(element);
 
-		for(int j=i;j<count;j++)
+		for(int j=i;j<Count;j++)
 		{
 			elements[j]=elements[j+1];
 		}
 
-		elements = (T*)realloc(elements, (count-1)*sizeof(T));
-		count--;
+		elements = (T*)realloc(elements, (Count-1)*sizeof(T));
+		Count--;
 	}
 
 	void RemoveAt(int index)
 	{
 		//TODO message
-		if(index >= count) throw;
+		if(index >= Count) throw;
 
-		for(int j=index;j<count;j++)
+		for(int j=index;j<Count;j++)
 		{
 			elements[j]=elements[j+1];
 		}
 
-		elements = (T*)realloc(elements, (count-1)*sizeof(T));
-		count--;
+		elements = (T*)realloc(elements, (Count-1)*sizeof(T));
+		Count--;
 	}
 };
 }

@@ -745,7 +745,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitBreakStatement(CSharp.BreakStatement breakStatement, object data)
         {
-            throw new NotImplementedException();
+            return EndNode(breakStatement, new BreakStatement());
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitCheckedStatement(CSharp.CheckedStatement checkedStatement, object data)
@@ -1308,12 +1308,12 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 case "double":
                     typeName = "float";
                     break;
-                case "string":
-                    typeName = "String";
                     break;
                 default:
                     if (primitiveType.Keyword.ToLower() == "object")
                         return EndNode(primitiveType, new PtrType(new SimpleType("Object")));
+                    else if (primitiveType.Keyword.ToLower() == "string")
+                        return EndNode(primitiveType, new PtrType(new SimpleType("String")));
                     typeName = primitiveType.Keyword;
                     break;
             }

@@ -39,18 +39,18 @@ public:
 	}
 
 	iteratorcxx& operator++(){
-		is_end = it->MoveNext();
+		is_end = !it->MoveNext();
 		return *this;
 	}
 
 	iteratorcxx operator++(int){
-		is_end = it->MoveNext();
+		is_end = !it->MoveNext();
 		return *this;
 	}
 
 	iteratorcxx operator+(int value){
 	  for(int i=0; i < value;i++)
-		  is_end = it->MoveNext();
+		  is_end = !it->MoveNext();
 
 	  return *this;
 	}

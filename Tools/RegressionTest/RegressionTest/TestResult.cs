@@ -8,14 +8,14 @@ namespace RegressionTest
     public class TestResult
     {
         public bool output;
-        public bool fileDiff;
+        public short diffCode;
         public short cmakeCode;
         public short msbuildCode;
 
         public TestResult()
         {
             output = false;
-            fileDiff = true;
+            diffCode = -1;
             cmakeCode = -1;
             msbuildCode = -1;
         }

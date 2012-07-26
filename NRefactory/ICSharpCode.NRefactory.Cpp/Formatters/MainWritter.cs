@@ -23,7 +23,7 @@ namespace ICSharpCode.NRefactory.Cpp
             writer.WriteLine("\tfor(int i = 0; i < argc; i++)");
             writer.WriteLine("\t\targs[i] = argv[i];");
             writer.WriteLine();
-            writer.WriteLine("\t" + entryType + "::Main(args);");
+            writer.WriteLine("\t" + entryType + "::Main(&args);");
             writer.WriteLine("\t//TODO");
             writer.WriteLine("\t//delete args;");
             writer.WriteLine("}");

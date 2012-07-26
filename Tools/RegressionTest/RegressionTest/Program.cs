@@ -10,12 +10,18 @@ namespace RegressionTest
     class Program
     {
         Dictionary<DirectoryInfo, TestResult> Tests = new Dictionary<DirectoryInfo, TestResult>();
+        string testPath = Environment.CurrentDirectory;
+        string alternativePath = Environment.CurrentDirectory + "/../AlterNative/bin/Debug/AlterNative.exe";        
 
         static void Main(string[] args)
         {
             Program p = new Program();
             p.AvailableTests();
-            p.Run();
+            if (args.Length == 0)
+                p.RunAll();
+            else
+                p.RunTests(args);
+
         }
 
         public void AvailableTests()
@@ -119,8 +125,24 @@ namespace RegressionTest
             res.output = string.Compare(originalOutput, finalOutput) == 0;
         }
 
+        private void alternative(DirectoryInfo di)
+        {
+            DirectoryInfo outd = new DirectoryInfo(di.FullName + "/Output");
+            CleanDirectory(outd);
+
+            Process runAlt = new Process();
+
+            runAlt.StartInfo = new ProcessStartInfo(alternativePath, di.FullName + "/NETbin/" + di.Name + ".exe" + " "
+                                                    + di.FullName + "/Output/" + " "
+                                                    + "CXX" + " "
+                                                    + di.FullName + "/../../Lib/");
+            runAlt.Start();
+            runAlt.WaitForExit();
+        }
+
         private void diff(DirectoryInfo di, TestResult res)
         {
+            Directory.SetCurrentDirectory(testPath);
             Process diff = new Process();
             diff.StartInfo = new ProcessStartInfo("diff", "-qr " + di.Name + "/Output " + di.Name + "/Target");
             diff.StartInfo.RedirectStandardOutput = true;
@@ -131,45 +153,23 @@ namespace RegressionTest
             diff.BeginOutputReadLine();
             diff.WaitForExit();
 
-            if (diff.ExitCode == 0)
-                res.fileDiff = false;
-
-            else if (diff.ExitCode == 1)
-                res.fileDiff = true;
-
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Something was wrong with diff command. Exit code was: " + diff.ExitCode);
-                Console.ResetColor();
-            }
+            res.diffCode = (short)diff.ExitCode;
         }
 
-        public void Run()
+        public void RunTests(string[] tests)
         {
-            foreach (KeyValuePair<DirectoryInfo, TestResult> kvp in Tests)
+            foreach (string s in tests)
             {
+                KeyValuePair<DirectoryInfo, TestResult> kvp = Tests.First(x => x.Key.Name == s);
                 DirectoryInfo di = kvp.Key;
+                TestResult res = kvp.Value;
+
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("Running test " + di.Name);
                 Console.ResetColor();
 
-                DirectoryInfo outd = new DirectoryInfo(di.FullName + "/Output");
-                CleanDirectory(outd);
-
-                Process runAlt = new Process();
-                runAlt.StartInfo = new ProcessStartInfo(Environment.CurrentDirectory + "/../AlterNative/bin/Debug/AlterNative.exe", di.FullName + "/NETbin/" + di.Name + ".exe" + " "
-                                                        + di.FullName + "/Output/" + " "
-                                                        + "CXX" + " "
-                                                        + di.FullName + "/../../Lib/");
-                runAlt.Start();
-                runAlt.WaitForExit();
-            }
-
-            foreach (KeyValuePair<DirectoryInfo, TestResult> kvp in Tests)
-            {
-                DirectoryInfo di = kvp.Key;
-                TestResult res = kvp.Value;
+                //Run alternative
+                alternative(di);
 
                 //Diff files
                 diff(di, res);
@@ -178,10 +178,65 @@ namespace RegressionTest
                 Directory.CreateDirectory(di.FullName + "/Output/build");
                 Directory.SetCurrentDirectory(di.FullName + "/Output/build");
 
-                
+
                 Cmake(res);
                 if (res.cmakeCode == 0)
-                    msbuild(di, res);                
+                    msbuild(di, res);
+                if (kvp.Value.msbuildCode == 0)
+                    compareOutput(di, res);
+            }
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("******************************************* TEST RESULTS *****************************************");
+            Console.ResetColor();
+
+            string[,] arr = new string[tests.Length + 1, 5];
+            arr[0, 0] = "NAME";
+            arr[0, 1] = "CMAKE CODE";
+            arr[0, 2] = "MSBUILD CODE";
+            arr[0, 3] = "FILE DIFFER";
+            arr[0, 4] = "OUTPUT";
+            int i = 1;
+            foreach (string s in tests)
+            {
+                KeyValuePair<DirectoryInfo, TestResult> kvp = Tests.First(x => x.Key.Name == s);
+                arr[i, 0] = kvp.Key.Name;
+                arr[i, 1] = kvp.Value.cmakeCode == 0 ? "SUCCESS" : "FAIL. Code: " + kvp.Value.cmakeCode;
+                arr[i, 2] = kvp.Value.msbuildCode == 0 ? "BUILD SUCCEEDED" : "FAIL. Code: " + kvp.Value.msbuildCode;
+                arr[i, 3] = (kvp.Value.diffCode == 0 ? "No Differ" : (kvp.Value.diffCode == 1 ? "Differ" : "Error. Code: " + kvp.Value.diffCode));
+                arr[i, 4] = (kvp.Value.output ? "OK" : "FAIL");
+
+                i++;
+            }
+            ArrayPrinter.PrintToConsole(arr);
+
+        }
+
+        public void RunAll()
+        {
+            foreach (KeyValuePair<DirectoryInfo, TestResult> kvp in Tests)
+            {
+                DirectoryInfo di = kvp.Key;
+                TestResult res = kvp.Value;
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Running test " + di.Name);
+                Console.ResetColor();
+
+                //Run alternative
+                alternative(di);
+
+                //Diff files
+                diff(di, res);
+
+                //Create folder and run cmake                
+                Directory.CreateDirectory(di.FullName + "/Output/build");
+                Directory.SetCurrentDirectory(di.FullName + "/Output/build");
+
+
+                Cmake(res);
+                if (res.cmakeCode == 0)
+                    msbuild(di, res);
                 if (kvp.Value.msbuildCode == 0)
                     compareOutput(di, res);
             }
@@ -200,9 +255,9 @@ namespace RegressionTest
             foreach (KeyValuePair<DirectoryInfo, TestResult> kvp in Tests)
             {
                 arr[i, 0] = kvp.Key.Name;
-                arr[i, 1] = kvp.Value.cmakeCode == 0 ? "SUCCESS": "FAIL. Code: " + kvp.Value.cmakeCode;
+                arr[i, 1] = kvp.Value.cmakeCode == 0 ? "SUCCESS" : "FAIL. Code: " + kvp.Value.cmakeCode;
                 arr[i, 2] = kvp.Value.msbuildCode == 0 ? "BUILD SUCCEEDED" : "FAIL. Code: " + kvp.Value.msbuildCode;
-                arr[i, 3] = (kvp.Value.fileDiff ? "Differ" : "No differ");
+                arr[i, 3] = (kvp.Value.diffCode == 0 ? "No Differ" : (kvp.Value.diffCode == 1 ? "Differ" : "Error. Code: " + kvp.Value.diffCode));
                 arr[i, 4] = (kvp.Value.output ? "OK" : "FAIL");
 
                 i++;

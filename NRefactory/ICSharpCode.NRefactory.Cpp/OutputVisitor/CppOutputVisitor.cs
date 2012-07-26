@@ -1233,7 +1233,7 @@ namespace ICSharpCode.NRefactory.Cpp
         }
 
         public object VisitTypeDeclaration(TypeDeclaration typeDeclaration, object data)
-        {            
+        {
             //WRITE FIRST CPP AND THEN .H
             StartNode(typeDeclaration);
             if (typeDeclaration.TypeParameters.Any())
@@ -1302,7 +1302,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
             WriteAttributes(typeDeclaration.Attributes);
 
-            WriteTypeParameters(typeDeclaration.TypeParameters,true);
+            WriteTypeParameters(typeDeclaration.TypeParameters, true);
             // HERE GOES THE TEMPLATE !
             BraceStyle braceStyle;
             switch (typeDeclaration.ClassType)
@@ -1329,8 +1329,11 @@ namespace ICSharpCode.NRefactory.Cpp
             Space();
             WriteToken(":", TypeDeclaration.ColonRole);
             Space();
+            //ÑAPA se añade virtual modifier y se quita
+            var modif = new CppModifierToken(TextLocation.Empty, Modifiers.Virtual);
+            typeDeclaration.ModifierTokens.Add(modif);
             WriteCommaSeparatedListWithModifiers(typeDeclaration.BaseTypes, typeDeclaration.ModifierTokens);
-
+            typeDeclaration.ModifierTokens.Remove(modif);
 
             //foreach (Constraint constraint in typeDeclaration.Constraints)
             //{
@@ -1421,7 +1424,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 NewLine();
             }
             NewLine();
-            
+
             //WRITE NAMESPACES
             foreach (string s in Resolver.GetNeededNamespaces())
             {
@@ -1468,12 +1471,16 @@ namespace ICSharpCode.NRefactory.Cpp
                     break;
             }
             WriteIdentifier(typeDeclaration.Name);
-            WriteTypeParameters(typeDeclaration.TypeParameters,false);           
+            WriteTypeParameters(typeDeclaration.TypeParameters, false);
 
             Space();
             WriteToken(":", TypeDeclaration.ColonRole);
             Space();
+            //ÑAPA se añade virtual modifier y se quita
+            var modif = new CppModifierToken(TextLocation.Empty, Modifiers.Virtual);
+            typeDeclaration.ModifierTokens.Add(modif);
             WriteCommaSeparatedListWithModifiers(typeDeclaration.BaseTypes, typeDeclaration.ModifierTokens);
+            typeDeclaration.ModifierTokens.Remove(modif);
 
 
             //foreach (Constraint constraint in typeDeclaration.Constraints)
@@ -1596,7 +1603,7 @@ namespace ICSharpCode.NRefactory.Cpp
             //WriteAccesorModifier(constructorDeclaration.ModifierTokens);
             TypeDeclaration type = constructorDeclaration.Parent as TypeDeclaration;
             if (!isTemplateType)
-            {                
+            {
                 WriteIdentifier(type != null ? type.Name : constructorDeclaration.Name);
                 WriteToken("::", MethodDeclaration.Roles.Dot);
             }
@@ -1660,7 +1667,7 @@ namespace ICSharpCode.NRefactory.Cpp
             //WriteAccesorModifier(destructorDeclaration.ModifierTokens);
             TypeDeclaration type = destructorDeclaration.Parent as TypeDeclaration;
             if (!isTemplateType)
-            {               
+            {
                 WriteIdentifier(type != null ? type.Name : destructorDeclaration.Name);
                 WriteToken("::", MethodDeclaration.Roles.Dot);
             }
@@ -1755,8 +1762,8 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitFieldDeclaration(FieldDeclaration fieldDeclaration, object data)
         {
-            StartNode(fieldDeclaration);           
-            
+            StartNode(fieldDeclaration);
+
             if (fieldDeclaration.HasModifier(Modifiers.Static) || isTemplateType)
             {
                 fieldDeclaration.ReturnType.AcceptVisitor(this, data);
@@ -1782,7 +1789,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 }
             }
             headerNodes.Add(fieldDeclaration);
-            return EndNode(fieldDeclaration);            
+            return EndNode(fieldDeclaration);
         }
 
         private object VisitFieldDeclarationHeader(FieldDeclaration fieldDeclaration, object data)
@@ -1869,7 +1876,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 WriteToken("::", MethodDeclaration.Roles.DoubleColon);
             }
             methodDeclaration.NameToken.AcceptVisitor(this, data);
-            WriteTypeParameters(methodDeclaration.TypeParameters,false);
+            WriteTypeParameters(methodDeclaration.TypeParameters, false);
             Space(policy.SpaceBeforeMethodDeclarationParentheses);
             WriteCommaSeparatedListInParenthesis(methodDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
             //foreach (Constraint constraint in methodDeclaration.Constraints)
@@ -2380,7 +2387,7 @@ namespace ICSharpCode.NRefactory.Cpp
             }
         }
 
-        public void WriteTypeParameters(IEnumerable<TypeParameterDeclaration> typeParameters,bool declaration)
+        public void WriteTypeParameters(IEnumerable<TypeParameterDeclaration> typeParameters, bool declaration)
         {
             if (typeParameters.Any())
             {
@@ -2575,6 +2582,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     Comma(node);
                 }
                 WriteModifiers(modifiers);
+
                 node.AcceptVisitor(this, null);
             }
         }
@@ -2791,9 +2799,9 @@ namespace ICSharpCode.NRefactory.Cpp
             vdecl_end.AcceptVisitor(this, data);
 
 
-            /***************************FOR*************************/
-            ////FOR STATEMENT            
-            ForStatement forstmt = new ForStatement();
+            /***************************WHILE*************************/
+            ////WHILE STATEMENT            
+            WhileStatement whilstmt = new WhileStatement();
 
             ///*embedded statement*/
             VariableDeclarationStatement vds = new VariableDeclarationStatement(
@@ -2806,24 +2814,17 @@ namespace ICSharpCode.NRefactory.Cpp
             foreach (Statement st in foreachStatement.EmbeddedStatement.GetChildrenByRole(BlockStatement.StatementRole))
                 blckstmt.AddChild(st.Clone(), BlockStatement.StatementRole);
 
-            forstmt.EmbeddedStatement = blckstmt;
+            whilstmt.EmbeddedStatement = blckstmt;
 
             ///*condition*/
             BinaryOperatorExpression bop = new BinaryOperatorExpression();
             bop.Operator = BinaryOperatorType.InEquality;
-            bop.Left = new IdentifierExpression("__begin");
+            bop.Left = new UnaryOperatorExpression(UnaryOperatorType.PostIncrement, new IdentifierExpression("__begin"));
             bop.Right = new IdentifierExpression("__end");
-            forstmt.Condition = bop;
+            whilstmt.Condition = bop;
 
-            /*iterators*/
-            UnaryOperatorExpression uop = new UnaryOperatorExpression();
-            uop.Operator = UnaryOperatorType.Increment;
-            uop.Expression = new IdentifierExpression("__begin");
-            ExpressionStatement est = new ExpressionStatement(uop);
-            forstmt.AddChild(est, ForStatement.IteratorRole);
-
-            forstmt.AcceptVisitor(this, data);
-            /***************************FOR*************************/
+            whilstmt.AcceptVisitor(this, data);
+            /***************************WHIILE*************************/
             return EndNode(foreachStatement);
         }
 
