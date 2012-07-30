@@ -27,73 +27,48 @@
 using ICSharpCode.NRefactory.Cpp.Ast;
 namespace ICSharpCode.NRefactory.Cpp
 {
-	/// <summary>
-	/// foreach (Type VariableName in InExpression) EmbeddedStatement
-	/// </summary>
-	public class ForeachStatement : Statement
-	{
-        public CppTokenNode ForeachToken
-        {
-			get { return GetChildByRole (Roles.Keyword); }
-		}
+    /// <summary>
+    /// foreach (Type VariableName in InExpression) EmbeddedStatement
+    /// </summary>
+    public class ForeachStatement : Statement
+    {
+        public readonly static Role<Statement> Begin = new Role<Statement>("BeginExpression", Statement.Null);
+        public readonly static Role<Statement> End = new Role<Statement>("EndExpression", Statement.Null);
+        public readonly static Role<Statement> Range = new Role<Statement>("RangeExpression", Statement.Null);
 
-        public CppTokenNode LParToken
+        public Statement BeginExpression
         {
-			get { return GetChildByRole (Roles.LPar); }
-		}
-		
-		public AstType VariableType {
-			get { return GetChildByRole (Roles.Type); }
-			set { SetChildByRole (Roles.Type, value); }
-		}
-		
-		public string VariableName {
-			get {
-				return GetChildByRole (Roles.Identifier).Name;
-			}
-			set {
-				SetChildByRole(Roles.Identifier, Identifier.Create (value, TextLocation.Empty));
-			}
-		}
-		
-		public Identifier VariableNameToken {
-			get {
-				return GetChildByRole (Roles.Identifier);
-			}
-			set {
-				SetChildByRole(Roles.Identifier, value);
-			}
-		}
-		
-		public CppTokenNode InToken {
-			get { return GetChildByRole (Roles.InKeyword); }
-		}
-		
-		public Expression InExpression {
-			get { return GetChildByRole (Roles.Expression); }
-			set { SetChildByRole (Roles.Expression, value); }
-		}
+            get { return GetChildByRole(Begin); }
+            set { SetChildByRole(Begin, value); }
+        }
 
-        public CppTokenNode RParToken
+        public Statement EndExpression
         {
-			get { return GetChildByRole (Roles.RPar); }
-		}
-		
-		public Statement EmbeddedStatement {
-			get { return GetChildByRole (Roles.EmbeddedStatement); }
-			set { SetChildByRole (Roles.EmbeddedStatement, value); }
-		}
-		
-		public override S AcceptVisitor<T, S> (IAstVisitor<T, S> visitor, T data = default(T))
-		{
-			return visitor.VisitForeachStatement (this, data);
-		}
-		
-		protected internal override bool DoMatch(AstNode other, PatternMatching.Match match)
-		{
-			ForeachStatement o = other as ForeachStatement;
-			return o != null && this.VariableType.DoMatch(o.VariableType, match) && MatchString(this.VariableName, o.VariableName)
-				&& this.InExpression.DoMatch(o.InExpression, match) && this.EmbeddedStatement.DoMatch(o.EmbeddedStatement, match);
-		}
-	}
+            get { return GetChildByRole(End); }
+            set { SetChildByRole(End, value); }
+        }
+
+        public Statement RangeExpression
+        {
+            get { return GetChildByRole(Range); }
+            set { SetChildByRole(Range, value); }
+        }
+
+        public Statement WhileStatement
+        {
+            get { return GetChildByRole(Roles.EmbeddedStatement); }
+            set { SetChildByRole(Roles.EmbeddedStatement, value); }
+        }
+
+        public override S AcceptVisitor<T, S>(IAstVisitor<T, S> visitor, T data = default(T))
+        {
+            return visitor.VisitForeachStatement(this, data);
+        }
+
+        protected internal override bool DoMatch(AstNode other, PatternMatching.Match match)
+        {
+            ForeachStatement o = other as ForeachStatement;
+            return o != null && this.WhileStatement.DoMatch(o.WhileStatement, match);
+        }
+    }
 }

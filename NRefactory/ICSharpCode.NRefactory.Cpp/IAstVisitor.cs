@@ -54,6 +54,7 @@ namespace ICSharpCode.NRefactory.Cpp
 		S VisitObjectCreateExpression(ObjectCreateExpression objectCreateExpression, T data);
 		S VisitAnonymousTypeCreateExpression(AnonymousTypeCreateExpression anonymousTypeCreateExpression, T data);
 		S VisitParenthesizedExpression(ParenthesizedExpression parenthesizedExpression, T data);
+        S VisitPointerExpression(PointerExpression pointerExpression, T data);//*********************
 		S VisitPointerReferenceExpression(PointerReferenceExpression pointerReferenceExpression, T data);
 		S VisitPrimitiveExpression(PrimitiveExpression primitiveExpression, T data);
 		S VisitSizeOfExpression(SizeOfExpression sizeOfExpression, T data);

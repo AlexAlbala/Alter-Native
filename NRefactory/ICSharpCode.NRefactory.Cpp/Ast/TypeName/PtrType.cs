@@ -13,8 +13,8 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
     public class PtrType : AstType
     {
         public static readonly Role<AstType> TargetRole = new Role<AstType>("Target", AstType.Null);
-        public static readonly Role<AstType> PointerRole = new Role<AstType>("Pointer", AstType.Null);
-        public static readonly Role<AstType> AddressRole = new Role<AstType>("Address", AstType.Null);
+        public static readonly Role<CppTokenNode> PointerRole = new Role<CppTokenNode>("Pointer", CppTokenNode.Null);
+        public static readonly Role<CppTokenNode> AddressRole = new Role<CppTokenNode>("Address", CppTokenNode.Null);
 
         public AstType Target
         {

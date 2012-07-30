@@ -8,7 +8,7 @@ using namespace System_Collections;
 
 namespace System_Collections_Generic{
 
-template<typename T> class IEnumerable_T : public IEnumerable{
+template<typename T> class IEnumerable_T : public virtual IEnumerable{
 public:
 	virtual IEnumerator_T<T>* GetEnumerator()=0;
 

@@ -13,6 +13,7 @@ namespace ICSharpCode.NRefactory.Cpp
         private static Dictionary<string, List<string>> properties = new Dictionary<string, List<string>>();
         private static Dictionary<string, Ast.AstType> auxVariables = new Dictionary<string, Ast.AstType>();
         private static List<Ast.Statement> addedConstructorStatements = new List<Ast.Statement>();
+        private static Dictionary<string, List<FieldDeclaration>> fields = new Dictionary<string, List<FieldDeclaration>>();
 
         //RESOLVER
         private static Dictionary<string, string> libraryMap = new Dictionary<string, string>();
@@ -149,6 +150,37 @@ namespace ICSharpCode.NRefactory.Cpp
         #endregion
 
         #region OutputVisitor
+
+        public static void AddField(string type, FieldDeclaration field)
+        {
+            if (!fields.ContainsKey(type))
+            {
+                fields.Add(type, new List<FieldDeclaration>() { field });
+                return;
+            }
+            else
+            {
+                if (!fields[type].Contains(field))
+                    fields[type].Add(field);
+            }
+        }
+
+        public static bool IsPointer(string currentType, string currentField)
+        {
+            if (fields.ContainsKey(currentType))
+            {
+                foreach (FieldDeclaration fd in fields[currentType])
+                {
+                    if (fd.ReturnType is Cpp.Ast.PtrType)
+                    {
+                        var col = fd.Variables;
+                        if (col.First(x => x.Name == currentField) != null)
+                            return true;
+                    }
+                }                
+            }
+            return false;
+        }
 
         public static Dictionary<string, List<string>> GetPropertiesList()
         {

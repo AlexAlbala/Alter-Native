@@ -301,8 +301,30 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitIndexerExpression(CSharp.IndexerExpression indexerExpression, object data)
         {
+            //TODO EXTRACT FIELD AND CHECK Cache.IsPointer(currentType, currentField);            
+            bool isptr = false;
+            if (indexerExpression.Target is CSharp.MemberReferenceExpression)
+            {
+                var iexpTar = indexerExpression.Target as CSharp.MemberReferenceExpression;
+                if (iexpTar.Target is CSharp.ThisReferenceExpression)
+                {
+                    isptr = Cache.IsPointer(currentType.Name, iexpTar.MemberName);
+                }
+                else if (iexpTar.Target is CSharp.IdentifierExpression)
+                {
+                    var id = iexpTar.Target as CSharp.IdentifierExpression;
+                    isptr = Cache.IsPointer(id.Identifier, iexpTar.MemberName);
+                }
+            }
+
             var expr = new IndexerExpression((Expression)indexerExpression.Target.AcceptVisitor(this, data));
             ConvertNodes(indexerExpression.Arguments, expr.Arguments);
+            if (isptr)
+            {
+                var pointerExpr = new PointerExpression();
+                pointerExpr.Target = expr.Clone();
+                return EndNode(indexerExpression, pointerExpr);
+            }
             return EndNode(indexerExpression, expr);
         }
 
@@ -782,10 +804,67 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitForeachStatement(CSharp.ForeachStatement foreachStatement, object data)
         {
             ForeachStatement feach = new ForeachStatement();
-            feach.EmbeddedStatement = (Statement)foreachStatement.EmbeddedStatement.AcceptVisitor(this, data);
-            feach.InExpression = (Expression)foreachStatement.InExpression.AcceptVisitor(this, data); ;
-            feach.VariableName = foreachStatement.VariableName;
-            feach.VariableType = (AstType)foreachStatement.VariableType.AcceptVisitor(this, data);
+
+            /***************************WHILE*************************/
+            ///WHILE STATEMENT            
+            WhileStatement whilstmt = new WhileStatement();
+
+            ///*embedded statement*/
+            VariableDeclarationStatement vds = new VariableDeclarationStatement(
+                (AstType)foreachStatement.VariableType.AcceptVisitor(this, data),//TODO PTRTYPE TO ADD *
+                foreachStatement.VariableName,
+                new IdentifierExpression("*__begin"));//TODO CHANGE FOR POINTERIDENTIFIEREXPRESSION
+
+            BlockStatement blckstmt = new BlockStatement();
+            blckstmt.AddChild(vds, BlockStatement.StatementRole);
+            foreach (CSharp.Statement st in foreachStatement.EmbeddedStatement.GetChildrenByRole(CSharp.BlockStatement.StatementRole))
+                blckstmt.AddChild((Statement)st.AcceptVisitor(this, data), BlockStatement.StatementRole);
+            whilstmt.EmbeddedStatement = blckstmt;
+
+            ///*condition*/
+            BinaryOperatorExpression bop = new BinaryOperatorExpression();
+            bop.Operator = BinaryOperatorType.InEquality;
+            bop.Left = new UnaryOperatorExpression(UnaryOperatorType.PostIncrement, new IdentifierExpression("__begin"));
+            bop.Right = new IdentifierExpression("__end");
+            whilstmt.Condition = bop;
+
+            feach.WhileStatement = whilstmt;
+            /***************************WHIILE*************************/
+
+            /***************************RANGE*************************/
+            VariableDeclarationStatement vdecl_range = new VariableDeclarationStatement();
+            vdecl_range.Type = new PrimitiveType("auto");
+            VariableInitializer vinit_range = new VariableInitializer("&&__range", (Expression)foreachStatement.InExpression.AcceptVisitor(this, data));
+            vdecl_range.AddChild(vinit_range, FieldDeclaration.Roles.Variable);
+            feach.RangeExpression = vdecl_range;
+            /***************************RANGE*************************/
+
+            /***************************BEGIN*************************/
+            MemberReferenceExpression mref_beg = new MemberReferenceExpression(
+               new IdentifierExpression("__range"),
+               "begin");
+            InvocationExpression inv_beg = new InvocationExpression(mref_beg);
+
+            VariableDeclarationStatement vdecl_beg = new VariableDeclarationStatement();
+            vdecl_beg.Type = new PrimitiveType("auto");
+            VariableInitializer vinit_beg = new VariableInitializer("__begin", inv_beg);
+            vdecl_beg.AddChild(vinit_beg, FieldDeclaration.Roles.Variable);
+            feach.BeginExpression = vdecl_beg;
+            /***************************BEGIN*************************/
+
+            /***************************END*************************/
+            MemberReferenceExpression mref_end = new MemberReferenceExpression(
+                new IdentifierExpression("__range"),
+                "end");
+            InvocationExpression inv_end = new InvocationExpression(mref_end);
+
+            VariableDeclarationStatement vdecl_end = new VariableDeclarationStatement();
+            vdecl_end.Type = new PrimitiveType("auto");
+            VariableInitializer vinit_end = new VariableInitializer("__end", inv_end);
+            vdecl_end.AddChild(vinit_end, FieldDeclaration.Roles.Variable);
+            feach.EndExpression = vdecl_end;
+            /***************************END*************************/
+
             return EndNode(foreachStatement, feach);
         }
 
@@ -846,12 +925,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 if (IsPropertyCall(r))
                 {
                     //GET
-                    InvocationExpression m = new InvocationExpression(
+                    expr = new InvocationExpression(
                         new MemberReferenceExpression(r.Target.Clone(), "get" + r.MemberName), new Expression[1] { new EmptyExpression() });
-
-                    ExpressionStatement exprs = new ExpressionStatement(m);
-
-                    return EndNode(returnStatement, exprs);
                 }
             }
 
@@ -1090,6 +1165,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 }
             }
 
+            Cache.AddField(currentType.Name, decl);
             return EndNode(fieldDeclaration, decl);
         }
 
@@ -1142,8 +1218,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitPropertyDeclaration(CSharp.PropertyDeclaration propertyDeclaration, object data)
         {
-            //TODO: If the property is clicked in the TreeView panel, the code crashes (cause its parent is not a TypeDeclaration) 
-            Cache.AddProperty(propertyDeclaration.Name, currentType.Name);
+            if (currentType != null) //If currentType is null, the property is on the treeView
+                Cache.AddProperty(propertyDeclaration.Name, currentType.Name);
 
             PropertyDeclaration pdecl = new PropertyDeclaration();
             pdecl.Getter = (MethodDeclaration)propertyDeclaration.Getter.AcceptVisitor(this, data);

@@ -588,7 +588,10 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitIndexerExpression(IndexerExpression indexerExpression, object data)
         {
             StartNode(indexerExpression);
+            //Add parenthesis if the parent is pointer expression: *a[3] is incorrect but (*a)[3] is correct !           
             indexerExpression.Target.AcceptVisitor(this, data);
+            if (indexerExpression.Parent is PointerExpression)
+                RPar();
             Space(policy.SpaceBeforeMethodCallParentheses);
             WriteCommaSeparatedListInBrackets(indexerExpression.Arguments);
             return EndNode(indexerExpression);
@@ -1762,7 +1765,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitFieldDeclaration(FieldDeclaration fieldDeclaration, object data)
         {
-            StartNode(fieldDeclaration);
+            StartNode(fieldDeclaration);            
 
             if (fieldDeclaration.HasModifier(Modifiers.Static) || isTemplateType)
             {
@@ -2768,63 +2771,11 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitForeachStatement(ForeachStatement foreachStatement, object data)
         {
-            StartNode(foreachStatement);
-
-            VariableDeclarationStatement vdecl_range = new VariableDeclarationStatement();
-            vdecl_range.Type = new PrimitiveType("auto");
-            VariableInitializer vinit_range = new VariableInitializer("&&__range", foreachStatement.InExpression.Clone());
-            vdecl_range.AddChild(vinit_range, FieldDeclaration.Roles.Variable);
-            vdecl_range.AcceptVisitor(this, data);
-
-
-            MemberReferenceExpression mref_beg = new MemberReferenceExpression(
-               new IdentifierExpression("__range"),
-               "begin()");
-
-            VariableDeclarationStatement vdecl_beg = new VariableDeclarationStatement();
-            vdecl_beg.Type = new PrimitiveType("auto");
-            VariableInitializer vinit_beg = new VariableInitializer("__begin", mref_beg);
-            vdecl_beg.AddChild(vinit_beg, FieldDeclaration.Roles.Variable);
-            vdecl_beg.AcceptVisitor(this, data);
-
-
-            MemberReferenceExpression mref_end = new MemberReferenceExpression(
-                new IdentifierExpression("__range"),
-                "end()");
-
-            VariableDeclarationStatement vdecl_end = new VariableDeclarationStatement();
-            vdecl_end.Type = new PrimitiveType("auto");
-            VariableInitializer vinit_end = new VariableInitializer("__end", mref_end);
-            vdecl_end.AddChild(vinit_end, FieldDeclaration.Roles.Variable);
-            vdecl_end.AcceptVisitor(this, data);
-
-
-            /***************************WHILE*************************/
-            ////WHILE STATEMENT            
-            WhileStatement whilstmt = new WhileStatement();
-
-            ///*embedded statement*/
-            VariableDeclarationStatement vds = new VariableDeclarationStatement(
-                (AstType)foreachStatement.VariableType.Clone(),//TODO PTRTYPE TO ADD *
-                foreachStatement.VariableName,
-                new IdentifierExpression("*__begin"));//TODO CHANGE FOR POINTERIDENTIFIEREXPRESSION
-
-            BlockStatement blckstmt = new BlockStatement();
-            blckstmt.AddChild(vds, BlockStatement.StatementRole);
-            foreach (Statement st in foreachStatement.EmbeddedStatement.GetChildrenByRole(BlockStatement.StatementRole))
-                blckstmt.AddChild(st.Clone(), BlockStatement.StatementRole);
-
-            whilstmt.EmbeddedStatement = blckstmt;
-
-            ///*condition*/
-            BinaryOperatorExpression bop = new BinaryOperatorExpression();
-            bop.Operator = BinaryOperatorType.InEquality;
-            bop.Left = new UnaryOperatorExpression(UnaryOperatorType.PostIncrement, new IdentifierExpression("__begin"));
-            bop.Right = new IdentifierExpression("__end");
-            whilstmt.Condition = bop;
-
-            whilstmt.AcceptVisitor(this, data);
-            /***************************WHIILE*************************/
+            StartNode(foreachStatement);          
+            foreachStatement.RangeExpression.AcceptVisitor(this,data);            
+            foreachStatement.BeginExpression.AcceptVisitor(this, data);
+            foreachStatement.EndExpression.AcceptVisitor(this, data);
+            foreachStatement.WhileStatement.AcceptVisitor(this, data);           
             return EndNode(foreachStatement);
         }
 
@@ -3177,7 +3128,7 @@ namespace ICSharpCode.NRefactory.Cpp
             //WriteKeyword("gc_ptr", PtrType.Roles.Keyword);
             //WriteToken("<", PtrType.Roles.LChevron);
             ptrType.Target.AcceptVisitor(this, data);
-            WriteToken("*", PtrType.Roles.RChevron);//TODO PTRROLE
+            WriteToken("*", PtrType.PointerRole);
             //WriteToken(">", PtrType.Roles.RChevron);
             return EndNode(ptrType);
         }
@@ -3192,6 +3143,16 @@ namespace ICSharpCode.NRefactory.Cpp
                 m = m.Parent;
             }
             return false;
+        }
+
+
+        public object VisitPointerExpression(PointerExpression pointerExpression, object data)
+        {
+            StartNode(pointerExpression);
+            LPar();
+            WriteToken("*", PointerExpression.AsteriskRole);
+            pointerExpression.Target.AcceptVisitor(this, data);
+            return EndNode(pointerExpression);
         }
     }
 }
