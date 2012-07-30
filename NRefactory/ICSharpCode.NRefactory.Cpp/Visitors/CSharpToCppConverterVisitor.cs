@@ -811,9 +811,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
             ///*embedded statement*/
             VariableDeclarationStatement vds = new VariableDeclarationStatement(
-                (AstType)foreachStatement.VariableType.AcceptVisitor(this, data),//TODO PTRTYPE TO ADD *
+                (AstType)foreachStatement.VariableType.AcceptVisitor(this, data),
                 foreachStatement.VariableName,
-                new IdentifierExpression("*__begin"));//TODO CHANGE FOR POINTERIDENTIFIEREXPRESSION
+                new PointerIdentifierExpression("__begin"));
 
             BlockStatement blckstmt = new BlockStatement();
             blckstmt.AddChild(vds, BlockStatement.StatementRole);

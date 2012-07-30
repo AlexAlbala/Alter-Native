@@ -3154,5 +3154,14 @@ namespace ICSharpCode.NRefactory.Cpp
             pointerExpression.Target.AcceptVisitor(this, data);
             return EndNode(pointerExpression);
         }
+
+
+        public object VisitPointerIdentifierExpression(PointerIdentifierExpression pointerIdentifierExpression, object data)
+        {
+            StartNode(pointerIdentifierExpression);            
+            WriteToken("*", PointerExpression.AsteriskRole);
+            pointerIdentifierExpression.IdentifierToken.AcceptVisitor(this, data);
+            return EndNode(pointerIdentifierExpression);
+        }
     }
 }
