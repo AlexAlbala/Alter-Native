@@ -34,20 +34,27 @@ String* StreamReader::ReadLine()
 			std::getline(*file,line);
 		}
 	}
-
-	line.append("\n");//REVIEW THIS
 	return new String(line.data());
 }
 
 String* StreamReader::ReadToEnd()
 {
-	string data;
-	while(!file->eof())
+	if(file->is_open())
 	{
-		data.append(ReadLine()->Data);
-	}
+		char* buffer;	
 
-	return new String(data.data());
+		//Get file length
+		file->seekg(0,file->end);
+		int length = file->tellg();
+		file->seekg(0,ios::beg);
+
+		buffer = new char[length];
+		file->read(buffer,length);	
+
+		return new String(buffer);
+	}
+	else
+		throw exception();//TODO MESSAGE
 }
 
 void StreamReader::Close()
