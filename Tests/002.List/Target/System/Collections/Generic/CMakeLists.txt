@@ -1,5 +1,0 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
-PROJECT(sys_col_gen)
-FILE(GLOB GenLib *.h *.cpp)
-ADD_LIBRARY(System_Collections_Generic ${GenLib})
-SET_TARGET_PROPERTIES(System_Collections_Generic PROPERTIES LINKER_LANGUAGE CXX)

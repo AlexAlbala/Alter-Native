@@ -9,18 +9,41 @@ namespace RegressionTest
 {
     class Program
     {
+        private bool Debug = false;
+        private bool Verbose = false;
         Dictionary<DirectoryInfo, TestResult> Tests = new Dictionary<DirectoryInfo, TestResult>();
         string testPath = Environment.CurrentDirectory;
-        string alternativePath = Environment.CurrentDirectory + "/../AlterNative/bin/Debug/AlterNative.exe";        
+        string alternativePath = Environment.CurrentDirectory + "/../AlterNative/bin/Debug/AlterNative.exe";
 
         static void Main(string[] args)
         {
+            List<string> _args = new List<string>();
+            List<string> _opts = new List<string>();
+
+            foreach (string s in args)
+            {
+                if (s.StartsWith("-"))
+                    _opts.Add(s);
+                else
+                    _args.Add(s);
+            }
+
             Program p = new Program();
+
+            foreach (string s in _opts)
+            {
+                if (s.ToLowerInvariant().Contains("d"))
+                    p.Debug = true;
+                if (s.ToLowerInvariant().Contains("v"))
+                    p.Verbose = true;                    
+            }
+
+            
             p.AvailableTests();
-            if (args.Length == 0)
+            if (_args.Count == 0)
                 p.RunAll();
             else
-                p.RunTests(args);
+                p.RunTests(_args.ToArray());
 
         }
 
@@ -36,7 +59,7 @@ namespace RegressionTest
                     ContainsDirectory(di, "NETbin"))
                 {
                     Tests.Add(di, new TestResult());
-                    Console.WriteLine("Found test " + di.Name);
+                    DebugMessage("Found test " + di.Name);
                 }
             }
         }
@@ -67,15 +90,20 @@ namespace RegressionTest
 
         private void Cmake(TestResult res)
         {
+            Console.WriteLine("Configuring native source project...");
             //Run cmake
             Process runCmake = new Process();
             runCmake.StartInfo = new ProcessStartInfo("cmake", "..");
-            runCmake.StartInfo.RedirectStandardOutput = true;
             runCmake.StartInfo.CreateNoWindow = true;
             runCmake.StartInfo.UseShellExecute = false;
-            runCmake.OutputDataReceived += (sender, args) => Console.WriteLine(args.Data);
+            if (Verbose)
+            {
+                runCmake.StartInfo.RedirectStandardOutput = true;
+                runCmake.OutputDataReceived += (sender, args) => Console.WriteLine(args.Data);
+            }
             runCmake.Start();
-            runCmake.BeginOutputReadLine();
+            if (Verbose)
+                runCmake.BeginOutputReadLine();
             runCmake.WaitForExit();
 
             res.cmakeCode = (short)runCmake.ExitCode;
@@ -83,6 +111,7 @@ namespace RegressionTest
 
         private void msbuild(DirectoryInfo di, TestResult res)
         {
+            Console.WriteLine("Building native code...");
             //Compile the code
             string msbuildPath = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
             msbuildPath += @"msbuild.exe";
@@ -90,22 +119,39 @@ namespace RegressionTest
             //Run msbuild
             Process msbuild = new Process();
             msbuild.StartInfo = new ProcessStartInfo(msbuildPath, di.Name.Split('.')[1] + "Proj.sln");
-            msbuild.StartInfo.RedirectStandardOutput = true;
-            msbuild.StartInfo.CreateNoWindow = true;
             msbuild.StartInfo.UseShellExecute = false;
-            msbuild.OutputDataReceived += (sender, args) => Console.WriteLine(args.Data);
+            msbuild.StartInfo.CreateNoWindow = true;
+            if (Verbose)
+            {
+                msbuild.StartInfo.RedirectStandardOutput = true;
+                msbuild.OutputDataReceived += (sender, args) => Console.WriteLine(args.Data);
+            }
             msbuild.Start();
-            msbuild.BeginOutputReadLine();
+            if (Verbose)
+                msbuild.BeginOutputReadLine();
             msbuild.WaitForExit();
 
             res.msbuildCode = (short)msbuild.ExitCode;
+            DebugMessage("Exit Code: " + res.msbuildCode);
+        }
+
+        private void DebugMessage(string message)
+        {
+            if (Debug)
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine("DEBUG >>> " + message);
+                Console.ResetColor();
+            }
         }
 
         private void compareOutput(DirectoryInfo di, TestResult res)
         {
+            Console.WriteLine("Comparing outputs...");
             //Run original app
             Process orig = new Process();
             orig.StartInfo = new ProcessStartInfo(di.FullName + @"/NETbin/" + di.Name + ".exe");
+
             orig.StartInfo.RedirectStandardOutput = true;
             orig.StartInfo.CreateNoWindow = true;
             orig.StartInfo.UseShellExecute = false;
@@ -123,34 +169,70 @@ namespace RegressionTest
             String finalOutput = final.StandardOutput.ReadToEnd();
 
             res.output = string.Compare(originalOutput, finalOutput) == 0;
+
+            int maxLengthMsg = 300;
+            DebugMessage("ORIGINAL");
+            DebugMessage(originalOutput.Length > maxLengthMsg ? originalOutput.Substring(0, maxLengthMsg) + " [......] " : originalOutput);
+            DebugMessage("FINAL");
+            DebugMessage(finalOutput.Length > maxLengthMsg ? finalOutput.Substring(0, maxLengthMsg) + " [......] " : finalOutput);
         }
 
         private void alternative(DirectoryInfo di)
         {
+            Console.WriteLine("Running alternative...");
             DirectoryInfo outd = new DirectoryInfo(di.FullName + "/Output");
             CleanDirectory(outd);
 
             Process runAlt = new Process();
 
-            runAlt.StartInfo = new ProcessStartInfo(alternativePath, di.FullName + "/NETbin/" + di.Name + ".exe" + " "
+            string altArgs = di.FullName + "/NETbin/" + di.Name + ".exe" + " "
                                                     + di.FullName + "/Output/" + " "
                                                     + "CXX" + " "
-                                                    + di.FullName + "/../../Lib/");
+                                                    + di.FullName + "/../../Lib/";
+
+            DebugMessage("ALTERNATIVE COMMAND:");
+            DebugMessage(alternativePath + " " + altArgs);
+
+            runAlt.StartInfo = new ProcessStartInfo(alternativePath, altArgs);
+            runAlt.StartInfo.CreateNoWindow = true;
+            runAlt.StartInfo.UseShellExecute = false;
+            if (Verbose)
+            {
+                runAlt.StartInfo.RedirectStandardOutput = true;
+                runAlt.OutputDataReceived += (sender, args) => Console.WriteLine(args.Data);
+            }
             runAlt.Start();
+            if (Verbose)
+                runAlt.BeginOutputReadLine();
             runAlt.WaitForExit();
         }
 
         private void diff(DirectoryInfo di, TestResult res)
         {
+            Console.WriteLine("Diff output source with target source...");
             Directory.SetCurrentDirectory(testPath);
+            DebugMessage("Current directory: " + Environment.CurrentDirectory);
             Process diff = new Process();
-            diff.StartInfo = new ProcessStartInfo("diff", "-qr " + di.Name + "/Output " + di.Name + "/Target");
-            diff.StartInfo.RedirectStandardOutput = true;
-            diff.StartInfo.CreateNoWindow = true;
-            diff.StartInfo.UseShellExecute = false;
-            diff.OutputDataReceived += (sender, args) => Console.WriteLine(args.Data);
+            string diffArgs = "-qr " +
+                    /*"-x \"" + di.Name + "/Output/System\" " +
+                     "-x \"" + di.Name + "/Output/gc\" " +*/
+                    di.Name + "/Output " + di.Name + "/Target";
+
+            DebugMessage("DIFF COMMAND:");
+            DebugMessage("diff " + diffArgs);
+
+
+            diff.StartInfo = new ProcessStartInfo("diff", diffArgs);            
+            if (Verbose)
+            {
+                diff.StartInfo.CreateNoWindow = true;
+                diff.StartInfo.UseShellExecute = false;
+                diff.StartInfo.RedirectStandardOutput = true;
+                diff.OutputDataReceived += (sender, args) => Console.WriteLine(args.Data);
+            }
             diff.Start();
-            diff.BeginOutputReadLine();
+            if (Verbose)
+                diff.BeginOutputReadLine();
             diff.WaitForExit();
 
             res.diffCode = (short)diff.ExitCode;

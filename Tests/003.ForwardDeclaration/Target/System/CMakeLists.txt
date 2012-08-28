@@ -1,5 +1,0 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
-PROJECT(sys)
-ADD_SUBDIRECTORY(Collections)
-FILE(GLOB SysLib *.h *.cpp)
-ADD_LIBRARY(System ${SysLib})
