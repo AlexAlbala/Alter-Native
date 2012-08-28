@@ -121,7 +121,8 @@ namespace AlterNative
             if (args.Length >= 4 && args[3] != "")
                 CopyAll(new DirectoryInfo(args[3].Replace('\\', '/')), new DirectoryInfo(outputDir));
 
-            string name = adef.MainModule.Name.TrimEnd(new char[] { '.', 'e', 'x', 'e' });
+            //TRIM END .EXE : BUG If The name is File.exe, trim end ".exe" returns Fil !!!!
+            string name = adef.MainModule.Name.Substring(0, adef.MainModule.Name.Length - 4);
             CMakeGenerator.GenerateCMakeLists(name + "Proj",name, outputDir, FileWritterManager.GetSourceFiles());
 
             Console.ForegroundColor = ConsoleColor.Green;

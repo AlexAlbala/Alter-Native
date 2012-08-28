@@ -22,6 +22,8 @@ namespace ICSharpCode.NRefactory.Cpp
             libraryMap.Add("IEnumerable", "\"System/Collections/IEnumerable.h\"");
             libraryMap.Add("IEnumerator", "\"System/Collections/IEnumeratorCXX.h\"");
             libraryMap.Add("IDisposable", "\"System/IDisposable.h\"");
+            libraryMap.Add("StreamReader", "\"System/IO/StreamReaderCXX.h\"");
+            libraryMap.Add("StreamWriter", "\"System/IO/StreamWriterCXX.h\"");
             Cache.InitLibrary(libraryMap);
         }
 
