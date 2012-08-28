@@ -107,6 +107,7 @@ namespace RegressionTest
             runCmake.WaitForExit();
 
             res.cmakeCode = (short)runCmake.ExitCode;
+            DebugMessage("Exit Code: " + res.cmakeCode);
         }
 
         private void msbuild(DirectoryInfo di, TestResult res)
@@ -116,9 +117,11 @@ namespace RegressionTest
             string msbuildPath = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
             msbuildPath += @"msbuild.exe";
 
+            string targetFile = di.Name.Split('.')[1] + "Proj.sln";
+            DebugMessage("Target file: " + targetFile);
             //Run msbuild
-            Process msbuild = new Process();
-            msbuild.StartInfo = new ProcessStartInfo(msbuildPath, di.Name.Split('.')[1] + "Proj.sln");
+            Process msbuild = new Process();            
+            msbuild.StartInfo = new ProcessStartInfo(msbuildPath, targetFile);
             msbuild.StartInfo.UseShellExecute = false;
             msbuild.StartInfo.CreateNoWindow = true;
             if (Verbose)
@@ -188,7 +191,7 @@ namespace RegressionTest
             string altArgs = di.FullName + "/NETbin/" + di.Name + ".exe" + " "
                                                     + di.FullName + "/Output/" + " "
                                                     + "CXX" + " "
-                                                    + di.FullName + "/../../Lib/";
+                                                    + testPath + "/../Lib/";
 
             DebugMessage("ALTERNATIVE COMMAND:");
             DebugMessage(alternativePath + " " + altArgs);
@@ -214,8 +217,8 @@ namespace RegressionTest
             DebugMessage("Current directory: " + Environment.CurrentDirectory);
             Process diff = new Process();
             string diffArgs = "-qr " +
-                    /*"-x \"" + di.Name + "/Output/System\" " +
-                     "-x \"" + di.Name + "/Output/gc\" " +*/
+                    "-x \"" + di.Name + "/Output/System/*\" " +
+                     "-x \"" + di.Name + "/Output/gc/*\" " +
                     di.Name + "/Output " + di.Name + "/Target";
 
             DebugMessage("DIFF COMMAND:");
@@ -236,6 +239,7 @@ namespace RegressionTest
             diff.WaitForExit();
 
             res.diffCode = (short)diff.ExitCode;
+            DebugMessage("Exit Code: " + res.diffCode);
         }
 
         public void RunTests(string[] tests)
