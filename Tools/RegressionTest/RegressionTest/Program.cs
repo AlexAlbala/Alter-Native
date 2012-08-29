@@ -35,10 +35,10 @@ namespace RegressionTest
                 if (s.ToLowerInvariant().Contains("d"))
                     p.Debug = true;
                 if (s.ToLowerInvariant().Contains("v"))
-                    p.Verbose = true;                    
+                    p.Verbose = true;
             }
 
-            
+
             p.AvailableTests();
             if (_args.Count == 0)
                 p.RunAll();
@@ -120,7 +120,7 @@ namespace RegressionTest
             string targetFile = di.Name.Split('.')[1] + "Proj.sln";
             DebugMessage("Target file: " + targetFile);
             //Run msbuild
-            Process msbuild = new Process();            
+            Process msbuild = new Process();
             msbuild.StartInfo = new ProcessStartInfo(msbuildPath, targetFile);
             msbuild.StartInfo.UseShellExecute = false;
             msbuild.StartInfo.CreateNoWindow = true;
@@ -210,22 +210,22 @@ namespace RegressionTest
             runAlt.WaitForExit();
         }
 
-        private void diff(DirectoryInfo di, TestResult res)
+        private int diffDirectory(DirectoryInfo di1, DirectoryInfo di2)
         {
-            Console.WriteLine("Diff output source with target source...");
-            Directory.SetCurrentDirectory(testPath);
-            DebugMessage("Current directory: " + Environment.CurrentDirectory);
+            if (!di1.Exists || !di2.Exists)
+                return 1;
+
             Process diff = new Process();
-            string diffArgs = "-qr " +
-                    "-x \"" + di.Name + "/Output/System/*\" " +
-                     "-x \"" + di.Name + "/Output/gc/*\" " +
-                    di.Name + "/Output " + di.Name + "/Target";
+            string diffArgs = "-q " +
+                /*"-x \"" + di.Name + "/Output/System/*\" " +
+                 "-x \"" + di.Name + "/Output/gc/*\" " +*/
+                    di1.FullName + " " + di2.FullName;
 
             DebugMessage("DIFF COMMAND:");
             DebugMessage("diff " + diffArgs);
 
 
-            diff.StartInfo = new ProcessStartInfo("diff", diffArgs);            
+            diff.StartInfo = new ProcessStartInfo("diff", diffArgs);
             if (Verbose)
             {
                 diff.StartInfo.CreateNoWindow = true;
@@ -238,7 +238,46 @@ namespace RegressionTest
                 diff.BeginOutputReadLine();
             diff.WaitForExit();
 
-            res.diffCode = (short)diff.ExitCode;
+            return diff.ExitCode;
+        }
+
+        private void diff(DirectoryInfo di, TestResult res)
+        {
+            int exitCode = 0;
+            Console.WriteLine("Diff output source with target source...");
+            Directory.SetCurrentDirectory(testPath);
+            DebugMessage("Current directory: " + Environment.CurrentDirectory);
+
+
+            DirectoryInfo output = new DirectoryInfo(di.FullName + "/Output");
+            DirectoryInfo target = new DirectoryInfo(di.FullName + "/Target");
+            int rootDirectoryCode = diffDirectory(output, target);
+
+            if (rootDirectoryCode == 0)
+            {
+                foreach (DirectoryInfo d in output.GetDirectories())
+                {
+                    if (d.Name == "System" || d.Name == "gc")
+                    {
+                        DebugMessage("Ignoring " + d.Name + " folder");
+                        continue;
+                    }
+
+                    DirectoryInfo d1 = new DirectoryInfo(di.FullName + "/Output/" + d.Name);
+                    DirectoryInfo d2 = new DirectoryInfo(di.FullName + "/Target/" + d.Name);
+
+                    int dirCode = diffDirectory(d1, d2);
+                    if (dirCode != 0)
+                    {
+                        exitCode = dirCode;
+                        break;
+                    }
+                }
+            }
+            else
+                exitCode = rootDirectoryCode;
+
+            res.diffCode = (short)exitCode;
             DebugMessage("Exit Code: " + res.diffCode);
         }
 

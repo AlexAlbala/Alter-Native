@@ -4,9 +4,9 @@
 
 namespace Properties{
 
-	class Program : public Object, public gc_cleanup
+	class Program : public virtual Object, public virtual gc_cleanup
 	{
 		public:
-			static void Main(String args[]);
+			static void Main(String* args[]);
 	};
 }

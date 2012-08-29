@@ -1,4 +1,4 @@
-#include "Program.h"
+#include "A.h"
 using namespace System;
 using namespace PropertyConstructor;
 
@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 	for(int i = 0; i < argc; i++)
 		args[i] = argv[i];
 
-	A::Main(args);
+	A::Main(&args);
 	//TODO
 	//delete args;
 }

@@ -7,12 +7,12 @@ namespace ForwardDeclaration{
 	//Forward Declaration
 	class ClassB;
 
-	class ClassA : public Object, public gc_cleanup{
+	class ClassA : public virtual Object, public virtual gc_cleanup{
 		private:
 			ClassB* b;
 		public:
 			ClassA();
 		public:
-			String SayHello();
+			String* SayHello();
 	};
 }

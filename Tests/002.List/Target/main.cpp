@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 	for(int i = 0; i < argc; i++)
 		args[i] = argv[i];
 
-	Program::Main(args);
+	Program::Main(&args);
 	//TODO
 	//delete args;
 }

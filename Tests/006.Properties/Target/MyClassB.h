@@ -3,7 +3,7 @@
 
 namespace Properties{
 
-	class MyClassB : public Object, public gc_cleanup
+	class MyClassB : public virtual Object, public virtual gc_cleanup
 	{
 		private:
 			int _data;

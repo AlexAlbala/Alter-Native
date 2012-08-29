@@ -8,12 +8,12 @@
 using namespace System;
 namespace List{
 
-	class Program : public Object, public gc_cleanup
+	class Program : public virtual Object, public virtual gc_cleanup
 	{
 		private:
 			MyList* list;
 		public:
-			static void Main(String args[]);
+			static void Main(String* args[]);
 		private:
 			void Run();
 		private:

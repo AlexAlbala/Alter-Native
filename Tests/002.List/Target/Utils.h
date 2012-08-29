@@ -5,7 +5,7 @@
 using namespace System;
 namespace List{
 
-	class Utils : public Object, public gc_cleanup
+	class Utils : public virtual Object, public virtual gc_cleanup
 	{
 		public:
 		static Random* random;

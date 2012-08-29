@@ -1,6 +1,6 @@
 #include "Program.h"
 using namespace System;
-using namespace Properties;
+using namespace File;
 
 int main(int argc, char *argv[])
 {

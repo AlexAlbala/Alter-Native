@@ -1,7 +1,7 @@
 #include "Program.h"
 namespace List{
 
-	void Program::Main(String args[]){
+	void Program::Main(String* args[]){
 		Program* p = new Program();
 		p->Run();
 		p->printList();

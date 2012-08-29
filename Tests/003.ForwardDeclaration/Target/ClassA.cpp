@@ -4,7 +4,7 @@ namespace ForwardDeclaration{
 	ClassA::ClassA(){
 		this->b = new ClassB(this);
 	}
-	String ClassA::SayHello()
+	String* ClassA::SayHello()
 	{
 		return this->b->SayHello();
 	}
