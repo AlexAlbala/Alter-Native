@@ -23,7 +23,6 @@ StreamReader::~StreamReader(void)
 	delete file;
 }
 
-//REVIEW THIS METHOD !
 String* StreamReader::ReadLine()
 {
 	string line;
@@ -55,6 +54,28 @@ String* StreamReader::ReadToEnd()
 	}
 	else
 		throw exception();//TODO MESSAGE
+}
+
+//TODO TEST
+int StreamReader::Peek()
+{
+	return file->peek();
+}
+
+//TODO TEST
+int StreamReader::Read()
+{
+	char* tmp = new char[1];
+	file->read(tmp,1);
+
+	return int(*tmp);
+}
+
+//TODO TEST
+int StreamReader::Read(char* buffer, int index, int count)
+{
+	file->read(buffer + index,count);
+	return count;
 }
 
 void StreamReader::Close()

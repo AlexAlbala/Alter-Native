@@ -16,6 +16,9 @@ public:
 	~StreamReader(void);
 	String* ReadLine();
 	String* ReadToEnd();
+	int Peek();
+	int Read();
+	int Read(char* buffer, int index, int count);
 	void Close();
 };
 }

@@ -77,14 +77,21 @@ namespace RegressionTest
 
         private void CleanDirectory(DirectoryInfo d)
         {
-            if (d.Exists)
+            try
             {
-                foreach (DirectoryInfo di in d.GetDirectories())
-                    CleanDirectory(di);
+                if (d.Exists)
+                {
+                    foreach (DirectoryInfo di in d.GetDirectories())
+                        CleanDirectory(di);
 
-                foreach (FileInfo fi in d.GetFiles())
-                    fi.Delete();
-                d.Delete();
+                    foreach (FileInfo fi in d.GetFiles())
+                        fi.Delete();
+                    d.Delete();
+                }
+            }
+            catch(IOException e)
+            {
+                DebugMessage("IOException: " + e.Message);
             }
         }
 
@@ -204,7 +211,15 @@ namespace RegressionTest
                 runAlt.StartInfo.RedirectStandardOutput = true;
                 runAlt.OutputDataReceived += (sender, args) => Console.WriteLine(args.Data);
             }
-            runAlt.Start();
+            try
+            {
+                runAlt.Start();
+            }
+            catch(UnauthorizedAccessException e)
+            {
+                DebugMessage("Unautorized exception: " + e.Message);
+                return;
+            }
             if (Verbose)
                 runAlt.BeginOutputReadLine();
             runAlt.WaitForExit();
