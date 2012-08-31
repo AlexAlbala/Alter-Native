@@ -4,15 +4,15 @@
 
 namespace System_IO {
 class TextReader : public IDisposable, public virtual gc_cleanup {
-public:
-	virtual void Close();
+public:	
 	void Dispose();
-	void Dispose(bool disposing);
+	virtual void Dispose(bool disposing);
 	virtual int Peek();
 	virtual int Read();
 	virtual int Read(char* buffer, int index, int count);
 	virtual String* ReadToEnd();
 	virtual int ReadBlock(char* buffer, int index, int count);
 	virtual String* ReadLine();
+	virtual void Close();
 };
 }

@@ -83,4 +83,9 @@ void StreamReader::Close()
 	file->close();
 }
 
+void StreamReader::Dispose(bool disposing)
+{
+	delete file;
+}
+
 }

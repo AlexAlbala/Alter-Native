@@ -7,6 +7,7 @@ namespace RegressionTest
 {
     public class TestResult
     {
+        public short alternative;
         public bool output;
         public short diffCode;
         public short cmakeCode;
@@ -18,6 +19,7 @@ namespace RegressionTest
             diffCode = -1;
             cmakeCode = -1;
             msbuildCode = -1;
+            alternative = -1;
         }
     }
 }

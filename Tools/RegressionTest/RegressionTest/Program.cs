@@ -41,7 +41,12 @@ namespace RegressionTest
 
             p.AvailableTests();
             if (_args.Count == 0)
-                p.RunAll();
+            {
+                List<string> t = new List<string>();
+                foreach (DirectoryInfo di in p.Tests.Keys)
+                    t.Add(di.Name);
+                p.RunTests(t.ToArray());
+            }
             else
                 p.RunTests(_args.ToArray());
 
@@ -89,7 +94,7 @@ namespace RegressionTest
                     d.Delete();
                 }
             }
-            catch(IOException e)
+            catch (IOException e)
             {
                 DebugMessage("IOException: " + e.Message);
             }
@@ -187,7 +192,7 @@ namespace RegressionTest
             DebugMessage(finalOutput.Length > maxLengthMsg ? finalOutput.Substring(0, maxLengthMsg) + " [......] " : finalOutput);
         }
 
-        private void alternative(DirectoryInfo di)
+        private void alternative(DirectoryInfo di, TestResult res)
         {
             Console.WriteLine("Running alternative...");
             DirectoryInfo outd = new DirectoryInfo(di.FullName + "/Output");
@@ -215,14 +220,16 @@ namespace RegressionTest
             {
                 runAlt.Start();
             }
-            catch(UnauthorizedAccessException e)
+            catch (UnauthorizedAccessException e)
             {
                 DebugMessage("Unautorized exception: " + e.Message);
+                res.alternative = 1;
                 return;
             }
             if (Verbose)
                 runAlt.BeginOutputReadLine();
             runAlt.WaitForExit();
+            res.alternative = 0;
         }
 
         private int diffDirectory(DirectoryInfo di1, DirectoryInfo di2)
@@ -309,7 +316,7 @@ namespace RegressionTest
                 Console.ResetColor();
 
                 //Run alternative
-                alternative(di);
+                alternative(di, res);
 
                 //Diff files
                 diff(di, res);
@@ -318,8 +325,8 @@ namespace RegressionTest
                 Directory.CreateDirectory(di.FullName + "/Output/build");
                 Directory.SetCurrentDirectory(di.FullName + "/Output/build");
 
-
-                Cmake(res);
+                if (res.alternative == 0)
+                    Cmake(res);
                 if (res.cmakeCode == 0)
                     msbuild(di, res);
                 if (kvp.Value.msbuildCode == 0)
@@ -327,78 +334,26 @@ namespace RegressionTest
             }
 
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("******************************************* TEST RESULTS *****************************************");
+            Console.WriteLine("******************************************************************** TEST RESULTS ***************************************************************");
             Console.ResetColor();
 
-            string[,] arr = new string[tests.Length + 1, 5];
+            string[,] arr = new string[tests.Length + 1, 6];
             arr[0, 0] = "NAME";
-            arr[0, 1] = "CMAKE CODE";
-            arr[0, 2] = "MSBUILD CODE";
-            arr[0, 3] = "FILE DIFFER";
-            arr[0, 4] = "OUTPUT";
+            arr[0, 1] = "ALTERNATIVE";
+            arr[0, 2] = "CMAKE CODE";
+            arr[0, 3] = "MSBUILD CODE";
+            arr[0, 4] = "FILE DIFFER";
+            arr[0, 5] = "OUTPUT";
             int i = 1;
             foreach (string s in tests)
             {
                 KeyValuePair<DirectoryInfo, TestResult> kvp = Tests.First(x => x.Key.Name == s);
                 arr[i, 0] = kvp.Key.Name;
-                arr[i, 1] = kvp.Value.cmakeCode == 0 ? "SUCCESS" : "FAIL. Code: " + kvp.Value.cmakeCode;
-                arr[i, 2] = kvp.Value.msbuildCode == 0 ? "BUILD SUCCEEDED" : "FAIL. Code: " + kvp.Value.msbuildCode;
-                arr[i, 3] = (kvp.Value.diffCode == 0 ? "No Differ" : (kvp.Value.diffCode == 1 ? "Differ" : "Error. Code: " + kvp.Value.diffCode));
-                arr[i, 4] = (kvp.Value.output ? "OK" : "FAIL");
-
-                i++;
-            }
-            ArrayPrinter.PrintToConsole(arr);
-
-        }
-
-        public void RunAll()
-        {
-            foreach (KeyValuePair<DirectoryInfo, TestResult> kvp in Tests)
-            {
-                DirectoryInfo di = kvp.Key;
-                TestResult res = kvp.Value;
-
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("Running test " + di.Name);
-                Console.ResetColor();
-
-                //Run alternative
-                alternative(di);
-
-                //Diff files
-                diff(di, res);
-
-                //Create folder and run cmake                
-                Directory.CreateDirectory(di.FullName + "/Output/build");
-                Directory.SetCurrentDirectory(di.FullName + "/Output/build");
-
-
-                Cmake(res);
-                if (res.cmakeCode == 0)
-                    msbuild(di, res);
-                if (kvp.Value.msbuildCode == 0)
-                    compareOutput(di, res);
-            }
-
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("******************************************* TEST RESULTS *****************************************");
-            Console.ResetColor();
-
-            string[,] arr = new string[Tests.Count + 1, 5];
-            arr[0, 0] = "NAME";
-            arr[0, 1] = "CMAKE CODE";
-            arr[0, 2] = "MSBUILD CODE";
-            arr[0, 3] = "FILE DIFFER";
-            arr[0, 4] = "OUTPUT";
-            int i = 1;
-            foreach (KeyValuePair<DirectoryInfo, TestResult> kvp in Tests)
-            {
-                arr[i, 0] = kvp.Key.Name;
-                arr[i, 1] = kvp.Value.cmakeCode == 0 ? "SUCCESS" : "FAIL. Code: " + kvp.Value.cmakeCode;
-                arr[i, 2] = kvp.Value.msbuildCode == 0 ? "BUILD SUCCEEDED" : "FAIL. Code: " + kvp.Value.msbuildCode;
-                arr[i, 3] = (kvp.Value.diffCode == 0 ? "No Differ" : (kvp.Value.diffCode == 1 ? "Differ" : "Error. Code: " + kvp.Value.diffCode));
-                arr[i, 4] = (kvp.Value.output ? "OK" : "FAIL");
+                arr[i, 1] = kvp.Value.alternative == 0 ? "SUCCESS" : "FAIL. Code: " + kvp.Value.alternative;
+                arr[i, 2] = kvp.Value.cmakeCode == 0 ? "SUCCESS" : "FAIL. Code: " + kvp.Value.cmakeCode;
+                arr[i, 3] = kvp.Value.msbuildCode == 0 ? "BUILD SUCCEEDED" : "FAIL. Code: " + kvp.Value.msbuildCode;
+                arr[i, 4] = (kvp.Value.diffCode == 0 ? "No Differ" : (kvp.Value.diffCode == 1 ? "Differ" : "Error. Code: " + kvp.Value.diffCode));
+                arr[i, 5] = (kvp.Value.output ? "OK" : "FAIL");
 
                 i++;
             }
