@@ -1253,6 +1253,31 @@ namespace ICSharpCode.NRefactory.Cpp
             return EndNode(typeDeclaration);
         }
 
+        private void UsingNamespaces()
+        {
+            //WRITE NAMESPACES
+            foreach (string s in Resolver.GetNeededNamespaces())
+            {
+                if (s == currNamespaceString || String.IsNullOrEmpty(s))
+                    continue;
+                WriteKeyword("using");
+                WriteKeyword("namespace");
+                WriteIdentifier(s, IncludeDeclaration.Roles.Identifier);
+                Semicolon();
+            }
+        }
+
+        private void WriteNamespace()
+        {
+            if (!String.IsNullOrEmpty(currNamespaceString))
+            {
+                WriteKeyword("namespace");
+                WriteIdentifier(currNamespaceString, IncludeDeclaration.Roles.Identifier);
+                OpenBrace(BraceStyle.EndOfLineWithoutSpace);
+                NewLine();
+            }
+        }
+
         private void TypeDeclarationTemplates(TypeDeclaration typeDeclaration, object data)
         {
             formatter.ChangeFile(typeDeclaration.Name + ".h");
@@ -1280,24 +1305,11 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             NewLine();
 
-            //WRITE NAMESPACES
-            foreach (string s in Resolver.GetNeededNamespaces())
-            {
-                if (s == currNamespaceString)
-                    continue;
-                WriteKeyword("using");
-                WriteKeyword("namespace");
-                WriteIdentifier(s, IncludeDeclaration.Roles.Identifier);
-                Semicolon();
-            }
+            UsingNamespaces();
 
             Resolver.Restart();
 
-
-            WriteKeyword("namespace");
-            WriteIdentifier(currNamespaceString, IncludeDeclaration.Roles.Identifier);
-            OpenBrace(BraceStyle.EndOfLineWithoutSpace);
-            NewLine();
+            WriteNamespace();
 
             string type2 = String.Empty;
             if (Resolver.NeedsForwardDeclaration(typeDeclaration.Name, out type2))
@@ -1373,7 +1385,8 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             CloseBrace(braceStyle);//END OF TYPE
             Semicolon();
-            CloseBrace(BraceStyle.NextLine);//END OF NAMESPACE
+            if (!String.IsNullOrEmpty(currNamespaceString))
+                CloseBrace(BraceStyle.NextLine);//END OF NAMESPACE
             headerNodes.Clear();
 
             formatter.ChangeFile("tmp");
@@ -1389,16 +1402,14 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteIdentifier("\"" + typeDeclaration.Name + ".h\"", TypeDeclaration.Roles.Identifier);
             NewLine();
 
-            WriteKeyword("namespace");
-            WriteIdentifier(currNamespaceString, TypeDeclaration.Roles.Identifier);
-            OpenBrace(BraceStyle.EndOfLineWithoutSpace);
-            NewLine();
+            WriteNamespace();
 
             foreach (var member in typeDeclaration.Members)
                 member.AcceptVisitor(this, data);
 
             NewLine();
-            CloseBrace(BraceStyle.NextLine);//END OF NAMESPACE
+            if (!String.IsNullOrEmpty(currNamespaceString))
+                CloseBrace(BraceStyle.NextLine);//END OF NAMESPACE
         }
 
         private void TypeDeclarationHeader(TypeDeclaration typeDeclaration, object data)
@@ -1428,24 +1439,12 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             NewLine();
 
-            //WRITE NAMESPACES
-            foreach (string s in Resolver.GetNeededNamespaces())
-            {
-                if (s == currNamespaceString)
-                    continue;
-                WriteKeyword("using");
-                WriteKeyword("namespace");
-                WriteIdentifier(s, IncludeDeclaration.Roles.Identifier);
-                Semicolon();
-            }
+            UsingNamespaces();
 
             Resolver.Restart();
 
 
-            WriteKeyword("namespace");
-            WriteIdentifier(currNamespaceString, IncludeDeclaration.Roles.Identifier);
-            OpenBrace(BraceStyle.EndOfLineWithoutSpace);
-            NewLine();
+            WriteNamespace();
 
             string type2 = String.Empty;
             if (Resolver.NeedsForwardDeclaration(typeDeclaration.Name, out type2))
@@ -1528,7 +1527,8 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             CloseBrace(braceStyle);//END OF TYPE
             Semicolon();
-            CloseBrace(BraceStyle.NextLine);//END OF NAMESPACE
+            if (!String.IsNullOrEmpty(currNamespaceString))
+                CloseBrace(BraceStyle.NextLine);//END OF NAMESPACE
             headerNodes.Clear();
 
             formatter.ChangeFile("tmp");
@@ -1765,7 +1765,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitFieldDeclaration(FieldDeclaration fieldDeclaration, object data)
         {
-            StartNode(fieldDeclaration);            
+            StartNode(fieldDeclaration);
 
             if (fieldDeclaration.HasModifier(Modifiers.Static) || isTemplateType)
             {
@@ -1898,8 +1898,9 @@ namespace ICSharpCode.NRefactory.Cpp
 
             if (methodDeclaration.Name == "Main")
             {
+                NamespaceDeclaration entryNamespace = methodDeclaration.Parent.Parent as NamespaceDeclaration;
                 MainWritter.GenerateMain((methodDeclaration.Parent as TypeDeclaration).Name,
-                   (methodDeclaration.Parent.Parent as NamespaceDeclaration).Name);
+                    entryNamespace == null ? String.Empty : entryNamespace.Name);
                 //<ÑAPA>
                 //Force the Main to be public because it will be called from main.cpp and has to be accessible
                 WriteKeyword("public:");
@@ -2771,11 +2772,11 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitForeachStatement(ForeachStatement foreachStatement, object data)
         {
-            StartNode(foreachStatement);          
-            foreachStatement.RangeExpression.AcceptVisitor(this,data);            
+            StartNode(foreachStatement);
+            foreachStatement.RangeExpression.AcceptVisitor(this, data);
             foreachStatement.BeginExpression.AcceptVisitor(this, data);
             foreachStatement.EndExpression.AcceptVisitor(this, data);
-            foreachStatement.WhileStatement.AcceptVisitor(this, data);           
+            foreachStatement.WhileStatement.AcceptVisitor(this, data);
             return EndNode(foreachStatement);
         }
 
@@ -3158,7 +3159,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitPointerIdentifierExpression(PointerIdentifierExpression pointerIdentifierExpression, object data)
         {
-            StartNode(pointerIdentifierExpression);            
+            StartNode(pointerIdentifierExpression);
             WriteToken("*", PointerExpression.AsteriskRole);
             pointerIdentifierExpression.IdentifierToken.AcceptVisitor(this, data);
             return EndNode(pointerIdentifierExpression);

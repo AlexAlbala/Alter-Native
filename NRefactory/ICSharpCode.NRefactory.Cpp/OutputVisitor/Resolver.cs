@@ -24,6 +24,10 @@ namespace ICSharpCode.NRefactory.Cpp
             libraryMap.Add("IDisposable", "\"System/IDisposable.h\"");
             libraryMap.Add("StreamReader", "\"System/IO/StreamReaderCXX.h\"");
             libraryMap.Add("StreamWriter", "\"System/IO/StreamWriterCXX.h\"");
+            libraryMap.Add("FileStream", "\"System/IO/FileStream.h\"");
+            libraryMap.Add("Convert", "\"System/Convert.h\"");
+            libraryMap.Add("File", "\"System/IO/File.h\"");
+            libraryMap.Add("UTF8Encoding", "\"System/Text/UTF8Encoding.h\"");
             Cache.InitLibrary(libraryMap);
         }
 

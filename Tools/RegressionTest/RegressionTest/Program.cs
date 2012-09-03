@@ -81,7 +81,7 @@ namespace RegressionTest
         }
 
         private void CleanDirectory(DirectoryInfo d)
-        {
+        {            
             try
             {
                 if (d.Exists)
@@ -185,7 +185,7 @@ namespace RegressionTest
 
             res.output = string.Compare(originalOutput, finalOutput) == 0;
 
-            int maxLengthMsg = 300;
+            int maxLengthMsg = 100;
             DebugMessage("ORIGINAL");
             DebugMessage(originalOutput.Length > maxLengthMsg ? originalOutput.Substring(0, maxLengthMsg) + " [......] " : originalOutput);
             DebugMessage("FINAL");
@@ -193,10 +193,11 @@ namespace RegressionTest
         }
 
         private void alternative(DirectoryInfo di, TestResult res)
-        {
-            Console.WriteLine("Running alternative...");
+        {            
             DirectoryInfo outd = new DirectoryInfo(di.FullName + "/Output");
+            Console.WriteLine("Cleanning directory: " + outd.Name);
             CleanDirectory(outd);
+            Console.WriteLine("Running alternative...");
 
             Process runAlt = new Process();
 
@@ -225,6 +226,11 @@ namespace RegressionTest
                 DebugMessage("Unautorized exception: " + e.Message);
                 res.alternative = 1;
                 return;
+            }
+            catch (Exception ex)
+            {
+                DebugMessage("Exception: " + ex.Message);
+                res.alternative = 2;
             }
             if (Verbose)
                 runAlt.BeginOutputReadLine();
@@ -269,7 +275,6 @@ namespace RegressionTest
             Console.WriteLine("Diff output source with target source...");
             Directory.SetCurrentDirectory(testPath);
             DebugMessage("Current directory: " + Environment.CurrentDirectory);
-
 
             DirectoryInfo output = new DirectoryInfo(di.FullName + "/Output");
             DirectoryInfo target = new DirectoryInfo(di.FullName + "/Target");

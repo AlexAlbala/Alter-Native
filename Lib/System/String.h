@@ -8,6 +8,7 @@ public:
 	int Length;
 	char* Data;
 	String(void);
+	String(char txt);
 	String(const char* txt);
 	String* operator =(char* text);
 	virtual ~String(void);

@@ -5,6 +5,13 @@ String::String() {
 	Length = 0;
 }
 
+String::String(char txt) {
+	
+	Length = 1;
+	Data = new char[1];
+	Data[0] = txt;
+}
+
 String::String(const char* txt) {
 	//TODO It will be nice to not to copy "constant" strings 
 	Length = strlen(txt);
