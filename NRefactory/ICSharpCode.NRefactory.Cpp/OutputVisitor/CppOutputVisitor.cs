@@ -1900,7 +1900,7 @@ namespace ICSharpCode.NRefactory.Cpp
             {
                 NamespaceDeclaration entryNamespace = methodDeclaration.Parent.Parent as NamespaceDeclaration;
                 MainWritter.GenerateMain((methodDeclaration.Parent as TypeDeclaration).Name,
-                    entryNamespace == null ? String.Empty : entryNamespace.Name);
+                    entryNamespace == null ? String.Empty : entryNamespace.Name, methodDeclaration.Parameters.Any());
                 //<ÑAPA>
                 //Force the Main to be public because it will be called from main.cpp and has to be accessible
                 WriteKeyword("public:");

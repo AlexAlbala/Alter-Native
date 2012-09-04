@@ -11,6 +11,7 @@ public:
 	String(char txt);
 	String(const char* txt);
 	String* operator =(char* text);
+	operator const char*();
 	virtual ~String(void);
 	static String* Concat(Object* elements);	
 };

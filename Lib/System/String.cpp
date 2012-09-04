@@ -24,6 +24,11 @@ String* String::operator=(char* text) {
 	return s;
 }
 
+String::operator const char*()
+{
+	return Data;
+}
+
 String::~String() {
 	if(Data!=null) {
 		delete Data;

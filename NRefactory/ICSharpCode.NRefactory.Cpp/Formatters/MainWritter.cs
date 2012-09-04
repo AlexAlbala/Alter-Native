@@ -9,14 +9,14 @@ namespace ICSharpCode.NRefactory.Cpp
 {
     public class MainWritter
     {
-        public static void GenerateMain(string entryType, string entryNamespace)
+        public static void GenerateMain(string entryType, string entryNamespace, bool inputArgs)
         {
             StreamWriter writer = new StreamWriter(FileWritterManager.WorkingPath + "main.cpp");
 
             writer.WriteLine("#include \"" + entryType + ".h\"");
             writer.WriteLine("using namespace System;");
             if (!String.IsNullOrEmpty(entryNamespace))
-                writer.WriteLine("using namespace " + entryNamespace + ";");    
+                writer.WriteLine("using namespace " + entryNamespace + ";");
             writer.WriteLine();
             writer.WriteLine("int main(int argc, char *argv[])");
             writer.WriteLine("{");
@@ -24,7 +24,7 @@ namespace ICSharpCode.NRefactory.Cpp
             writer.WriteLine("\tfor(int i = 0; i < argc; i++)");
             writer.WriteLine("\t\targs[i] = argv[i];");
             writer.WriteLine();
-            writer.WriteLine("\t" + entryType + "::Main(&args);");
+            writer.WriteLine("\t" + entryType + "::Main(" + (inputArgs ? "&args" : "") + ");");
             writer.WriteLine("\t//TODO");
             writer.WriteLine("\t//delete args;");
             writer.WriteLine("}");

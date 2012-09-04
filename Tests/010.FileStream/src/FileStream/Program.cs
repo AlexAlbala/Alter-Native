@@ -38,7 +38,7 @@ class Test
         fs = File.OpenRead(path);
 
         byte[] b = new byte[1024];
-        UTF8Encoding temp = new UTF8Encoding(true);
+        UTF8Encoding temp = new UTF8Encoding();
         while (fs.Read(b, 0, b.Length) > 0)
         {
             String s = temp.GetString(b);
@@ -49,7 +49,7 @@ class Test
 
     private static void AddText(FileStream fs, string value)
     {
-        byte[] info = new UTF8Encoding(true).GetBytes(value);
+        byte[] info = new UTF8Encoding().GetBytes(value);
         fs.Write(info, 0, info.Length);
     }
 }
