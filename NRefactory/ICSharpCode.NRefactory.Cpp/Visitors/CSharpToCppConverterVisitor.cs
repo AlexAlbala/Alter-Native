@@ -981,9 +981,32 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitVariableDeclarationStatement(CSharp.VariableDeclarationStatement variableDeclarationStatement, object data)
         {
+            bool objectCreation = false;
             var vds = new VariableDeclarationStatement();
+
+            if (variableDeclarationStatement.Type is CSharp.ComposedType)
+            {
+                if ((variableDeclarationStatement.Type as CSharp.ComposedType).ArraySpecifiers.Any())
+                {
+                    if (variableDeclarationStatement.Variables.Count == 1)
+                    {
+                        CSharp.VariableInitializer v = variableDeclarationStatement.Variables.ElementAt(0);
+                        //We must check the array for any of the expression that can return values (objet creations, array creations, invocations)
+                        if (v.Initializer is CSharp.ArrayCreateExpression || v.Initializer is CSharp.ObjectCreateExpression || v.Initializer is CSharp.InvocationExpression)
+                        {
+                            objectCreation = true;                            
+                        }
+                    }
+                }
+            }
+
             vds.Type = (AstType)variableDeclarationStatement.Type.AcceptVisitor(this, data);
             ConvertNodes(variableDeclarationStatement.Variables, vds.Variables);
+            if (objectCreation)
+            {
+                vds.Variables.ElementAt(0).NameToken = new Identifier(vds.Variables.ElementAt(0).Name,TextLocation.Empty);
+                vds.Type = new PtrType((AstType)vds.Type.Clone());
+            }
             return EndNode(variableDeclarationStatement, vds);
         }
 
@@ -1376,7 +1399,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     typeName = "short";
                     break;
                 case "byte":
-                    typeName = "short";
+                    typeName = "char";
                     break;
                 case "decimal":
                     typeName = "float";
