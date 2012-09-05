@@ -5,7 +5,7 @@
 #include "System/IO/StreamReaderCXX.h"
 #include "System/Console.h"
 
-using namespace System_IO;
+using namespace System::IO;
 using namespace System;
 namespace File{
 

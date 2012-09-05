@@ -216,7 +216,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
         private static void AddNamespace(string nameSpace)
         {
-            nameSpace = nameSpace.Replace(".", "_");
+            nameSpace = nameSpace.Replace(".", "::");
             Cache.AddNamespace(nameSpace);
         }
 

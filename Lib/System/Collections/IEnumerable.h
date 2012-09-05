@@ -5,19 +5,21 @@
 using namespace std;
 using namespace System;
 
-namespace System_Collections{
+namespace System{
+	namespace Collections{
 
-class IEnumerable{
-public:
-	virtual IEnumerator* GetEnumerator()=0;
-
-	iteratorcxx* begin()
-	{
-		return new iteratorcxx(GetEnumerator());
+		class IEnumerable{
+		public:
+			virtual IEnumerator* GetEnumerator()=0;
+		
+			iteratorcxx* begin()
+			{
+				return new iteratorcxx(GetEnumerator());
+			}
+			iteratorcxx* end()
+			{
+				return new iteratorcxx(0);
+			}
+		};
 	}
-	iteratorcxx* end()
-	{
-		return new iteratorcxx(0);
-	}
-};
 }

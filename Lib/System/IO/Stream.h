@@ -1,9 +1,11 @@
 #pragma once
 #include "../IDisposable.h"
-namespace System_IO{
-class Stream : public IDisposable
-{
-public:
-	void Dispose();
-};
+namespace System{
+	namespace IO{
+		class Stream : public IDisposable
+		{
+		public:
+			void Dispose();
+		};
+	}
 }

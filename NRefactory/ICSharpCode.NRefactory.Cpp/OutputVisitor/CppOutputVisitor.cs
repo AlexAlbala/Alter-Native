@@ -26,7 +26,7 @@ namespace ICSharpCode.NRefactory.Cpp
         readonly Stack<AstNode> containerStack = new Stack<AstNode>();
         readonly Stack<AstNode> positionStack = new Stack<AstNode>();
 
-        private string currNamespaceString;
+        private List<string> currNamespaces;
         public static string WorkingPath;
         private bool isTemplateType;
 
@@ -1229,7 +1229,9 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitNamespaceDeclaration(NamespaceDeclaration namespaceDeclaration, object data)
         {
             StartNode(namespaceDeclaration);
-            currNamespaceString = namespaceDeclaration.Name;
+            //TODO: What if there are different namespaces declarations involving the same type ??
+            currNamespaces = new List<string>();
+            currNamespaces.AddRange(namespaceDeclaration.Name.Split('.'));
             foreach (var member in namespaceDeclaration.Members)
                 member.AcceptVisitor(this, data);
             return EndNode(namespaceDeclaration);
@@ -1258,7 +1260,13 @@ namespace ICSharpCode.NRefactory.Cpp
             //WRITE NAMESPACES
             foreach (string s in Resolver.GetNeededNamespaces())
             {
-                if (s == currNamespaceString || String.IsNullOrEmpty(s))
+                string tmp = "";
+                if (currNamespaces != null)
+                {
+                    foreach (string _s in currNamespaces)
+                        tmp += _s + ":";
+                }
+                if (s == tmp.TrimEnd(':') || String.IsNullOrEmpty(s))
                     continue;
                 WriteKeyword("using");
                 WriteKeyword("namespace");
@@ -1269,12 +1277,15 @@ namespace ICSharpCode.NRefactory.Cpp
 
         private void WriteNamespace()
         {
-            if (!String.IsNullOrEmpty(currNamespaceString))
+            if (currNamespaces != null)
             {
-                WriteKeyword("namespace");
-                WriteIdentifier(currNamespaceString, IncludeDeclaration.Roles.Identifier);
-                OpenBrace(BraceStyle.EndOfLineWithoutSpace);
-                NewLine();
+                foreach (string s in currNamespaces)
+                {
+                    WriteKeyword("namespace");
+                    WriteIdentifier(s, IncludeDeclaration.Roles.Identifier);
+                    OpenBrace(BraceStyle.EndOfLineWithoutSpace);
+                    NewLine();
+                }
             }
         }
 
@@ -1385,8 +1396,9 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             CloseBrace(braceStyle);//END OF TYPE
             Semicolon();
-            if (!String.IsNullOrEmpty(currNamespaceString))
-                CloseBrace(BraceStyle.NextLine);//END OF NAMESPACE
+            if (currNamespaces != null)
+                for (int i = 0; i < currNamespaces.Count; i++)
+                    CloseBrace(BraceStyle.NextLine);//END OF NAMESPACES
             headerNodes.Clear();
 
             formatter.ChangeFile("tmp");
@@ -1408,8 +1420,9 @@ namespace ICSharpCode.NRefactory.Cpp
                 member.AcceptVisitor(this, data);
 
             NewLine();
-            if (!String.IsNullOrEmpty(currNamespaceString))
-                CloseBrace(BraceStyle.NextLine);//END OF NAMESPACE
+            if (currNamespaces != null)
+                for (int i = 0; i < currNamespaces.Count; i++)
+                    CloseBrace(BraceStyle.NextLine);//END OF NAMESPACES
         }
 
         private void TypeDeclarationHeader(TypeDeclaration typeDeclaration, object data)
@@ -1527,8 +1540,9 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             CloseBrace(braceStyle);//END OF TYPE
             Semicolon();
-            if (!String.IsNullOrEmpty(currNamespaceString))
-                CloseBrace(BraceStyle.NextLine);//END OF NAMESPACE
+            if (currNamespaces != null)
+                for (int i = 0; i < currNamespaces.Count; i++)
+                    CloseBrace(BraceStyle.NextLine);//END OF NAMESPACES
             headerNodes.Clear();
 
             formatter.ChangeFile("tmp");

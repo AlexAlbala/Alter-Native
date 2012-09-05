@@ -1,13 +1,17 @@
 #pragma once
 
 #include "../IEnumeratorCXX.h"
-using namespace System_Collections;
+using namespace System::Collections;
 
-namespace System_Collections_Generic{
+namespace System{
+	namespace Collections{
+		namespace Generic{
 
-template<typename T> class IEnumerator_T : public IEnumerator{
-
-public:	
-	virtual Box_T<T>* getCurrent() = 0;
-};
+			template<typename T> class IEnumerator_T : public IEnumerator{
+			
+			public:	
+				virtual Box_T<T>* getCurrent() = 0;
+			};
+		}
+	}
 }
