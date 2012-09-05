@@ -351,7 +351,6 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                         expr.Arguments.Remove(expr.Arguments.ElementAt(i));
                     }
                 }
-
             }
 
             return EndNode(invocationExpression, expr);
@@ -444,7 +443,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitSizeOfExpression(CSharp.SizeOfExpression sizeOfExpression, object data)
         {
-            throw new NotImplementedException();
+            var sizeofExpr = new SizeOfExpression();
+            sizeofExpr.Type = (AstType)sizeOfExpression.Type.AcceptVisitor(this, data);
+            return EndNode(sizeOfExpression, sizeofExpr);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitStackAllocExpression(CSharp.StackAllocExpression stackAllocExpression, object data)
@@ -470,7 +471,6 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitUnaryOperatorExpression(CSharp.UnaryOperatorExpression unaryOperatorExpression, object data)
         {
-
             Expression expr;
 
             switch (unaryOperatorExpression.Operator)
@@ -543,7 +543,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitEmptyExpression(CSharp.EmptyExpression emptyExpression, object data)
         {
-            throw new NotImplementedException();
+            var eexpr = new EmptyExpression();
+            CopyAnnotations(emptyExpression, eexpr);
+            return EndNode(emptyExpression, eexpr);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitQueryExpression(CSharp.QueryExpression queryExpression, object data)
@@ -994,7 +996,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                         //We must check the array for any of the expression that can return values (objet creations, array creations, invocations)
                         if (v.Initializer is CSharp.ArrayCreateExpression || v.Initializer is CSharp.ObjectCreateExpression || v.Initializer is CSharp.InvocationExpression)
                         {
-                            objectCreation = true;                            
+                            objectCreation = true;
                         }
                     }
                 }
@@ -1004,7 +1006,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             ConvertNodes(variableDeclarationStatement.Variables, vds.Variables);
             if (objectCreation)
             {
-                vds.Variables.ElementAt(0).NameToken = new Identifier(vds.Variables.ElementAt(0).Name,TextLocation.Empty);
+                vds.Variables.ElementAt(0).NameToken = new Identifier(vds.Variables.ElementAt(0).Name, TextLocation.Empty);
                 vds.Type = new PtrType((AstType)vds.Type.Clone());
             }
             return EndNode(variableDeclarationStatement, vds);
@@ -1099,7 +1101,6 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             else
                 throw new NotImplementedException();
 
-
             //End method declaration
 
             //CONVERT TO CPP METHOD        
@@ -1119,14 +1120,15 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             if (!constructorDeclaration.Initializer.IsNull)
                 result.Body.Statements.InsertBefore(result.Body.FirstOrDefault(), (Statement)constructorDeclaration.Initializer.AcceptVisitor(this, data));
 
-
-
             return EndNode(constructorDeclaration, result);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitConstructorInitializer(CSharp.ConstructorInitializer constructorInitializer, object data)
         {
-            throw new NotImplementedException();
+            var cinit = new ConstructorInitializer();
+            cinit.ConstructorInitializerType = (ConstructorInitializerType)constructorInitializer.ConstructorInitializerType;
+            ConvertNodes(constructorInitializer.Arguments, cinit.Arguments);
+            return EndNode(constructorInitializer, cinit);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitDestructorDeclaration(CSharp.DestructorDeclaration destructorDeclaration, object data)
@@ -1406,7 +1408,6 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     break;
                 case "double":
                     typeName = "float";
-                    break;
                     break;
                 default:
                     if (primitiveType.Keyword.ToLower() == "object")

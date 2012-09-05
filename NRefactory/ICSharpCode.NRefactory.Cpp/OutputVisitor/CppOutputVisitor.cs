@@ -1266,8 +1266,10 @@ namespace ICSharpCode.NRefactory.Cpp
                     foreach (string _s in currNamespaces)
                         tmp += _s + ":";
                 }
+
                 if (s == tmp.TrimEnd(':') || String.IsNullOrEmpty(s))
                     continue;
+
                 WriteKeyword("using");
                 WriteKeyword("namespace");
                 WriteIdentifier(s, IncludeDeclaration.Roles.Identifier);
@@ -1456,7 +1458,6 @@ namespace ICSharpCode.NRefactory.Cpp
 
             Resolver.Restart();
 
-
             WriteNamespace();
 
             string type2 = String.Empty;
@@ -1497,11 +1498,11 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteCommaSeparatedListWithModifiers(typeDeclaration.BaseTypes, typeDeclaration.ModifierTokens);
             typeDeclaration.ModifierTokens.Remove(modif);
 
-
             //foreach (Constraint constraint in typeDeclaration.Constraints)
             //{
             //    constraint.AcceptVisitor(this, data);
             //}
+
             OpenBrace(braceStyle);
 
             if (typeDeclaration.ClassType == ClassType.Enum)
@@ -3097,8 +3098,6 @@ namespace ICSharpCode.NRefactory.Cpp
         }
 
         #endregion
-
-
 
         public object VisitMemberAccessExpression(MemberAccessExpression memberAccessExpression, object data)
         {

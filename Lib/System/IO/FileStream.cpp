@@ -7,7 +7,6 @@ namespace System{
 		{
 			Length = 0;
 			Position = 0;
-			buffer = (char*)malloc(0);
 
 			//FileMode Create, CreateNew....
 		}
@@ -26,7 +25,11 @@ namespace System{
 
 		void FileStream::Write(char* _array, int offset, int count)
 		{
-			buffer = (char*)realloc(buffer, (count + Length)*sizeof(char));		
+			if(buffer == null)
+				buffer = (char*)malloc(count*sizeof(char));
+			else			
+				buffer = (char*)realloc(buffer, (count + Length)*sizeof(char));		
+
 			memcpy(buffer + Length, _array + offset, count);
 
 			Length += count;
