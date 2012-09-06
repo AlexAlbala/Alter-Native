@@ -4,6 +4,7 @@
 #include "../String.h"
 #include "FileStream.h"
 #include <fstream>
+#include <exception>
 
 namespace System{
 	namespace IO{

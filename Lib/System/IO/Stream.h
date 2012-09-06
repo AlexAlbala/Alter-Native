@@ -6,6 +6,8 @@ namespace System{
 		{
 		public:
 			void Dispose();
+			virtual void Dispose(bool disposing);
+			virtual void Close();
 		};
 	}
 }

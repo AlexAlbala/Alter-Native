@@ -13,14 +13,17 @@ namespace System{
 
 		FileStream* File::Create(String* path)
 		{
-			//return new FileStream(*path);
-			return null;
+			return new FileStream(path, FileMode::CreateNew,FileAccess::ReadWrite);
 		}
 
 		FileStream* File::OpenRead(String* path)
 		{
-			//return new FileStream(*path,FileMode::Read);
-			return null;
+			if(File::Exists(path))
+			{
+				return new FileStream(path,FileMode::Open, FileAccess::Read);
+			}
+			else
+				throw std::exception("File not found");
 		}
 	}
 }

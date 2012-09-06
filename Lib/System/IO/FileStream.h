@@ -5,6 +5,8 @@
 #include "FileAccess.h"
 #include "Stream.h"
 #include "../String.h"
+#include "StreamReaderCXX.h"
+#include "StreamWriterCXX.h"
 
 namespace System{
 	namespace IO{
@@ -16,12 +18,16 @@ namespace System{
 			bool CanSeek;
 			long Length;
 			long Position;
+
+			StreamWriter* sw;
+			StreamReader* sr;
 		
 			FileStream(String* path, FileMode mode);
-			FileStream(String* path, FileMode mode, FileAccess access);	
+			FileStream(String* path, FileMode mode, FileAccess access);
+			~FileStream();
 			int Read(char* _array, int offset, int count);
 			void Write(char* _array, int offset, int count);
-			virtual void Dispose();
+			virtual void Dispose(bool disposing);
 		
 		private:
 			char* buffer;

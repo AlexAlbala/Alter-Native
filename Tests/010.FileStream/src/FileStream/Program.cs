@@ -7,7 +7,7 @@ class Test
 
     public static void Main()
     {
-        string path = @"c:\temp\MyTest.txt";
+        string path = "MyTest.txt";
 
         // Delete the file if it exists.
         if (File.Exists(path))
@@ -23,7 +23,7 @@ class Test
         AddText(fs, "\r\nand this is on a new line");
         AddText(fs, "\r\n\r\nThe following is a subset of characters:\r\n");
 
-        for (int i = 1; i < 120; i++)
+        for (int i = 100; i < 220; i++)
         {
             AddText(fs, Convert.ToChar(i).ToString());
 
@@ -33,7 +33,7 @@ class Test
                 AddText(fs, "\r\n");
             }
         }
-
+        fs.Close();
         //Open the stream and read it back.
         fs = File.OpenRead(path);
 

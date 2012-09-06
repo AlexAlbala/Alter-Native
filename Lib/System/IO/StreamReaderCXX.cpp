@@ -44,7 +44,7 @@ namespace System{
 				char* buffer;	
 
 				//Get file length
-				file->seekg(0,file->end);
+				file->seekg(0,ios::end);
 				int length = file->tellg();
 				file->seekg(0,ios::beg);
 
@@ -66,6 +66,9 @@ namespace System{
 		//TODO TEST
 		int StreamReader::Read()
 		{
+			if(file->eof())
+				return -1;
+
 			char* tmp = new char[1];
 			file->read(tmp,1);
 
@@ -74,8 +77,21 @@ namespace System{
 
 		//TODO TEST
 		int StreamReader::Read(char* buffer, int index, int count)
-		{
+		{			
+			if(file->eof())
+				return 0;
+
+			int actualPos = file->tellg();
+			//Get file length
+			file->seekg(0,ios::end);
+			int length = file->tellg();
+			file->seekg(0,actualPos);
+
+			if(length - index < count)
+				count = length - index;
+
 			file->read(buffer + index,count);
+
 			return count;
 		}
 
