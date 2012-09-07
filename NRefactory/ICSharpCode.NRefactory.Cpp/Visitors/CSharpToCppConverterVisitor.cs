@@ -663,6 +663,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     case CSharp.ClassType.Interface:
                         type.ClassType = ClassType.Interface;
                         break;
+                    case CSharp.ClassType.Enum:
+                        type.ClassType = ClassType.Enum;
+                        break;
                     default:
                         throw new InvalidOperationException("Invalid value for ClassType");
                 }
@@ -1144,7 +1147,11 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitEnumMemberDeclaration(CSharp.EnumMemberDeclaration enumMemberDeclaration, object data)
         {
-            throw new NotImplementedException();
+            var enumMember = new EnumMemberDeclaration();
+            enumMember.Initializer = (Expression)enumMemberDeclaration.Initializer.AcceptVisitor(this, data);
+            enumMember.NameToken = (Identifier)enumMemberDeclaration.NameToken.AcceptVisitor(this, data);
+
+            return EndNode(enumMemberDeclaration, enumMember);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitEventDeclaration(CSharp.EventDeclaration eventDeclaration, object data)

@@ -1,6 +1,5 @@
 #include "Program.h"
 namespace File{
-
 	void Program::Main(String* args[]){
 		Program* p = new Program();
 		p->Run();

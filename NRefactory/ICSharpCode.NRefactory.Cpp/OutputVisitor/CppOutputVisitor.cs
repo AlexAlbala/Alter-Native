@@ -1249,7 +1249,10 @@ namespace ICSharpCode.NRefactory.Cpp
             else
             {
                 isTemplateType = false;
-                TypeDeclarationCPP(typeDeclaration, data);
+
+                if (typeDeclaration.ClassType != ClassType.Enum)
+                    TypeDeclarationCPP(typeDeclaration, data);
+
                 TypeDeclarationHeader(typeDeclaration, data);
             }
             return EndNode(typeDeclaration);
@@ -1286,9 +1289,18 @@ namespace ICSharpCode.NRefactory.Cpp
                     WriteKeyword("namespace");
                     WriteIdentifier(s, IncludeDeclaration.Roles.Identifier);
                     OpenBrace(BraceStyle.EndOfLineWithoutSpace);
-                    NewLine();
                 }
             }
+        }
+
+        private void CloseNamespaceBraces()
+        {
+            if (currNamespaces != null)
+                for (int i = 0; i < currNamespaces.Count; i++)
+                {
+                    CloseBrace(BraceStyle.NextLine);//END OF NAMESPACES
+                    NewLine();
+                }
         }
 
         private void TypeDeclarationTemplates(TypeDeclaration typeDeclaration, object data)
@@ -1398,10 +1410,7 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             CloseBrace(braceStyle);//END OF TYPE
             Semicolon();
-            if (currNamespaces != null)
-                for (int i = 0; i < currNamespaces.Count; i++)
-                    CloseBrace(BraceStyle.NextLine);//END OF NAMESPACES
-            headerNodes.Clear();
+            CloseNamespaceBraces();
 
             formatter.ChangeFile("tmp");
         }
@@ -1422,9 +1431,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 member.AcceptVisitor(this, data);
 
             NewLine();
-            if (currNamespaces != null)
-                for (int i = 0; i < currNamespaces.Count; i++)
-                    CloseBrace(BraceStyle.NextLine);//END OF NAMESPACES
+            CloseNamespaceBraces();
         }
 
         private void TypeDeclarationHeader(TypeDeclaration typeDeclaration, object data)
@@ -1541,9 +1548,7 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             CloseBrace(braceStyle);//END OF TYPE
             Semicolon();
-            if (currNamespaces != null)
-                for (int i = 0; i < currNamespaces.Count; i++)
-                    CloseBrace(BraceStyle.NextLine);//END OF NAMESPACES
+            CloseNamespaceBraces();
             headerNodes.Clear();
 
             formatter.ChangeFile("tmp");

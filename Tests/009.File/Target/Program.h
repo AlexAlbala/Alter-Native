@@ -8,7 +8,6 @@
 using namespace System::IO;
 using namespace System;
 namespace File{
-
 	class Program : public virtual Object, public virtual gc_cleanup
 	{
 		public:

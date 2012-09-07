@@ -4,7 +4,6 @@
 
 using namespace System;
 namespace List{
-
 	class Utils : public virtual Object, public virtual gc_cleanup
 	{
 		public:

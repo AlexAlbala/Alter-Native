@@ -2,7 +2,6 @@
 #include "System/System.h"
 
 namespace Properties{
-
 	class MyClassB : public virtual Object, public virtual gc_cleanup
 	{
 		private:

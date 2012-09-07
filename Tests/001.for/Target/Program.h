@@ -4,7 +4,6 @@
 
 using namespace System;
 namespace For{
-
 	class Program : public virtual Object, public virtual gc_cleanup
 	{
 		public:

@@ -3,7 +3,6 @@
 #include "Node.h"
 
 namespace List{
-
 	class MyList : public virtual Object, public virtual gc_cleanup
 	{
 		private:
