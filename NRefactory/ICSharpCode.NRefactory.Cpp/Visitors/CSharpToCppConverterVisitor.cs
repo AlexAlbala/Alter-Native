@@ -432,12 +432,21 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         {
             Expression expr;
 
-            if (!string.IsNullOrEmpty(primitiveExpression.Value as string) || primitiveExpression.Value is char)
-                expr = new PrimitiveExpression(primitiveExpression.Value);//TODO
-            //expr = ConvertToConcat(primitiveExpression.Value.ToString());
-            else
-                expr = new PrimitiveExpression(primitiveExpression.Value);
+            //Testing...
+            if (primitiveExpression.Value is string)
+            {
+                return EndNode(primitiveExpression, new ObjectCreateExpression(
+                    new SimpleType("String"), 
+                    new PrimitiveExpression(primitiveExpression.Value as string)));
+            }
 
+            //if (!string.IsNullOrEmpty(primitiveExpression.Value as string) || primitiveExpression.Value is char)
+            //    expr = new PrimitiveExpression(primitiveExpression.Value);//TODO
+            ////expr = ConvertToConcat(primitiveExpression.Value.ToString());
+            //else
+            //    expr = new PrimitiveExpression(primitiveExpression.Value);
+
+            expr = new PrimitiveExpression(primitiveExpression.Value);
             return EndNode(primitiveExpression, expr);
         }
 
@@ -1001,9 +1010,22 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                         {
                             objectCreation = true;
                         }
+
                     }
                 }
             }
+            //else if(variableDeclarationStatement.Type is CSharp.PrimitiveType)
+            //{
+            //    CSharp.VariableInitializer v = variableDeclarationStatement.Variables.ElementAt(0);
+            //    if (v.Initializer is CSharp.PrimitiveExpression)
+            //    {
+            //        CSharp.PrimitiveExpression p = v.Initializer as CSharp.PrimitiveExpression;
+            //        if (p.Value is string)
+            //        {
+            //            v.Initializer = new CSharp.ObjectCreateExpression(new CSharp.SimpleType("String"), new CSharp.PrimitiveExpression(p.Value));
+            //        }
+            //    }
+            //}
 
             vds.Type = (AstType)variableDeclarationStatement.Type.AcceptVisitor(this, data);
             ConvertNodes(variableDeclarationStatement.Variables, vds.Variables);

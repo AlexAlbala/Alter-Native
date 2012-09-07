@@ -26,13 +26,13 @@ namespace System{
 		
 			virtual void Write(char value);
 			virtual void Write(const char* value);
+			virtual void Write(String* value);
 			virtual void Write(char* text, int length);
 			virtual void Write(char buffer[], int index, int count);
-			void Write(String* value);
 		
 			void WriteLine(const char* text);
-			/*void WriteLine(String* text);
-			void WriteLine(const char* text);
+			void WriteLine(String* text);
+			/*void WriteLine(const char* text);
 			void WriteLine(bool value);
 			void WriteLine(int value);
 			void WriteLine(float value);

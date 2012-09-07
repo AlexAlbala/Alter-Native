@@ -20,11 +20,11 @@ namespace List{
 	}
 	void Program::printList()
 	{
-		Console::WriteLine("****************");
+		Console::WriteLine(new String("****************"));
 		for (int i = 0; i < this->list->Length(); i += 1) {
-			Console::Write("Node ");
+			Console::Write(new String("Node "));
 			Console::Write(i);
-			Console::Write(": ");
+			Console::Write(new String(": "));
 			Console::WriteLine(this->list->getElementAt(i)->value);
 		}
 	}

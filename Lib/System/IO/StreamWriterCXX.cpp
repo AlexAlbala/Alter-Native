@@ -86,10 +86,10 @@ namespace System{
 			delete tmp;
 		}
 
-		//void StreamWriter::WriteLine(String* text)
-		//{
-		//	*file << text->Data << std::endl;
-		//}
+		void StreamWriter::WriteLine(String* text)
+		{
+			*file << text->Data << std::endl;
+		}
 		//
 		void StreamWriter::WriteLine(const char* text)
 		{

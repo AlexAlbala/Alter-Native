@@ -6,11 +6,11 @@ namespace File{
 	}
 	void Program::Run()
 	{
-		StreamWriter* sw = new StreamWriter("test.txt");
-		sw->WriteLine("Hi! I'm a stream writer");
+		StreamWriter* sw = new StreamWriter(new String("test.txt"));
+		sw->WriteLine(new String("Hi! I'm a stream writer"));
 		sw->Flush();
 		sw->Close();
-		StreamReader* sr = new StreamReader("test.txt");
+		StreamReader* sr = new StreamReader(new String("test.txt"));
 		String* text = sr->ReadToEnd();
 		sr->Close();
 		Console::WriteLine(text);
