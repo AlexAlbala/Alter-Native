@@ -330,6 +330,32 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitInvocationExpression(CSharp.InvocationExpression invocationExpression, object data)
         {
+            if (invocationExpression.Target is CSharp.MemberReferenceExpression)
+            {
+                var mref = invocationExpression.Target as CSharp.MemberReferenceExpression;
+                if (mref.MemberName == "ToString")
+                {
+                    //TODO: Only if the invocationExpression.Target returns a basic type !!!
+                    //TODO: The type is extracted from the annotations.
+                    //We must be careful, we have supposed the annotations always contain that information, and may be not !!
+                    if (mref.Target.Annotations.Any())
+                    {
+                        for (int i = 0; i < mref.Target.Annotations.Count(); i++)
+                        {
+                            if (mref.Target.Annotations.ElementAt(i) is Decompiler.Ast.TypeInformation)
+                            {
+                                Decompiler.Ast.TypeInformation t = mref.Target.Annotations.ElementAt(i) as Decompiler.Ast.TypeInformation;
+                                if (t.InferredType.IsPrimitive)
+                                {
+                                    var _expr = new ObjectCreateExpression(new SimpleType("String"), (Expression)mref.Target.AcceptVisitor(this, data));
+                                    return EndNode(invocationExpression, _expr);
+                                }
+                            }
+                        }                      
+                    }
+                }
+            }
+
             var expr = new InvocationExpression(
                 (Expression)invocationExpression.Target.AcceptVisitor(this, data));
 
@@ -436,7 +462,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             if (primitiveExpression.Value is string)
             {
                 return EndNode(primitiveExpression, new ObjectCreateExpression(
-                    new SimpleType("String"), 
+                    new SimpleType("String"),
                     new PrimitiveExpression(primitiveExpression.Value as string)));
             }
 
@@ -806,8 +832,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitExpressionStatement(CSharp.ExpressionStatement expressionStatement, object data)
         {
-            var expr = new ExpressionStatement((Expression)expressionStatement.Expression.AcceptVisitor(this, data));
-            return EndNode(expressionStatement, expr);
+            var _expr = new ExpressionStatement((Expression)expressionStatement.Expression.AcceptVisitor(this, data));
+            return EndNode(expressionStatement, _expr);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitFixedStatement(CSharp.FixedStatement fixedStatement, object data)

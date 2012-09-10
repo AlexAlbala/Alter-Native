@@ -1,13 +1,16 @@
 #pragma once
 #include "../String.h"
 
+using namespace std;
+
 namespace System{
 	namespace Text{
 		class UTF8Encoding // : public Encoding
 		{
 		public:
-			char* GetBytes(String* value);
+			Array<char>* GetBytes(String* value);
 			String* GetString(char* bytes);
+			String* GetString(Array<char>* bytes);
 		};
 	}
 }

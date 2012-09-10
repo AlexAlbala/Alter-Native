@@ -3,14 +3,20 @@
 namespace System{
 	namespace Text{
 
-		char* UTF8Encoding::GetBytes(String* value)
+		Array<char>* UTF8Encoding::GetBytes(String* value)
 		{
-			return value->Data;
+			Array<char>* v = new Array<char>(value->Data,value->Length);
+			return v;
 		}
 
 		String* UTF8Encoding::GetString(char* bytes)
 		{
 			return new String(bytes);
+		}
+
+		String* UTF8Encoding::GetString(Array<char>* bytes)
+		{
+			return new String(bytes->GetData());
 		}
 	}
 }
