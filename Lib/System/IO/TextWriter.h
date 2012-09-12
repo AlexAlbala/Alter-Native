@@ -1,6 +1,7 @@
 #pragma once
 #include "../IDisposable.h"
 #include "../String.h"
+#include "../Array.h"
 
 namespace System {
 	namespace IO{
@@ -14,8 +15,8 @@ namespace System {
 		
 			virtual void Write(char value);
 			//virtual void Write(const char* value);
-			virtual void Write(char* buffer,int length);
-			virtual void Write(char* buffer, int index, int count);
+			virtual void Write(Array<char>* buffer,int length);
+			virtual void Write(Array<char>* buffer, int index, int count);
 			virtual void Write(bool value);
 			virtual void Write(int value);
 			virtual void Write(unsigned int value);
@@ -26,8 +27,8 @@ namespace System {
 		
 			virtual void WriteLine(char value);
 			//virtual void WriteLine(const char* value);
-			virtual void WriteLine(char* buffer,int length);
-			virtual void WriteLine(char* buffer, int index, int count);
+			virtual void WriteLine(Array<char>* buffer,int length);
+			virtual void WriteLine(Array<char>* buffer, int index, int count);
 			virtual void WriteLine(bool value);
 			virtual void WriteLine(int value);
 			virtual void WriteLine(unsigned int value);

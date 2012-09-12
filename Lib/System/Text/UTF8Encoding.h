@@ -1,5 +1,6 @@
 #pragma once
 #include "../String.h"
+#include "../System.h"
 
 using namespace std;
 

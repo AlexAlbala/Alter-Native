@@ -30,10 +30,10 @@ namespace System{
 			*file << value;
 		}
 
-		void StreamWriter::Write(char* text, int length)
+		void StreamWriter::Write(Array<char>* text, int length)
 		{
 			char* buffer = new char[length];
-			memcpy(buffer,text,length);
+			memcpy(buffer,text->GetData(),length);
 			*file << buffer;
 		}
 
@@ -74,13 +74,15 @@ namespace System{
 		//	*file << value;
 		//}
 
-		void StreamWriter::Write(char buffer[], int index, int count)
-		{
-			//TODO CHECK THE LENGTH OF BUFFER !!!
+		void StreamWriter::Write(Array<char>* buffer, int index, int count)
+		{			
+			if(count > buffer->Length - index)
+				count = buffer->Length - index;
+
 			char* tmp = new char[count];
 			for(int i=index; i < index+count; i++)
 			{
-				tmp[i-index] = buffer[i];
+				tmp[i-index] = buffer->GetData()[i];
 			}
 			*file << tmp;
 			delete tmp;

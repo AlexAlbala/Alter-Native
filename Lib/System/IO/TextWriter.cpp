@@ -30,7 +30,7 @@ namespace System{
 		{
 		}
 
-		void TextWriter::Write(char* buffer,int length)//ADDED LENGTH
+		void TextWriter::Write(Array<char>* buffer,int length)//ADDED LENGTH
 		{
 			if(buffer != null)
 			{
@@ -38,7 +38,7 @@ namespace System{
 			}
 		}
 
-		void TextWriter::Write(char* buffer, int index, int count)
+		void TextWriter::Write(Array<char>* buffer, int index, int count)
 		{
 			if (buffer == null)
 				{
@@ -119,14 +119,15 @@ namespace System{
 
 		void TextWriter::Write(String* value)
 		{		
-			this->Write(value->Data, value->Length);
+			Array<char>* a = new Array<char>(value->Data,value->Length);
+			this->Write(a, a->Length);
 		}
 
 		void TextWriter::WriteLine(char value)
 		{
 		}
 
-		void TextWriter::WriteLine(char* buffer, int length)
+		void TextWriter::WriteLine(Array<char>* buffer, int length)
 		{
 			if(buffer != null)
 			{
@@ -134,7 +135,7 @@ namespace System{
 			}
 		}
 
-		void TextWriter::WriteLine(char* buffer, int index, int count)
+		void TextWriter::WriteLine(Array<char>* buffer, int index, int count)
 		{
 			if (buffer == null)
 				{
@@ -216,7 +217,8 @@ namespace System{
 
 		void TextWriter::WriteLine(String* value)
 		{
-			this->WriteLine(value->Data, value->Length);
+			Array<char>* a = new Array<char>(value->Data,value->Length);
+			this->WriteLine(a, a->Length);
 		}
 	}
 }

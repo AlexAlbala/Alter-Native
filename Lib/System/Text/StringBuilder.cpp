@@ -21,7 +21,7 @@ namespace System{
 			return data;
 		}
 
-		StringBuilder* StringBuilder::Append(char* value , int startIndex, int charCount)
+		StringBuilder* StringBuilder::Append(Array<char>* value , int startIndex, int charCount)
 		{
 			//TODO APPEND THE STRING TO DATA !!!!!!
 			return this;

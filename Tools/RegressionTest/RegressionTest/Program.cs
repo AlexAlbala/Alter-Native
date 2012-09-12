@@ -11,6 +11,7 @@ namespace RegressionTest
     {
         private bool Debug = false;
         private bool Verbose = false;
+        private bool Unlimited = false;
         Dictionary<DirectoryInfo, TestResult> Tests = new Dictionary<DirectoryInfo, TestResult>();
         string testPath = Environment.CurrentDirectory;
         string alternativePath = Environment.CurrentDirectory + "/../AlterNative/bin/Debug/AlterNative.exe";
@@ -36,6 +37,8 @@ namespace RegressionTest
                     p.Debug = true;
                 if (s.ToLowerInvariant().Contains("v"))
                     p.Verbose = true;
+                if (s.ToLowerInvariant().Contains("u"))
+                    p.Unlimited = true;
             }
 
 
@@ -81,7 +84,7 @@ namespace RegressionTest
         }
 
         private void CleanDirectory(DirectoryInfo d)
-        {            
+        {
             try
             {
                 if (d.Exists)
@@ -185,7 +188,12 @@ namespace RegressionTest
 
             res.output = string.Compare(originalOutput, finalOutput) == 0;
 
-            int maxLengthMsg = 100;
+            int maxLengthMsg;
+            if (Unlimited)
+                maxLengthMsg = int.MaxValue;
+            else
+                maxLengthMsg = 100;
+
             DebugMessage("ORIGINAL");
             DebugMessage(originalOutput.Length > maxLengthMsg ? originalOutput.Substring(0, maxLengthMsg) + " [......] " : originalOutput);
             DebugMessage("FINAL");
@@ -193,7 +201,7 @@ namespace RegressionTest
         }
 
         private void alternative(DirectoryInfo di, TestResult res)
-        {            
+        {
             DirectoryInfo outd = new DirectoryInfo(di.FullName + "/Output");
             Console.WriteLine("Cleanning directory: " + outd.Name);
             CleanDirectory(outd);

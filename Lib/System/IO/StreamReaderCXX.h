@@ -5,6 +5,7 @@
 #include "TextReader.h";
 #include "../String.h";
 #include "../GC.h"
+#include "../Array.h"
 
 using namespace std;
 
@@ -22,7 +23,7 @@ namespace System{
 			virtual String* ReadToEnd();
 			virtual int Peek();
 			virtual int Read();
-			virtual int Read(char* buffer, int index, int count);
+			virtual int Read(Array<char>* buffer, int index, int count);
 			virtual void Dispose(bool disposing);
 			virtual void Close();
 		};

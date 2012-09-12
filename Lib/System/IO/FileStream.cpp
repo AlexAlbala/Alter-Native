@@ -45,14 +45,14 @@ namespace System{
 				sr->Close();
 		}
 
-		int FileStream::Read(char* _array, int offset, int count)
+		int FileStream::Read(Array<char>* _array, int offset, int count)
 		{//TODO Improve method!
 			int c = sr->ReadBlock(_array,offset,count);			
 			Position += c;
 			return c;
 	}	
 
-		void FileStream::Write(char* _array, int offset, int count)
+		void FileStream::Write(Array<char>* _array, int offset, int count)
 		{
 			sw->Write(_array,offset,count);
 			Length += count;

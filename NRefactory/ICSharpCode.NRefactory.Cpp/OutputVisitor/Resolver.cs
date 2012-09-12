@@ -12,7 +12,7 @@ namespace ICSharpCode.NRefactory.Cpp
         static Resolver()
         {
             Dictionary<string, string> libraryMap = new Dictionary<string, string>();
-            libraryMap.Add("System", "\"System/System.h\""); //ADD CONSOLE, STRING AND SUPPORT            
+            libraryMap.Add("System", "\"System/System.h\"");       
             libraryMap.Add("Console", "\"System/Console.h\"");
             libraryMap.Add("Random", "\"System/Random.h\"");
             libraryMap.Add("GC", "\"System/GC.h\"");

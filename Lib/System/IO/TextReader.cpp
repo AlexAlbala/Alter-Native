@@ -32,7 +32,7 @@ namespace System{
 			return -1;
 		}
 
-		int TextReader::Read(char* buffer, int index, int count)
+		int TextReader::Read(Array<char>* buffer, int index, int count)
 		{
 			if (buffer == null)
 			{
@@ -69,7 +69,7 @@ namespace System{
 
 		String* TextReader::ReadToEnd()
 		{
-			char* _array = new char[4096];
+			Array<char>* _array = new Array<char>(4096);
 			StringBuilder* stringBuilder = new StringBuilder(4096);//System.Text.StringBuilder
 			int charCount;
 			while ((charCount = this->Read(_array, 0, 4096)) != 0)
@@ -79,7 +79,7 @@ namespace System{
 			return stringBuilder->ToString();
 		}
 
-		int TextReader::ReadBlock(char* buffer, int index, int count)
+		int TextReader::ReadBlock(Array<char>* buffer, int index, int count)
 		{
 			int num = 0;
 			int num2;

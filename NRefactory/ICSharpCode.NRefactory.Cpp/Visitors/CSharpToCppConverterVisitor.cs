@@ -351,7 +351,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                                     return EndNode(invocationExpression, _expr);
                                 }
                             }
-                        }                      
+                        }
                     }
                 }
             }
@@ -772,8 +772,12 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             Resolver.ProcessIncludes(type.Name);
 
             //HERE SHOULD BE BaseType or InheritedType or something similar
-            type.AddChild(new SimpleType("Object"), TypeDeclaration.BaseTypeRole);
-            type.AddChild(new SimpleType("gc_cleanup"), TypeDeclaration.BaseTypeRole);
+            AstType objectType = new SimpleType("Object");
+            AstType gcType = new SimpleType("gc_cleanup");
+            type.AddChild(objectType, TypeDeclaration.BaseTypeRole);
+            type.AddChild(gcType, TypeDeclaration.BaseTypeRole);
+
+            Cache.AddNamespace("System");
 
             return EndNode(typeDeclaration, type);
         }
@@ -1022,6 +1026,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitVariableDeclarationStatement(CSharp.VariableDeclarationStatement variableDeclarationStatement, object data)
         {
             bool objectCreation = false;
+            bool arrayCreation = false;
             var vds = new VariableDeclarationStatement();
 
             if (variableDeclarationStatement.Type is CSharp.ComposedType)
@@ -1032,9 +1037,13 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     {
                         CSharp.VariableInitializer v = variableDeclarationStatement.Variables.ElementAt(0);
                         //We must check the array for any of the expression that can return values (objet creations, array creations, invocations)
-                        if (v.Initializer is CSharp.ArrayCreateExpression || v.Initializer is CSharp.ObjectCreateExpression || v.Initializer is CSharp.InvocationExpression)
+                        if (v.Initializer is CSharp.ObjectCreateExpression)
                         {
                             objectCreation = true;
+                        }
+                        else if (v.Initializer is CSharp.ArrayCreateExpression || v.Initializer is CSharp.InvocationExpression)
+                        {
+                            arrayCreation = true;
                         }
 
                     }
@@ -1059,6 +1068,24 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             {
                 vds.Variables.ElementAt(0).NameToken = new Identifier(vds.Variables.ElementAt(0).Name, TextLocation.Empty);
                 vds.Type = new PtrType((AstType)vds.Type.Clone());
+            }
+            else if (arrayCreation)
+            {
+                AstType t = new SimpleType("Array");
+                t.AddChild((AstType)vds.Type.Clone(), SimpleType.Roles.TypeArgument);
+
+                VariableInitializer vinit = vds.Variables.ElementAt(0);
+                vinit.NameToken = new Identifier(vinit.Name, TextLocation.Empty);
+                if (vinit.Initializer is ArrayCreateExpression)
+                {
+                    var obj = new ObjectCreateExpression((AstType)t.Clone());
+                    foreach (var n in (vinit.Initializer as ArrayCreateExpression).Arguments)
+                    {
+                        obj.Arguments.Add(n.Clone());
+                    }
+                    vinit.Initializer = obj;                    
+                }
+                vds.Type = new PtrType((AstType)t.Clone());
             }
             return EndNode(variableDeclarationStatement, vds);
         }
@@ -1290,6 +1317,15 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             ConvertNodes(parameterDeclaration.Attributes, param.Attributes);
             param.ParameterModifier = (ParameterModifier)parameterDeclaration.ParameterModifier;
             param.Type = (AstType)parameterDeclaration.Type.AcceptVisitor(this, data);
+            if (param.Type is PtrType)
+            {
+                if ((param.Type as PtrType).Target.IsBasicType)
+                {//ARRAY
+                    SimpleType s = new SimpleType("Array");
+                    s.TypeArguments.Add((AstType)(param.Type as PtrType).Target.Clone());
+                    param.Type = new PtrType(s);
+                }
+            }
             param.NameToken = (Identifier)parameterDeclaration.NameToken.AcceptVisitor(this, data);
             param.DefaultExpression = (Expression)parameterDeclaration.DefaultExpression.AcceptVisitor(this, data);
 

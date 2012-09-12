@@ -2,6 +2,7 @@
 #include "System/System.h"
 #include "Node.h"
 
+using namespace System;
 namespace List{
 	class MyList : public virtual Object, public virtual gc_cleanup
 	{

@@ -76,7 +76,7 @@ namespace System{
 		}
 
 		//TODO TEST
-		int StreamReader::Read(char* buffer, int index, int count)
+		int StreamReader::Read(Array<char>* buffer, int index, int count)
 		{			
 			if(file->eof())
 				return 0;
@@ -90,7 +90,7 @@ namespace System{
 			if(length - index < count)
 				count = length - index;
 
-			file->read(buffer + index,count);
+			file->read(buffer->GetData() + index,count);
 
 			return count;
 		}

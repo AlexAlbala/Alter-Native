@@ -1,11 +1,13 @@
 #pragma once
-
-#include "Object.h"
 #include "../gc/include/gc_cpp.h"
+#include "Object.h"
 
-
-class GC : public Object
-{
-public:	
-	static void Collect();
-};
+namespace System{
+	//Forward declaration
+	class Object;
+	class GC : public Object
+	{
+	public:	
+		static void Collect();
+	};
+}

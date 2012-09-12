@@ -3,6 +3,7 @@
 #include <fstream>
 #include "../String.h"
 #include "TextWriter.h"
+#include "../Array.h"
 using namespace std;
 
 namespace System{
@@ -27,8 +28,8 @@ namespace System{
 			virtual void Write(char value);
 			virtual void Write(const char* value);
 			virtual void Write(String* value);
-			virtual void Write(char* text, int length);
-			virtual void Write(char buffer[], int index, int count);
+			virtual void Write(Array<char>* text, int length);
+			virtual void Write(Array<char>* buffer, int index, int count);
 		
 			void WriteLine(const char* text);
 			void WriteLine(String* text);

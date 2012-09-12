@@ -1,9 +1,12 @@
 #pragma once
-
-#include "support.h"
 #include <string.h>
+#include "Object.h"
+#include "GC.h"
+#include "support.h"
 
 namespace System{
+	//Forward declaration
+	class Object;
 	class String : public Object, public virtual gc_cleanup {
 	public:
 		int Length;

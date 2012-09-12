@@ -1,6 +1,8 @@
 #include "GC.h"
 
-void GC::Collect(){	
-	//TODO
-	//DO NOTHING
+namespace System{
+	void GC::Collect(){	
+		//TODO
+		//DO NOTHING
+	}
 }

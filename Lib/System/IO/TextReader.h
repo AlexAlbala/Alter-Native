@@ -1,6 +1,8 @@
 #pragma once
 #include "../IDisposable.h"
 #include "../String.h"
+#include "../support.h"
+#include "../Array.h"
 
 namespace System {
 	namespace IO{
@@ -10,9 +12,9 @@ namespace System {
 			virtual void Dispose(bool disposing);
 			virtual int Peek();
 			virtual int Read();
-			virtual int Read(char* buffer, int index, int count);
+			virtual int Read(Array<char>* buffer, int index, int count);
 			virtual String* ReadToEnd();
-			virtual int ReadBlock(char* buffer, int index, int count);
+			virtual int ReadBlock(Array<char>* buffer, int index, int count);
 			virtual String* ReadLine();
 			virtual void Close();
 		};

@@ -1,6 +1,7 @@
 #pragma once
 #include "../GC.h"
 #include "../String.h"
+#include "../Array.h"
 
 namespace System{
 	namespace Text{
@@ -17,7 +18,7 @@ namespace System{
 			StringBuilder(int capacity);
 
 			String* ToString();
-			StringBuilder* Append(char* value , int startIndex, int charCount);
+			StringBuilder* Append(Array<char>* value , int startIndex, int charCount);
 			StringBuilder* Append(char value);
 		};
 	}

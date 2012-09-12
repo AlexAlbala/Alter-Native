@@ -650,7 +650,16 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitMemberReferenceExpression(MemberReferenceExpression memberReferenceExpression, object data)
         {
             StartNode(memberReferenceExpression);
+
+            //Expressions like new MyObject().f1() ---->  new MyObject()->f1() is incorrect, must be (new MyObject())->f1()
+            if (memberReferenceExpression.Target is ObjectCreateExpression && memberReferenceExpression.Parent is InvocationExpression)
+                LPar();
+            
             memberReferenceExpression.Target.AcceptVisitor(this, data);
+            
+            if (memberReferenceExpression.Target is ObjectCreateExpression && memberReferenceExpression.Parent is InvocationExpression)
+                RPar();
+
             if (memberReferenceExpression.FirstChild is TypeReferenceExpression)
             {
                 WriteToken("::", MemberReferenceExpression.Roles.Dot);
@@ -658,7 +667,8 @@ namespace ICSharpCode.NRefactory.Cpp
             else
             {
                 WriteToken("->", MemberReferenceExpression.Roles.Dot);
-            }
+            }           
+            
             WriteIdentifier(memberReferenceExpression.MemberName);
             WriteTypeArguments(memberReferenceExpression.TypeArguments);
             return EndNode(memberReferenceExpression);
