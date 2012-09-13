@@ -13,24 +13,24 @@ namespace AsIs{
 		Object* a = new Anne();
 		Object* j = new Person();
 		Console::WriteLine(new String("Cast to super class"));
-		if (isinstof<Person*>(i)) {
-			Person* _j = ascast<Person*>(i);
+		if (is_inst_of<Person*>(i)) {
+			Person* _j = as_cast<Person*>(i);
 			Console::WriteLine(_j->getName());
 		}
-		if (isinstof<Person*>(a)) {
-			Person* _a = ascast<Person*>(a);
+		if (is_inst_of<Person*>(a)) {
+			Person* _a = as_cast<Person*>(a);
 			Console::WriteLine(_a->getName());
 		}
 		Console::WriteLine(new String("Cast to specific class"));
-		if (isinstof<John*>(i)) {
-			John* _j2 = ascast<John*>(i);
+		if (is_inst_of<John*>(i)) {
+			John* _j2 = as_cast<John*>(i);
 			Console::WriteLine(_j2->getName());
 		}
-		if (isinstof<Anne*>(a)) {
-			Anne* _a2 = ascast<Anne*>(a);
+		if (is_inst_of<Anne*>(a)) {
+			Anne* _a2 = as_cast<Anne*>(a);
 			Console::WriteLine(_a2->getName());
 		}
-		if (isinstof<John*>(j)) {
+		if (is_inst_of<John*>(j)) {
 			Console::WriteLine(new String("error"));
 		}
 	}
