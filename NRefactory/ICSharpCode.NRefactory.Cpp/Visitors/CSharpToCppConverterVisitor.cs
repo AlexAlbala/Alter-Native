@@ -73,19 +73,14 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitAsExpression(CSharp.AsExpression asExpression, object data)
         {
-            //CastExpression cexp = new CastExpression(,
-            //    );
-
             InvocationExpression invExpr = new InvocationExpression();
             IdentifierExpression mref = new IdentifierExpression();
             mref.TypeArguments.Add((AstType)asExpression.Type.AcceptVisitor(this,data));           
-            mref.Identifier = "ascast";
+            mref.Identifier = "as_cast";
             invExpr.Arguments.Add((Expression)asExpression.Expression.AcceptVisitor(this,data));
             invExpr.Target = mref;
 
             return EndNode(asExpression, invExpr);
-
-            //return EndNode(asExpression, cexp);
         }
 
         private bool IsPropertyCall(MemberReferenceExpression memberReferenceExpression)
@@ -399,7 +394,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             InvocationExpression invExpr = new InvocationExpression();
             IdentifierExpression mref = new IdentifierExpression();
             mref.TypeArguments.Add((AstType)isExpression.Type.AcceptVisitor(this, data));
-            mref.Identifier = "isinstof";
+            mref.Identifier = "is_inst_of";
             invExpr.Arguments.Add((Expression)isExpression.Expression.AcceptVisitor(this, data));
             invExpr.Target = mref;
 
