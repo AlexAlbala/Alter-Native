@@ -1,6 +1,5 @@
 #pragma once
 #include "System/System.h"
-#include "Program.h"
 #include "ClassA.h"
 #include "System/Console.h"
 

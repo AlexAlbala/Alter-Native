@@ -2,7 +2,6 @@
 #include "System/System.h"
 #include "System/IO/File.h"
 #include "System/IO/FileStream.h"
-#include "Test.h"
 #include "System/Convert.h"
 #include "System/Text/UTF8Encoding.h"
 #include "System/Console.h"

@@ -11,7 +11,7 @@ namespace System{
 	public:
 		Object(void);
 		~Object(void);
-		virtual char* ToString(void);
+		virtual String* ToString(void);
 	};
 }
 

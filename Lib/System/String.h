@@ -6,7 +6,6 @@
 
 namespace System{
 	//Forward declaration
-	class Object;
 	class String : public Object, public virtual gc_cleanup {
 	public:
 		int Length;

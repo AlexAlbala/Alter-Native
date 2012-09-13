@@ -1,17 +1,17 @@
 #pragma once
 #include "System/System.h"
-#include "System/IO/StreamWriterCXX.h"
-#include "System/IO/StreamReaderCXX.h"
+#include "Person.h"
 #include "System/Console.h"
+#include "John.h"
+#include "Anne.h"
 
-using namespace System::IO;
 using namespace System;
-namespace File{
+namespace AsIs{
 	class Program : public virtual Object, public virtual gc_cleanup
 	{
 		public:
 			static void Main(String* args[]);
-		private:
-			void Run();
+		public:
+			void AsIsTest();
 	};
 }

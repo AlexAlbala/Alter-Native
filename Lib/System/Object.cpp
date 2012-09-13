@@ -1,4 +1,5 @@
 #include "Object.h"
+#include "String.h"
 
 namespace System{
 	Object::Object(void)
@@ -11,8 +12,8 @@ namespace System{
 	}
 
 
-	char* Object::ToString(void)
+	String* Object::ToString(void)
 	{
-		return "System::Object";
+		return new String("System::Object");
 	}
 }

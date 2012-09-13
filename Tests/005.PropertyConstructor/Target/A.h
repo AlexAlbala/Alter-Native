@@ -1,6 +1,5 @@
 #pragma once
 #include "System/System.h"
-#include "A.h"
 #include "System/Console.h"
 
 using namespace System;

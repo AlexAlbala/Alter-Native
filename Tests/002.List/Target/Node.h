@@ -1,6 +1,5 @@
 #pragma once
 #include "System/System.h"
-#include "Node.h"
 #include "Utils.h"
 
 using namespace System;

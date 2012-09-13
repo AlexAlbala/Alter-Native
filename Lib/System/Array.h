@@ -38,42 +38,42 @@ namespace System{
 			return data->data();
 		}
 
-		iteratorcxx<T> begin()
+		iteratorcxx<T>* begin()
 		{			
 			return data->begin();
 		}
 
-		iteratorcxx<T> begin() const
+		iteratorcxx<T>* begin() const
 		{
 			return data->begin();
 		}
 
-		iteratorcxx<T> end()
+		iteratorcxx<T>* end()
 		{			
 			return data->end();
 		}
 
-		iteratorcxx<T> end() const
+		iteratorcxx<T>* end() const
 		{
 			return data->end();
 		}
 
-		iteratorcxx<T> rbegin()
+		iteratorcxx<T>* rbegin()
 		{			
 			return data->rbegin();
 		}
 
-		iteratorcxx<T> rbegin() const
+		iteratorcxx<T>* rbegin() const
 		{
 			return data->rbegin();
 		}
 
-		iteratorcxx<T> rend()
+		iteratorcxx<T>* rend()
 		{			
 			return data->rend();
 		}
 
-		iteratorcxx<T> rend() const
+		iteratorcxx<T>* rend() const
 		{
 			return data->rend();
 		}

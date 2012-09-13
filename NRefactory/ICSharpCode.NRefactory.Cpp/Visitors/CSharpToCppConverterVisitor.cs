@@ -73,7 +73,19 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitAsExpression(CSharp.AsExpression asExpression, object data)
         {
-            throw new NotImplementedException();
+            //CastExpression cexp = new CastExpression(,
+            //    );
+
+            InvocationExpression invExpr = new InvocationExpression();
+            IdentifierExpression mref = new IdentifierExpression();
+            mref.TypeArguments.Add((AstType)asExpression.Type.AcceptVisitor(this,data));           
+            mref.Identifier = "ascast";
+            invExpr.Arguments.Add((Expression)asExpression.Expression.AcceptVisitor(this,data));
+            invExpr.Target = mref;
+
+            return EndNode(asExpression, invExpr);
+
+            //return EndNode(asExpression, cexp);
         }
 
         private bool IsPropertyCall(MemberReferenceExpression memberReferenceExpression)
@@ -384,7 +396,14 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitIsExpression(CSharp.IsExpression isExpression, object data)
         {
-            throw new NotImplementedException();
+            InvocationExpression invExpr = new InvocationExpression();
+            IdentifierExpression mref = new IdentifierExpression();
+            mref.TypeArguments.Add((AstType)isExpression.Type.AcceptVisitor(this, data));
+            mref.Identifier = "isinstof";
+            invExpr.Arguments.Add((Expression)isExpression.Expression.AcceptVisitor(this, data));
+            invExpr.Target = mref;
+
+            return EndNode(isExpression, invExpr);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitLambdaExpression(CSharp.LambdaExpression lambdaExpression, object data)
@@ -1083,7 +1102,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     {
                         obj.Arguments.Add(n.Clone());
                     }
-                    vinit.Initializer = obj;                    
+                    vinit.Initializer = obj;
                 }
                 vds.Type = new PtrType((AstType)t.Clone());
             }
@@ -1195,8 +1214,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             ConvertNodes(constructorDeclaration.Parameters, result.Parameters);
             result.Body = (BlockStatement)constructorDeclaration.Body.AcceptVisitor(this, data);
 
+            //TODO: C++ WILL NOT COMPILE C# INITIALIZERS
             if (!constructorDeclaration.Initializer.IsNull)
-                result.Body.Statements.InsertBefore(result.Body.FirstOrDefault(), (Statement)constructorDeclaration.Initializer.AcceptVisitor(this, data));
+                result.Initializer = (ConstructorInitializer)constructorDeclaration.Initializer.AcceptVisitor(this, data);
 
             return EndNode(constructorDeclaration, result);
         }
@@ -1419,7 +1439,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 //Add the visited type to the resolver in order to include it after
                 //Also this call adds the type to the include list for detecting forward declarations
                 //If its parent is null, is better to ignore :)
-                if (simpleType.Parent != null)
+                //Ignore the type if is the current type declaration
+                if (simpleType.Parent != null && (currentType == null ?  "N/A" : currentType.Name) != simpleType.Identifier)
                     Resolver.AddVistedType(type, type.Identifier);
 
                 if (simpleType.Annotations.Count() > 0)
@@ -1674,7 +1695,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         private bool IsChildOf(CSharp.AstNode member, Type type)
         {
-            CSharp.AstNode m = (CSharp.AstNode)member;
+            CSharp.AstNode m = member as CSharp.AstNode;
             while (m.Parent != null)
             {
                 if (m.Parent.GetType() == type)
