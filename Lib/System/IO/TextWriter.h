@@ -15,7 +15,7 @@ namespace System {
 		
 			virtual void Write(char value);
 			//virtual void Write(const char* value);
-			virtual void Write(Array<char>* buffer,int length);
+			virtual void Write(Array<char>* buffer);
 			virtual void Write(Array<char>* buffer, int index, int count);
 			virtual void Write(bool value);
 			virtual void Write(int value);
@@ -27,7 +27,7 @@ namespace System {
 		
 			virtual void WriteLine(char value);
 			//virtual void WriteLine(const char* value);
-			virtual void WriteLine(Array<char>* buffer,int length);
+			virtual void WriteLine(Array<char>* buffer);
 			virtual void WriteLine(Array<char>* buffer, int index, int count);
 			virtual void WriteLine(bool value);
 			virtual void WriteLine(int value);

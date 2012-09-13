@@ -30,11 +30,11 @@ namespace System{
 		{
 		}
 
-		void TextWriter::Write(Array<char>* buffer,int length)//ADDED LENGTH
+		void TextWriter::Write(Array<char>* buffer)
 		{
 			if(buffer != null)
 			{
-				this->Write(buffer,0, length);
+				this->Write(buffer,0, buffer->Length);
 			}
 		}
 
@@ -52,10 +52,11 @@ namespace System{
 				{
 					throw std::exception("count is out of range");
 				}
-				/*if (buffer.Length - index < count)
+				if (buffer->Length - index < count)
 				{
-					throw new ArgumentException(Environment.GetResourceString("Argument_InvalidOffLen"));
-				}*/
+					throw std::exception("Invalid length");
+					//throw new ArgumentException(Environment.GetResourceString("Argument_InvalidOffLen"));
+				}
 				for (int i = 0; i < count; i++)
 				{
 					this->Write(buffer[index + i]);
@@ -120,18 +121,18 @@ namespace System{
 		void TextWriter::Write(String* value)
 		{		
 			Array<char>* a = new Array<char>(value->Data,value->Length);
-			this->Write(a, a->Length);
+			this->Write(a);
 		}
 
 		void TextWriter::WriteLine(char value)
 		{
 		}
 
-		void TextWriter::WriteLine(Array<char>* buffer, int length)
+		void TextWriter::WriteLine(Array<char>* buffer)
 		{
 			if(buffer != null)
 			{
-				this->WriteLine(buffer,0, length);
+				this->WriteLine(buffer,0, buffer->Length);
 			}
 		}
 
@@ -149,10 +150,11 @@ namespace System{
 				{
 					throw std::exception("count is out of range");
 				}
-				/*if (buffer.Length - index < count)
+				if (buffer->Length - index < count)
 				{
-					throw new ArgumentException(Environment.GetResourceString("Argument_InvalidOffLen"));
-				}*/
+					throw std::exception("Invalid length");
+					//throw new ArgumentException(Environment.GetResourceString("Argument_InvalidOffLen"));
+				}
 				for (int i = 0; i < count; i++)
 				{
 					this->Write(buffer[index + i]);
@@ -218,7 +220,7 @@ namespace System{
 		void TextWriter::WriteLine(String* value)
 		{
 			Array<char>* a = new Array<char>(value->Data,value->Length);
-			this->WriteLine(a, a->Length);
+			this->WriteLine(a);
 		}
 	}
 }

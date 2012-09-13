@@ -284,7 +284,12 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitConditionalExpression(CSharp.ConditionalExpression conditionalExpression, object data)
         {
-            throw new NotImplementedException();
+            var cExpr = new ConditionalExpression(
+                (Expression)conditionalExpression.Condition.AcceptVisitor(this, data),
+                (Expression)conditionalExpression.TrueExpression.AcceptVisitor(this, data),
+                (Expression)conditionalExpression.FalseExpression.AcceptVisitor(this, data)
+                );
+            return EndNode(conditionalExpression, cExpr);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitDefaultValueExpression(CSharp.DefaultValueExpression defaultValueExpression, object data)
@@ -393,7 +398,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         {
             InvocationExpression invExpr = new InvocationExpression();
             IdentifierExpression mref = new IdentifierExpression();
-            mref.TypeArguments.Add((AstType)isExpression.Type.AcceptVisitor(this, data));
+            mref.TypeArguments.Add((AstType)isExpression.Type.AcceptVisitor(this, data));            
             mref.Identifier = "is_inst_of";
             invExpr.Arguments.Add((Expression)isExpression.Expression.AcceptVisitor(this, data));
             invExpr.Target = mref;
@@ -845,7 +850,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitEmptyStatement(CSharp.EmptyStatement emptyStatement, object data)
         {
-            throw new NotImplementedException();
+            return EndNode(emptyStatement, new EmptyExpression());
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitExpressionStatement(CSharp.ExpressionStatement expressionStatement, object data)

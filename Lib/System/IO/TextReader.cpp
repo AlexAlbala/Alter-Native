@@ -49,10 +49,11 @@ namespace System{
 				throw std::exception("count out of range");
 				//throw new ArgumentOutOfRangeException("count", Environment.GetResourceString("ArgumentOutOfRange_NeedNonNegNum"));
 			}
-			//if (buffer.Length - index < count) //CANNOT BE CHECKED
-			//{
-			//	//throw new ArgumentException(Environment.GetResourceString("Argument_InvalidOffLen"));
-			//}
+			if (buffer->Length - index < count)
+			{
+				throw std::exception("Invalid length");
+				//throw new ArgumentException(Environment.GetResourceString("Argument_InvalidOffLen"));
+			}
 			int num = 0;
 			do
 			{
