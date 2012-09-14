@@ -21,6 +21,10 @@ namespace System {
 		std::cout << txt << std::endl;
 	}
 
+	void Console::WriteLine(Array<char>* c) {
+		std::cout << c->GetData() << std::endl;
+	}
+
 	void Console::WriteLine(int i) {
 		std::cout << i << std::endl;
 	}

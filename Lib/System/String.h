@@ -3,6 +3,7 @@
 #include "Object.h"
 #include "GC.h"
 #include "support.h"
+#include "Array.h"
 
 namespace System{
 	//Forward declaration
@@ -14,6 +15,7 @@ namespace System{
 		String(char txt);
 		String(const char* txt);
 		String* operator =(char* text);
+		Array<char>* ToCharArray();
 		operator const char*();
 		virtual ~String(void);
 		static String* Concat(Object* elements);	

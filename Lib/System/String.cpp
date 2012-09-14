@@ -21,6 +21,11 @@ namespace System{
 		strncpy(Data,txt,Length);
 	}
 
+	Array<char>* String::ToCharArray()
+	{
+		return new Array<char>(Data, Length);
+	}
+
 	String* String::operator=(char* text) {
 		String* s = new String(text);
 		return s;

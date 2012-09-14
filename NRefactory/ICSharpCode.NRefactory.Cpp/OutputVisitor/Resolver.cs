@@ -12,7 +12,7 @@ namespace ICSharpCode.NRefactory.Cpp
         static Resolver()
         {
             Dictionary<string, string> libraryMap = new Dictionary<string, string>();
-            libraryMap.Add("System", "\"System/System.h\"");       
+            libraryMap.Add("System", "\"System/System.h\"");
             libraryMap.Add("Console", "\"System/Console.h\"");
             libraryMap.Add("Random", "\"System/Random.h\"");
             libraryMap.Add("GC", "\"System/GC.h\"");
@@ -36,7 +36,7 @@ namespace ICSharpCode.NRefactory.Cpp
         /// </summary>        
         /// <param name="included">The type included</param>
         public static void AddInclude(string included)
-        {            
+        {
             string owner = "N/P";
             Cache.AddInclude(owner, included);
         }
@@ -142,7 +142,73 @@ namespace ICSharpCode.NRefactory.Cpp
             return false;
         }
 
-        private static bool Reaches(string type1, string type2, Dictionary<string,List<string>> includes)
+        /// <summary>
+        /// Returns if an identifier is a pointer expression. This method checks if the identifier (declared in a method parameter, method variable, or class field) is a pointer.
+        /// The method will search the identifier depending of the filled parameters or the null parameters
+        /// CurrentType + currentFieldVarialbe
+        /// CurrentMethod + CurrentParameter
+        /// CurrentMethod + CurrentField_Variable
+        /// </summary>
+        /// <param name="currentType">The current type name</param>
+        /// <param name="currentField_Variable">The variable or field that is being checked</param>
+        /// <param name="currentMethod">The current method</param>
+        /// <param name="currentParameter">The parameter that is being checked</param>
+        /// <returns></returns>
+        public static bool IsPointer(string currentType, string currentField_Variable, string currentMethod, string currentParameter)
+        {
+            if (currentField_Variable != null && currentType != null)
+            {
+                Dictionary<string, List<FieldDeclaration>> fields = Cache.GetFields();
+                if (fields.ContainsKey(currentType))
+                {
+                    foreach (FieldDeclaration fd in fields[currentType])
+                    {
+                        if (fd.ReturnType is Cpp.Ast.PtrType)
+                        {
+                            var col = fd.Variables;
+                            if (col.FirstOrNullObject(x => x.Name == currentField_Variable) != null)
+                                return true;
+                        }
+                    }
+                }
+            }
+
+            if (currentMethod != null && currentParameter != null)
+            {
+                Dictionary<string, List<ParameterDeclaration>> parameters = Cache.GetParameters();
+                if (parameters.ContainsKey(currentMethod))
+                {
+                    foreach (ParameterDeclaration pd in parameters[currentMethod])
+                    {
+                        if (pd.Type is Cpp.Ast.PtrType)
+                        {
+                            if (pd.Name == currentParameter)
+                                return true;
+                        }
+                    }
+                }
+            }
+
+            if (currentMethod != null && currentField_Variable != null)
+            {
+                Dictionary<string, List<VariableDeclarationStatement>> variablesMethod = Cache.GetVariablesMethod();
+                if (variablesMethod.ContainsKey(currentMethod))
+                {
+                    foreach (VariableDeclarationStatement fd in variablesMethod[currentMethod])
+                    {
+                        if (fd.Type is Cpp.Ast.PtrType)
+                        {
+                            var col = fd.Variables;
+                            if (col.FirstOrNullObject(x => x.Name == currentField_Variable) != null)
+                                return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        private static bool Reaches(string type1, string type2, Dictionary<string, List<string>> includes)
         {
             if (includes.ContainsKey(type1))
             {
@@ -194,10 +260,10 @@ namespace ICSharpCode.NRefactory.Cpp
             {
                 if (!kvp.Key.IsBasicType)
                 {
-                    if (!Cache.GetExcluded().Contains(kvp.Value) && !tmp.Contains(GetCppName(kvp.Value)))                    
-                        tmp.Add(GetCppName(kvp.Value));                    
+                    if (!Cache.GetExcluded().Contains(kvp.Value) && !tmp.Contains(GetCppName(kvp.Value)))
+                        tmp.Add(GetCppName(kvp.Value));
                 }
-            }   
+            }
             return tmp.ToArray();
         }
 

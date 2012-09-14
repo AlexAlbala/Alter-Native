@@ -407,22 +407,6 @@ namespace ICSharpCode.NRefactory.Cpp
             CloseBrace(style);
         }
 
-        //public object VisitAsExpression(AsExpression asExpression, object data)
-        //{
-        //    //C++ does not contain as keyword
-
-        //    StartNode(asExpression);
-        //    VisitCastExpression(new CastExpression(asExpression.Type, asExpression.Expression), data);
-
-
-        //    //asExpression.Expression.AcceptVisitor(this, data);
-        //    //Space();
-        //    //WriteKeyword("as");
-        //    //Space();
-        //    //asExpression.Type.AcceptVisitor(this, data);
-        //    return EndNode(asExpression);
-        //}
-
         public object VisitAssignmentExpression(AssignmentExpression assignmentExpression, object data)
         {
             StartNode(assignmentExpression);
@@ -605,16 +589,6 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteCommaSeparatedListInParenthesis(invocationExpression.Arguments, policy.SpaceWithinMethodCallParentheses);
             return EndNode(invocationExpression);
         }
-
-        //public object VisitIsExpression(IsExpression isExpression, object data)
-        //{
-        //    StartNode(isExpression);
-        //    isExpression.Expression.AcceptVisitor(this, data);
-        //    Space();
-        //    WriteKeyword("is");
-        //    isExpression.Type.AcceptVisitor(this, data);
-        //    return EndNode(isExpression);
-        //}
 
         public object VisitLambdaExpression(LambdaExpression lambdaExpression, object data)
         {

@@ -14,6 +14,8 @@ namespace ICSharpCode.NRefactory.Cpp
         private static Dictionary<string, Ast.AstType> auxVariables = new Dictionary<string, Ast.AstType>();
         private static List<Ast.Statement> addedConstructorStatements = new List<Ast.Statement>();
         private static Dictionary<string, List<FieldDeclaration>> fields = new Dictionary<string, List<FieldDeclaration>>();
+        private static Dictionary<string, List<VariableDeclarationStatement>> variablesMethod = new Dictionary<string, List<VariableDeclarationStatement>>();
+        private static Dictionary<string, List<ParameterDeclaration>> parameters = new Dictionary<string, List<ParameterDeclaration>>();
 
         //RESOLVER
         private static Dictionary<string, string> libraryMap = new Dictionary<string, string>();
@@ -51,7 +53,7 @@ namespace ICSharpCode.NRefactory.Cpp
             return auxVariables;
         }
 
-        public static void ClearTmpVariables()
+        public static void ClearAuxVariables()
         {
             auxVariables.Clear();
         }
@@ -62,37 +64,15 @@ namespace ICSharpCode.NRefactory.Cpp
             namespaces.Clear();
         }
 
-        public static List<string> GetExcluded()
-        {
-            return excluded;
-        }
-
-        public static List<string> GetNamespaces()
-        {
-            return namespaces;
-        }
-
         public static void AddExcludedType(string type)
         {
             if (!excluded.Contains(type))
                 excluded.Add(type);
         }
 
-        public static Dictionary<Ast.AstType, string> GetVisitedTypes()
+        public static List<string> GetExcluded()
         {
-            return visitedTypes;
-        }
-
-        public static void AddVisitedType(Ast.AstType type, string name)
-        {
-            if (!visitedTypes.ContainsValue(name) && !visitedTypes.ContainsKey(type))
-                visitedTypes.Add(type, name);
-        }
-
-        public static void AddSymbol(string type, TypeReference reference)
-        {
-            if (!symbols.ContainsKey(type))
-                symbols.Add(type, reference);
+            return excluded;
         }
 
         public static void AddNamespace(string nameSpace)
@@ -101,19 +81,31 @@ namespace ICSharpCode.NRefactory.Cpp
                 namespaces.Add(nameSpace);
         }
 
+        public static List<string> GetNamespaces()
+        {
+            return namespaces;
+        }
+
+        public static void AddVisitedType(Ast.AstType type, string name)
+        {
+            if (!visitedTypes.ContainsValue(name) && !visitedTypes.ContainsKey(type))
+                visitedTypes.Add(type, name);
+        }
+
+        public static Dictionary<Ast.AstType, string> GetVisitedTypes()
+        {
+            return visitedTypes;
+        }
+
+        public static void AddSymbol(string type, TypeReference reference)
+        {
+            if (!symbols.ContainsKey(type))
+                symbols.Add(type, reference);
+        }
+
         public static Dictionary<string, string> GetLibraryMap()
         {
             return libraryMap;
-        }
-
-        public static Dictionary<string, List<string>> GetIncludes()
-        {
-            return includes;
-        }
-
-        public static void SaveIncludes(Dictionary<string, List<string>> _includes)
-        {
-            includes = _includes;
         }
 
         public static void AddInclude(string owner, string included)
@@ -130,22 +122,19 @@ namespace ICSharpCode.NRefactory.Cpp
             }
         }
 
+        public static void SaveIncludes(Dictionary<string, List<string>> _includes)
+        {
+            includes = _includes;
+        }
+
+        public static Dictionary<string, List<string>> GetIncludes()
+        {
+            return includes;
+        }
+
         public static void InitLibrary(Dictionary<string, string> map)
         {
             libraryMap = map;
-        }
-
-        public static void AddProperty(string propertyName, string typeName)
-        {
-            if (properties.ContainsKey(propertyName))
-            {
-                List<string> tmpTypes = properties[propertyName];
-
-                if (!tmpTypes.Contains(typeName))
-                    tmpTypes.Add(typeName);
-            }
-            else
-                properties.Add(propertyName, new List<string>() { typeName });
         }
         #endregion
 
@@ -165,21 +154,66 @@ namespace ICSharpCode.NRefactory.Cpp
             }
         }
 
-        public static bool IsPointer(string currentType, string currentField)
+        public static Dictionary<string, List<FieldDeclaration>> GetFields()
         {
-            if (fields.ContainsKey(currentType))
+            return fields;
+        }
+
+        public static void AddParameterDeclaration(string methodName, ParameterDeclaration parameter)
+        {
+            if (!parameters.ContainsKey(methodName))
             {
-                foreach (FieldDeclaration fd in fields[currentType])
-                {
-                    if (fd.ReturnType is Cpp.Ast.PtrType)
-                    {
-                        var col = fd.Variables;
-                        if (col.First(x => x.Name == currentField) != null)
-                            return true;
-                    }
-                }                
+                parameters.Add(methodName, new List<ParameterDeclaration>() { parameter });
+                return;
             }
-            return false;
+            else
+            {
+                if (!parameters[methodName].Contains(parameter))
+                    parameters[methodName].Add(parameter);
+            }
+        }
+
+        public static Dictionary<string, List<ParameterDeclaration>> GetParameters()
+        {
+            return parameters;
+        }
+
+        public static void AddMethodVariableDeclaration(string methodName, VariableDeclarationStatement field)
+        {
+            if (!variablesMethod.ContainsKey(methodName))
+            {
+                variablesMethod.Add(methodName, new List<VariableDeclarationStatement>() { field });
+                return;
+            }
+            else
+            {
+                if (!variablesMethod[methodName].Contains(field))
+                    variablesMethod[methodName].Add(field);
+            }
+        }
+
+        public static void ClearParametersAndFieldsDeclarations()
+        {
+            parameters.Clear();
+            variablesMethod.Clear();
+        }
+
+        public static Dictionary<string, List<VariableDeclarationStatement>> GetVariablesMethod()
+        {
+            return variablesMethod;
+        }
+
+        public static void AddProperty(string propertyName, string typeName)
+        {
+            if (properties.ContainsKey(propertyName))
+            {
+                List<string> tmpTypes = properties[propertyName];
+
+                if (!tmpTypes.Contains(typeName))
+                    tmpTypes.Add(typeName);
+            }
+            else
+                properties.Add(propertyName, new List<string>() { typeName });
         }
 
         public static Dictionary<string, List<string>> GetPropertiesList()

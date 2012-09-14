@@ -38,6 +38,16 @@ namespace System{
 			return data->data();
 		}
 
+		T& operator[](int index)
+		{
+			return data->at(index);
+		}
+
+		const T& operator[](int index) const
+		{
+			return data->at(index);
+		}
+
 		iteratorcxx<T>* begin()
 		{			
 			return data->begin();

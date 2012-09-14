@@ -24,6 +24,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
     {
         //Auxiliar list to change the array specifiers from one branch to another        
         private CSharp.TypeDeclaration currentType;
+        private string currentMethod;
 
         IEnvironmentProvider provider;
         Stack<BlockStatement> blocks;
@@ -75,9 +76,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         {
             InvocationExpression invExpr = new InvocationExpression();
             IdentifierExpression mref = new IdentifierExpression();
-            mref.TypeArguments.Add((AstType)asExpression.Type.AcceptVisitor(this,data));           
+            mref.TypeArguments.Add((AstType)asExpression.Type.AcceptVisitor(this, data));
             mref.Identifier = "as_cast";
-            invExpr.Arguments.Add((Expression)asExpression.Expression.AcceptVisitor(this,data));
+            invExpr.Arguments.Add((Expression)asExpression.Expression.AcceptVisitor(this, data));
             invExpr.Target = mref;
 
             return EndNode(asExpression, invExpr);
@@ -312,21 +313,26 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitIndexerExpression(CSharp.IndexerExpression indexerExpression, object data)
-        {
-            //TODO EXTRACT FIELD AND CHECK Cache.IsPointer(currentType, currentField);            
+        {         
+            //Check if the identifier is a pointer type: if it is a pointer, we have to de-reference it to apply an indexer operator: data[i]; NO!!! ------ (*data)[i]; YES !!
             bool isptr = false;
             if (indexerExpression.Target is CSharp.MemberReferenceExpression)
             {
                 var iexpTar = indexerExpression.Target as CSharp.MemberReferenceExpression;
                 if (iexpTar.Target is CSharp.ThisReferenceExpression)
                 {
-                    isptr = Cache.IsPointer(currentType.Name, iexpTar.MemberName);
+                    isptr = Resolver.IsPointer(currentType.Name, iexpTar.MemberName, null, null);
                 }
                 else if (iexpTar.Target is CSharp.IdentifierExpression)
                 {
                     var id = iexpTar.Target as CSharp.IdentifierExpression;
-                    isptr = Cache.IsPointer(id.Identifier, iexpTar.MemberName);
+                    isptr = Resolver.IsPointer(id.Identifier, iexpTar.MemberName, null, null);
                 }
+            }
+            else if (indexerExpression.Target is CSharp.IdentifierExpression)
+            {
+                var iexpTar = indexerExpression.Target as CSharp.IdentifierExpression;
+                isptr = Resolver.IsPointer(null, iexpTar.Identifier, currentMethod, iexpTar.Identifier);
             }
 
             var expr = new IndexerExpression((Expression)indexerExpression.Target.AcceptVisitor(this, data));
@@ -398,7 +404,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         {
             InvocationExpression invExpr = new InvocationExpression();
             IdentifierExpression mref = new IdentifierExpression();
-            mref.TypeArguments.Add((AstType)isExpression.Type.AcceptVisitor(this, data));            
+            mref.TypeArguments.Add((AstType)isExpression.Type.AcceptVisitor(this, data));
             mref.Identifier = "is_inst_of";
             invExpr.Arguments.Add((Expression)isExpression.Expression.AcceptVisitor(this, data));
             invExpr.Target = mref;
@@ -552,24 +558,32 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     };
                     break;
                 case ICSharpCode.NRefactory.CSharp.UnaryOperatorType.Increment:
-                    expr = new InvocationExpression();
-                    ((InvocationExpression)expr).Target = new IdentifierExpression() { Identifier = "__Increment" };
-                    ((InvocationExpression)expr).Arguments.Add((Expression)unaryOperatorExpression.Expression.AcceptVisitor(this, data));
+                    expr = new UnaryOperatorExpression()
+                   {
+                       Expression = (Expression)unaryOperatorExpression.Expression.AcceptVisitor(this, data),
+                       Operator = UnaryOperatorType.Increment
+                   };
                     break;
                 case ICSharpCode.NRefactory.CSharp.UnaryOperatorType.PostIncrement:
-                    expr = new InvocationExpression();
-                    ((InvocationExpression)expr).Target = new IdentifierExpression() { Identifier = "__PostIncrement" };
-                    ((InvocationExpression)expr).Arguments.Add((Expression)unaryOperatorExpression.Expression.AcceptVisitor(this, data));
+                    expr = new UnaryOperatorExpression()
+                    {
+                        Expression = (Expression)unaryOperatorExpression.Expression.AcceptVisitor(this, data),
+                        Operator = UnaryOperatorType.PostIncrement
+                    };
                     break;
                 case ICSharpCode.NRefactory.CSharp.UnaryOperatorType.Decrement:
-                    expr = new InvocationExpression();
-                    ((InvocationExpression)expr).Target = new IdentifierExpression() { Identifier = "__Decrement" };
-                    ((InvocationExpression)expr).Arguments.Add((Expression)unaryOperatorExpression.Expression.AcceptVisitor(this, data));
+                    expr = new UnaryOperatorExpression()
+                    {
+                        Expression = (Expression)unaryOperatorExpression.Expression.AcceptVisitor(this, data),
+                        Operator = UnaryOperatorType.Decrement
+                    };
                     break;
                 case ICSharpCode.NRefactory.CSharp.UnaryOperatorType.PostDecrement:
-                    expr = new InvocationExpression();
-                    ((InvocationExpression)expr).Target = new IdentifierExpression() { Identifier = "__PostDecrement" };
-                    ((InvocationExpression)expr).Arguments.Add((Expression)unaryOperatorExpression.Expression.AcceptVisitor(this, data));
+                    expr = new UnaryOperatorExpression()
+                    {
+                        Expression = (Expression)unaryOperatorExpression.Expression.AcceptVisitor(this, data),
+                        Operator = UnaryOperatorType.PostDecrement
+                    };
                     break;
                 //case ICSharpCode.NRefactory.CSharp.UnaryOperatorType.AddressOf:
                 //    expr = new UnaryOperatorExpression()
@@ -783,7 +797,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 }
             }
 
-            Cache.ClearTmpVariables();
+            Cache.ClearAuxVariables();
 
             if (typeDeclaration.TypeParameters.Any())
                 ConvertNodes(typeDeclaration.TypeParameters, type.TypeParameters);
@@ -1106,6 +1120,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 }
                 vds.Type = new PtrType((AstType)t.Clone());
             }
+            Cache.AddMethodVariableDeclaration(currentMethod, vds);
             return EndNode(variableDeclarationStatement, vds);
         }
 
@@ -1207,6 +1222,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitConstructorDeclaration(CSharp.ConstructorDeclaration constructorDeclaration, object data)
         {
+            currentMethod = constructorDeclaration.Name;
             var result = new ConstructorDeclaration();
 
             ConvertNodes(constructorDeclaration.Attributes, result.Attributes);
@@ -1231,6 +1247,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitDestructorDeclaration(CSharp.DestructorDeclaration destructorDeclaration, object data)
         {
+            currentMethod = destructorDeclaration.Name;
             var result = new DestructorDeclaration();
 
             ConvertNodes(destructorDeclaration.Attributes, result.Attributes);
@@ -1303,6 +1320,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitMethodDeclaration(CSharp.MethodDeclaration methodDeclaration, object data)
         {
+            Cache.ClearParametersAndFieldsDeclarations();
+            currentMethod = methodDeclaration.Name;
+
             var result = new MethodDeclaration();
 
             ConvertNodes(methodDeclaration.Attributes.Where(section => section.AttributeTarget != "return"), result.Attributes);
@@ -1337,18 +1357,21 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             ConvertNodes(parameterDeclaration.Attributes, param.Attributes);
             param.ParameterModifier = (ParameterModifier)parameterDeclaration.ParameterModifier;
             param.Type = (AstType)parameterDeclaration.Type.AcceptVisitor(this, data);
-            if (param.Type is PtrType)
+            param.NameToken = (Identifier)parameterDeclaration.NameToken.AcceptVisitor(this, data);
+            if (param.NameToken is ComposedIdentifier)
             {
-                if ((param.Type as PtrType).Target.IsBasicType)
+                if (param.Type.IsBasicType)
                 {//ARRAY
                     SimpleType s = new SimpleType("Array");
-                    s.TypeArguments.Add((AstType)(param.Type as PtrType).Target.Clone());
+                    s.TypeArguments.Add((AstType)param.Type.Clone());
                     param.Type = new PtrType(s);
+
+                    param.NameToken = (Identifier)(param.NameToken as ComposedIdentifier).BaseIdentifier.Clone();
                 }
             }
-            param.NameToken = (Identifier)parameterDeclaration.NameToken.AcceptVisitor(this, data);
             param.DefaultExpression = (Expression)parameterDeclaration.DefaultExpression.AcceptVisitor(this, data);
 
+            Cache.AddParameterDeclaration(currentMethod, param);
             return EndNode(parameterDeclaration, param);
         }
 
@@ -1440,7 +1463,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 //Also this call adds the type to the include list for detecting forward declarations
                 //If its parent is null, is better to ignore :)
                 //Ignore the type if is the current type declaration
-                if (simpleType.Parent != null && (currentType == null ?  "N/A" : currentType.Name) != simpleType.Identifier)
+                if (simpleType.Parent != null && (currentType == null ? "N/A" : currentType.Name) != simpleType.Identifier)
                     Resolver.AddVistedType(type, type.Identifier);
 
                 if (simpleType.Annotations.Count() > 0)
