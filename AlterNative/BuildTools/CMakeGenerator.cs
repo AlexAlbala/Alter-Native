@@ -17,6 +17,7 @@ namespace AlterNative.BuildTools
             sb.AppendLine("PROJECT(" + projectName + " CXX)");
             sb.AppendLine("ADD_SUBDIRECTORY(System)");
             sb.AppendLine("ADD_SUBDIRECTORY(gc)");
+            sb.AppendLine("ADD_SUBDIRECTORY(boost)");
             sb.Append("SET(EXECPATH");
 
             foreach (string s in sourceFiles)
@@ -29,6 +30,7 @@ namespace AlterNative.BuildTools
             sb.AppendLine("ADD_EXECUTABLE(" + execName + " ${EXECPATH})");
             sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " System)");
             sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " gc-lib)");
+            sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " boost)");
             sb.AppendLine("IF(UNIX)");
             sb.AppendLine("IF(!ANDROID)");
             sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " pthread)");

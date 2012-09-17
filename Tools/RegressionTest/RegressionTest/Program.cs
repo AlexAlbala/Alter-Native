@@ -13,6 +13,7 @@ namespace RegressionTest
         private bool Verbose = false;
         private bool Unlimited = false;
         Dictionary<DirectoryInfo, TestResult> Tests = new Dictionary<DirectoryInfo, TestResult>();
+        List<string> ignoreFolders = new List<string>() { "gc", "boost", "System" };
         string testPath = Environment.CurrentDirectory;
         string alternativePath = Environment.CurrentDirectory + "/../AlterNative/bin/Debug/AlterNative.exe";
 
@@ -292,7 +293,7 @@ namespace RegressionTest
             {
                 foreach (DirectoryInfo d in output.GetDirectories())
                 {
-                    if (d.Name == "System" || d.Name == "gc")
+                    if (ignoreFolders.Contains(d.Name))
                     {
                         DebugMessage("Ignoring " + d.Name + " folder");
                         continue;
