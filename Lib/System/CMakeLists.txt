@@ -33,8 +33,8 @@ if(WIN32 OR WIN64)
 SET(Boost_include_path "${External_Library_Path}/boost_1_51/win/include/boost-1_51")
 SET(Boost_library_path "${External_Library_Path}/boost_1_51/win/lib")
 ELSE()
-SET(Boost_include_path "${EXT_LIB_PATH}/boost_1_51/unix/include/boost-1_51")
-SET(Boost_library_path "${EXT_LIB_PATH}/boost_1_51/unix/lib")
+SET(Boost_include_path "${External_Library_Path}/boost_1_51/unix/include/boost-1_51")
+SET(Boost_library_path "${External_Library_Path}/boost_1_51/unix/lib")
 ENDIF()
 
 ##################################################

@@ -8,13 +8,11 @@ namespace System{
 		Array<char>* UTF8Encoding::GetBytes(String* value)
 		{
 			loc::generator* gen = new loc::generator();
-			std::locale blah = gen->generate("es_ES.utf-8");
-			std::string* UTF8String = new string(value->Data);
+			std::locale blah = gen->generate("en_US.utf-8");			
 
-			std::string converted = loc::conv::from_utf(*UTF8String, blah);
+			std::string converted = loc::conv::to_utf<char>(value->Data, blah);
 
 			delete gen;
-			delete UTF8String;
 
 			Array<char>* v = new Array<char>((char*)converted.data(),converted.size());
 			return v;
@@ -28,13 +26,10 @@ namespace System{
 		String* UTF8Encoding::GetString(Array<char>* bytes)
 		{	
 			loc::generator* gen = new loc::generator();
-			std::locale blah = gen->generate("es_ES.utf-8");
-			std::string* UTF8String = new string(bytes->GetData());
-
-			std::string converted = loc::conv::from_utf(*UTF8String, blah);
+			std::locale blah = gen->generate("en_US.utf-8");			
+			std::string converted = loc::conv::from_utf(bytes->GetData(),blah);
 
 			delete gen;
-			delete UTF8String;
 
 			return new String(converted.data());
 		}
