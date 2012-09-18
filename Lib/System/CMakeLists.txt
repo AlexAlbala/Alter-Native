@@ -1,11 +1,8 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 PROJECT(sys)
-
+##################################################
 #Macro for searching subdirectories
-SET(root ${CMAKE_CURRENT_SOURCE_DIR})
-STRING(REGEX REPLACE ":" "_" root ${root})
-STRING(REGEX REPLACE "/" "_" root ${root})
-
+##################################################
 MACRO(HEADER_DIRECTORIES return_list)
     FILE(GLOB_RECURSE new_list *.h *.hpp *.cpp)
     SET(dir_list "")
@@ -28,12 +25,33 @@ MACRO(HEADER_DIRECTORIES return_list)
     SET(${return_list} ${dir_list})
 ENDMACRO()
 
+##################################################
+#include and library path variables for boost library
+##################################################
+if(WIN32 OR WIN64)
+SET(Boost_include_path "C:/Users/Alex/Desktop/AlterNative/Tools/External libraries/boost_1_51/win/include/boost-1_51")
+SET(Boost_library_path "C:/Users/Alex/Desktop/AlterNative/Tools/External libraries/boost_1_51/win/lib")
+ELSE()
+SET(Boost_include_path "C:/Users/Alex/Desktop/AlterNative/Tools/External libraries/boost_1_51/unix/include/boost-1_51")
+SET(Boost_library_path "C:/Users/Alex/Desktop/AlterNative/Tools/External libraries/boost_1_51/unix/lib")
+ENDIF()
+
+##################################################
+#useful variables for make source groups
+##################################################
+SET(root ${CMAKE_CURRENT_SOURCE_DIR})
+STRING(REGEX REPLACE ":" "_" root ${root})
+STRING(REGEX REPLACE "/" "_" root ${root})
+
+##################################################
 #Get subdirectories
-#SUBDIRLIST(SUBDIRS ${CMAKE_CURRENT_SOURCE_DIR} "")
+##################################################
 HEADER_DIRECTORIES(SUBDIRS)
 FILE(GLOB_RECURSE SysLib *.h *.cpp *.hpp)
 
+##################################################
 #Add groups
+##################################################
 FOREACH(subdir ${SUBDIRS})
   SET(subdir_cpp "Source Files\\${subdir}")
   SET(subdir_h "Header Files\\${subdir}")
@@ -43,14 +61,19 @@ FOREACH(subdir ${SUBDIRS})
   SOURCE_GROUP(${subdir_h} FILES ${tmph}) 
 ENDFOREACH()
 
+##################################################
+#LINK LIBRARIES
+##################################################
+
 ADD_LIBRARY(System ${SysLib})
 SET_TARGET_PROPERTIES(System PROPERTIES LINKER_LANGUAGE CXX)
 
-#INCLUDE_DIRECTORIES(${Boost_include_path})
-#LINK_DIRECTORIES(${Boost_library_path})
+INCLUDE_DIRECTORIES(${Boost_include_path})
+FIND_LIBRARY(BOOST_SYS_LIB libboost_system-vc100-mt-gd-1_51 ${Boost_library_path})
+FIND_LIBRARY(BOOST_LOC_LIB libboost_locale-vc100-mt-gd-1_51 ${Boost_library_path})
 
-#TARGET_LINK_DEPENDENCES(System libboost_system-vc100-mt-gd-1_51)
-#TARGET_LINK_DEPENDENCES(System libboost_locale-vc100-mt-gd-1_51)
+TARGET_LINK_LIBRARIES(System ${BOOST_SYS_LIB})
+TARGET_LINK_LIBRARIES(System ${BOOST_LOC_LIB})
 
 #INCLUDE_DIRECTORIES(${ICU_include_path})
 #LINK_DIRECTORIES(${ICU_library_path})

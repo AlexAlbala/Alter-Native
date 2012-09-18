@@ -254,7 +254,7 @@ namespace RegressionTest
 
             Process diff = new Process();
             string diffArgs = "-q " +
-                /*"-x \"" + di.Name + "/Output/System/*\" " +
+                "-x CMakeLists.txt " +/*
                  "-x \"" + di.Name + "/Output/gc/*\" " +*/
                     di1.FullName + " " + di2.FullName;
 
