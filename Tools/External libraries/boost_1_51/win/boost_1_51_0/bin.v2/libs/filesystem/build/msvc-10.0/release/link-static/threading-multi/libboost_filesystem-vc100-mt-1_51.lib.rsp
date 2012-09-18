@@ -1,9 +1,0 @@
-
-"bin.v2\libs\filesystem\build\msvc-10.0\release\link-static\threading-multi\codecvt_error_category.obj" 
-"bin.v2\libs\filesystem\build\msvc-10.0\release\link-static\threading-multi\operations.obj" 
-"bin.v2\libs\filesystem\build\msvc-10.0\release\link-static\threading-multi\path.obj" 
-"bin.v2\libs\filesystem\build\msvc-10.0\release\link-static\threading-multi\path_traits.obj" 
-"bin.v2\libs\filesystem\build\msvc-10.0\release\link-static\threading-multi\portability.obj" 
-"bin.v2\libs\filesystem\build\msvc-10.0\release\link-static\threading-multi\unique_path.obj" 
-"bin.v2\libs\filesystem\build\msvc-10.0\release\link-static\threading-multi\utf8_codecvt_facet.obj" 
-"bin.v2\libs\filesystem\build\msvc-10.0\release\link-static\threading-multi\windows_file_codecvt.obj"   

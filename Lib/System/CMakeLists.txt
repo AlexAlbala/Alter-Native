@@ -45,3 +45,12 @@ ENDFOREACH()
 
 ADD_LIBRARY(System ${SysLib})
 SET_TARGET_PROPERTIES(System PROPERTIES LINKER_LANGUAGE CXX)
+
+#INCLUDE_DIRECTORIES(${Boost_include_path})
+#LINK_DIRECTORIES(${Boost_library_path})
+
+#TARGET_LINK_DEPENDENCES(System libboost_system-vc100-mt-gd-1_51)
+#TARGET_LINK_DEPENDENCES(System libboost_locale-vc100-mt-gd-1_51)
+
+#INCLUDE_DIRECTORIES(${ICU_include_path})
+#LINK_DIRECTORIES(${ICU_library_path})
