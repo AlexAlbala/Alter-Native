@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Windows;
 
 namespace AlterNative.BuildTools
 {
@@ -11,10 +12,13 @@ namespace AlterNative.BuildTools
         public static void GenerateCMakeLists(string projectName, string execName, string workingDir, string[] sourceFiles)
         {
             Utils.WriteToConsole("Generating CMakeLists.txt for project " + projectName + " and executable " + execName);
+            
+            DirectoryInfo di = new DirectoryInfo(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\..\..\..\Tools\External Libraries");
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("CMAKE_MINIMUM_REQUIRED(VERSION 2.8)");
             sb.AppendLine("PROJECT(" + projectName + " CXX)");
+            sb.AppendLine("SET_PROPERTY(GLOBAL PROPERTY EXT_LIB_PATH \"" + di.FullName.Replace('\\', '/') + "\")");
             sb.AppendLine("ADD_SUBDIRECTORY(System)");
             sb.AppendLine("ADD_SUBDIRECTORY(gc)");
             sb.Append("SET(EXECPATH");

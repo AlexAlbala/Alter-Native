@@ -28,12 +28,13 @@ ENDMACRO()
 ##################################################
 #include and library path variables for boost library
 ##################################################
+GET_PROPERTY(External_Library_Path GLOBAL PROPERTY EXT_LIB_PATH)
 if(WIN32 OR WIN64)
-SET(Boost_include_path "C:/Users/Alex/Desktop/AlterNative/Tools/External libraries/boost_1_51/win/include/boost-1_51")
-SET(Boost_library_path "C:/Users/Alex/Desktop/AlterNative/Tools/External libraries/boost_1_51/win/lib")
+SET(Boost_include_path "${External_Library_Path}/boost_1_51/win/include/boost-1_51")
+SET(Boost_library_path "${External_Library_Path}/boost_1_51/win/lib")
 ELSE()
-SET(Boost_include_path "C:/Users/Alex/Desktop/AlterNative/Tools/External libraries/boost_1_51/unix/include/boost-1_51")
-SET(Boost_library_path "C:/Users/Alex/Desktop/AlterNative/Tools/External libraries/boost_1_51/unix/lib")
+SET(Boost_include_path "${EXT_LIB_PATH}/boost_1_51/unix/include/boost-1_51")
+SET(Boost_library_path "${EXT_LIB_PATH}/boost_1_51/unix/lib")
 ENDIF()
 
 ##################################################
