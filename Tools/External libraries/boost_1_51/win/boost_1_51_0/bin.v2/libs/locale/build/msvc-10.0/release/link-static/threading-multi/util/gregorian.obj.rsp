@@ -1,0 +1,7 @@
+"libs\locale\src\util\gregorian.cpp" -Fo"bin.v2\libs\locale\build\msvc-10.0\release\link-static\threading-multi\util\gregorian.obj"    -TP /O2 /Ob2 /W3 /GR /MD /Zc:forScope /Zc:wchar_t /wd4675 /EHs -c 
+-DBOOST_ALL_NO_LIB=1 
+-DBOOST_LOCALE_NO_POSIX_BACKEND=1 
+-DBOOST_SYSTEM_STATIC_LINK=1 
+-DBOOST_THREAD_NO_LIB=1 
+-DNDEBUG 
+"-I."

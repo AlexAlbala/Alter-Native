@@ -1,0 +1,4 @@
+"libs\signals\src\slot.cpp" -Fo"bin.v2\libs\signals\build\msvc-10.0\debug\link-static\threading-multi\slot.obj"    -TP /Z7 /Od /Ob0 /W3 /GR /MDd /Zc:forScope /Zc:wchar_t /wd4675 /EHs -c 
+-DBOOST_ALL_NO_LIB=1 
+-DBOOST_SIGNALS_NO_LIB=1 
+"-I."

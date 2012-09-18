@@ -1,0 +1,6 @@
+"libs\chrono\src\thread_clock.cpp" -Fo"bin.v2\libs\chrono\build\msvc-10.0\debug\link-static\threading-multi\thread_clock.obj"    -TP /Z7 /Od /Ob0 /W4 /GR /MDd /Zc:forScope /Zc:wchar_t /wd4675 /EHs -c 
+-DBOOST_ALL_NO_LIB=1 
+-DBOOST_All_STATIC_LINK=1 
+-DBOOST_SYSTEM_NO_DEPRECATED 
+-DBOOST_SYSTEM_STATIC_LINK=1 
+"-I."

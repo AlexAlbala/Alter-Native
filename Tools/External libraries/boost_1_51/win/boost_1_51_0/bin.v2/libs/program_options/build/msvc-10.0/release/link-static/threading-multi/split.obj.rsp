@@ -1,0 +1,4 @@
+"libs\program_options\src\split.cpp" -Fo"bin.v2\libs\program_options\build\msvc-10.0\release\link-static\threading-multi\split.obj"    -TP /O2 /Ob2 /W3 /GR /MD /Zc:forScope /Zc:wchar_t /wd4675 /EHs -c 
+-DBOOST_ALL_NO_LIB=1 
+-DNDEBUG 
+"-I."

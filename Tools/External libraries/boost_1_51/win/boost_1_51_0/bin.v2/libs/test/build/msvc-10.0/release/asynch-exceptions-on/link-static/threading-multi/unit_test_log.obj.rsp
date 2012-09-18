@@ -1,0 +1,4 @@
+"libs\test\src\unit_test_log.cpp" -Fo"bin.v2\libs\test\build\msvc-10.0\release\asynch-exceptions-on\link-static\threading-multi\unit_test_log.obj"    -TP /O2 /Ob2 /W4 /GR /MD /Zc:forScope /Zc:wchar_t /wd4675 /EHa -wd4671 -wd4673 -c 
+-DBOOST_ALL_NO_LIB=1 
+-DNDEBUG 
+"-I."

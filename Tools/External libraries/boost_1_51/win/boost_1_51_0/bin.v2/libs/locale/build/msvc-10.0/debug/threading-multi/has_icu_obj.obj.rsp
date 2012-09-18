@@ -1,0 +1,3 @@
+"libs\locale\src\..\build\has_icu_test.cpp" -Fo"bin.v2\libs\locale\build\msvc-10.0\debug\threading-multi\has_icu_obj.obj"    -TP /Z7 /Od /Ob0 /W3 /GR /MDd /Zc:forScope /Zc:wchar_t /wd4675 /EHs -c 
+-DBOOST_ALL_NO_LIB=1 
+"-I."

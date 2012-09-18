@@ -1,0 +1,6 @@
+"libs\locale\src\win32\numeric.cpp" -Fo"bin.v2\libs\locale\build\msvc-10.0\debug\link-static\threading-multi\win32\numeric.obj"    -TP /Z7 /Od /Ob0 /W3 /GR /MDd /Zc:forScope /Zc:wchar_t /wd4675 /EHs -c 
+-DBOOST_ALL_NO_LIB=1 
+-DBOOST_LOCALE_NO_POSIX_BACKEND=1 
+-DBOOST_SYSTEM_STATIC_LINK=1 
+-DBOOST_THREAD_NO_LIB=1 
+"-I."

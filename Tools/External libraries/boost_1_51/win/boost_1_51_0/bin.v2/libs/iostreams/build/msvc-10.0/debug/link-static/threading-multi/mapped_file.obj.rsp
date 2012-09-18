@@ -1,0 +1,4 @@
+"libs\iostreams\src\mapped_file.cpp" -Fo"bin.v2\libs\iostreams\build\msvc-10.0\debug\link-static\threading-multi\mapped_file.obj"    -TP /Z7 /Od /Ob0 /W3 /GR /MDd /Zc:forScope /Zc:wchar_t /wd4675 /EHs -c 
+-DBOOST_ALL_NO_LIB=1 
+-DBOOST_IOSTREAMS_USE_DEPRECATED 
+"-I."

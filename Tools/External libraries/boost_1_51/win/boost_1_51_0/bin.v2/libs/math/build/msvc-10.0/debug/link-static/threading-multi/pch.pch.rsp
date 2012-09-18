@@ -1,0 +1,5 @@
+ -Fo"bin.v2\libs\math\build\msvc-10.0\debug\link-static\threading-multi\pch.obj" -Yc"pch.hpp" -Yl"__bjam_pch_symbol_pch.hpp" -Fp"bin.v2\libs\math\build\msvc-10.0\debug\link-static\threading-multi\pch.pch" -TP /Z7 /Od /Ob0 /W3 /GR /MDd /Zc:forScope /Zc:wchar_t /wd4675 /EHs -c 
+-DBOOST_ALL_NO_LIB=1 
+-DBOOST_BUILD_PCH_ENABLED 
+"-I." 
+"-Ilibs\math\src\tr1"

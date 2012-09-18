@@ -1,0 +1,12 @@
+
+"bin.v2\libs\wave\build\msvc-10.0\debug\link-static\threading-multi\instantiate_cpp_exprgrammar.obj" 
+"bin.v2\libs\wave\build\msvc-10.0\debug\link-static\threading-multi\instantiate_cpp_grammar.obj" 
+"bin.v2\libs\wave\build\msvc-10.0\debug\link-static\threading-multi\instantiate_cpp_literalgrs.obj" 
+"bin.v2\libs\wave\build\msvc-10.0\debug\link-static\threading-multi\instantiate_defined_grammar.obj" 
+"bin.v2\libs\wave\build\msvc-10.0\debug\link-static\threading-multi\instantiate_predef_macros.obj" 
+"bin.v2\libs\wave\build\msvc-10.0\debug\link-static\threading-multi\instantiate_re2c_lexer.obj" 
+"bin.v2\libs\wave\build\msvc-10.0\debug\link-static\threading-multi\instantiate_re2c_lexer_str.obj" 
+"bin.v2\libs\wave\build\msvc-10.0\debug\link-static\threading-multi\token_ids.obj" 
+"bin.v2\libs\wave\build\msvc-10.0\debug\link-static\threading-multi\wave_config_constant.obj" 
+"bin.v2\libs\wave\build\msvc-10.0\debug\link-static\threading-multi\cpplexer\re2clex\aq.obj" 
+"bin.v2\libs\wave\build\msvc-10.0\debug\link-static\threading-multi\cpplexer\re2clex\cpp_re.obj"   

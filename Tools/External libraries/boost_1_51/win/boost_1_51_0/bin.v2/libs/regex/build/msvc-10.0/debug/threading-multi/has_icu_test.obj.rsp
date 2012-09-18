@@ -1,0 +1,4 @@
+"libs\regex\build\has_icu_test.cpp" -Fo"bin.v2\libs\regex\build\msvc-10.0\debug\threading-multi\has_icu_test.obj"    -TP /Z7 /Od /Ob0 /W4 /GR /MDd /Zc:forScope /Zc:wchar_t /wd4675 /EHs -c 
+-DBOOST_ALL_NO_LIB=1 
+-DBOOST_HAS_ICU=1 
+"-I."
