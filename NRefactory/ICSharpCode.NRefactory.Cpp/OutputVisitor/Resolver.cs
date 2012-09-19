@@ -68,46 +68,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     kvp.Value.Remove(kvp.Key);
             }
             Cache.SaveIncludes(includes);
-        }
-
-
-        ///// <summary>
-        ///// Returns if a forward declaration is needed between two types
-        ///// </summary>
-        ///// <param name="fw_dcl_type1">The type to test</param>
-        ///// <param name="fw_dcl_type2">If the method is true, the second type is placed here</param>
-        ///// <returns></returns>
-        //public static bool NeedsForwardDeclaration(string fw_dcl_type1, out string fw_dcl_type2)
-        //{
-        //    //The type is included ?
-        //    //If not... we have a problem !
-        //    if (includes.ContainsKey(fw_dcl_type1))
-        //    {
-        //        //if one of the types is declared in includes...
-        //        foreach (string type2_s in includes[fw_dcl_type1])
-        //        {
-        //            if (includes.ContainsKey(type2_s))
-        //            {
-        //                //search in type2 dependences if is declared type1
-        //                List<string> type2Dep = includes[type2_s];
-        //                if (type2Dep.Contains(fw_dcl_type1))
-        //                {
-        //                    fw_dcl_type2 = type2Dep.ElementAt(type2Dep.IndexOf(fw_dcl_type1));
-        //                    return true;
-        //                }
-        //                else
-        //                    continue;
-        //            }
-        //            else
-        //                continue;
-        //        }
-        //    }
-        //    else
-        //        throw new InvalidOperationException("Must be included. It is impossible to enter this funcion before the type is included!");
-
-        //    fw_dcl_type2 = String.Empty;
-        //    return false;
-        //}
+        }      
 
         /// <summary>
         /// Returns if a forward declaration is needed between two types

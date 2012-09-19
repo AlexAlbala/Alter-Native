@@ -1548,7 +1548,14 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     if (primitiveType.Keyword.ToLower() == "object")
                         return EndNode(primitiveType, new PtrType(new SimpleType("Object")));
                     else if (primitiveType.Keyword.ToLower() == "string")
+                    {
+                        if (primitiveType.Role == CSharp.SimpleType.Roles.TypeArgument || primitiveType.Role == CSharp.SimpleType.Roles.TypeParameter)
+                        {
+                            Resolver.AddExcludedType(primitiveType.Keyword);
+                            return EndNode(primitiveType, new SimpleType("String"));
+                        }
                         return EndNode(primitiveType, new PtrType(new SimpleType("String")));
+                    }
                     typeName = primitiveType.Keyword;
                     break;
             }

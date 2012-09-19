@@ -28,7 +28,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
         private List<string> currNamespaces;
         public static string WorkingPath;
-        private bool isTemplateType;
+        private bool isGenericTemplate;
 
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 throw new ArgumentNullException("formattingPolicy");
             this.formatter = new TextWriterOutputFormatter(textWriter);
             this.policy = formattingPolicy;
-            this.isTemplateType = false;
+            this.isGenericTemplate = false;
         }
 
         public CppOutputVisitor(IOutputFormatter formatter, CppFormattingOptions formattingPolicy)
@@ -67,7 +67,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 throw new ArgumentNullException("formattingPolicy");
             this.formatter = formatter;
             this.policy = formattingPolicy;
-            this.isTemplateType = false;
+            this.isGenericTemplate = false;
         }
 
         void StartNode(AstNode node)
@@ -628,9 +628,9 @@ namespace ICSharpCode.NRefactory.Cpp
             //Expressions like new MyObject().f1() ---->  new MyObject()->f1() is incorrect, must be (new MyObject())->f1()
             if (memberReferenceExpression.Target is ObjectCreateExpression && memberReferenceExpression.Parent is InvocationExpression)
                 LPar();
-            
+
             memberReferenceExpression.Target.AcceptVisitor(this, data);
-            
+
             if (memberReferenceExpression.Target is ObjectCreateExpression && memberReferenceExpression.Parent is InvocationExpression)
                 RPar();
 
@@ -641,8 +641,8 @@ namespace ICSharpCode.NRefactory.Cpp
             else
             {
                 WriteToken("->", MemberReferenceExpression.Roles.Dot);
-            }           
-            
+            }
+
             WriteIdentifier(memberReferenceExpression.MemberName);
             WriteTypeArguments(memberReferenceExpression.TypeArguments);
             return EndNode(memberReferenceExpression);
@@ -1199,7 +1199,7 @@ namespace ICSharpCode.NRefactory.Cpp
             delegateDeclaration.ReturnType.AcceptVisitor(this, data);
             Space();
             WriteIdentifier(delegateDeclaration.Name);
-            WriteTypeParameters(delegateDeclaration.TypeParameters, false);
+            WriteTypeParameters(delegateDeclaration.TypeParameters);
             Space(policy.SpaceBeforeDelegateDeclarationParentheses);
             WriteCommaSeparatedListInParenthesis(delegateDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
             //foreach (Constraint constraint in delegateDeclaration.Constraints)
@@ -1221,19 +1221,60 @@ namespace ICSharpCode.NRefactory.Cpp
             return EndNode(namespaceDeclaration);
         }
 
+        private void PatchMethodToBaseTemplate(TypeDeclaration typeDeclaration)
+        {
+            foreach (var member in typeDeclaration.Members)
+            {
+                if (member is MethodDeclaration)
+                {
+                    var method = member as MethodDeclaration;
+
+                    if (IsGenericTemplateType(method.ReturnType))
+                        method.ReturnType = new PtrType(new SimpleType("Object"));
+
+                    foreach (ParameterDeclaration p in method.Parameters)
+                    {
+                        if (IsGenericTemplateType(p.Type))
+                            p.Type = new PtrType(new SimpleType("Object"));
+                    }
+                }
+
+                if (member is ConstructorDeclaration)
+                {
+                    var method = member as ConstructorDeclaration;
+
+                    foreach (ParameterDeclaration p in method.Parameters)
+                    {
+                        if (IsGenericTemplateType(p.Type))
+                            p.Type = new PtrType(new SimpleType("Object"));
+                    }
+                }
+
+                if (member is FieldDeclaration)
+                {
+                    var field = member as FieldDeclaration;
+
+                    if (IsGenericTemplateType(field.ReturnType))
+                        field.ReturnType = new PtrType(new SimpleType("Object"));
+                }
+            }
+        }
+
         public object VisitTypeDeclaration(TypeDeclaration typeDeclaration, object data)
         {
             //WRITE FIRST CPP AND THEN .H
             StartNode(typeDeclaration);
             if (typeDeclaration.TypeParameters.Any())
             {
-                isTemplateType = true;
-                TypeDeclarationTemplates(typeDeclaration, data);
+                isGenericTemplate = true;
+                TypeDeclaration orig = (TypeDeclaration)typeDeclaration.Clone();
+                PatchMethodToBaseTemplate(typeDeclaration);
+                TypeDeclarationCPP(typeDeclaration, data);
+                TypeDeclarationTemplatesHeader(orig, data);
             }
             else
             {
-                isTemplateType = false;
-
+                isGenericTemplate = false;
                 if (typeDeclaration.ClassType != ClassType.Enum)
                     TypeDeclarationCPP(typeDeclaration, data);
 
@@ -1287,8 +1328,103 @@ namespace ICSharpCode.NRefactory.Cpp
                 }
         }
 
-        private void TypeDeclarationTemplates(TypeDeclaration typeDeclaration, object data)
+        private bool IsGenericTemplateType(AstType type)
         {
+            string name = "";
+            if (type is SimpleType)
+            {
+                name = (type as SimpleType).Identifier;
+            }
+            if (type is PtrType)
+            {
+                if ((type as PtrType).Target is SimpleType)
+                    name = ((type as PtrType).Target as SimpleType).Identifier;
+            }
+
+            return Cache.GetExcluded().Contains(name);
+        }
+
+        private void WriteInlineMembers(AstNodeCollection<AttributedNode> members, string type)
+        {
+            foreach (var member in members)
+            {
+                if (member is MethodDeclaration)
+                {
+                    WriteAccesorModifier(member.ModifierTokens);
+                    var methodDeclaration = member as MethodDeclaration;
+                    StartNode(methodDeclaration);
+
+                    WriteAttributes(methodDeclaration.Attributes);
+                    //WriteAccesorModifier(methodDeclaration.ModifierTokens);
+                    WriteKeyword("inline");
+                    methodDeclaration.ReturnType.AcceptVisitor(this, null);
+                    Space();
+
+                    WritePrivateImplementationType(methodDeclaration.PrivateImplementationType);
+
+                    methodDeclaration.NameToken.AcceptVisitor(this, null);
+                    WriteTypeParameters(methodDeclaration.TypeParameters);
+                    Space(policy.SpaceBeforeMethodDeclarationParentheses);
+                    WriteCommaSeparatedListInParenthesis(methodDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
+
+                    List<string> needsCast = new List<string>();
+                    List<string> parametersName = new List<string>();
+                    foreach (ParameterDeclaration p in methodDeclaration.Parameters)
+                    {
+                        parametersName.Add(p.Name);
+                        if (IsGenericTemplateType(p.Type))
+                            needsCast.Add(p.Name);
+
+                    }
+
+                    Expression[] parameters = new Expression[parametersName.Count];
+                    int i = 0;
+                    foreach (string s in parametersName)
+                    {
+                        if (needsCast.Contains(s))
+                        {
+                            parameters[i++] = new CastExpression(new PtrType(new SimpleType("Object")), new IdentifierExpression(s));
+                        }
+                        else
+                        {
+                            parameters[i++] = new IdentifierExpression(s);
+                        }
+                    }
+
+                    //CALL SPECIALIZED OBJECT METHOD
+                    BlockStatement blck = new BlockStatement();
+
+                    if (IsGenericTemplateType(methodDeclaration.ReturnType))//NEEDS CAST
+                    {
+                        string tmpName = "var_tmp";
+                        VariableDeclarationStatement varDeclStmt = new VariableDeclarationStatement(new PtrType(new SimpleType("Object")), tmpName,
+                            new InvocationExpression(new MemberReferenceExpression(new TypeReferenceExpression(new SimpleType(type + "_Base")), methodDeclaration.Name), parameters));
+
+                        blck.Add(varDeclStmt);
+
+                        ReturnStatement rtstm = new ReturnStatement(new CastExpression((AstType)methodDeclaration.ReturnType.Clone(), new IdentifierExpression(tmpName)));
+                        blck.Add(rtstm);
+                    }
+                    else
+                    {
+                        ReturnStatement rtstm = new ReturnStatement(new InvocationExpression(
+                            new MemberReferenceExpression(
+                                new TypeReferenceExpression(new SimpleType(type + "_Base")), methodDeclaration.Name), parameters));
+                        blck.Add(rtstm);
+                    }
+
+
+                    WriteMethodBody(blck);
+                    EndNode(methodDeclaration);
+                }
+            }
+        }
+
+        private void TypeDeclarationTemplatesHeader(TypeDeclaration typeDeclaration, object data)
+        {
+            //TODO: Se puede implementar con más claridad ?
+            TypeDeclaration orig = (TypeDeclaration)typeDeclaration.Clone();
+            PatchMethodToBaseTemplate(typeDeclaration);
             formatter.ChangeFile(typeDeclaration.Name + ".h");
             FileWritterManager.AddSourceFile(typeDeclaration.Name + ".h");
 
@@ -1320,14 +1456,8 @@ namespace ICSharpCode.NRefactory.Cpp
 
             WriteNamespace();
 
-            string type2 = String.Empty;
-            if (Resolver.NeedsForwardDeclaration(typeDeclaration.Name, out type2))
-                WriteForwardDeclaration(type2);
-
             WriteAttributes(typeDeclaration.Attributes);
-
-            WriteTypeParameters(typeDeclaration.TypeParameters, true);
-            // HERE GOES THE TEMPLATE !
+            //WriteModifiers(typeDeclaration.ModifierTokens);
             BraceStyle braceStyle;
             switch (typeDeclaration.ClassType)
             {
@@ -1348,7 +1478,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     braceStyle = policy.ClassBraceStyle;
                     break;
             }
-            WriteIdentifier(typeDeclaration.Name);
+            WriteIdentifier(typeDeclaration.Name + "_Base");
 
             Space();
             WriteToken(":", TypeDeclaration.ColonRole);
@@ -1359,10 +1489,6 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteCommaSeparatedListWithModifiers(typeDeclaration.BaseTypes, typeDeclaration.ModifierTokens);
             typeDeclaration.ModifierTokens.Remove(modif);
 
-            //foreach (Constraint constraint in typeDeclaration.Constraints)
-            //{
-            //    constraint.AcceptVisitor(this, data);
-            //}
             OpenBrace(braceStyle);
 
             if (typeDeclaration.ClassType == ClassType.Enum)
@@ -1386,14 +1512,97 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             else
             {
-                foreach (var member in typeDeclaration.Members)
+                foreach (AstNode n in headerNodes)
                 {
-                    WriteAccesorModifier(member.ModifierTokens);
-                    member.AcceptVisitor(this, data);
+                    //Write Fields and methods with its Accessors:
+                    if (n is MethodDeclaration)
+                        VisitMethodDeclarationHeader(n as MethodDeclaration, data);
+                    else if (n is ConstructorDeclaration)
+                        VisitConstructorDeclarationHeader(n as ConstructorDeclaration, data);
+                    else if (n is DestructorDeclaration)
+                        VisitDestructorDeclarationHeader(n as DestructorDeclaration, data);
+                    else if (n is FieldDeclaration)
+                        VisitFieldDeclarationHeader(n as FieldDeclaration, data);
                 }
             }
             CloseBrace(braceStyle);//END OF TYPE
             Semicolon();
+            headerNodes.Clear();
+
+
+            //After defining _Base class header, we can define the class template
+            //We retrieve the original typeDeclaration
+            typeDeclaration = (TypeDeclaration)orig.Clone();
+            NewLine();
+
+            //Write first the template<typename T> with inline methods
+            #region <template typenameT>
+
+            WriteAttributes(typeDeclaration.Attributes);
+
+            WriteTypeParameters(typeDeclaration.TypeParameters, true);
+            // HERE GOES THE TEMPLATE !
+            BraceStyle braceStyle2;
+            switch (typeDeclaration.ClassType)
+            {
+                case ClassType.Enum:
+                    WriteKeyword("enum");
+                    braceStyle2 = policy.EnumBraceStyle;
+                    break;
+                case ClassType.Interface:
+                    WriteKeyword("interface");
+                    braceStyle2 = policy.InterfaceBraceStyle;
+                    break;
+                case ClassType.Struct:
+                    WriteKeyword("struct");
+                    braceStyle2 = policy.StructBraceStyle;
+                    break;
+                default:
+                    WriteKeyword("class");
+                    braceStyle2 = policy.ClassBraceStyle;
+                    break;
+            }
+            WriteIdentifier(typeDeclaration.Name);
+
+            Space();
+            WriteToken(":", TypeDeclaration.ColonRole);
+            Space();
+
+            //ÑAPA se añade virtual modifier y se quita
+            var modif2 = new CppModifierToken(TextLocation.Empty, Modifiers.Virtual);
+            typeDeclaration.ModifierTokens.Add(modif2);
+            typeDeclaration.BaseTypes.Add(new SimpleType(typeDeclaration.Name + "_Base"));
+            WriteCommaSeparatedListWithModifiers(typeDeclaration.BaseTypes, typeDeclaration.ModifierTokens);
+            typeDeclaration.ModifierTokens.Remove(modif);
+            OpenBrace(braceStyle);
+
+            if (typeDeclaration.ClassType == ClassType.Enum)
+            {
+                bool first = true;
+                foreach (var member in typeDeclaration.Members)
+                {
+                    if (first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        Comma(member, noSpaceAfterComma: true);
+                        NewLine();
+                    }
+                    member.AcceptVisitor(this, data);
+                }
+                //OptionalComma();
+                NewLine();
+            }
+            else
+            {
+                WriteInlineMembers(typeDeclaration.Members, typeDeclaration.Name);
+            }
+            CloseBrace(braceStyle);//END OF TYPE
+            Semicolon();
+            #endregion
+
             CloseNamespaceBraces();
 
             formatter.ChangeFile("tmp");
@@ -1478,7 +1687,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     break;
             }
             WriteIdentifier(typeDeclaration.Name);
-            WriteTypeParameters(typeDeclaration.TypeParameters, false);
+            WriteTypeParameters(typeDeclaration.TypeParameters);
 
             Space();
             WriteToken(":", TypeDeclaration.ColonRole);
@@ -1488,11 +1697,6 @@ namespace ICSharpCode.NRefactory.Cpp
             typeDeclaration.ModifierTokens.Add(modif);
             WriteCommaSeparatedListWithModifiers(typeDeclaration.BaseTypes, typeDeclaration.ModifierTokens);
             typeDeclaration.ModifierTokens.Remove(modif);
-
-            //foreach (Constraint constraint in typeDeclaration.Constraints)
-            //{
-            //    constraint.AcceptVisitor(this, data);
-            //}
 
             OpenBrace(braceStyle);
 
@@ -1609,11 +1813,10 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteAttributes(constructorDeclaration.Attributes);
             //WriteAccesorModifier(constructorDeclaration.ModifierTokens);
             TypeDeclaration type = constructorDeclaration.Parent as TypeDeclaration;
-            if (!isTemplateType)
-            {
-                WriteIdentifier(type != null ? type.Name : constructorDeclaration.Name);
-                WriteToken("::", MethodDeclaration.Roles.Dot);
-            }
+
+            WriteIdentifier(type != null ? type.Name : constructorDeclaration.Name);
+            WriteToken("::", MethodDeclaration.Roles.Dot);
+
             WriteIdentifier(type != null ? type.Name : constructorDeclaration.Name);
             Space(policy.SpaceBeforeConstructorDeclarationParentheses);
             WriteCommaSeparatedListInParenthesis(constructorDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
@@ -1673,11 +1876,9 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteAttributes(destructorDeclaration.Attributes);
             //WriteAccesorModifier(destructorDeclaration.ModifierTokens);
             TypeDeclaration type = destructorDeclaration.Parent as TypeDeclaration;
-            if (!isTemplateType)
-            {
-                WriteIdentifier(type != null ? type.Name : destructorDeclaration.Name);
-                WriteToken("::", MethodDeclaration.Roles.Dot);
-            }
+
+            WriteIdentifier(type != null ? type.Name : destructorDeclaration.Name);
+            WriteToken("::", MethodDeclaration.Roles.Dot);
 
             WriteToken("~", DestructorDeclaration.TildeRole);
             WriteIdentifier(type != null ? type.Name : destructorDeclaration.Name);
@@ -1771,17 +1972,14 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             StartNode(fieldDeclaration);
 
-            if (fieldDeclaration.HasModifier(Modifiers.Static) || isTemplateType)
+            if (fieldDeclaration.HasModifier(Modifiers.Static))
             {
                 fieldDeclaration.ReturnType.AcceptVisitor(this, data);
                 Space();
 
-                if (!isTemplateType)
-                {
-                    TypeDeclaration tdecl = fieldDeclaration.Parent as TypeDeclaration;
-                    WriteIdentifier(tdecl != null ? tdecl.Name : String.Empty, MethodDeclaration.Roles.Identifier);
-                    WriteToken("::", MethodDeclaration.Roles.DoubleColon);
-                }
+                TypeDeclaration tdecl = fieldDeclaration.Parent as TypeDeclaration;
+                WriteIdentifier(tdecl != null ? tdecl.Name : String.Empty, MethodDeclaration.Roles.Identifier);
+                WriteToken("::", MethodDeclaration.Roles.DoubleColon);
 
                 WriteCommaSeparatedList(fieldDeclaration.Variables);
                 Semicolon();
@@ -1876,20 +2074,16 @@ namespace ICSharpCode.NRefactory.Cpp
             Space();
 
             WritePrivateImplementationType(methodDeclaration.PrivateImplementationType);
-            if (!isTemplateType)
-            {
-                Identifier tdecl = methodDeclaration.TypeMember;
-                WriteIdentifier(tdecl != null ? tdecl.Name : String.Empty, MethodDeclaration.Roles.Identifier);
-                WriteToken("::", MethodDeclaration.Roles.DoubleColon);
-            }
+
+            //TODO: se podria implementar mejor ?
+            Identifier tdecl = methodDeclaration.TypeMember;
+            WriteIdentifier(tdecl != null ? (isGenericTemplate ? tdecl.Name + "_T_Base" : tdecl.Name) : String.Empty, MethodDeclaration.Roles.Identifier);
+            WriteToken("::", MethodDeclaration.Roles.DoubleColon);
+
             methodDeclaration.NameToken.AcceptVisitor(this, data);
-            WriteTypeParameters(methodDeclaration.TypeParameters, false);
+            WriteTypeParameters(methodDeclaration.TypeParameters);
             Space(policy.SpaceBeforeMethodDeclarationParentheses);
             WriteCommaSeparatedListInParenthesis(methodDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
-            //foreach (Constraint constraint in methodDeclaration.Constraints)
-            //{
-            //    constraint.AcceptVisitor(this, data);
-            //}
             WriteMethodBody(methodDeclaration.Body);
             headerNodes.Add(methodDeclaration);
             return EndNode(methodDeclaration);
@@ -1926,7 +2120,7 @@ namespace ICSharpCode.NRefactory.Cpp
             WritePrivateImplementationType(methodDeclaration.PrivateImplementationType);
 
             WriteIdentifier(methodDeclaration.Name);
-            WriteTypeParameters(methodDeclaration.TypeParameters, false);
+            WriteTypeParameters(methodDeclaration.TypeParameters);
             Space(policy.SpaceBeforeMethodDeclarationParentheses);
             WriteCommaSeparatedListInParenthesis(methodDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
             //foreach (Constraint constraint in methodDeclaration.Constraints)
@@ -2395,16 +2589,19 @@ namespace ICSharpCode.NRefactory.Cpp
             }
         }
 
-        public void WriteTypeParameters(IEnumerable<TypeParameterDeclaration> typeParameters, bool declaration)
+        public void WriteTypeParameters(IEnumerable<TypeParameterDeclaration> typeParameters, bool declaration = false, bool empty = false)
         {
-            if (typeParameters.Any())
+            if (typeParameters.Any() || empty)
             {
                 if (declaration)
                 {
                     WriteKeyword("template");
                     WriteToken("<", AstNode.Roles.LChevron);
-                    WriteKeyword("typename");
-                    WriteCommaSeparatedList(typeParameters);
+                    if (!empty)
+                    {
+                        WriteKeyword("typename");
+                        WriteCommaSeparatedList(typeParameters);
+                    }
                     WriteToken(">", AstNode.Roles.RChevron);
                     NewLine();
                 }

@@ -73,7 +73,7 @@ namespace AlterNative
         /// </summary>
         /// <param name="args">{ assembly, destinationPath, language, Params } (In CPP: Params is the path of the library)</param>
         public void ConsoleMain(string[] args)
-        {
+        {            
             Utils.WriteToConsole("\n");
 
             //LOAD TARGET ASSEMBLY
