@@ -494,6 +494,19 @@ namespace ICSharpCode.NRefactory.Cpp
             return EndNode(castExpression);
         }
 
+        public object VisitDynamicCastExpression(DynamicCastExpression dynamicCastExpression, object data)
+        {
+            StartNode(dynamicCastExpression);
+            WriteKeyword("dynamic_cast");
+            WriteToken("<", CppTokenNode.Roles.LChevron);
+            dynamicCastExpression.Type.AcceptVisitor(this, data);
+            WriteToken(">", CppTokenNode.Roles.RChevron);            
+            LPar();
+            dynamicCastExpression.Expression.AcceptVisitor(this, data);
+            RPar();
+            return EndNode(dynamicCastExpression);
+        }
+
         public object VisitCheckedExpression(CheckedExpression checkedExpression, object data)
         {
             StartNode(checkedExpression);
@@ -1401,9 +1414,9 @@ namespace ICSharpCode.NRefactory.Cpp
                             new InvocationExpression(new MemberReferenceExpression(new TypeReferenceExpression(new SimpleType(type + "_Base")), methodDeclaration.Name), parameters));
 
                         blck.Add(varDeclStmt);
-
-                        ReturnStatement rtstm = new ReturnStatement(new CastExpression((AstType)methodDeclaration.ReturnType.Clone(), new IdentifierExpression(tmpName)));
-                        blck.Add(rtstm);
+                        
+                        ReturnStatement rtstm = new ReturnStatement(new DynamicCastExpression((AstType)methodDeclaration.ReturnType.Clone(), new IdentifierExpression(tmpName)));
+                        blck.Add(rtstm);                        
                     }
                     else
                     {
@@ -2537,7 +2550,7 @@ namespace ICSharpCode.NRefactory.Cpp
         #region IsKeyword Test
         static readonly HashSet<string> unconditionalKeywords = new HashSet<string> {
             "abstract", "base", "bool", "break", "byte", "case", "catch",
-            "char", "checked", "class", "const", "continue", "decimal", "default", "delegate",
+            "char", "checked", "class", "const", "continue", "decimal", "dynamic_cast", "default", "delegate",
             "do", "double", "else", "enum", "event", "explicit", "extern", "false",
             "finally", "fixed", "float", "for", "foreach", "goto", "if", "implicit",
             "in", "int", "interface", "lock", "long", "namespace",

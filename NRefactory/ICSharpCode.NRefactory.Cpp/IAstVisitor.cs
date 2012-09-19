@@ -36,6 +36,7 @@ namespace ICSharpCode.NRefactory.Cpp
 		S VisitBaseReferenceExpression(BaseReferenceExpression baseReferenceExpression, T data);
 		S VisitBinaryOperatorExpression(BinaryOperatorExpression binaryOperatorExpression, T data);
 		S VisitCastExpression(CastExpression castExpression, T data);
+        S VisitDynamicCastExpression(DynamicCastExpression castExpression, T data);
 		S VisitCheckedExpression(CheckedExpression checkedExpression, T data);
 		S VisitConditionalExpression(ConditionalExpression conditionalExpression, T data);
 		S VisitDefaultValueExpression(DefaultValueExpression defaultValueExpression, T data);

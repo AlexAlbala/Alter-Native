@@ -208,11 +208,6 @@ namespace ICSharpCode.NRefactory.Cpp
             AddInclude(name);
         }
 
-        public static void AddExcludedType(string type)
-        {
-            Cache.AddExcludedType(type);
-        }
-
         public static string[] GetTypeIncludes()
         {
             Dictionary<Ast.AstType, string> visitedTypes = Cache.GetVisitedTypes();

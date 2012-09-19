@@ -313,7 +313,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitIndexerExpression(CSharp.IndexerExpression indexerExpression, object data)
-        {         
+        {
             //Check if the identifier is a pointer type: if it is a pointer, we have to de-reference it to apply an indexer operator: data[i]; NO!!! ------ (*data)[i]; YES !!
             bool isptr = false;
             if (indexerExpression.Target is CSharp.MemberReferenceExpression)
@@ -1482,8 +1482,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             }
             else
             {
-                if (simpleType.Role == CSharp.SimpleType.Roles.TypeArgument || simpleType.Role == CSharp.SimpleType.Roles.TypeParameter)
-                    Resolver.AddExcludedType(type.Identifier);
+                //if (simpleType.Role == CSharp.SimpleType.Roles.TypeArgument || simpleType.Role == CSharp.SimpleType.Roles.TypeParameter)
+                    //Cache.AddExcludedType(type.Identifier);
                 return EndNode(simpleType, type);
             }
         }
@@ -1530,7 +1530,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         {
             string typeName;
 
-            switch (primitiveType.Keyword)
+            switch (primitiveType.Keyword.ToLower())
             {
                 case "sbyte":
                     typeName = "short";
@@ -1544,18 +1544,13 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 case "double":
                     typeName = "float";
                     break;
+                case "object":
+                    return EndNode(primitiveType, new PtrType(new SimpleType("Object")));
+                case "string":
+                    if (primitiveType.Role == CSharp.SimpleType.Roles.TypeArgument || primitiveType.Role == CSharp.SimpleType.Roles.TypeParameter)                    
+                        return EndNode(primitiveType, new SimpleType("String"));                    
+                    return EndNode(primitiveType, new PtrType(new SimpleType("String")));
                 default:
-                    if (primitiveType.Keyword.ToLower() == "object")
-                        return EndNode(primitiveType, new PtrType(new SimpleType("Object")));
-                    else if (primitiveType.Keyword.ToLower() == "string")
-                    {
-                        if (primitiveType.Role == CSharp.SimpleType.Roles.TypeArgument || primitiveType.Role == CSharp.SimpleType.Roles.TypeParameter)
-                        {
-                            Resolver.AddExcludedType(primitiveType.Keyword);
-                            return EndNode(primitiveType, new SimpleType("String"));
-                        }
-                        return EndNode(primitiveType, new PtrType(new SimpleType("String")));
-                    }
                     typeName = primitiveType.Keyword;
                     break;
             }
@@ -1594,9 +1589,10 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitTypeParameterDeclaration(CSharp.TypeParameterDeclaration typeParameterDeclaration, object data)
         {
             TypeParameterDeclaration t = new TypeParameterDeclaration();
+            
             t.Name = typeParameterDeclaration.Name;
             t.NameToken = (Identifier)typeParameterDeclaration.NameToken.AcceptVisitor(this, data);
-
+            Cache.AddExcludedType(t.Name);
             return EndNode(typeParameterDeclaration, t);
         }
 

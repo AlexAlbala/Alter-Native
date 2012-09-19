@@ -1,0 +1,15 @@
+#pragma once
+#include "System/System.h"
+#include "MyClass_T.h"
+#include "A.h"
+#include "B.h"
+#include "System/Console.h"
+
+using namespace System;
+namespace Templates{
+	class Program : public virtual Object, public virtual gc_cleanup
+	{
+		public:
+			static void Main(String* args[]);
+	};
+}
