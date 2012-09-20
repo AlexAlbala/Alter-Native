@@ -13,11 +13,11 @@ namespace Templates{
 			Object* get();
 	};
 
+	//Generic template type
 	template<typename T>
-	class MyClass_T : public virtual Object, public virtual gc_cleanup, public virtual MyClass_T_Base
-	{
+	class MyClass_T : public virtual Object, public virtual gc_cleanup, public virtual MyClass_T_Base{
 		public:
-		inline void set(T* data) {
+		inline void set(T* data){
 			return MyClass_T_Base::set((Object*)(data));
 		}
 		public:

@@ -19,10 +19,6 @@ namespace ICSharpCode.NRefactory.Cpp
         IOutputFormatter formatter;
         readonly CppFormattingOptions policy;
 
-        //<ÑAPA>
-        readonly List<AstNode> headerNodes = new List<AstNode>();
-        //</ÑAPA>
-
         readonly Stack<AstNode> containerStack = new Stack<AstNode>();
         readonly Stack<AstNode> positionStack = new Stack<AstNode>();
 
@@ -1232,46 +1228,7 @@ namespace ICSharpCode.NRefactory.Cpp
             foreach (var member in namespaceDeclaration.Members)
                 member.AcceptVisitor(this, data);
             return EndNode(namespaceDeclaration);
-        }
-
-        private void PatchMethodToBaseTemplate(TypeDeclaration typeDeclaration)
-        {
-            foreach (var member in typeDeclaration.Members)
-            {
-                if (member is MethodDeclaration)
-                {
-                    var method = member as MethodDeclaration;
-
-                    if (IsGenericTemplateType(method.ReturnType))
-                        method.ReturnType = new PtrType(new SimpleType("Object"));
-
-                    foreach (ParameterDeclaration p in method.Parameters)
-                    {
-                        if (IsGenericTemplateType(p.Type))
-                            p.Type = new PtrType(new SimpleType("Object"));
-                    }
-                }
-
-                if (member is ConstructorDeclaration)
-                {
-                    var method = member as ConstructorDeclaration;
-
-                    foreach (ParameterDeclaration p in method.Parameters)
-                    {
-                        if (IsGenericTemplateType(p.Type))
-                            p.Type = new PtrType(new SimpleType("Object"));
-                    }
-                }
-
-                if (member is FieldDeclaration)
-                {
-                    var field = member as FieldDeclaration;
-
-                    if (IsGenericTemplateType(field.ReturnType))
-                        field.ReturnType = new PtrType(new SimpleType("Object"));
-                }
-            }
-        }
+        }        
 
         public object VisitTypeDeclaration(TypeDeclaration typeDeclaration, object data)
         {
@@ -1280,10 +1237,8 @@ namespace ICSharpCode.NRefactory.Cpp
             if (typeDeclaration.TypeParameters.Any())
             {
                 isGenericTemplate = true;
-                TypeDeclaration orig = (TypeDeclaration)typeDeclaration.Clone();
-                PatchMethodToBaseTemplate(typeDeclaration);
                 TypeDeclarationCPP(typeDeclaration, data);
-                TypeDeclarationTemplatesHeader(orig, data);
+                TypeDeclarationTemplatesHeader(typeDeclaration, data);
             }
             else
             {
@@ -1341,20 +1296,82 @@ namespace ICSharpCode.NRefactory.Cpp
                 }
         }
 
-        private bool IsGenericTemplateType(AstType type)
+        //TODO: move this method to C#2CPPCONVERTERVISITOR
+        private bool TryPatchGenericTemplateType(AstType type, out AstType newType)
         {
+            newType = (AstType)type.Clone();
             string name = "";
             if (type is SimpleType)
             {
-                name = (type as SimpleType).Identifier;
+                SimpleType st = type as SimpleType;
+                name = st.Identifier;
+                if(Cache.GetExcluded().Contains(name))
+                {
+                    newType = new PtrType(new SimpleType("Object"));
+                    return true;
+                }
+                else
+                {
+                    if (st.TypeArguments.Any())
+                    {
+                        List<AstType> args = new List<AstType>();
+                        foreach (AstType t in st.TypeArguments)
+                        {
+                            AstType discard;
+                            if (TryPatchGenericTemplateType(t, out discard))
+                            {
+                                args.Add(new SimpleType("Object"));
+                            }
+                            else
+                                args.Add(t);
+                        }
+
+                        st.TypeArguments.Clear();
+                        foreach (AstNode t in args)
+                        {
+                            st.TypeArguments.AddRange(args.ToArray());
+                        }
+                    }
+                }
             }
             if (type is PtrType)
             {
                 if ((type as PtrType).Target is SimpleType)
-                    name = ((type as PtrType).Target as SimpleType).Identifier;
+                {
+                    SimpleType pst = (type as PtrType).Target as SimpleType;
+                    name = pst.Identifier;
+                    if (Cache.GetExcluded().Contains(name))
+                    {
+                        newType = new PtrType(new SimpleType("Object"));
+                        return true;
+                    }
+                    else
+                    {
+                        if (pst.TypeArguments.Any())
+                        {
+                            List<AstType> args = new List<AstType>();
+                            foreach (AstType t in pst.TypeArguments)
+                            {
+                                AstType discard;
+                                if (TryPatchGenericTemplateType(t, out discard))
+                                {
+                                    args.Add(new SimpleType("Object"));
+                                }
+                                else
+                                    args.Add(t);
+                            }
+
+                            pst.TypeArguments.Clear();
+                            foreach (AstNode t in args)
+                            {
+                                pst.TypeArguments.AddRange(args.ToArray());
+                            }
+                        }
+                    }
+                }
             }
 
-            return Cache.GetExcluded().Contains(name);
+            return false;            
         }
 
         private void WriteInlineMembers(AstNodeCollection<AttributedNode> members, string type)
@@ -1385,7 +1402,8 @@ namespace ICSharpCode.NRefactory.Cpp
                     foreach (ParameterDeclaration p in methodDeclaration.Parameters)
                     {
                         parametersName.Add(p.Name);
-                        if (IsGenericTemplateType(p.Type))
+                        AstType tmp;
+                        if (TryPatchGenericTemplateType(p.Type, out tmp))
                             needsCast.Add(p.Name);
 
                     }
@@ -1407,7 +1425,8 @@ namespace ICSharpCode.NRefactory.Cpp
                     //CALL SPECIALIZED OBJECT METHOD
                     BlockStatement blck = new BlockStatement();
 
-                    if (IsGenericTemplateType(methodDeclaration.ReturnType))//NEEDS CAST
+                    AstType _tmp;
+                    if (TryPatchGenericTemplateType(methodDeclaration.ReturnType, out _tmp))//NEEDS CAST
                     {
                         string tmpName = "var_tmp";
                         VariableDeclarationStatement varDeclStmt = new VariableDeclarationStatement(new PtrType(new SimpleType("Object")), tmpName,
@@ -1436,8 +1455,6 @@ namespace ICSharpCode.NRefactory.Cpp
         private void TypeDeclarationTemplatesHeader(TypeDeclaration typeDeclaration, object data)
         {
             //TODO: Se puede implementar con más claridad ?
-            TypeDeclaration orig = (TypeDeclaration)typeDeclaration.Clone();
-            PatchMethodToBaseTemplate(typeDeclaration);
             formatter.ChangeFile(typeDeclaration.Name + ".h");
             FileWritterManager.AddSourceFile(typeDeclaration.Name + ".h");
 
@@ -1446,7 +1463,7 @@ namespace ICSharpCode.NRefactory.Cpp
             NewLine();
 
             //Write using declarations in header file
-            foreach (AstNode n in headerNodes)
+            foreach (AstNode n in Cache.GetHeaderNodes())
             {
                 if (n is IncludeDeclaration)
                 {
@@ -1525,32 +1542,25 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             else
             {
-                foreach (AstNode n in headerNodes)
-                {
-                    //Write Fields and methods with its Accessors:
-                    if (n is MethodDeclaration)
-                        VisitMethodDeclarationHeader(n as MethodDeclaration, data);
-                    else if (n is ConstructorDeclaration)
-                        VisitConstructorDeclarationHeader(n as ConstructorDeclaration, data);
-                    else if (n is DestructorDeclaration)
-                        VisitDestructorDeclarationHeader(n as DestructorDeclaration, data);
-                    else if (n is FieldDeclaration)
-                        VisitFieldDeclarationHeader(n as FieldDeclaration, data);
-                }
+                foreach (AstNode n in Cache.GetHeaderNodes())                
+                    n.AcceptVisitor(this, data);
+                
             }
             CloseBrace(braceStyle);//END OF TYPE
             Semicolon();
-            headerNodes.Clear();
+            Cache.ClearHeaderNodes();
 
 
             //After defining _Base class header, we can define the class template
-            //We retrieve the original typeDeclaration
-            typeDeclaration = (TypeDeclaration)orig.Clone();
+            //We disable the flag for converting types
+            isGenericTemplate = false;
             NewLine();
 
             //Write first the template<typename T> with inline methods
-            #region <template typenameT>
+            #region <template typename T>
 
+            Comment c = new Comment("Generic template type",CommentType.SingleLine);
+            c.AcceptVisitor(this, data);
             WriteAttributes(typeDeclaration.Attributes);
 
             WriteTypeParameters(typeDeclaration.TypeParameters, true);
@@ -1650,7 +1660,7 @@ namespace ICSharpCode.NRefactory.Cpp
             NewLine();
 
             //Write using declarations in header file
-            foreach (AstNode n in headerNodes)
+            foreach (AstNode n in Cache.GetHeaderNodes())
             {
                 if (n is IncludeDeclaration)
                 {
@@ -1734,23 +1744,13 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             else
             {
-                foreach (AstNode n in headerNodes)
-                {
-                    //Write Fields and methods with its Accessors:
-                    if (n is MethodDeclaration)
-                        VisitMethodDeclarationHeader(n as MethodDeclaration, data);
-                    else if (n is ConstructorDeclaration)
-                        VisitConstructorDeclarationHeader(n as ConstructorDeclaration, data);
-                    else if (n is DestructorDeclaration)
-                        VisitDestructorDeclarationHeader(n as DestructorDeclaration, data);
-                    else if (n is FieldDeclaration)
-                        VisitFieldDeclarationHeader(n as FieldDeclaration, data);
-                }
+                foreach (AstNode n in Cache.GetHeaderNodes())                
+                    n.AcceptVisitor(this, data);
             }
             CloseBrace(braceStyle);//END OF TYPE
             Semicolon();
             CloseNamespaceBraces();
-            headerNodes.Clear();
+            Cache.ClearHeaderNodes();
 
             formatter.ChangeFile("tmp");
         }
@@ -1764,13 +1764,15 @@ namespace ICSharpCode.NRefactory.Cpp
             NewLine();
         }
 
+        //TODO: Supress this method, do the same as HeaderMEthodDeclaration, HeaderFieldDeclaration ...
         public object VisitIncludeDeclaration(IncludeDeclaration includeDeclaration, object data)
         {
             StartNode(includeDeclaration);
-            headerNodes.Add(includeDeclaration);
+            Cache.AddHeaderNode(includeDeclaration);
             return EndNode(includeDeclaration);
         }
 
+        //TODO: Put this method in the interface as VisitHeaderIncludeDeclaration
         private object VisitIncludeDeclarationHeader(IncludeDeclaration includeDeclaration, object data)
         {
             //TODO If the user has implemented a qualified namespace ?
@@ -1827,10 +1829,10 @@ namespace ICSharpCode.NRefactory.Cpp
             //WriteAccesorModifier(constructorDeclaration.ModifierTokens);
             TypeDeclaration type = constructorDeclaration.Parent as TypeDeclaration;
 
-            WriteIdentifier(type != null ? type.Name : constructorDeclaration.Name);
+            WriteIdentifier(type != null ? (isGenericTemplate ? type.Name + "_Base" : type.Name) : (isGenericTemplate ? constructorDeclaration.Name + "_Base" : constructorDeclaration.Name));
             WriteToken("::", MethodDeclaration.Roles.Dot);
 
-            WriteIdentifier(type != null ? type.Name : constructorDeclaration.Name);
+            WriteIdentifier(type != null ? (isGenericTemplate ? type.Name + "_Base" : type.Name) : (isGenericTemplate ? constructorDeclaration.Name + "_Base" : constructorDeclaration.Name));
             Space(policy.SpaceBeforeConstructorDeclarationParentheses);
             WriteCommaSeparatedListInParenthesis(constructorDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
             if (!constructorDeclaration.Initializer.IsNull)
@@ -1839,31 +1841,9 @@ namespace ICSharpCode.NRefactory.Cpp
                 constructorDeclaration.Initializer.AcceptVisitor(this, data);
             }
             WriteMethodBody(constructorDeclaration.Body);
-            headerNodes.Add(constructorDeclaration);
+           
             return EndNode(constructorDeclaration);
-        }
-
-        public object VisitConstructorDeclarationHeader(ConstructorDeclaration constructorDeclaration, object data)
-        {
-            //StartNode(constructorDeclaration);
-            WriteAttributes(constructorDeclaration.Attributes);
-            WriteAccesorModifier(constructorDeclaration.ModifierTokens);
-            formatter.Indent();
-            TypeDeclaration type = constructorDeclaration.Parent as TypeDeclaration;
-            WriteIdentifier(type != null ? type.Name : constructorDeclaration.Name);
-            Space(policy.SpaceBeforeConstructorDeclarationParentheses);
-            WriteCommaSeparatedListInParenthesis(constructorDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
-            if (!constructorDeclaration.Initializer.IsNull)
-            {
-                Space();
-                constructorDeclaration.Initializer.AcceptVisitor(this, data);
-            }
-            //WriteMethodBody(constructorDeclaration.Body);
-            Semicolon();
-            //return EndNode(constructorDeclaration);
-            formatter.Unindent();
-            return null;
-        }
+        }       
 
         public object VisitConstructorInitializer(ConstructorInitializer constructorInitializer, object data)
         {
@@ -1890,43 +1870,18 @@ namespace ICSharpCode.NRefactory.Cpp
             //WriteAccesorModifier(destructorDeclaration.ModifierTokens);
             TypeDeclaration type = destructorDeclaration.Parent as TypeDeclaration;
 
-            WriteIdentifier(type != null ? type.Name : destructorDeclaration.Name);
+            WriteIdentifier(type != null ? (isGenericTemplate ? type.Name + "_Base" : type.Name) : (isGenericTemplate ? destructorDeclaration.Name + "_Base" : destructorDeclaration.Name));
             WriteToken("::", MethodDeclaration.Roles.Dot);
-
+           
             WriteToken("~", DestructorDeclaration.TildeRole);
-            WriteIdentifier(type != null ? type.Name : destructorDeclaration.Name);
+            WriteIdentifier(type != null ? (isGenericTemplate ? type.Name + "_Base" : type.Name) : (isGenericTemplate ? destructorDeclaration.Name + "_Base" : destructorDeclaration.Name));
+
             Space(policy.SpaceBeforeConstructorDeclarationParentheses);
             LPar();
             RPar();
-            WriteMethodBody(destructorDeclaration.Body);
-            headerNodes.Add(destructorDeclaration);
+            WriteMethodBody(destructorDeclaration.Body);            
             return EndNode(destructorDeclaration);
-        }
-
-        public object VisitDestructorDeclarationHeader(DestructorDeclaration destructorDeclaration, object data)
-        {
-            //StartNode(destructorDeclaration);
-            WriteAttributes(destructorDeclaration.Attributes);
-
-            //<ÑAPA>
-            //WriteAccesorModifier(destructorDeclaration.ModifierTokens);
-            WriteKeyword("public:");
-            NewLine();
-            //</ÑAPA>
-
-            formatter.Indent();
-            WriteToken("~", DestructorDeclaration.TildeRole);
-            TypeDeclaration type = destructorDeclaration.Parent as TypeDeclaration;
-            WriteIdentifier(type != null ? type.Name : destructorDeclaration.Name);
-            Space(policy.SpaceBeforeConstructorDeclarationParentheses);
-            LPar();
-            RPar();
-            //WriteMethodBody(destructorDeclaration.Body);
-            Semicolon();
-            //return EndNode(destructorDeclaration);
-            formatter.Unindent();
-            return null;
-        }
+        }       
 
         public object VisitEnumMemberDeclaration(EnumMemberDeclaration enumMemberDeclaration, object data)
         {
@@ -1995,32 +1950,8 @@ namespace ICSharpCode.NRefactory.Cpp
                 WriteToken("::", MethodDeclaration.Roles.DoubleColon);
 
                 WriteCommaSeparatedList(fieldDeclaration.Variables);
-                Semicolon();
-
-                //Reset the variable initializer befor add to header ndoes
-                for (int i = 0; i < fieldDeclaration.Variables.Count; i++)
-                {
-                    VariableInitializer vi = fieldDeclaration.Variables.ElementAt(i);
-                    fieldDeclaration.Variables.Remove(vi);
-                    vi = new VariableInitializer(vi.Name);
-                    fieldDeclaration.Variables.Add(vi);
-                }
+                Semicolon();               
             }
-            headerNodes.Add(fieldDeclaration);
-            return EndNode(fieldDeclaration);
-        }
-
-        private object VisitFieldDeclarationHeader(FieldDeclaration fieldDeclaration, object data)
-        {
-            StartNode(fieldDeclaration);
-            WriteAttributes(fieldDeclaration.Attributes);
-            WriteAccesorModifier(fieldDeclaration.ModifierTokens);
-            formatter.Indent();
-            fieldDeclaration.ReturnType.AcceptVisitor(this, data);
-            Space();
-            WriteCommaSeparatedList(fieldDeclaration.Variables);
-            Semicolon();
-            formatter.Unindent();
             return EndNode(fieldDeclaration);
         }
 
@@ -2084,68 +2015,25 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteAttributes(methodDeclaration.Attributes);
             //WriteAccesorModifier(methodDeclaration.ModifierTokens);         
             methodDeclaration.ReturnType.AcceptVisitor(this, data);
-            Space();
-
-            WritePrivateImplementationType(methodDeclaration.PrivateImplementationType);
+            Space();           
 
             //TODO: se podria implementar mejor ?
+            TypeDeclaration type = methodDeclaration.Parent as TypeDeclaration;
+            
             Identifier tdecl = methodDeclaration.TypeMember;
-            WriteIdentifier(tdecl != null ? (isGenericTemplate ? tdecl.Name + "_T_Base" : tdecl.Name) : String.Empty, MethodDeclaration.Roles.Identifier);
+
+            WriteIdentifier(type == null ? (tdecl != null ? (isGenericTemplate ? tdecl.Name + "_T_Base" : tdecl.Name) : String.Empty) : (isGenericTemplate ? type.Name + "_Base" : type.Name), MethodDeclaration.Roles.Identifier);
             WriteToken("::", MethodDeclaration.Roles.DoubleColon);
+            WritePrivateImplementationType(methodDeclaration.PrivateImplementationType);
 
             methodDeclaration.NameToken.AcceptVisitor(this, data);
             WriteTypeParameters(methodDeclaration.TypeParameters);
             Space(policy.SpaceBeforeMethodDeclarationParentheses);
             WriteCommaSeparatedListInParenthesis(methodDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
             WriteMethodBody(methodDeclaration.Body);
-            headerNodes.Add(methodDeclaration);
+            
             return EndNode(methodDeclaration);
-        }
-
-        private object VisitMethodDeclarationHeader(MethodDeclaration methodDeclaration, object data)
-        {
-            //StartNode(methodDeclaration);
-            WriteAttributes(methodDeclaration.Attributes);
-
-            if (methodDeclaration.Name == "Main")
-            {
-                NamespaceDeclaration entryNamespace = methodDeclaration.Parent.Parent as NamespaceDeclaration;
-                MainWritter.GenerateMain((methodDeclaration.Parent as TypeDeclaration).Name,
-                    entryNamespace == null ? String.Empty : entryNamespace.Name, methodDeclaration.Parameters.Any());
-                //<ÑAPA>
-                //Force the Main to be public because it will be called from main.cpp and has to be accessible
-                WriteKeyword("public:");
-                NewLine();
-                formatter.Indent();
-                methodDeclaration.ModifierTokens.Remove(methodDeclaration.ModifierTokens.First());
-                WriteModifiers(methodDeclaration.ModifierTokens);
-                //</ÑAPA>                
-            }
-            else
-            {
-                WriteAccesorModifier(methodDeclaration.ModifierTokens);
-                formatter.Indent();
-            }
-
-            methodDeclaration.ReturnType.AcceptVisitor(this, data);
-            Space();
-
-            WritePrivateImplementationType(methodDeclaration.PrivateImplementationType);
-
-            WriteIdentifier(methodDeclaration.Name);
-            WriteTypeParameters(methodDeclaration.TypeParameters);
-            Space(policy.SpaceBeforeMethodDeclarationParentheses);
-            WriteCommaSeparatedListInParenthesis(methodDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
-            //foreach (Constraint constraint in methodDeclaration.Constraints)
-            //{
-            //    constraint.AcceptVisitor(this, data);
-            //}
-            //WriteMethodBody(methodDeclaration.Body);
-            Semicolon();
-            formatter.Unindent();
-            //return EndNode(methodDeclaration);
-            return null;
-        }
+        }       
 
         public object VisitOperatorDeclaration(OperatorDeclaration operatorDeclaration, object data)
         {
@@ -2260,6 +2148,15 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitSimpleType(SimpleType simpleType, object data)
         {
             StartNode(simpleType);
+            if (isGenericTemplate)
+            {
+                AstType tmp;
+                if (TryPatchGenericTemplateType(simpleType, out tmp))
+                {
+                    tmp.AcceptVisitor(this, data);
+                    return EndNode(simpleType);
+                }
+            }
             WriteIdentifier(simpleType.Identifier);
             WriteTypeArguments(simpleType.TypeArguments);
             return EndNode(simpleType);
@@ -3340,6 +3237,15 @@ namespace ICSharpCode.NRefactory.Cpp
             StartNode(ptrType);
             //WriteKeyword("gc_ptr", PtrType.Roles.Keyword);
             //WriteToken("<", PtrType.Roles.LChevron);
+            if (isGenericTemplate)
+            {
+                AstType tmp;
+                if (TryPatchGenericTemplateType(ptrType, out tmp))
+                {
+                    tmp.AcceptVisitor(this, data);
+                    return EndNode(ptrType);
+                }
+            }
             ptrType.Target.AcceptVisitor(this, data);
             WriteToken("*", PtrType.PointerRole);
             //WriteToken(">", PtrType.Roles.RChevron);
@@ -3376,5 +3282,107 @@ namespace ICSharpCode.NRefactory.Cpp
             pointerIdentifierExpression.IdentifierToken.AcceptVisitor(this, data);
             return EndNode(pointerIdentifierExpression);
         }
+
+        #region HeaderNodes
+        public object VisitHeaderConstructorDeclaration(HeaderConstructorDeclaration headerConstructorDeclaration, object data)
+        {
+            //StartNode(headerConstructorDeclaration);
+            WriteAttributes(headerConstructorDeclaration.Attributes);
+            WriteAccesorModifier(headerConstructorDeclaration.ModifierTokens);
+            formatter.Indent();
+
+            TypeDeclaration type = headerConstructorDeclaration.Parent as TypeDeclaration;
+            WriteIdentifier(type != null ? (isGenericTemplate ? type.Name + "_Base" : type.Name) : (isGenericTemplate ? headerConstructorDeclaration.Name + "_T_Base" : headerConstructorDeclaration.Name));
+
+            Space(policy.SpaceBeforeConstructorDeclarationParentheses);
+            WriteCommaSeparatedListInParenthesis(headerConstructorDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
+            if (!headerConstructorDeclaration.Initializer.IsNull)
+            {
+                Space();
+                headerConstructorDeclaration.Initializer.AcceptVisitor(this, data);
+            }
+            Semicolon();
+            //return EndNode(constructorDeclaration);
+            formatter.Unindent();
+            return null;
+        }
+
+        public object VisitHeaderDestructorDeclaration(HeaderDestructorDeclaration headerDestructorDeclaration, object data)
+        {
+            //StartNode(destructorDeclaration);
+            WriteAttributes(headerDestructorDeclaration.Attributes);
+
+            //<ÑAPA>
+            //WriteAccesorModifier(destructorDeclaration.ModifierTokens);
+            WriteKeyword("public:");
+            NewLine();
+            //</ÑAPA>
+
+            formatter.Indent();
+            WriteToken("~", DestructorDeclaration.TildeRole);
+            TypeDeclaration type = headerDestructorDeclaration.Parent as TypeDeclaration;
+            WriteIdentifier(type != null ? (isGenericTemplate ? type.Name + "_Base" : type.Name) : (isGenericTemplate ? headerDestructorDeclaration.Name + "_T_Base" : headerDestructorDeclaration.Name));
+            Space(policy.SpaceBeforeConstructorDeclarationParentheses);
+            LPar();
+            RPar();
+            Semicolon();
+            //return EndNode(destructorDeclaration);
+            formatter.Unindent();
+            return null;  
+        }
+
+        public object VisitHeaderFieldDeclaration(HeaderFieldDeclaration headerFieldDeclaration, object data)
+        {
+            StartNode(headerFieldDeclaration);
+            WriteAttributes(headerFieldDeclaration.Attributes);
+            WriteAccesorModifier(headerFieldDeclaration.ModifierTokens);
+            formatter.Indent();
+            headerFieldDeclaration.ReturnType.AcceptVisitor(this, data);
+            Space();
+            WriteCommaSeparatedList(headerFieldDeclaration.Variables);
+            Semicolon();
+            formatter.Unindent();
+            return EndNode(headerFieldDeclaration);
+        }
+
+        public object VisitHeaderMethodDeclaration(HeaderMethodDeclaration headerMethodDeclaration, object data)
+        {
+            //StartNode(methodDeclaration);
+            WriteAttributes(headerMethodDeclaration.Attributes);
+
+            if (headerMethodDeclaration.Name == "Main")
+            {
+                MainWritter.GenerateMain(headerMethodDeclaration.TypeMember.Name,
+                    headerMethodDeclaration.Namespace, headerMethodDeclaration.Parameters.Any());
+                //<ÑAPA>
+                //Force the Main to be public because it will be called from main.cpp and has to be accessible
+                WriteKeyword("public:");
+                NewLine();
+                formatter.Indent();
+                headerMethodDeclaration.ModifierTokens.Remove(headerMethodDeclaration.ModifierTokens.First());
+                WriteModifiers(headerMethodDeclaration.ModifierTokens);
+                //</ÑAPA>                
+            }
+            else
+            {
+                WriteAccesorModifier(headerMethodDeclaration.ModifierTokens);
+                formatter.Indent();
+            }
+
+            headerMethodDeclaration.ReturnType.AcceptVisitor(this, data);
+            Space();
+
+            WritePrivateImplementationType(headerMethodDeclaration.PrivateImplementationType);
+
+            WriteIdentifier(headerMethodDeclaration.Name);
+            WriteTypeParameters(headerMethodDeclaration.TypeParameters);
+            Space(policy.SpaceBeforeMethodDeclarationParentheses);
+            WriteCommaSeparatedListInParenthesis(headerMethodDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
+            Semicolon();
+            formatter.Unindent();
+            //return EndNode(methodDeclaration);
+            return null;
+        }
+        #endregion
     }
 }

@@ -769,6 +769,10 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 Cache.AddConstructorStatement(new ExpressionStatement(
                     new AssignmentExpression(
                         new IdentifierExpression(kvp.Key), new PrimitiveExpression(0))));
+
+                HeaderFieldDeclaration hf = new HeaderFieldDeclaration();
+                GetHeaderNode(fdecl, hf);
+                Cache.AddHeaderNode(hf);
             }
 
             //Add constructor if there is no added yet and it is necessary to initialize some variables
@@ -792,8 +796,14 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                         blck.AddChild((Statement)st.Clone(), BlockStatement.StatementRole);
                     result.Body = blck;
                     Cache.ClearConstructorStatements();
+                    result.Name = type.Name;
+                    result.IdentifierToken = new Identifier(type.Name, TextLocation.Empty);
 
                     type.AddChild(result, TypeDeclaration.MemberRole);
+
+                    HeaderConstructorDeclaration hc = new HeaderConstructorDeclaration();
+                    GetHeaderNode(result, hc);
+                    Cache.AddHeaderNode(hc);
                 }
             }
 
@@ -1220,6 +1230,83 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             return EndNode(accessor, cppMethod);
         }
 
+        private void GetHeaderNode(AstNode node, AstNode headerNode)
+        {
+            if (node is ConstructorDeclaration)
+            {
+                var _node = node as ConstructorDeclaration;
+                var _header = headerNode as HeaderConstructorDeclaration;
+
+                foreach (var token in _node.ModifierTokens)
+                    headerNode.AddChild((CppModifierToken)token.Clone(), HeaderConstructorDeclaration.ModifierRole);
+
+                foreach (var att in _node.Attributes)
+                    headerNode.AddChild((AttributeSection)att.Clone(), HeaderConstructorDeclaration.AttributeRole);
+
+                foreach (var param in _node.Parameters)
+                    headerNode.AddChild((ParameterDeclaration)param.Clone(), HeaderConstructorDeclaration.Roles.Parameter);
+
+                _header.Name = _node.Name;
+                _header.IdentifierToken = (Identifier)_node.IdentifierToken.Clone();
+
+            }
+            if (node is DestructorDeclaration)
+            {
+                var _node = node as DestructorDeclaration;
+                var _header = headerNode as HeaderDestructorDeclaration;
+
+                foreach (var token in _node.ModifierTokens)
+                    headerNode.AddChild((CppModifierToken)token.Clone(), HeaderConstructorDeclaration.ModifierRole);
+
+                foreach (var att in _node.Attributes)
+                    headerNode.AddChild((AttributeSection)att.Clone(), HeaderConstructorDeclaration.AttributeRole);
+
+                _header.Name = _node.Name;
+            }
+            if (node is FieldDeclaration)
+            {
+                var _node = node as FieldDeclaration;
+                var _header = headerNode as HeaderFieldDeclaration;
+
+                _header.ReturnType = (AstType)_node.ReturnType.Clone();
+
+                foreach (var token in _node.ModifierTokens)
+                    headerNode.AddChild((CppModifierToken)token.Clone(), HeaderConstructorDeclaration.ModifierRole);
+
+                foreach (var att in _node.Attributes)
+                    headerNode.AddChild((AttributeSection)att.Clone(), HeaderConstructorDeclaration.AttributeRole);
+
+                for (int i = 0; i < _node.Variables.Count; i++)
+                {
+                    VariableInitializer vi = _node.Variables.ElementAt(i);
+
+                    _header.Variables.Add(_node.HasModifier(Modifiers.Static) ? new VariableInitializer(vi.Name) : (VariableInitializer)vi.Clone());
+                }
+            }
+            if (node is MethodDeclaration)
+            {
+                var _node = node as MethodDeclaration;
+                var _header = headerNode as HeaderMethodDeclaration;
+
+                foreach (var token in _node.ModifierTokens)
+                    headerNode.AddChild((CppModifierToken)token.Clone(), HeaderConstructorDeclaration.ModifierRole);
+
+                foreach (var att in _node.Attributes)
+                    headerNode.AddChild((AttributeSection)att.Clone(), HeaderConstructorDeclaration.AttributeRole);
+
+                foreach (var param in _node.Parameters)
+                    headerNode.AddChild((ParameterDeclaration)param.Clone(), HeaderConstructorDeclaration.Roles.Parameter);
+
+                foreach (var tparam in _node.TypeParameters)
+                    _header.TypeParameters.Add((TypeParameterDeclaration)tparam.Clone());
+
+                _header.ReturnType = (AstType)_node.ReturnType.Clone();
+                _header.PrivateImplementationType = (AstType)_node.PrivateImplementationType.Clone();
+                _header.TypeMember = (Identifier)_node.TypeMember.Clone();
+                _header.NameToken = (Identifier)_node.NameToken.Clone();
+            }
+        }
+
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitConstructorDeclaration(CSharp.ConstructorDeclaration constructorDeclaration, object data)
         {
             currentMethod = constructorDeclaration.Name;
@@ -1228,11 +1315,17 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             ConvertNodes(constructorDeclaration.Attributes, result.Attributes);
             ConvertNodes(constructorDeclaration.ModifierTokens, result.ModifierTokens);
             ConvertNodes(constructorDeclaration.Parameters, result.Parameters);
+            result.IdentifierToken = (Identifier)constructorDeclaration.IdentifierToken.AcceptVisitor(this, data);
+            result.Name = constructorDeclaration.Name;
             result.Body = (BlockStatement)constructorDeclaration.Body.AcceptVisitor(this, data);
 
             //TODO: C++ WILL NOT COMPILE C# INITIALIZERS
             if (!constructorDeclaration.Initializer.IsNull)
                 result.Initializer = (ConstructorInitializer)constructorDeclaration.Initializer.AcceptVisitor(this, data);
+
+            HeaderConstructorDeclaration hc = new HeaderConstructorDeclaration();
+            GetHeaderNode(result, hc);
+            Cache.AddHeaderNode(hc);
 
             return EndNode(constructorDeclaration, result);
         }
@@ -1254,6 +1347,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             ConvertNodes(destructorDeclaration.ModifierTokens, result.ModifierTokens);
             result.Body = (BlockStatement)destructorDeclaration.Body.AcceptVisitor(this, data);
 
+            var hd = new HeaderDestructorDeclaration();
+            GetHeaderNode(result, hd);
+            Cache.AddHeaderNode(hd);
             return EndNode(destructorDeclaration, result);
         }
 
@@ -1310,6 +1406,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             }
 
             Cache.AddField(currentType.Name, decl);
+            var hf = new HeaderFieldDeclaration();
+            GetHeaderNode(decl, hf);
+            Cache.AddHeaderNode(hf);
             return EndNode(fieldDeclaration, decl);
         }
 
@@ -1342,6 +1441,15 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             if (result.PrivateImplementationType is PtrType)
                 result.PrivateImplementationType = (AstType)(result.PrivateImplementationType as PtrType).Target.Clone();
 
+            var hm = new HeaderMethodDeclaration();
+            GetHeaderNode(result, hm);
+
+            if (methodDeclaration.Name == "Main")
+            {
+                CSharp.NamespaceDeclaration nms = methodDeclaration.Parent.Parent as CSharp.NamespaceDeclaration;
+                hm.Namespace = nms == null ? String.Empty : nms.Name;
+            }
+            Cache.AddHeaderNode(hm);
             return EndNode(methodDeclaration, result);
         }
 
@@ -1483,7 +1591,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             else
             {
                 //if (simpleType.Role == CSharp.SimpleType.Roles.TypeArgument || simpleType.Role == CSharp.SimpleType.Roles.TypeParameter)
-                    //Cache.AddExcludedType(type.Identifier);
+                //Cache.AddExcludedType(type.Identifier);
                 return EndNode(simpleType, type);
             }
         }
@@ -1547,8 +1655,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 case "object":
                     return EndNode(primitiveType, new PtrType(new SimpleType("Object")));
                 case "string":
-                    if (primitiveType.Role == CSharp.SimpleType.Roles.TypeArgument || primitiveType.Role == CSharp.SimpleType.Roles.TypeParameter)                    
-                        return EndNode(primitiveType, new SimpleType("String"));                    
+                    if (primitiveType.Role == CSharp.SimpleType.Roles.TypeArgument || primitiveType.Role == CSharp.SimpleType.Roles.TypeParameter)
+                        return EndNode(primitiveType, new SimpleType("String"));
                     return EndNode(primitiveType, new PtrType(new SimpleType("String")));
                 default:
                     typeName = primitiveType.Keyword;
@@ -1589,7 +1697,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitTypeParameterDeclaration(CSharp.TypeParameterDeclaration typeParameterDeclaration, object data)
         {
             TypeParameterDeclaration t = new TypeParameterDeclaration();
-            
+
             t.Name = typeParameterDeclaration.Name;
             t.NameToken = (Identifier)typeParameterDeclaration.NameToken.AcceptVisitor(this, data);
             Cache.AddExcludedType(t.Name);

@@ -169,7 +169,7 @@ namespace RegressionTest
             Console.WriteLine("Comparing outputs...");
             //Run original app
             Process orig = new Process();
-            orig.StartInfo = new ProcessStartInfo(di.FullName + @"/NETbin/" + di.Name + ".exe");
+            orig.StartInfo = new ProcessStartInfo(di.FullName + @"/NETbin/" + di.Name.Split('.')[1] + ".exe");
 
             orig.StartInfo.RedirectStandardOutput = true;
             orig.StartInfo.CreateNoWindow = true;
@@ -210,7 +210,7 @@ namespace RegressionTest
 
             Process runAlt = new Process();
 
-            string altArgs = di.FullName + "/NETbin/" + di.Name + ".exe" + " "
+            string altArgs = di.FullName + "/NETbin/" + di.Name.Split('.')[1] + ".exe" + " "
                                                     + di.FullName + "/Output/" + " "
                                                     + "CXX" + " "
                                                     + testPath + "/../Lib/";

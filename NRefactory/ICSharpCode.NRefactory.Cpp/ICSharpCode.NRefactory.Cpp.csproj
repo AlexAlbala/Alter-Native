@@ -78,6 +78,10 @@
     <Compile Include="Ast\Header\IncludeDeclaration.cs" />
     <Compile Include="Ast\GeneralScope\InterfaceMemberSpecifier.cs" />
     <Compile Include="Ast\Statements\ForeachStatement.cs" />
+    <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderConstructorDeclaration.cs" />
+    <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderDestructorDeclaration.cs" />
+    <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderFieldDeclaration.cs" />
+    <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderMethodDeclaration.cs" />
     <Compile Include="Ast\TypeName\AstType.cs" />
     <Compile Include="Ast\ID.cs" />
     <Compile Include="Ast\IdentifierExpressionBackreference.cs" />

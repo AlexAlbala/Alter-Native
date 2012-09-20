@@ -121,14 +121,18 @@ namespace ICSharpCode.NRefactory.Cpp
 		
 		S VisitAccessor(Accessor accessor, T data);
 		S VisitConstructorDeclaration(ConstructorDeclaration constructorDeclaration, T data);
+        S VisitHeaderConstructorDeclaration(HeaderConstructorDeclaration headerConstructorDeclaration, T data);
 		S VisitConstructorInitializer(ConstructorInitializer constructorInitializer, T data);
 		S VisitDestructorDeclaration(DestructorDeclaration destructorDeclaration, T data);
+        S VisitHeaderDestructorDeclaration(HeaderDestructorDeclaration headerDestructorDeclaration, T data);
 		S VisitEnumMemberDeclaration(EnumMemberDeclaration enumMemberDeclaration, T data);
 		S VisitEventDeclaration(EventDeclaration eventDeclaration, T data);
 		S VisitCustomEventDeclaration(CustomEventDeclaration customEventDeclaration, T data);
 		S VisitFieldDeclaration(FieldDeclaration fieldDeclaration, T data);
+        S VisitHeaderFieldDeclaration(HeaderFieldDeclaration headerFieldDeclaration, T data);
 		S VisitIndexerDeclaration(IndexerDeclaration indexerDeclaration, T data);
 		S VisitMethodDeclaration(MethodDeclaration methodDeclaration, T data);
+        S VisitHeaderMethodDeclaration(HeaderMethodDeclaration headerMethodDeclaration, T data);
 		S VisitOperatorDeclaration(OperatorDeclaration operatorDeclaration, T data);
 		S VisitParameterDeclaration(ParameterDeclaration parameterDeclaration, T data);
 		S VisitPropertyDeclaration(PropertyDeclaration propertyDeclaration, T data);
