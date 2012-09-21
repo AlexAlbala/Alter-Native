@@ -89,7 +89,7 @@ namespace ICSharpCode.NRefactory.Cpp
 		
 		public override S AcceptVisitor<T, S> (IAstVisitor<T, S> visitor, T data = default(T))
 		{
-			return visitor.VisitCSharpTokenNode (this, data);
+			return visitor.VisitCppTokenNode (this, data);
 		}
 		
 		protected internal override bool DoMatch(AstNode other, PatternMatching.Match match)

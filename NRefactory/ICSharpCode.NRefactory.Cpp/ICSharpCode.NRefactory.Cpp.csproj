@@ -68,8 +68,12 @@
   <ItemGroup>
     <Compile Include="Ast\AstNode.cs" />
     <Compile Include="Ast\AstNodeCollection.cs" />
+    <Compile Include="Ast\Expressions\AddressOfExpression.cs" />
     <Compile Include="Ast\Expressions\DynamicCastExpression.cs" />
     <Compile Include="Ast\Expressions\MemberAccessExpression.cs" />
+    <Compile Include="Ast\GeneralScope\GenericTemplateTypeDeclaration.cs" />
+    <Compile Include="Ast\GeneralScope\InterfaceTypeDeclaration.cs" />
+    <Compile Include="Ast\GeneralScope\NestedTypeDeclaration.cs" />
     <Compile Include="Ast\Expressions\PointerExpression.cs" />
     <Compile Include="Ast\Expressions\PointerIdentifierExpression.cs" />
     <Compile Include="Ast\GeneralScope\CompilationUnit.cs">
@@ -78,7 +82,10 @@
     <Compile Include="Ast\Header\IncludeDeclaration.cs" />
     <Compile Include="Ast\GeneralScope\InterfaceMemberSpecifier.cs" />
     <Compile Include="Ast\Statements\ForeachStatement.cs" />
+    <Compile Include="Ast\TypeMembers\ConversionConstructorDeclaration.cs" />
+    <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderAbstractMethodDeclaration.cs" />
     <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderConstructorDeclaration.cs" />
+    <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderConversionConstructorDeclaration.cs" />
     <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderDestructorDeclaration.cs" />
     <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderFieldDeclaration.cs" />
     <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderMethodDeclaration.cs" />

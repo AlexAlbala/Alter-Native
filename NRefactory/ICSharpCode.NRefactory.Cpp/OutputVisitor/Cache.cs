@@ -17,7 +17,7 @@ namespace ICSharpCode.NRefactory.Cpp
         private static Dictionary<string, List<VariableDeclarationStatement>> variablesMethod = new Dictionary<string, List<VariableDeclarationStatement>>();
         private static Dictionary<string, List<ParameterDeclaration>> parameters = new Dictionary<string, List<ParameterDeclaration>>();
         private static List<AstNode> headerNodes = new List<AstNode>();
-        private static Dictionary<Ast.AstType, MethodDeclaration> privateImplementations = new Dictionary<Ast.AstType, MethodDeclaration>();
+        private static Dictionary<Ast.AstType, List<MethodDeclaration>> privateImplementations = new Dictionary<Ast.AstType, List<MethodDeclaration>>();
 
         //RESOLVER
         private static Dictionary<string, string> libraryMap = new Dictionary<string, string>();
@@ -28,6 +28,24 @@ namespace ICSharpCode.NRefactory.Cpp
         private static List<string> excluded = new List<string>();
 
         #region RESOLVER
+
+        public static void AddPrivateImplementation(Ast.AstType type, MethodDeclaration method)
+        {
+            if (privateImplementations.ContainsKey(type))
+                privateImplementations[type].Add(method);
+            else
+                privateImplementations.Add(type, new List<MethodDeclaration>() { method });
+        }
+
+        public static Dictionary<Ast.AstType, List<MethodDeclaration>> GetPrivateImplementation()
+        {
+            return privateImplementations;
+        }
+
+        public static void ClearPrivateImplementations()
+        {
+            privateImplementations.Clear();
+        }
 
         public static void AddConstructorStatement(Ast.Statement statement)
         {
@@ -99,11 +117,11 @@ namespace ICSharpCode.NRefactory.Cpp
             return visitedTypes;
         }
 
-        public static void AddSymbol(string type, TypeReference reference)
-        {
-            if (!symbols.ContainsKey(type))
-                symbols.Add(type, reference);
-        }
+        //public static void AddSymbol(string type, TypeReference reference)
+        //{
+        //    if (!symbols.ContainsKey(type))
+        //        symbols.Add(type, reference);
+        //}
 
         public static Dictionary<string, string> GetLibraryMap()
         {
@@ -151,7 +169,7 @@ namespace ICSharpCode.NRefactory.Cpp
         public static List<AstNode> GetHeaderNodes()
         {
             return headerNodes;
-        }
+        }       
 
         public static void ClearHeaderNodes()
         {

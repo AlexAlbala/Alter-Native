@@ -57,6 +57,7 @@ namespace ICSharpCode.NRefactory.Cpp
 		S VisitAnonymousTypeCreateExpression(AnonymousTypeCreateExpression anonymousTypeCreateExpression, T data);
 		S VisitParenthesizedExpression(ParenthesizedExpression parenthesizedExpression, T data);
         S VisitPointerExpression(PointerExpression pointerExpression, T data);//*********************
+        S VisitAddressOfExpression(AddressOfExpression addressOfExpression, T data);//*****************
 		S VisitPointerReferenceExpression(PointerReferenceExpression pointerReferenceExpression, T data);
 		S VisitPrimitiveExpression(PrimitiveExpression primitiveExpression, T data);
 		S VisitSizeOfExpression(SizeOfExpression sizeOfExpression, T data);
@@ -84,6 +85,7 @@ namespace ICSharpCode.NRefactory.Cpp
 		S VisitDelegateDeclaration(DelegateDeclaration delegateDeclaration, T data);
 		S VisitNamespaceDeclaration(NamespaceDeclaration namespaceDeclaration, T data);
 		S VisitTypeDeclaration(TypeDeclaration typeDeclaration, T data);
+        S VisitNestedTypeDeclaration(NestedTypeDeclaration nestedTypeDeclaration, T data); //******************
 		//S VisitUsingAliasDeclaration(UsingAliasDeclaration usingAliasDeclaration, T data);
 		S VisitIncludeDeclaration(IncludeDeclaration usingDeclaration, T data);
 		S VisitExternAliasDeclaration(ExternAliasDeclaration externAliasDeclaration, T data);
@@ -121,19 +123,22 @@ namespace ICSharpCode.NRefactory.Cpp
 		
 		S VisitAccessor(Accessor accessor, T data);
 		S VisitConstructorDeclaration(ConstructorDeclaration constructorDeclaration, T data);
-        S VisitHeaderConstructorDeclaration(HeaderConstructorDeclaration headerConstructorDeclaration, T data);
+        S VisitHeaderConstructorDeclaration(HeaderConstructorDeclaration headerConstructorDeclaration, T data);//*************
 		S VisitConstructorInitializer(ConstructorInitializer constructorInitializer, T data);
 		S VisitDestructorDeclaration(DestructorDeclaration destructorDeclaration, T data);
-        S VisitHeaderDestructorDeclaration(HeaderDestructorDeclaration headerDestructorDeclaration, T data);
+        S VisitHeaderDestructorDeclaration(HeaderDestructorDeclaration headerDestructorDeclaration, T data);//***************
 		S VisitEnumMemberDeclaration(EnumMemberDeclaration enumMemberDeclaration, T data);
 		S VisitEventDeclaration(EventDeclaration eventDeclaration, T data);
 		S VisitCustomEventDeclaration(CustomEventDeclaration customEventDeclaration, T data);
 		S VisitFieldDeclaration(FieldDeclaration fieldDeclaration, T data);
-        S VisitHeaderFieldDeclaration(HeaderFieldDeclaration headerFieldDeclaration, T data);
+        S VisitHeaderFieldDeclaration(HeaderFieldDeclaration headerFieldDeclaration, T data);//**************
 		S VisitIndexerDeclaration(IndexerDeclaration indexerDeclaration, T data);
 		S VisitMethodDeclaration(MethodDeclaration methodDeclaration, T data);
-        S VisitHeaderMethodDeclaration(HeaderMethodDeclaration headerMethodDeclaration, T data);
+        S VisitHeaderMethodDeclaration(HeaderMethodDeclaration headerMethodDeclaration, T data);//***************
+        S VisitHeaderAbstractMethodDeclaration(HeaderAbstractMethodDeclaration headerAbstractMethodDeclaration, T data);//***************
 		S VisitOperatorDeclaration(OperatorDeclaration operatorDeclaration, T data);
+        S VisitConversionConstructorDeclaration(ConversionConstructorDeclaration conversionConstructorDeclaration, T data);//************
+        S VisitHeaderConversionConstructorDeclaration(HeaderConversionConstructorDeclaration headerConversionConstructorDeclaration, T data);//**********
 		S VisitParameterDeclaration(ParameterDeclaration parameterDeclaration, T data);
 		S VisitPropertyDeclaration(PropertyDeclaration propertyDeclaration, T data);
 		S VisitVariableInitializer(VariableInitializer variableInitializer, T data);
@@ -142,7 +147,7 @@ namespace ICSharpCode.NRefactory.Cpp
 		
 		S VisitCompilationUnit(CompilationUnit compilationUnit, T data);
 		S VisitSimpleType(SimpleType simpleType, T data);
-        S VisitPtrType(PtrType ptrType, T data);
+        S VisitPtrType(PtrType ptrType, T data);//**************
 		//S VisitMemberType(MemberType memberType, T data);
         S VisitQualifiedType(QualifiedType qualifiedType, T data);
 		S VisitComposedType(ComposedType composedType, T data);
@@ -154,9 +159,9 @@ namespace ICSharpCode.NRefactory.Cpp
 		
 		S VisitTypeParameterDeclaration(TypeParameterDeclaration typeParameterDeclaration, T data);
 		//S VisitConstraint(Constraint constraint, T data);
-		S VisitCSharpTokenNode(CppTokenNode cSharpTokenNode, T data);
+		S VisitCppTokenNode(CppTokenNode cSharpTokenNode, T data);
 		S VisitIdentifier(Identifier identifier, T data);
-        S VisitComposedIdentifier(ComposedIdentifier identifier, T data);
+        S VisitComposedIdentifier(ComposedIdentifier identifier, T data);//****************
 		
 		S VisitPatternPlaceholder(AstNode placeholder, PatternMatching.Pattern pattern, T data);
 	}

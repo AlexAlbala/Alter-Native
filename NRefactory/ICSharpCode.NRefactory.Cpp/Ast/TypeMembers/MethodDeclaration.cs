@@ -70,7 +70,8 @@ namespace ICSharpCode.NRefactory.Cpp
         public Identifier TypeMember
         {
             get { return GetChildByRole(TypeRole); }
-        }        
+            set { SetChildByRole(TypeRole, value); }
+        }
 
         public AstNodeCollection<ParameterDeclaration> Parameters
         {

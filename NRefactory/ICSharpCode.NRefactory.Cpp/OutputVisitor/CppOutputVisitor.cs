@@ -496,7 +496,7 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteKeyword("dynamic_cast");
             WriteToken("<", CppTokenNode.Roles.LChevron);
             dynamicCastExpression.Type.AcceptVisitor(this, data);
-            WriteToken(">", CppTokenNode.Roles.RChevron);            
+            WriteToken(">", CppTokenNode.Roles.RChevron);
             LPar();
             dynamicCastExpression.Expression.AcceptVisitor(this, data);
             RPar();
@@ -1228,27 +1228,6 @@ namespace ICSharpCode.NRefactory.Cpp
             foreach (var member in namespaceDeclaration.Members)
                 member.AcceptVisitor(this, data);
             return EndNode(namespaceDeclaration);
-        }        
-
-        public object VisitTypeDeclaration(TypeDeclaration typeDeclaration, object data)
-        {
-            //WRITE FIRST CPP AND THEN .H
-            StartNode(typeDeclaration);
-            if (typeDeclaration.TypeParameters.Any())
-            {
-                isGenericTemplate = true;
-                TypeDeclarationCPP(typeDeclaration, data);
-                TypeDeclarationTemplatesHeader(typeDeclaration, data);
-            }
-            else
-            {
-                isGenericTemplate = false;
-                if (typeDeclaration.ClassType != ClassType.Enum)
-                    TypeDeclarationCPP(typeDeclaration, data);
-
-                TypeDeclarationHeader(typeDeclaration, data);
-            }
-            return EndNode(typeDeclaration);
         }
 
         private void UsingNamespaces()
@@ -1305,7 +1284,7 @@ namespace ICSharpCode.NRefactory.Cpp
             {
                 SimpleType st = type as SimpleType;
                 name = st.Identifier;
-                if(Cache.GetExcluded().Contains(name))
+                if (Cache.GetExcluded().Contains(name))
                 {
                     newType = new PtrType(new SimpleType("Object"));
                     return true;
@@ -1371,7 +1350,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 }
             }
 
-            return false;            
+            return false;
         }
 
         private void WriteInlineMembers(AstNodeCollection<AttributedNode> members, string type)
@@ -1433,9 +1412,9 @@ namespace ICSharpCode.NRefactory.Cpp
                             new InvocationExpression(new MemberReferenceExpression(new TypeReferenceExpression(new SimpleType(type + "_Base")), methodDeclaration.Name), parameters));
 
                         blck.Add(varDeclStmt);
-                        
+
                         ReturnStatement rtstm = new ReturnStatement(new DynamicCastExpression((AstType)methodDeclaration.ReturnType.Clone(), new IdentifierExpression(tmpName)));
-                        blck.Add(rtstm);                        
+                        blck.Add(rtstm);
                     }
                     else
                     {
@@ -1450,6 +1429,29 @@ namespace ICSharpCode.NRefactory.Cpp
                     EndNode(methodDeclaration);
                 }
             }
+        }
+
+        #region TypeDeclaration
+
+        public object VisitTypeDeclaration(TypeDeclaration typeDeclaration, object data)
+        {
+            //WRITE FIRST CPP AND THEN .H
+            StartNode(typeDeclaration);
+            if (typeDeclaration.TypeParameters.Any())
+            {
+                isGenericTemplate = true;
+                TypeDeclarationCPP(typeDeclaration, data);
+                TypeDeclarationTemplatesHeader(typeDeclaration, data);
+            }
+            else
+            {
+                isGenericTemplate = false;
+                if (typeDeclaration.ClassType != ClassType.Enum)
+                    TypeDeclarationCPP(typeDeclaration, data);
+
+                TypeDeclarationHeader(typeDeclaration, data);
+            }
+            return EndNode(typeDeclaration);
         }
 
         private void TypeDeclarationTemplatesHeader(TypeDeclaration typeDeclaration, object data)
@@ -1479,35 +1481,13 @@ namespace ICSharpCode.NRefactory.Cpp
                 NewLine();
             }
             NewLine();
-
             UsingNamespaces();
-
             Resolver.Restart();
-
             WriteNamespace();
 
             WriteAttributes(typeDeclaration.Attributes);
             //WriteModifiers(typeDeclaration.ModifierTokens);
-            BraceStyle braceStyle;
-            switch (typeDeclaration.ClassType)
-            {
-                case ClassType.Enum:
-                    WriteKeyword("enum");
-                    braceStyle = policy.EnumBraceStyle;
-                    break;
-                case ClassType.Interface:
-                    WriteKeyword("interface");
-                    braceStyle = policy.InterfaceBraceStyle;
-                    break;
-                case ClassType.Struct:
-                    WriteKeyword("struct");
-                    braceStyle = policy.StructBraceStyle;
-                    break;
-                default:
-                    WriteKeyword("class");
-                    braceStyle = policy.ClassBraceStyle;
-                    break;
-            }
+            BraceStyle braceStyle = WriteClassType(typeDeclaration.ClassType);
             WriteIdentifier(typeDeclaration.Name + "_Base");
 
             Space();
@@ -1542,9 +1522,9 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             else
             {
-                foreach (AstNode n in Cache.GetHeaderNodes())                
+                foreach (AstNode n in Cache.GetHeaderNodes())
                     n.AcceptVisitor(this, data);
-                
+
             }
             CloseBrace(braceStyle);//END OF TYPE
             Semicolon();
@@ -1559,32 +1539,13 @@ namespace ICSharpCode.NRefactory.Cpp
             //Write first the template<typename T> with inline methods
             #region <template typename T>
 
-            Comment c = new Comment("Generic template type",CommentType.SingleLine);
+            Comment c = new Comment("Generic template type", CommentType.SingleLine);
             c.AcceptVisitor(this, data);
             WriteAttributes(typeDeclaration.Attributes);
 
             WriteTypeParameters(typeDeclaration.TypeParameters, true);
             // HERE GOES THE TEMPLATE !
-            BraceStyle braceStyle2;
-            switch (typeDeclaration.ClassType)
-            {
-                case ClassType.Enum:
-                    WriteKeyword("enum");
-                    braceStyle2 = policy.EnumBraceStyle;
-                    break;
-                case ClassType.Interface:
-                    WriteKeyword("interface");
-                    braceStyle2 = policy.InterfaceBraceStyle;
-                    break;
-                case ClassType.Struct:
-                    WriteKeyword("struct");
-                    braceStyle2 = policy.StructBraceStyle;
-                    break;
-                default:
-                    WriteKeyword("class");
-                    braceStyle2 = policy.ClassBraceStyle;
-                    break;
-            }
+            BraceStyle braceStyle2 = WriteClassType(typeDeclaration.ClassType);
             WriteIdentifier(typeDeclaration.Name);
 
             Space();
@@ -1622,13 +1583,46 @@ namespace ICSharpCode.NRefactory.Cpp
             {
                 WriteInlineMembers(typeDeclaration.Members, typeDeclaration.Name);
             }
-            CloseBrace(braceStyle);//END OF TYPE
+            CloseBrace(braceStyle2);//END OF TYPE
             Semicolon();
             #endregion
 
             CloseNamespaceBraces();
 
             formatter.ChangeFile("tmp");
+        }
+
+        public object VisitNestedTypeDeclaration(NestedTypeDeclaration nestedTypeDeclaration, object data)
+        {
+            StartNode(nestedTypeDeclaration);
+            formatter.WriteComment(CommentType.SingleLine, "Nested Class: " + nestedTypeDeclaration.Type.Name);
+            TypeDeclaration typeDeclaration = nestedTypeDeclaration.Type;
+
+            BraceStyle braceStyle = WriteClassType(typeDeclaration.ClassType);
+
+            WriteIdentifier(typeDeclaration.Name);
+            WriteTypeParameters(typeDeclaration.TypeParameters);
+
+            Space();
+            WriteToken(":", TypeDeclaration.ColonRole);
+            Space();
+            //ÑAPA se añade virtual modifier y se quita
+            var modif = new CppModifierToken(TextLocation.Empty, Modifiers.Virtual);
+            typeDeclaration.ModifierTokens.Add(modif);
+            WriteCommaSeparatedListWithModifiers(typeDeclaration.BaseTypes, typeDeclaration.ModifierTokens);
+            typeDeclaration.ModifierTokens.Remove(modif);
+
+            OpenBrace(braceStyle);
+            foreach (var member in typeDeclaration.Members)
+            {
+                WriteAccesorModifier(member.ModifierTokens);
+                member.AcceptVisitor(this, data);
+            }
+
+            CloseBrace(braceStyle);//END OF TYPE
+            Semicolon();
+            NewLine();
+            return EndNode(nestedTypeDeclaration);
         }
 
         private void TypeDeclarationCPP(TypeDeclaration typeDeclaration, object data)
@@ -1644,10 +1638,36 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteNamespace();
 
             foreach (var member in typeDeclaration.Members)
-                member.AcceptVisitor(this, data);
+            {
+                //TODO: DO AbstractTypeDeclaration node
+                if (!(member is HeaderAbstractMethodDeclaration))
+                    member.AcceptVisitor(this, data);
+            }
 
             NewLine();
             CloseNamespaceBraces();
+        }
+
+        private BraceStyle WriteClassType(ClassType classType)
+        {
+            BraceStyle braceStyle;
+            switch (classType)
+            {
+                case ClassType.Enum:
+                    WriteKeyword("enum");
+                    braceStyle = policy.EnumBraceStyle;
+                    break;
+                case ClassType.Struct:
+                    WriteKeyword("struct");
+                    braceStyle = policy.StructBraceStyle;
+                    break;
+                default:
+                    WriteKeyword("class");
+                    braceStyle = policy.ClassBraceStyle;
+                    break;
+            }
+
+            return braceStyle;
         }
 
         private void TypeDeclarationHeader(TypeDeclaration typeDeclaration, object data)
@@ -1676,11 +1696,8 @@ namespace ICSharpCode.NRefactory.Cpp
                 NewLine();
             }
             NewLine();
-
             UsingNamespaces();
-
             Resolver.Restart();
-
             WriteNamespace();
 
             string type2 = String.Empty;
@@ -1688,27 +1705,10 @@ namespace ICSharpCode.NRefactory.Cpp
                 WriteForwardDeclaration(type2);
 
             WriteAttributes(typeDeclaration.Attributes);
-            //WriteModifiers(typeDeclaration.ModifierTokens);
-            BraceStyle braceStyle;
-            switch (typeDeclaration.ClassType)
-            {
-                case ClassType.Enum:
-                    WriteKeyword("enum");
-                    braceStyle = policy.EnumBraceStyle;
-                    break;
-                case ClassType.Interface:
-                    WriteKeyword("interface");
-                    braceStyle = policy.InterfaceBraceStyle;
-                    break;
-                case ClassType.Struct:
-                    WriteKeyword("struct");
-                    braceStyle = policy.StructBraceStyle;
-                    break;
-                default:
-                    WriteKeyword("class");
-                    braceStyle = policy.ClassBraceStyle;
-                    break;
-            }
+            //WriteModifiers(typeDeclaration.ModifierTokens);           
+
+            BraceStyle braceStyle = WriteClassType(typeDeclaration.ClassType);
+
             WriteIdentifier(typeDeclaration.Name);
             WriteTypeParameters(typeDeclaration.TypeParameters);
 
@@ -1744,7 +1744,7 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             else
             {
-                foreach (AstNode n in Cache.GetHeaderNodes())                
+                foreach (AstNode n in Cache.GetHeaderNodes())
                     n.AcceptVisitor(this, data);
             }
             CloseBrace(braceStyle);//END OF TYPE
@@ -1754,6 +1754,8 @@ namespace ICSharpCode.NRefactory.Cpp
 
             formatter.ChangeFile("tmp");
         }
+
+        #endregion
 
         private void WriteForwardDeclaration(string forwardDeclaration)
         {
@@ -1841,9 +1843,9 @@ namespace ICSharpCode.NRefactory.Cpp
                 constructorDeclaration.Initializer.AcceptVisitor(this, data);
             }
             WriteMethodBody(constructorDeclaration.Body);
-           
+
             return EndNode(constructorDeclaration);
-        }       
+        }
 
         public object VisitConstructorInitializer(ConstructorInitializer constructorInitializer, object data)
         {
@@ -1872,16 +1874,16 @@ namespace ICSharpCode.NRefactory.Cpp
 
             WriteIdentifier(type != null ? (isGenericTemplate ? type.Name + "_Base" : type.Name) : (isGenericTemplate ? destructorDeclaration.Name + "_Base" : destructorDeclaration.Name));
             WriteToken("::", MethodDeclaration.Roles.Dot);
-           
+
             WriteToken("~", DestructorDeclaration.TildeRole);
             WriteIdentifier(type != null ? (isGenericTemplate ? type.Name + "_Base" : type.Name) : (isGenericTemplate ? destructorDeclaration.Name + "_Base" : destructorDeclaration.Name));
 
             Space(policy.SpaceBeforeConstructorDeclarationParentheses);
             LPar();
             RPar();
-            WriteMethodBody(destructorDeclaration.Body);            
+            WriteMethodBody(destructorDeclaration.Body);
             return EndNode(destructorDeclaration);
-        }       
+        }
 
         public object VisitEnumMemberDeclaration(EnumMemberDeclaration enumMemberDeclaration, object data)
         {
@@ -1950,7 +1952,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 WriteToken("::", MethodDeclaration.Roles.DoubleColon);
 
                 WriteCommaSeparatedList(fieldDeclaration.Variables);
-                Semicolon();               
+                Semicolon();
             }
             return EndNode(fieldDeclaration);
         }
@@ -2015,11 +2017,11 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteAttributes(methodDeclaration.Attributes);
             //WriteAccesorModifier(methodDeclaration.ModifierTokens);         
             methodDeclaration.ReturnType.AcceptVisitor(this, data);
-            Space();           
+            Space();
 
             //TODO: se podria implementar mejor ?
             TypeDeclaration type = methodDeclaration.Parent as TypeDeclaration;
-            
+
             Identifier tdecl = methodDeclaration.TypeMember;
 
             WriteIdentifier(type == null ? (tdecl != null ? (isGenericTemplate ? tdecl.Name + "_T_Base" : tdecl.Name) : String.Empty) : (isGenericTemplate ? type.Name + "_Base" : type.Name), MethodDeclaration.Roles.Identifier);
@@ -2031,9 +2033,40 @@ namespace ICSharpCode.NRefactory.Cpp
             Space(policy.SpaceBeforeMethodDeclarationParentheses);
             WriteCommaSeparatedListInParenthesis(methodDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
             WriteMethodBody(methodDeclaration.Body);
-            
+
             return EndNode(methodDeclaration);
-        }       
+        }
+
+        public object VisitConversionConstructorDeclaration(ConversionConstructorDeclaration conversionConstructorDeclaration, object data)
+        {
+            StartNode(conversionConstructorDeclaration);
+            WriteAttributes(conversionConstructorDeclaration.Attributes);
+            WriteToken(conversionConstructorDeclaration.type, ConversionConstructorDeclaration.TypeRole);
+            WriteToken("::", ConversionConstructorDeclaration.Roles.DoubleColon);
+            WriteKeyword("operator", OperatorDeclaration.OperatorKeywordRole);
+            conversionConstructorDeclaration.ReturnType.AcceptVisitor(this, data);
+            Space();
+            LPar();
+            RPar();
+            WriteMethodBody(conversionConstructorDeclaration.Body);
+            return EndNode(conversionConstructorDeclaration);
+        }
+
+        public object VisitHeaderConversionConstructorDeclaration(HeaderConversionConstructorDeclaration headerConversionConstructorDeclaration, object data)
+        {
+            StartNode(headerConversionConstructorDeclaration);
+            WriteAttributes(headerConversionConstructorDeclaration.Attributes);
+            WriteAccesorModifier(headerConversionConstructorDeclaration.ModifierTokens);
+            //WriteModifiers(headerConversionConstructorDeclaration.ModifierTokens);
+
+            WriteKeyword("operator", OperatorDeclaration.OperatorKeywordRole);
+            headerConversionConstructorDeclaration.ReturnType.AcceptVisitor(this, data);
+            Space();
+            LPar();
+            RPar();
+            Semicolon();
+            return EndNode(headerConversionConstructorDeclaration);
+        }
 
         public object VisitOperatorDeclaration(OperatorDeclaration operatorDeclaration, object data)
         {
@@ -2291,7 +2324,7 @@ namespace ICSharpCode.NRefactory.Cpp
         //    return EndNode(constraint);
         //}
 
-        public object VisitCSharpTokenNode(CppTokenNode cSharpTokenNode, object data)
+        public object VisitCppTokenNode(CppTokenNode cSharpTokenNode, object data)
         {
             CppModifierToken mod = cSharpTokenNode as CppModifierToken;
             if (mod != null)
@@ -3268,12 +3301,19 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitPointerExpression(PointerExpression pointerExpression, object data)
         {
             StartNode(pointerExpression);
-            LPar();
+            LPar();//TODO: I DON'T LIKE THIS PARENTHESIS
             WriteToken("*", PointerExpression.AsteriskRole);
             pointerExpression.Target.AcceptVisitor(this, data);
             return EndNode(pointerExpression);
         }
 
+        public object VisitAddressOfExpression(AddressOfExpression addressOfExpression, object data)
+        {
+            StartNode(addressOfExpression);
+            WriteToken("&", AddressOfExpression.AmpersandRole);
+            addressOfExpression.Target.AcceptVisitor(this, data);
+            return EndNode(addressOfExpression);
+        }
 
         public object VisitPointerIdentifierExpression(PointerIdentifierExpression pointerIdentifierExpression, object data)
         {
@@ -3328,7 +3368,7 @@ namespace ICSharpCode.NRefactory.Cpp
             Semicolon();
             //return EndNode(destructorDeclaration);
             formatter.Unindent();
-            return null;  
+            return null;
         }
 
         public object VisitHeaderFieldDeclaration(HeaderFieldDeclaration headerFieldDeclaration, object data)
@@ -3382,6 +3422,34 @@ namespace ICSharpCode.NRefactory.Cpp
             formatter.Unindent();
             //return EndNode(methodDeclaration);
             return null;
+        }
+
+        public object VisitHeaderAbstractMethodDeclaration(HeaderAbstractMethodDeclaration headerAbstractMethodDeclaration, object data)
+        {
+            StartNode(headerAbstractMethodDeclaration);
+            WriteAttributes(headerAbstractMethodDeclaration.Attributes);
+
+            WriteAccesorModifier(headerAbstractMethodDeclaration.ModifierTokens);
+            formatter.Indent();
+
+            WriteKeyword("virtual");
+
+            headerAbstractMethodDeclaration.ReturnType.AcceptVisitor(this, data);
+            Space();
+
+            WritePrivateImplementationType(headerAbstractMethodDeclaration.PrivateImplementationType);//TODO: Maybe it has to be removed ?
+
+            WriteIdentifier(headerAbstractMethodDeclaration.Name);
+            WriteTypeParameters(headerAbstractMethodDeclaration.TypeParameters);
+            Space(policy.SpaceBeforeMethodDeclarationParentheses);
+            WriteCommaSeparatedListInParenthesis(headerAbstractMethodDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
+            Space();
+            WriteToken("=", HeaderAbstractMethodDeclaration.EqualToken);
+            Space();
+            WriteToken("0", HeaderAbstractMethodDeclaration.ZeroToken);
+            Semicolon();
+            formatter.Unindent();
+            return EndNode(headerAbstractMethodDeclaration);
         }
         #endregion
     }

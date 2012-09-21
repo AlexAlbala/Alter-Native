@@ -46,7 +46,7 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
 	{
         public static readonly new TypeDeclaration Null = new NullTypeDeclaration();
 		public readonly static Role<CppTokenNode> ColonRole = Roles.Colon;
-		public readonly static Role<AstType> BaseTypeRole = new Role<AstType>("BaseType", AstType.Null);
+		public readonly static Role<AstType> BaseTypeRole = new Role<AstType>("BaseType", AstType.Null);        
 		public readonly static Role<AttributedNode> MemberRole = new Role<AttributedNode>("Member");
 
         sealed class NullTypeDeclaration : TypeDeclaration

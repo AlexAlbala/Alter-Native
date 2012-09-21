@@ -6,10 +6,10 @@ using System;
 
 namespace ICSharpCode.NRefactory.Cpp
 {
-    public class HeaderMethodDeclaration : MemberDeclaration
+    public class HeaderMethodDeclaration : MethodDeclaration
     {
         public static readonly new HeaderMethodDeclaration Null = new HeaderNullMethodDeclaration();
-        public static readonly Role<Identifier> TypeRole = new Role<Identifier>("type", Identifier.Null);
+        //public static readonly Role<Identifier> TypeRole = new Role<Identifier>("type", Identifier.Null);
 
         sealed class HeaderNullMethodDeclaration : HeaderMethodDeclaration
         {
@@ -32,46 +32,11 @@ namespace ICSharpCode.NRefactory.Cpp
             }
         }
 
-        public AstNodeCollection<TypeParameterDeclaration> TypeParameters
-        {
-            get { return GetChildrenByRole(Roles.TypeParameter); }
-        }
-
-        public CppTokenNode LParToken
-        {
-            get { return GetChildByRole(Roles.LPar); }
-        }
-
-        public Identifier TypeMember
-        {
-            get { return GetChildByRole(TypeRole); }
-            set { SetChildByRole(TypeRole, value); }
-        }
-
         public string Namespace
         {
             get;
             set;
-        }
-
-        public AstNodeCollection<ParameterDeclaration> Parameters
-        {
-            get { return GetChildrenByRole(Roles.Parameter); }
-        }
-
-        public CppTokenNode RParToken
-        {
-            get { return GetChildByRole(Roles.RPar); }
-        }
-
-        public bool IsExtensionMethod
-        {
-            get
-            {
-                ParameterDeclaration pd = (ParameterDeclaration)GetChildByRole(Roles.Parameter);
-                return pd != null && pd.ParameterModifier == ParameterModifier.This;
-            }
-        }
+        }       
 
         public override S AcceptVisitor<T, S>(IAstVisitor<T, S> visitor, T data = default(T))
         {

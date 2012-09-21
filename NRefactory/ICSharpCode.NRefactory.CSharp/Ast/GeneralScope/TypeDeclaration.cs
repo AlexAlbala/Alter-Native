@@ -48,7 +48,7 @@ namespace ICSharpCode.NRefactory.CSharp
 		public readonly static Role<AttributedNode> MemberRole = new Role<AttributedNode>("Member");
 		
 		public override NodeType NodeType {
-			get {
+			get {                
 				return NodeType.TypeDeclaration;
 			}
 		}

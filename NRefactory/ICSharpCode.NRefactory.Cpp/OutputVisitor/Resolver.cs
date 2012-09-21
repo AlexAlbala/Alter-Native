@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Mono.Cecil;
+using ICSharpCode.NRefactory.Cpp.Ast;
 
 namespace ICSharpCode.NRefactory.Cpp
 {
@@ -68,7 +69,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     kvp.Value.Remove(kvp.Key);
             }
             Cache.SaveIncludes(includes);
-        }      
+        }
 
         /// <summary>
         /// Returns if a forward declaration is needed between two types
@@ -228,13 +229,13 @@ namespace ICSharpCode.NRefactory.Cpp
             Cache.ClearResolver();
         }
 
-        public static void AddSymbol(string type, TypeReference reference)
-        {
-            Cache.AddSymbol(type, reference);
+        //public static void AddSymbol(string type, TypeReference reference)
+        //{
+        //    Cache.AddSymbol(type, reference);
 
-            string namesp = reference.Namespace;
-            AddNamespace(namesp);
-        }
+        //    string namesp = reference.Namespace;
+        //    AddNamespace(namesp);
+        //}
 
         private static void AddNamespace(string nameSpace)
         {
@@ -245,6 +246,274 @@ namespace ICSharpCode.NRefactory.Cpp
         public static string[] GetNeededNamespaces()
         {
             return Cache.GetNamespaces().ToArray();
+        }
+
+        public static string GetTypeName(Ast.AstType type)
+        {
+            if (type is SimpleType)
+                return (type as SimpleType).Identifier;
+            else if (type is PtrType)
+            {
+                PtrType p = type as PtrType;
+                return GetTypeName(p.Target);
+            }
+            else if (type == AstType.Null)
+                return String.Empty;
+            else
+                throw new NotImplementedException(type.ToString());
+        }
+
+        public static void RemoveHeaderNode(AstNode node)
+        {
+            if (node is ConstructorDeclaration)
+            {
+                for (int i = 0; i < Cache.GetHeaderNodes().Count; i++)
+                {
+                    if (Cache.GetHeaderNodes().ElementAt(i) is HeaderConstructorDeclaration)
+                    {
+                        var hc = Cache.GetHeaderNodes().ElementAt(i) as HeaderConstructorDeclaration;
+                        if (hc.Name == (node as ConstructorDeclaration).Name)
+                            Cache.GetHeaderNodes().RemoveAt(i);
+
+                    }
+                }
+            }
+            else if (node is DestructorDeclaration)
+            {
+                for (int i = 0; i < Cache.GetHeaderNodes().Count; i++)
+                {
+                    if (Cache.GetHeaderNodes().ElementAt(i) is HeaderDestructorDeclaration)
+                    {
+                        var hc = Cache.GetHeaderNodes().ElementAt(i) as HeaderDestructorDeclaration;
+                        if (hc.Name == (node as DestructorDeclaration).Name)
+                            Cache.GetHeaderNodes().RemoveAt(i);
+                    }
+                }
+            }
+            else if (node is FieldDeclaration)
+            {
+                for (int i = 0; i < Cache.GetHeaderNodes().Count; i++)
+                {
+                    if (Cache.GetHeaderNodes().ElementAt(i) is HeaderFieldDeclaration)
+                    {
+                        var hc = Cache.GetHeaderNodes().ElementAt(i) as HeaderFieldDeclaration;
+                        foreach (VariableInitializer v in (node as FieldDeclaration).Variables)
+                        {
+                            var n = hc.Variables.FirstOrNullObject(x => x.Name == v.Name);
+                            if (n != null)
+                                hc.Variables.Remove(n);
+
+                            if (!hc.Variables.Any())
+                                Cache.GetHeaderNodes().RemoveAt(i);
+
+                        }
+                    }
+                }
+            }
+            else if (node is MethodDeclaration)
+            {
+                for (int i = 0; i < Cache.GetHeaderNodes().Count; i++)
+                {
+                    if (Cache.GetHeaderNodes().ElementAt(i) is HeaderMethodDeclaration)
+                    {
+                        var hc = Cache.GetHeaderNodes().ElementAt(i) as HeaderMethodDeclaration;
+                        if (hc.Name == (node as MethodDeclaration).Name &&
+                            GetTypeName(hc.PrivateImplementationType) == GetTypeName((node as MethodDeclaration).PrivateImplementationType))
+                        {
+                            Cache.GetHeaderNodes().RemoveAt(i);
+                        }
+                    }
+                }
+            }
+        }
+
+        public static void GetNestedTypes(TypeDeclaration currentType)
+        {
+            string currentTypeName = currentType.Name;
+
+            //SEARCH FOR THE METHODS IN THE CURRENT TYPE THAT SHOULD BE IMPLEMENTED IN A NESTED CLASS
+            List<MethodDeclaration> methodsOfCurrentType = new List<MethodDeclaration>();
+            foreach (KeyValuePair<AstType, List<MethodDeclaration>> kvp in Cache.GetPrivateImplementation())
+            {
+                foreach (MethodDeclaration m in kvp.Value)
+                {
+                    if (m.TypeMember.Name == currentTypeName)
+                        methodsOfCurrentType.Add(m);
+                }
+            }
+
+            //CREATE A DICTIONARY WITH THE NESTEDCLASS AND METHODS NEEDED (SORTED)
+            Dictionary<AstType, List<MethodDeclaration>> privateImplClass = new Dictionary<AstType, List<MethodDeclaration>>();
+            foreach (MethodDeclaration m in methodsOfCurrentType)
+            {
+                foreach (KeyValuePair<AstType, List<MethodDeclaration>> kvp in Cache.GetPrivateImplementation())
+                {
+                    if (kvp.Value.Contains(m))
+                    {
+                        //If the method private implementation is corresponding to the current key type in the loop, continue
+                        if (GetTypeName(m.PrivateImplementationType) == GetTypeName(kvp.Key))
+                        {
+                            //REMOVE THE METHOD FROM THE CURRENT TYPE                            
+                            currentType.Members.Remove(m);
+                            RemoveHeaderNode(m);
+
+                            //REMOVE THE PRIVATE IMPLEMENTATION
+                            m.PrivateImplementationType = Ast.AstType.Null;
+
+                            //Add the method in the sorted dictionary
+                            if (privateImplClass.ContainsKey(kvp.Key))
+                                privateImplClass[kvp.Key].Add((MethodDeclaration)m.Clone());
+
+                            else
+                                privateImplClass.Add(kvp.Key, new List<MethodDeclaration>() { (MethodDeclaration)m.Clone() });
+
+                        }
+                    }
+                }
+            }
+
+            //CREATE FROM THE NESTED CLASS THE NESTEDTYPEDECLARATION NODE
+            foreach (KeyValuePair<AstType, List<MethodDeclaration>> kvp in privateImplClass)
+            {
+                TypeDeclaration type = new TypeDeclaration();
+                string nestedTypeName = "_nested_" + GetTypeName(kvp.Key);
+                type.NameToken = new Identifier(nestedTypeName, TextLocation.Empty);
+                type.Name = nestedTypeName;
+                type.ModifierTokens.Add(new CppModifierToken(TextLocation.Empty,Modifiers.Public));
+
+                //ADD BASE TYPES
+                AstType baseType = new SimpleType(GetTypeName(kvp.Key));
+                AstType objectType = new SimpleType("Object");
+                AstType gcType = new SimpleType("gc_cleanup");
+                type.AddChild(baseType, TypeDeclaration.BaseTypeRole);
+                type.AddChild(objectType, TypeDeclaration.BaseTypeRole);
+                type.AddChild(gcType, TypeDeclaration.BaseTypeRole);
+
+                //REMOVE THE BASE TYPE BECAUSE THE NESTED TYPE WILL INHERIT FROM IT
+                currentType.BaseTypes.Remove(currentType.BaseTypes.First(x => GetTypeName(x) == GetTypeName(baseType)));
+
+                //ADD METHODS
+                type.Members.AddRange(kvp.Value);
+
+                //ADD NESTED TYPE TO THE HEADER DECLARATION
+                Cache.AddHeaderNode(new Ast.NestedTypeDeclaration(type));
+                
+                //ADD FIELD
+                HeaderFieldDeclaration fdecl = new HeaderFieldDeclaration();
+                AstType nestedType = new SimpleType(nestedTypeName);
+                fdecl.ReturnType = nestedType;
+                string _tmp = "_" + GetTypeName(fdecl.ReturnType).ToLower();
+                fdecl.Variables.Add(new VariableInitializer(_tmp));
+                //ADD FIELD TO THE GLOBAL CLASS
+                Cache.AddHeaderNode(fdecl);                
+
+                //ADD OPERATORS TO THE GLOBAL CLASS
+                //ADD OPERATOR HEADER NODE
+                ConversionConstructorDeclaration op = new ConversionConstructorDeclaration();
+                op.ReturnType = new PtrType((AstType)kvp.Key.Clone());
+                op.ModifierTokens.Add(new CppModifierToken(TextLocation.Empty, Modifiers.Public));
+                op.type = currentTypeName;
+                BlockStatement blck = new BlockStatement();
+                Statement st = new ReturnStatement(new AddressOfExpression(new IdentifierExpression(_tmp)));
+                blck.Add(st);
+                op.Body = blck;
+
+                HeaderConversionConstructorDeclaration hc = new HeaderConversionConstructorDeclaration();
+                GetHeaderNode(op, hc);
+                Cache.AddHeaderNode(hc);
+
+                currentType.Members.Add(op);            
+            }
+        }
+
+        public static void GetHeaderNode(AstNode node, AstNode headerNode)
+        {
+            if (node is ConstructorDeclaration)
+            {
+                var _node = node as ConstructorDeclaration;
+                var _header = headerNode as HeaderConstructorDeclaration;
+
+                foreach (var token in _node.ModifierTokens)
+                    headerNode.AddChild((CppModifierToken)token.Clone(), HeaderConstructorDeclaration.ModifierRole);
+
+                foreach (var att in _node.Attributes)
+                    headerNode.AddChild((AttributeSection)att.Clone(), HeaderConstructorDeclaration.AttributeRole);
+
+                foreach (var param in _node.Parameters)
+                    headerNode.AddChild((ParameterDeclaration)param.Clone(), HeaderConstructorDeclaration.Roles.Parameter);
+
+                _header.Name = _node.Name;
+                _header.IdentifierToken = (Identifier)_node.IdentifierToken.Clone();
+
+            }
+            if (node is DestructorDeclaration)
+            {
+                var _node = node as DestructorDeclaration;
+                var _header = headerNode as HeaderDestructorDeclaration;
+
+                foreach (var token in _node.ModifierTokens)
+                    headerNode.AddChild((CppModifierToken)token.Clone(), HeaderConstructorDeclaration.ModifierRole);
+
+                foreach (var att in _node.Attributes)
+                    headerNode.AddChild((AttributeSection)att.Clone(), HeaderConstructorDeclaration.AttributeRole);
+
+                _header.Name = _node.Name;
+            }
+            if (node is FieldDeclaration)
+            {
+                var _node = node as FieldDeclaration;
+                var _header = headerNode as HeaderFieldDeclaration;
+
+                _header.ReturnType = (AstType)_node.ReturnType.Clone();
+
+                foreach (var token in _node.ModifierTokens)
+                    headerNode.AddChild((CppModifierToken)token.Clone(), HeaderConstructorDeclaration.ModifierRole);
+
+                foreach (var att in _node.Attributes)
+                    headerNode.AddChild((AttributeSection)att.Clone(), HeaderConstructorDeclaration.AttributeRole);
+
+                for (int i = 0; i < _node.Variables.Count; i++)
+                {
+                    VariableInitializer vi = _node.Variables.ElementAt(i);
+
+                    _header.Variables.Add(_node.HasModifier(Modifiers.Static) ? new VariableInitializer(vi.Name) : (VariableInitializer)vi.Clone());
+                }
+            }
+            if (node is MethodDeclaration)
+            {
+                var _node = node as MethodDeclaration;
+                var _header = headerNode as HeaderMethodDeclaration;
+
+                foreach (var token in _node.ModifierTokens)
+                    headerNode.AddChild((CppModifierToken)token.Clone(), HeaderConstructorDeclaration.ModifierRole);
+
+                foreach (var att in _node.Attributes)
+                    headerNode.AddChild((AttributeSection)att.Clone(), HeaderConstructorDeclaration.AttributeRole);
+
+                foreach (var param in _node.Parameters)
+                    headerNode.AddChild((ParameterDeclaration)param.Clone(), HeaderConstructorDeclaration.Roles.Parameter);
+
+                foreach (var tparam in _node.TypeParameters)
+                    _header.TypeParameters.Add((TypeParameterDeclaration)tparam.Clone());
+
+                _header.ReturnType = (AstType)_node.ReturnType.Clone();
+                _header.PrivateImplementationType = (AstType)_node.PrivateImplementationType.Clone();
+                _header.TypeMember = (Identifier)_node.TypeMember.Clone();
+                _header.NameToken = (Identifier)_node.NameToken.Clone();
+            }
+            if (node is ConversionConstructorDeclaration)
+            {
+                var _node = node as ConversionConstructorDeclaration;
+                var _header = headerNode as HeaderConversionConstructorDeclaration;
+
+                foreach (var token in _node.ModifierTokens)
+                    headerNode.AddChild((CppModifierToken)token.Clone(), HeaderConstructorDeclaration.ModifierRole);
+
+                foreach (var att in _node.Attributes)
+                    headerNode.AddChild((AttributeSection)att.Clone(), HeaderConstructorDeclaration.AttributeRole);
+
+                _header.ReturnType = (AstType)_node.ReturnType.Clone();
+            }
         }
     }
 }
