@@ -581,10 +581,15 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitIndexerExpression(IndexerExpression indexerExpression, object data)
         {
             StartNode(indexerExpression);
-            //Add parenthesis if the parent is pointer expression: *a[3] is incorrect but (*a)[3] is correct !           
+
+            //Add parenthesis if the parent is pointer expression: *a[3] is incorrect but (*a)[3] is correct !    
+            if (indexerExpression.Parent is PointerExpression)
+                LPar();       
             indexerExpression.Target.AcceptVisitor(this, data);
+
             if (indexerExpression.Parent is PointerExpression)
                 RPar();
+            
             Space(policy.SpaceBeforeMethodCallParentheses);
             WriteCommaSeparatedListInBrackets(indexerExpression.Arguments);
             return EndNode(indexerExpression);
@@ -1437,21 +1442,127 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             //WRITE FIRST CPP AND THEN .H
             StartNode(typeDeclaration);
-            if (typeDeclaration.TypeParameters.Any())
-            {
-                isGenericTemplate = true;
+            isGenericTemplate = false;
+            if (typeDeclaration.ClassType != ClassType.Enum)
                 TypeDeclarationCPP(typeDeclaration, data);
-                TypeDeclarationTemplatesHeader(typeDeclaration, data);
+
+            TypeDeclarationHeader(typeDeclaration, data);
+            return EndNode(typeDeclaration);
+        }
+
+        private void TypeDeclarationCPP(TypeDeclaration typeDeclaration, object data)
+        {
+            formatter.ChangeFile(typeDeclaration.Name + ".cpp");
+            FileWritterManager.AddSourceFile(typeDeclaration.Name + ".cpp");
+
+            WriteKeyword("#include");
+            Space();
+            WriteIdentifier("\"" + typeDeclaration.Name + ".h\"", TypeDeclaration.Roles.Identifier);
+            NewLine();
+
+            WriteNamespace();
+
+            foreach (var member in typeDeclaration.Members)
+            {
+                //TODO: DO AbstractTypeDeclaration node
+                if (!(member is HeaderAbstractMethodDeclaration))
+                    member.AcceptVisitor(this, data);
+            }
+
+            NewLine();
+            CloseNamespaceBraces();
+        }
+
+        private void TypeDeclarationHeader(TypeDeclaration typeDeclaration, object data)
+        {
+            formatter.ChangeFile(typeDeclaration.Name + ".h");
+            FileWritterManager.AddSourceFile(typeDeclaration.Name + ".h");
+
+            WriteKeyword("#pragma", TypeDeclaration.Roles.Keyword);
+            WriteKeyword("once", TypeDeclaration.Roles.Keyword);
+            NewLine();
+
+            //Write using declarations in header file
+            foreach (AstNode n in Cache.GetHeaderNodes())
+            {
+                if (n is IncludeDeclaration)
+                {
+                    VisitIncludeDeclarationHeader(n as IncludeDeclaration, data);
+                }
+            }
+
+            //WRITE RESOLVED TYPE DEPENDENCES
+            foreach (string s in Resolver.GetTypeIncludes())
+            {
+                WriteKeyword("#include");
+                WriteIdentifier(s);
+                NewLine();
+            }
+            NewLine();
+            UsingNamespaces();
+            Resolver.Restart();
+            WriteNamespace();
+
+            string type2 = String.Empty;
+            if (Resolver.NeedsForwardDeclaration(typeDeclaration.Name, out type2))
+                WriteForwardDeclaration(type2);
+
+            WriteAttributes(typeDeclaration.Attributes);
+            //WriteModifiers(typeDeclaration.ModifierTokens);           
+
+            BraceStyle braceStyle = WriteClassType(typeDeclaration.ClassType);
+
+            WriteIdentifier(typeDeclaration.Name);
+            WriteTypeParameters(typeDeclaration.TypeParameters);
+
+            Space();
+            WriteToken(":", TypeDeclaration.ColonRole);
+            Space();
+            //ÑAPA se añade virtual modifier y se quita
+            var modif = new CppModifierToken(TextLocation.Empty, Modifiers.Virtual);
+            typeDeclaration.ModifierTokens.Add(modif);
+            WriteCommaSeparatedListWithModifiers(typeDeclaration.BaseTypes, typeDeclaration.ModifierTokens);
+            typeDeclaration.ModifierTokens.Remove(modif);
+
+            OpenBrace(braceStyle);
+
+            if (typeDeclaration.ClassType == ClassType.Enum)
+            {
+                bool first = true;
+                foreach (var member in typeDeclaration.Members)
+                {
+                    if (first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        Comma(member, noSpaceAfterComma: true);
+                        NewLine();
+                    }
+                    member.AcceptVisitor(this, data);
+                }
+                //OptionalComma();
+                NewLine();
             }
             else
             {
-                isGenericTemplate = false;
-                if (typeDeclaration.ClassType != ClassType.Enum)
-                    TypeDeclarationCPP(typeDeclaration, data);
-
-                TypeDeclarationHeader(typeDeclaration, data);
+                foreach (AstNode n in Cache.GetHeaderNodes())
+                    n.AcceptVisitor(this, data);
             }
-            return EndNode(typeDeclaration);
+            CloseBrace(braceStyle);//END OF TYPE
+            Semicolon();
+            CloseNamespaceBraces();
+            Cache.ClearHeaderNodes();
+
+            formatter.ChangeFile("tmp");
+        }
+
+        public object VisitInterfaceTypeDeclaration(InterfaceTypeDeclaration interfaceTypeDeclaration, object data)
+        {
+            StartNode(interfaceTypeDeclaration);
+            TypeDeclarationHeader(interfaceTypeDeclaration.Type, data);
+            return EndNode(interfaceTypeDeclaration);
         }
 
         private void TypeDeclarationTemplatesHeader(TypeDeclaration typeDeclaration, object data)
@@ -1625,27 +1736,15 @@ namespace ICSharpCode.NRefactory.Cpp
             return EndNode(nestedTypeDeclaration);
         }
 
-        private void TypeDeclarationCPP(TypeDeclaration typeDeclaration, object data)
+        public object VisitGenericTemplateTypeDeclaration(GenericTemplateTypeDeclaration genericTemplateTypeDeclaration, object data)
         {
-            formatter.ChangeFile(typeDeclaration.Name + ".cpp");
-            FileWritterManager.AddSourceFile(typeDeclaration.Name + ".cpp");
-
-            WriteKeyword("#include");
-            Space();
-            WriteIdentifier("\"" + typeDeclaration.Name + ".h\"", TypeDeclaration.Roles.Identifier);
-            NewLine();
-
-            WriteNamespace();
-
-            foreach (var member in typeDeclaration.Members)
-            {
-                //TODO: DO AbstractTypeDeclaration node
-                if (!(member is HeaderAbstractMethodDeclaration))
-                    member.AcceptVisitor(this, data);
-            }
-
-            NewLine();
-            CloseNamespaceBraces();
+            //TODO: If there is generic AND interface type ????
+            isGenericTemplate = true;
+            StartNode(genericTemplateTypeDeclaration);
+            if (genericTemplateTypeDeclaration.Type.ClassType != ClassType.Interface)
+                TypeDeclarationCPP(genericTemplateTypeDeclaration.Type, data);
+            TypeDeclarationTemplatesHeader(genericTemplateTypeDeclaration.Type, data);
+            return EndNode(genericTemplateTypeDeclaration);
         }
 
         private BraceStyle WriteClassType(ClassType classType)
@@ -1670,91 +1769,6 @@ namespace ICSharpCode.NRefactory.Cpp
             return braceStyle;
         }
 
-        private void TypeDeclarationHeader(TypeDeclaration typeDeclaration, object data)
-        {
-            formatter.ChangeFile(typeDeclaration.Name + ".h");
-            FileWritterManager.AddSourceFile(typeDeclaration.Name + ".h");
-
-            WriteKeyword("#pragma", TypeDeclaration.Roles.Keyword);
-            WriteKeyword("once", TypeDeclaration.Roles.Keyword);
-            NewLine();
-
-            //Write using declarations in header file
-            foreach (AstNode n in Cache.GetHeaderNodes())
-            {
-                if (n is IncludeDeclaration)
-                {
-                    VisitIncludeDeclarationHeader(n as IncludeDeclaration, data);
-                }
-            }
-
-            //WRITE RESOLVED TYPE DEPENDENCES
-            foreach (string s in Resolver.GetTypeIncludes())
-            {
-                WriteKeyword("#include");
-                WriteIdentifier(s);
-                NewLine();
-            }
-            NewLine();
-            UsingNamespaces();
-            Resolver.Restart();
-            WriteNamespace();
-
-            string type2 = String.Empty;
-            if (Resolver.NeedsForwardDeclaration(typeDeclaration.Name, out type2))
-                WriteForwardDeclaration(type2);
-
-            WriteAttributes(typeDeclaration.Attributes);
-            //WriteModifiers(typeDeclaration.ModifierTokens);           
-
-            BraceStyle braceStyle = WriteClassType(typeDeclaration.ClassType);
-
-            WriteIdentifier(typeDeclaration.Name);
-            WriteTypeParameters(typeDeclaration.TypeParameters);
-
-            Space();
-            WriteToken(":", TypeDeclaration.ColonRole);
-            Space();
-            //ÑAPA se añade virtual modifier y se quita
-            var modif = new CppModifierToken(TextLocation.Empty, Modifiers.Virtual);
-            typeDeclaration.ModifierTokens.Add(modif);
-            WriteCommaSeparatedListWithModifiers(typeDeclaration.BaseTypes, typeDeclaration.ModifierTokens);
-            typeDeclaration.ModifierTokens.Remove(modif);
-
-            OpenBrace(braceStyle);
-
-            if (typeDeclaration.ClassType == ClassType.Enum)
-            {
-                bool first = true;
-                foreach (var member in typeDeclaration.Members)
-                {
-                    if (first)
-                    {
-                        first = false;
-                    }
-                    else
-                    {
-                        Comma(member, noSpaceAfterComma: true);
-                        NewLine();
-                    }
-                    member.AcceptVisitor(this, data);
-                }
-                //OptionalComma();
-                NewLine();
-            }
-            else
-            {
-                foreach (AstNode n in Cache.GetHeaderNodes())
-                    n.AcceptVisitor(this, data);
-            }
-            CloseBrace(braceStyle);//END OF TYPE
-            Semicolon();
-            CloseNamespaceBraces();
-            Cache.ClearHeaderNodes();
-
-            formatter.ChangeFile("tmp");
-        }
-
         #endregion
 
         private void WriteForwardDeclaration(string forwardDeclaration)
@@ -1777,18 +1791,17 @@ namespace ICSharpCode.NRefactory.Cpp
         //TODO: Put this method in the interface as VisitHeaderIncludeDeclaration
         private object VisitIncludeDeclarationHeader(IncludeDeclaration includeDeclaration, object data)
         {
+            StartNode(includeDeclaration);
             //TODO If the user has implemented a qualified namespace ?
             if (!(includeDeclaration.Import is QualifiedType))
             {
-                //StartNode(usingDeclaration);
                 WriteKeyword("#include");
                 Space();
 
                 includeDeclaration.Import.AcceptVisitor(this, data);
                 NewLine();
             }
-            //return EndNode(usingDeclaration);
-            return null;
+            return EndNode(includeDeclaration);
         }
 
         public object VisitExternAliasDeclaration(ExternAliasDeclaration externAliasDeclaration, object data)
@@ -3301,7 +3314,6 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitPointerExpression(PointerExpression pointerExpression, object data)
         {
             StartNode(pointerExpression);
-            LPar();//TODO: I DON'T LIKE THIS PARENTHESIS
             WriteToken("*", PointerExpression.AsteriskRole);
             pointerExpression.Target.AcceptVisitor(this, data);
             return EndNode(pointerExpression);

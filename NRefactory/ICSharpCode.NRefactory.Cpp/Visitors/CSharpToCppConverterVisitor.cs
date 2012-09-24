@@ -307,10 +307,46 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitIdentifierExpression(CSharp.IdentifierExpression identifierExpression, object data)
         {
+            bool needsPointer = false;
+            //We must check if the return type is different to the original type, if that is, it is necessar or maybe a cast, or maybe there is an operator. In both cases the identifier must be de-referenced:
+            //From IA* a = c; we must obtain IA* a = *c;
+            //TODO: MAYBE we should add a cast for security ?
+            if (IsChildOf(identifierExpression, typeof(CSharp.VariableInitializer)))
+            {
+                if (IsChildOf(identifierExpression, typeof(CSharp.FieldDeclaration)))
+                {
+                    var fdecl = (CSharp.FieldDeclaration)GetParentOf(identifierExpression, typeof(CSharp.FieldDeclaration));
+                    if (Resolver.GetTypeName(fdecl.ReturnType) != Resolver.GetTypeName(Resolver.GetType(identifierExpression.Identifier, currentType.Name, null, null)))
+                    {
+                        needsPointer = true;
+                    }
+                }
+                else if (IsChildOf(identifierExpression, typeof(CSharp.VariableDeclarationStatement)))
+                {
+                    var vdecl = (CSharp.VariableDeclarationStatement)GetParentOf(identifierExpression, typeof(CSharp.VariableDeclarationStatement));
+                    if (Resolver.GetTypeName(vdecl.Type) != Resolver.GetTypeName(Resolver.GetType(identifierExpression.Identifier, null, currentMethod, null)))
+                    {
+                        needsPointer = true;
+                    }
+                }
+                else if (IsChildOf(identifierExpression, typeof(CSharp.ParameterDeclaration)))
+                {
+                    var pdecl = (CSharp.ParameterDeclaration)GetParentOf(identifierExpression, typeof(CSharp.ParameterDeclaration));
+                    if (Resolver.GetTypeName(pdecl.Type) != Resolver.GetTypeName(Resolver.GetType(identifierExpression.Identifier, null, currentMethod, pdecl.Name)))
+                    {
+                        needsPointer = true;
+                    }
+                }
+            }
+
             var expr = new IdentifierExpression();
             expr.Identifier = identifierExpression.Identifier;
             ConvertNodes(identifierExpression.TypeArguments, expr.TypeArguments);
 
+           
+
+            if (needsPointer)
+                return EndNode(identifierExpression, new PointerExpression() { Target = expr });
             return EndNode(identifierExpression, expr);
         }
 
@@ -830,6 +866,16 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             Resolver.GetNestedTypes(type);
 
             Cache.AddNamespace("System");
+
+            //TODO: I'm not sure...
+            if (isInterface)
+                if (type.TypeParameters.Any())
+                    return EndNode(typeDeclaration, new GenericTemplateTypeDeclaration(new InterfaceTypeDeclaration(type)));
+                else
+                    return EndNode(typeDeclaration, new InterfaceTypeDeclaration(type));
+            if (type.TypeParameters.Any())
+                return EndNode(typeDeclaration, new GenericTemplateTypeDeclaration(type));
+
 
             return EndNode(typeDeclaration, type);
         }
@@ -1538,8 +1584,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 if (simpleType.Parent != null && (currentType == null ? "N/A" : currentType.Name) != simpleType.Identifier)
                     Resolver.AddVistedType(type, type.Identifier);
 
-                //if (simpleType.Annotations.Count() > 0)
-                //    Resolver.AddSymbol(id, simpleType.Annotations.ElementAt(0) as TypeReference);
+                if (simpleType.Annotations.Count() > 0)
+                    Resolver.AddSymbol(id, simpleType.Annotations.ElementAt(0) as TypeReference);
 
 
                 //If the type is in the Visual Tree, the parent is null. 
@@ -1803,6 +1849,48 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 m = m.Parent;
             }
             return false;
+        }
+
+        private bool IsChildOf(AstNode member, Type type)
+        {
+            AstNode m = member as AstNode;
+            while (m.Parent != null)
+            {
+                if (m.Parent.GetType() == type)
+                {
+                    return true;
+                }
+                m = m.Parent;
+            }
+            return false;
+        }
+
+        private CSharp.AstNode GetParentOf(CSharp.AstNode member, Type type)
+        {
+            CSharp.AstNode m = member as CSharp.AstNode;
+            while (m.Parent != null)
+            {
+                if (m.Parent.GetType() == type)
+                {
+                    return m.Parent;
+                }
+                m = m.Parent;
+            }
+            return CSharp.AstNode.Null;
+        }
+
+        private AstNode GetPatentOf(AstNode member, Type type)
+        {
+            AstNode m = member as AstNode;
+            while (m.Parent != null)
+            {
+                if (m.Parent.GetType() == type)
+                {
+                    return m.Parent;
+                }
+                m = m.Parent;
+            }
+            return AstNode.Null;
         }
     }
 }

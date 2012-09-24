@@ -117,11 +117,11 @@ namespace ICSharpCode.NRefactory.Cpp
             return visitedTypes;
         }
 
-        //public static void AddSymbol(string type, TypeReference reference)
-        //{
-        //    if (!symbols.ContainsKey(type))
-        //        symbols.Add(type, reference);
-        //}
+        public static void AddSymbol(string type, TypeReference reference)
+        {
+            if (!symbols.ContainsKey(type))
+                symbols.Add(type, reference);
+        }
 
         public static Dictionary<string, string> GetLibraryMap()
         {

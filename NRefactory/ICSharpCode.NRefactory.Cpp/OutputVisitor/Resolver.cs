@@ -10,6 +10,7 @@ namespace ICSharpCode.NRefactory.Cpp
     public class Resolver
     {
         private static List<string> ltmp = new List<string>();
+
         static Resolver()
         {
             Dictionary<string, string> libraryMap = new Dictionary<string, string>();
@@ -170,6 +171,56 @@ namespace ICSharpCode.NRefactory.Cpp
             return false;
         }
 
+        public static AstType GetType(string currentField_Variable, string currentType, string currentMethod, string currentParameter)
+        {
+            if (currentField_Variable != null && currentType != null)
+            {
+                Dictionary<string, List<FieldDeclaration>> fields = Cache.GetFields();
+                if (fields.ContainsKey(currentType))
+                {
+                    foreach (FieldDeclaration fd in fields[currentType])
+                    {
+                        foreach (VariableInitializer vi in fd.Variables)
+                        {
+                            if (vi.Name == currentField_Variable)
+                                return fd.ReturnType;
+                        }
+                    }
+                }
+            }
+
+            if (currentMethod != null && currentParameter != null)
+            {
+                Dictionary<string, List<ParameterDeclaration>> parameters = Cache.GetParameters();
+                if (parameters.ContainsKey(currentMethod))
+                {
+                    foreach (ParameterDeclaration pd in parameters[currentMethod])
+                    {
+                        if (pd.Name == currentParameter)
+                            return pd.Type;
+                    }
+                }
+            }
+
+            if (currentMethod != null && currentField_Variable != null)
+            {
+                Dictionary<string, List<VariableDeclarationStatement>> variablesMethod = Cache.GetVariablesMethod();
+                if (variablesMethod.ContainsKey(currentMethod))
+                {
+                    foreach (VariableDeclarationStatement fd in variablesMethod[currentMethod])
+                    {
+                        foreach (VariableInitializer vi in fd.Variables)
+                        {
+                            if (vi.Name == currentField_Variable)
+                                return fd.Type;
+                        }
+                        
+                    }
+                }
+            }
+            return AstType.Null;
+        }
+
         private static bool Reaches(string type1, string type2, Dictionary<string, List<string>> includes)
         {
             if (includes.ContainsKey(type1))
@@ -229,13 +280,13 @@ namespace ICSharpCode.NRefactory.Cpp
             Cache.ClearResolver();
         }
 
-        //public static void AddSymbol(string type, TypeReference reference)
-        //{
-        //    Cache.AddSymbol(type, reference);
+        public static void AddSymbol(string type, TypeReference reference)
+        {
+            Cache.AddSymbol(type, reference);
 
-        //    string namesp = reference.Namespace;
-        //    AddNamespace(namesp);
-        //}
+            string namesp = reference.Namespace;
+            AddNamespace(namesp);
+        }
 
         private static void AddNamespace(string nameSpace)
         {
@@ -259,6 +310,20 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             else if (type == AstType.Null)
                 return String.Empty;
+            else if (type is PrimitiveType)
+                return (type as PrimitiveType).Keyword;
+            else
+                throw new NotImplementedException(type.ToString());
+        }
+
+        public static string GetTypeName(CSharp.AstType type)
+        {
+            if (type is CSharp.SimpleType)
+                return (type as CSharp.SimpleType).Identifier;
+            else if (type == CSharp.AstType.Null)
+                return String.Empty;
+            else if (type is CSharp.PrimitiveType)
+                return (type as CSharp.PrimitiveType).Keyword;
             else
                 throw new NotImplementedException(type.ToString());
         }

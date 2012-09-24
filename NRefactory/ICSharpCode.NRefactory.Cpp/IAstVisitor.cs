@@ -86,6 +86,8 @@ namespace ICSharpCode.NRefactory.Cpp
 		S VisitNamespaceDeclaration(NamespaceDeclaration namespaceDeclaration, T data);
 		S VisitTypeDeclaration(TypeDeclaration typeDeclaration, T data);
         S VisitNestedTypeDeclaration(NestedTypeDeclaration nestedTypeDeclaration, T data); //******************
+        S VisitInterfaceTypeDeclaration(InterfaceTypeDeclaration interfaceTypeDeclaration, T data); //******************
+        S VisitGenericTemplateTypeDeclaration(GenericTemplateTypeDeclaration genericTemplateTypeDeclaration, T data); //******************
 		//S VisitUsingAliasDeclaration(UsingAliasDeclaration usingAliasDeclaration, T data);
 		S VisitIncludeDeclaration(IncludeDeclaration usingDeclaration, T data);
 		S VisitExternAliasDeclaration(ExternAliasDeclaration externAliasDeclaration, T data);
