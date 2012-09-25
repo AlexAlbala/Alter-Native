@@ -8,9 +8,9 @@ namespace System {
 
 	class Random : public Object {	
 	public:
-	Random();
+		Random();
 	public:
-	float NextDouble();
+		float NextDouble();
 	
 	};
 }

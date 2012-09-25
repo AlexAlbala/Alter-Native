@@ -616,6 +616,11 @@ namespace ICSharpCode.NRefactory.Cpp
                     {
                         return false;
                     }
+                    //THE PARAMETERS IN THE OBJECTCREATEEXPRESSION (new Object(parameters))
+                    else if (IsChildOf(node, typeof(CSharp.ObjectCreateExpression)))
+                    {
+                        return false;
+                    }
                     else
                     {
                         if (IsChildOf(node, typeof(CSharp.FieldDeclaration)))
