@@ -307,43 +307,11 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitIdentifierExpression(CSharp.IdentifierExpression identifierExpression, object data)
         {
-            bool needsPointer = false;
-            //We must check if the return type is different to the original type, if that is, it is necessar or maybe a cast, or maybe there is an operator. In both cases the identifier must be de-referenced:
-            //From IA* a = c; we must obtain IA* a = *c;
-            //TODO: MAYBE we should add a cast for security ?
-            if (IsChildOf(identifierExpression, typeof(CSharp.VariableInitializer)))
-            {
-                if (IsChildOf(identifierExpression, typeof(CSharp.FieldDeclaration)))
-                {
-                    var fdecl = (CSharp.FieldDeclaration)GetParentOf(identifierExpression, typeof(CSharp.FieldDeclaration));
-                    if (Resolver.GetTypeName(fdecl.ReturnType) != Resolver.GetTypeName(Resolver.GetType(identifierExpression.Identifier, currentType.Name, null, null)))
-                    {
-                        needsPointer = true;
-                    }
-                }
-                else if (IsChildOf(identifierExpression, typeof(CSharp.VariableDeclarationStatement)))
-                {
-                    var vdecl = (CSharp.VariableDeclarationStatement)GetParentOf(identifierExpression, typeof(CSharp.VariableDeclarationStatement));
-                    if (Resolver.GetTypeName(vdecl.Type) != Resolver.GetTypeName(Resolver.GetType(identifierExpression.Identifier, null, currentMethod, null)))
-                    {
-                        needsPointer = true;
-                    }
-                }
-                else if (IsChildOf(identifierExpression, typeof(CSharp.ParameterDeclaration)))
-                {
-                    var pdecl = (CSharp.ParameterDeclaration)GetParentOf(identifierExpression, typeof(CSharp.ParameterDeclaration));
-                    if (Resolver.GetTypeName(pdecl.Type) != Resolver.GetTypeName(Resolver.GetType(identifierExpression.Identifier, null, currentMethod, pdecl.Name)))
-                    {
-                        needsPointer = true;
-                    }
-                }
-            }
+            bool needsPointer = Resolver.NeedsDereference(identifierExpression, currentType == null ? String.Empty : currentType.Name, currentMethod);
 
             var expr = new IdentifierExpression();
             expr.Identifier = identifierExpression.Identifier;
             ConvertNodes(identifierExpression.TypeArguments, expr.TypeArguments);
-
-           
 
             if (needsPointer)
                 return EndNode(identifierExpression, new PointerExpression() { Target = expr });
@@ -353,34 +321,13 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitIndexerExpression(CSharp.IndexerExpression indexerExpression, object data)
         {
             //Check if the identifier is a pointer type: if it is a pointer, we have to de-reference it to apply an indexer operator: data[i]; NO!!! ------ (*data)[i]; YES !!
-            bool isptr = false;
-            if (indexerExpression.Target is CSharp.MemberReferenceExpression)
-            {
-                var iexpTar = indexerExpression.Target as CSharp.MemberReferenceExpression;
-                if (iexpTar.Target is CSharp.ThisReferenceExpression)
-                {
-                    isptr = Resolver.IsPointer(currentType.Name, iexpTar.MemberName, null, null);
-                }
-                else if (iexpTar.Target is CSharp.IdentifierExpression)
-                {
-                    var id = iexpTar.Target as CSharp.IdentifierExpression;
-                    isptr = Resolver.IsPointer(id.Identifier, iexpTar.MemberName, null, null);
-                }
-            }
-            else if (indexerExpression.Target is CSharp.IdentifierExpression)
-            {
-                var iexpTar = indexerExpression.Target as CSharp.IdentifierExpression;
-                isptr = Resolver.IsPointer(null, iexpTar.Identifier, currentMethod, iexpTar.Identifier);
-            }
+            bool needsDeref = Resolver.NeedsDereference(indexerExpression, currentType.Name, currentMethod);
 
             var expr = new IndexerExpression((Expression)indexerExpression.Target.AcceptVisitor(this, data));
             ConvertNodes(indexerExpression.Arguments, expr.Arguments);
-            if (isptr)
-            {
-                var pointerExpr = new PointerExpression();
-                pointerExpr.Target = expr.Clone();
-                return EndNode(indexerExpression, pointerExpr);
-            }
+            if (needsDeref)            
+                expr.Target = new PointerExpression((Expression)expr.Target.Clone());
+
             return EndNode(indexerExpression, expr);
         }
 
@@ -955,7 +902,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             VariableDeclarationStatement vds = new VariableDeclarationStatement(
                 (AstType)foreachStatement.VariableType.AcceptVisitor(this, data),
                 foreachStatement.VariableName,
-                new PointerIdentifierExpression("__begin"));
+                new PointerExpression(new IdentifierExpression("__begin")));
 
             BlockStatement blckstmt = new BlockStatement();
             blckstmt.AddChild(vds, BlockStatement.StatementRole);
@@ -1559,8 +1506,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             string id = simpleType.Identifier;
             bool isPtr = true;
 
-            if (IsChildOf(simpleType, typeof(CSharp.UsingDeclaration)) && !IsChildOf(simpleType, typeof(CSharp.MemberType))
-                && !IsChildOf(simpleType, typeof(CSharp.TypeParameterDeclaration)))
+            if (Resolver.IsChildOf(simpleType, typeof(CSharp.UsingDeclaration)) && !Resolver.IsChildOf(simpleType, typeof(CSharp.MemberType))
+                && !Resolver.IsChildOf(simpleType, typeof(CSharp.TypeParameterDeclaration)))
             {
                 id = Resolver.GetCppName(simpleType.Identifier);
                 Resolver.AddInclude(simpleType.Identifier);
@@ -1575,7 +1522,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 Resolver.AddVistedType(type, type.Identifier);
             }
 
-            if (!IsChildOf(simpleType, typeof(CSharp.UsingDeclaration)) && simpleType.Role != CSharp.SimpleType.Roles.TypeArgument)
+            if (!Resolver.IsChildOf(simpleType, typeof(CSharp.UsingDeclaration)) && simpleType.Role != CSharp.SimpleType.Roles.TypeArgument)
             {
                 //Add the visited type to the resolver in order to include it after
                 //Also this call adds the type to the include list for detecting forward declarations
@@ -1591,7 +1538,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 //If the type is in the Visual Tree, the parent is null. 
                 //If its parent is a TypeReferenceExpression it is like Console::ReadLine          
                 //If the Role is BaseTypeRole it means that it is a inherited class (i.e. MyClass : public MyInheritedClass)
-                if (simpleType.Parent == null || !isPtr || IsChildOf(simpleType, typeof(CSharp.TypeReferenceExpression))
+                if (simpleType.Parent == null || !isPtr || Resolver.IsChildOf(simpleType, typeof(CSharp.TypeReferenceExpression))
                     || simpleType.Role == CSharp.TypeDeclaration.BaseTypeRole)
                     return EndNode(simpleType, type);
 
@@ -1835,62 +1782,6 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             }
             foundAttribute = null;
             return false;
-        }
-
-        private bool IsChildOf(CSharp.AstNode member, Type type)
-        {
-            CSharp.AstNode m = member as CSharp.AstNode;
-            while (m.Parent != null)
-            {
-                if (m.Parent.GetType() == type)
-                {
-                    return true;
-                }
-                m = m.Parent;
-            }
-            return false;
-        }
-
-        private bool IsChildOf(AstNode member, Type type)
-        {
-            AstNode m = member as AstNode;
-            while (m.Parent != null)
-            {
-                if (m.Parent.GetType() == type)
-                {
-                    return true;
-                }
-                m = m.Parent;
-            }
-            return false;
-        }
-
-        private CSharp.AstNode GetParentOf(CSharp.AstNode member, Type type)
-        {
-            CSharp.AstNode m = member as CSharp.AstNode;
-            while (m.Parent != null)
-            {
-                if (m.Parent.GetType() == type)
-                {
-                    return m.Parent;
-                }
-                m = m.Parent;
-            }
-            return CSharp.AstNode.Null;
-        }
-
-        private AstNode GetPatentOf(AstNode member, Type type)
-        {
-            AstNode m = member as AstNode;
-            while (m.Parent != null)
-            {
-                if (m.Parent.GetType() == type)
-                {
-                    return m.Parent;
-                }
-                m = m.Parent;
-            }
-            return AstNode.Null;
         }
     }
 }

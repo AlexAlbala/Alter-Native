@@ -115,9 +115,9 @@ namespace ICSharpCode.NRefactory.Cpp
         /// <param name="currentType">The current type name</param>
         /// <param name="currentField_Variable">The variable or field that is being checked</param>
         /// <param name="currentMethod">The current method</param>
-        /// <param name="currentParameter">The parameter that is being checked</param>
+        /// <param name="currentParameter">The parameter that is being checked</param>currentType
         /// <returns></returns>
-        public static bool IsPointer(string currentType, string currentField_Variable, string currentMethod, string currentParameter)
+        public static bool IsPointer(string currentField_Variable, string currentType, string currentMethod, string currentParameter)
         {
             if (currentField_Variable != null && currentType != null)
             {
@@ -214,7 +214,7 @@ namespace ICSharpCode.NRefactory.Cpp
                             if (vi.Name == currentField_Variable)
                                 return fd.Type;
                         }
-                        
+
                     }
                 }
             }
@@ -324,6 +324,11 @@ namespace ICSharpCode.NRefactory.Cpp
                 return String.Empty;
             else if (type is CSharp.PrimitiveType)
                 return (type as CSharp.PrimitiveType).Keyword;
+            else if (type is CSharp.ComposedType)
+            {
+                CSharp.ComposedType ct = type as CSharp.ComposedType;
+                return GetTypeName(ct.BaseType);
+            }
             else
                 throw new NotImplementedException(type.ToString());
         }
@@ -444,7 +449,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 string nestedTypeName = "_nested_" + GetTypeName(kvp.Key);
                 type.NameToken = new Identifier(nestedTypeName, TextLocation.Empty);
                 type.Name = nestedTypeName;
-                type.ModifierTokens.Add(new CppModifierToken(TextLocation.Empty,Modifiers.Public));
+                type.ModifierTokens.Add(new CppModifierToken(TextLocation.Empty, Modifiers.Public));
 
                 //ADD BASE TYPES
                 AstType baseType = new SimpleType(GetTypeName(kvp.Key));
@@ -462,7 +467,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
                 //ADD NESTED TYPE TO THE HEADER DECLARATION
                 Cache.AddHeaderNode(new Ast.NestedTypeDeclaration(type));
-                
+
                 //ADD FIELD
                 HeaderFieldDeclaration fdecl = new HeaderFieldDeclaration();
                 AstType nestedType = new SimpleType(nestedTypeName);
@@ -470,7 +475,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 string _tmp = "_" + GetTypeName(fdecl.ReturnType).ToLower();
                 fdecl.Variables.Add(new VariableInitializer(_tmp));
                 //ADD FIELD TO THE GLOBAL CLASS
-                Cache.AddHeaderNode(fdecl);                
+                Cache.AddHeaderNode(fdecl);
 
                 //ADD OPERATORS TO THE GLOBAL CLASS
                 //ADD OPERATOR HEADER NODE
@@ -487,7 +492,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 GetHeaderNode(op, hc);
                 Cache.AddHeaderNode(hc);
 
-                currentType.Members.Add(op);            
+                currentType.Members.Add(op);
             }
         }
 
@@ -579,6 +584,159 @@ namespace ICSharpCode.NRefactory.Cpp
 
                 _header.ReturnType = (AstType)_node.ReturnType.Clone();
             }
+        }
+
+        public static bool NeedsDereference(CSharp.AstNode node, string currentType, string currentMethod)
+        {
+            //This method can be implemented in a more optimized way, but I prefer distinguish all the cases for control better the process
+            if (node is CSharp.IdentifierExpression)
+            {
+                var identifierExpression = node as CSharp.IdentifierExpression;
+                //We must check if the return type is different to the original type, if that is, it is necessar or maybe a cast, or maybe there is an operator. In both cases the identifier must be de-referenced:
+                //From IA* a = c; we must obtain IA* a = *c;
+                //TODO: MAYBE we should add a cast for security ?
+                if (IsChildOf(node, typeof(CSharp.VariableInitializer)))
+                {
+                    //TODO: IS CHILD OF INVOCATION EXPRESSION, SO, THE IDENTIFIEREXPRESSION IS A PARAMETER, 
+                    //IS THE METHOD PARAMETER DECLARATION TYPE EQUAL TO THE IDENTIFIER EXPRESSION TYPE?
+                    if (IsChildOf(node, typeof(CSharp.InvocationExpression)))
+                    {
+                        return false;
+                    }
+                    //IS CHILD OF MEMBERREFERENCEEXPRESSION, SO, THE IDENTIFIEREXPRESSION IS A TARGET MEMBER (i.e. Target->Member()),
+                    //I THINK THAT IT IS NOT NECESSARY A POINTER
+                    else if (IsChildOf(node, typeof(CSharp.MemberReferenceExpression)))
+                    {
+                        return false;
+                    }
+                    //Expression like a[j] cannot be a[*j] nor *a[*j] ...
+                    else if (IsChildOf(node, typeof(CSharp.IndexerExpression)))
+                    {
+                        return false;
+                    }
+                    //ASEXPRESSION OR ISEXPRESSION WILL BE PROCESSED AFTER
+                    else if (IsChildOf(node, typeof(CSharp.AsExpression)) || IsChildOf(node, typeof(CSharp.IsExpression)))
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        if (IsChildOf(node, typeof(CSharp.FieldDeclaration)))
+                        {
+                            var fdecl = (CSharp.FieldDeclaration)GetParentOf(node, typeof(CSharp.FieldDeclaration));
+                            if (Resolver.GetTypeName(fdecl.ReturnType) != Resolver.GetTypeName(Resolver.GetType(identifierExpression.Identifier, currentType, null, null)))
+                            {
+                                return true;
+                            }
+                        }
+                        else if (IsChildOf(node, typeof(CSharp.VariableDeclarationStatement)))
+                        {
+                            var vdecl = (CSharp.VariableDeclarationStatement)GetParentOf(node, typeof(CSharp.VariableDeclarationStatement));
+                            if (Resolver.GetTypeName(vdecl.Type) != Resolver.GetTypeName(Resolver.GetType(identifierExpression.Identifier, null, currentMethod, null)))
+                            {
+                                return true;
+                            }
+                        }
+                        else if (IsChildOf(node, typeof(CSharp.ParameterDeclaration)))
+                        {
+                            var pdecl = (CSharp.ParameterDeclaration)GetParentOf(node, typeof(CSharp.ParameterDeclaration));
+                            if (Resolver.GetTypeName(pdecl.Type) != Resolver.GetTypeName(Resolver.GetType(identifierExpression.Identifier, null, currentMethod, pdecl.Name)))
+                            {
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+                }
+                else//! IS CHILD OF VARIABLEINITIALIZER
+                {
+                    return false;
+                }
+            }
+            else if (node is CSharp.IndexerExpression)
+            {
+                var indexerExpression = node as CSharp.IndexerExpression;
+                if (indexerExpression.Target is CSharp.MemberReferenceExpression)
+                {
+                    var iexpTar = indexerExpression.Target as CSharp.MemberReferenceExpression;
+                    if (iexpTar.Target is CSharp.ThisReferenceExpression)
+                    {
+                        return Resolver.IsPointer(iexpTar.MemberName, currentType, null, null);
+                    }
+                    else if (iexpTar.Target is CSharp.IdentifierExpression)
+                    {
+                        var id = iexpTar.Target as CSharp.IdentifierExpression;
+                        return Resolver.IsPointer(iexpTar.MemberName, id.Identifier, null, null);
+                    }
+                    else
+                        return false;
+                }
+                else if (indexerExpression.Target is CSharp.IdentifierExpression)
+                {
+                    var iexpTar = indexerExpression.Target as CSharp.IdentifierExpression;
+                    return Resolver.IsPointer(iexpTar.Identifier, null, currentMethod, iexpTar.Identifier);
+                }
+                else
+                    return false;
+            }
+            else //! IS IDENTIFIEREXPRESSION
+                return false;
+        }
+
+        public static bool IsChildOf(AstNode member, Type type)
+        {
+            AstNode m = member as AstNode;
+            while (m.Parent != null)
+            {
+                if (m.Parent.GetType() == type)
+                {
+                    return true;
+                }
+                m = m.Parent;
+            }
+            return false;
+        }
+
+        public static bool IsChildOf(CSharp.AstNode member, Type type)
+        {
+            CSharp.AstNode m = member as CSharp.AstNode;
+            while (m.Parent != null)
+            {
+                if (m.Parent.GetType() == type)
+                {
+                    return true;
+                }
+                m = m.Parent;
+            }
+            return false;
+        }
+
+        public static CSharp.AstNode GetParentOf(CSharp.AstNode member, Type type)
+        {
+            CSharp.AstNode m = member as CSharp.AstNode;
+            while (m.Parent != null)
+            {
+                if (m.Parent.GetType() == type)
+                {
+                    return m.Parent;
+                }
+                m = m.Parent;
+            }
+            return CSharp.AstNode.Null;
+        }
+
+        public static AstNode GetPatentOf(AstNode member, Type type)
+        {
+            AstNode m = member as AstNode;
+            while (m.Parent != null)
+            {
+                if (m.Parent.GetType() == type)
+                {
+                    return m.Parent;
+                }
+                m = m.Parent;
+            }
+            return AstNode.Null;
         }
     }
 }

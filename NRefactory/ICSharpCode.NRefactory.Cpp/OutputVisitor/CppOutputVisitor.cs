@@ -582,14 +582,14 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             StartNode(indexerExpression);
 
-            //Add parenthesis if the parent is pointer expression: *a[3] is incorrect but (*a)[3] is correct !    
-            if (indexerExpression.Parent is PointerExpression)
-                LPar();       
+            //Add parenthesis if the parent is pointer expression: *a[3] is incorrect but (*a)[3] is correct !   
+            //TODO: Sure that put the parenthesis here ?
+            if (indexerExpression.Target is PointerExpression)
+                LPar();
             indexerExpression.Target.AcceptVisitor(this, data);
-
-            if (indexerExpression.Parent is PointerExpression)
+            if (indexerExpression.Target is PointerExpression)
                 RPar();
-            
+
             Space(policy.SpaceBeforeMethodCallParentheses);
             WriteCommaSeparatedListInBrackets(indexerExpression.Arguments);
             return EndNode(indexerExpression);
@@ -3325,14 +3325,6 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteToken("&", AddressOfExpression.AmpersandRole);
             addressOfExpression.Target.AcceptVisitor(this, data);
             return EndNode(addressOfExpression);
-        }
-
-        public object VisitPointerIdentifierExpression(PointerIdentifierExpression pointerIdentifierExpression, object data)
-        {
-            StartNode(pointerIdentifierExpression);
-            WriteToken("*", PointerExpression.AsteriskRole);
-            pointerIdentifierExpression.IdentifierToken.AcceptVisitor(this, data);
-            return EndNode(pointerIdentifierExpression);
         }
 
         #region HeaderNodes

@@ -22,8 +22,15 @@ namespace AlterNative
             ICSharpCode.ILSpy.App app = new ICSharpCode.ILSpy.App();
             if (args.Length > 1 && !args[0].Equals("/separate"))
             {
-                Program p = new Program();
-                p.ConsoleMain(args);
+                try
+                {
+                    Program p = new Program();
+                    p.ConsoleMain(args);
+                }
+                catch (Exception e)
+                {
+                    Utils.WriteToConsole("Exception: " + e.Message);
+                }
             }
             else
             {
@@ -73,7 +80,7 @@ namespace AlterNative
         /// </summary>
         /// <param name="args">{ assembly, destinationPath, language, Params } (In CPP: Params is the path of the library)</param>
         public void ConsoleMain(string[] args)
-        {            
+        {
             Utils.WriteToConsole("\n");
 
             //LOAD TARGET ASSEMBLY
@@ -97,7 +104,7 @@ namespace AlterNative
 
             //CONFIGURE OUTPUT LANGUAGE
             Language lang = OutputLanguage(args[2]);
-            
+
             //DECOMPILE FIRST TIME AND FILL THE TABLES
             foreach (TypeDefinition tdef in adef.MainModule.Types)
             {
@@ -123,7 +130,7 @@ namespace AlterNative
 
             //TRIM END .EXE : BUG If The name is File.exe, trim end ".exe" returns Fil !!!!
             string name = adef.MainModule.Name.Substring(0, adef.MainModule.Name.Length - 4);
-            CMakeGenerator.GenerateCMakeLists(name + "Proj",name, outputDir, FileWritterManager.GetSourceFiles());
+            CMakeGenerator.GenerateCMakeLists(name + "Proj", name, outputDir, FileWritterManager.GetSourceFiles());
 
             Console.ForegroundColor = ConsoleColor.Green;
             Utils.WriteToConsole("Done");

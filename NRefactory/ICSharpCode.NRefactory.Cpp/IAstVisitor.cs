@@ -42,7 +42,6 @@ namespace ICSharpCode.NRefactory.Cpp
 		S VisitDefaultValueExpression(DefaultValueExpression defaultValueExpression, T data);
 		S VisitDirectionExpression(DirectionExpression directionExpression, T data);
 		S VisitIdentifierExpression(IdentifierExpression identifierExpression, T data);
-        S VisitPointerIdentifierExpression(PointerIdentifierExpression pointerIdentifierExpression, T data);
 		S VisitIndexerExpression(IndexerExpression indexerExpression, T data);
 		S VisitInvocationExpression(InvocationExpression invocationExpression, T data);
         S VisitInterfaceMemberSpecifier(InterfaceMemberSpecifier interfaceMemberSpecifier, T data);

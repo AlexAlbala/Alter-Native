@@ -7,8 +7,16 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
 {
     public class PointerExpression : Expression
     {
-        public readonly static Role<CppTokenNode> AsteriskRole = new Role<CppTokenNode>("Asterisk", CppTokenNode.Null);      
+        public readonly static Role<CppTokenNode> AsteriskRole = new Role<CppTokenNode>("Asterisk", CppTokenNode.Null);
 
+        public PointerExpression()
+        {
+        }
+
+        public PointerExpression(Expression Target)
+        {
+            SetChildByRole(Roles.TargetExpression, Target);
+        }
         public Expression Target
         {
             get { return GetChildByRole(Roles.TargetExpression); }
