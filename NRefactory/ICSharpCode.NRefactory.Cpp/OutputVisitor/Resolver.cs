@@ -399,7 +399,8 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public static void GetNestedTypes(TypeDeclaration currentType)
         {
-            string currentTypeName = currentType.Name;
+            //Trim the type name to avoid errors with generic types
+            string currentTypeName = currentType.Name.TrimEnd("_Base".ToCharArray()).TrimEnd("_T".ToCharArray());
 
             //SEARCH FOR THE METHODS IN THE CURRENT TYPE THAT SHOULD BE IMPLEMENTED IN A NESTED CLASS
             List<MethodDeclaration> methodsOfCurrentType = new List<MethodDeclaration>();
@@ -453,11 +454,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
                 //ADD BASE TYPES
                 AstType baseType = new SimpleType(GetTypeName(kvp.Key));
-                AstType objectType = new SimpleType("Object");
-                AstType gcType = new SimpleType("gc_cleanup");
                 type.AddChild(baseType, TypeDeclaration.BaseTypeRole);
-                type.AddChild(objectType, TypeDeclaration.BaseTypeRole);
-                type.AddChild(gcType, TypeDeclaration.BaseTypeRole);
 
                 //REMOVE THE BASE TYPE BECAUSE THE NESTED TYPE WILL INHERIT FROM IT
                 currentType.BaseTypes.Remove(currentType.BaseTypes.First(x => GetTypeName(x) == GetTypeName(baseType)));
@@ -609,7 +606,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     {
                         return false;
                     }
-                    //Expression like a[j] cannot be a[*j] nor *a[*j] ...
+                    //Expression like a[j] cannot be neither a[*j] nor *a[*j] ...
                     else if (IsChildOf(node, typeof(CSharp.IndexerExpression)))
                     {
                         return false;
@@ -683,6 +680,12 @@ namespace ICSharpCode.NRefactory.Cpp
                 return false;
         }
 
+        /// <summary>
+        /// Checks if the node is child of other node of the specified type
+        /// </summary>
+        /// <param name="member">Node</param>
+        /// <param name="type">Type of the parent node</param>
+        /// <returns>Bool indicating if is child or not</returns>
         public static bool IsChildOf(AstNode member, Type type)
         {
             AstNode m = member as AstNode;
@@ -697,6 +700,12 @@ namespace ICSharpCode.NRefactory.Cpp
             return false;
         }
 
+        /// <summary>
+        /// Checks if the node is child of other node of the specified type
+        /// </summary>
+        /// <param name="member">Node</param>
+        /// <param name="type">Type of the parent node</param>
+        /// <returns>Bool indicating if is child or not</returns>
         public static bool IsChildOf(CSharp.AstNode member, Type type)
         {
             CSharp.AstNode m = member as CSharp.AstNode;
@@ -711,6 +720,32 @@ namespace ICSharpCode.NRefactory.Cpp
             return false;
         }
 
+        /// <summary>
+        /// Returns the first parent node of type specified by variable type
+        /// </summary>
+        /// <param name="member">Original node</param>
+        /// <param name="type">Target type of</param>
+        /// <returns>The resulting node</returns>
+        public static AstNode GetParentOf(AstNode member, Type type)
+        {
+            AstNode m = member as AstNode;
+            while (m.Parent != null)
+            {
+                if (m.Parent.GetType() == type)
+                {
+                    return m.Parent;
+                }
+                m = m.Parent;
+            }
+            return AstNode.Null;
+        }
+
+        /// <summary>
+        /// Returns the first parent node of type specified by variable type
+        /// </summary>
+        /// <param name="member">Original node</param>
+        /// <param name="type">Target type of</param>
+        /// <returns>The resulting node</returns>
         public static CSharp.AstNode GetParentOf(CSharp.AstNode member, Type type)
         {
             CSharp.AstNode m = member as CSharp.AstNode;
@@ -723,20 +758,6 @@ namespace ICSharpCode.NRefactory.Cpp
                 m = m.Parent;
             }
             return CSharp.AstNode.Null;
-        }
-
-        public static AstNode GetPatentOf(AstNode member, Type type)
-        {
-            AstNode m = member as AstNode;
-            while (m.Parent != null)
-            {
-                if (m.Parent.GetType() == type)
-                {
-                    return m.Parent;
-                }
-                m = m.Parent;
-            }
-            return AstNode.Null;
         }
     }
 }

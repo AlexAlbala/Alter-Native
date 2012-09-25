@@ -4,10 +4,10 @@ namespace NestedClasses{
 		Console::WriteLine(new String("c"));
 		return 0;
 	}
-	C::operator IA* () {
+	C::operator IA*() {
 		return &__nested_ia;
 	}
-	C::operator IB* () {
+	C::operator IB*() {
 		return &__nested_ib;
 	}
 

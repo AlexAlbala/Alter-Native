@@ -11,29 +11,35 @@ namespace NestedClasses{
 	{
 		public:
 			int f();
-		//Nested Class: _nested_IA
-		class _nested_IA : public virtual IA, public virtual Object, public virtual gc_cleanup{
+
+		//START Nested Class: _nested_IA****************
+		public:
+		class _nested_IA : public virtual IA{
 			private:
-			void _nested_IA::f(){
+			void f(){
 				Console::WriteLine(new String("a"));
 			}
 		};
+		//END Nested Class *********************
 
 		private:
 			_nested_IA __nested_ia;
 		public:
-		operator IA* ();
-		//Nested Class: _nested_IB
-		class _nested_IB : public virtual IB, public virtual Object, public virtual gc_cleanup{
+			operator IA*();
+
+		//START Nested Class: _nested_IB****************
+		public:
+		class _nested_IB : public virtual IB{
 			private:
-			void _nested_IB::f(){
+			void f(){
 				Console::WriteLine(new String("b"));
 			}
 		};
+		//END Nested Class *********************
 
 		private:
 			_nested_IB __nested_ib;
 		public:
-		operator IB* ();
+			operator IB*();
 	};
 }

@@ -1706,9 +1706,11 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitNestedTypeDeclaration(NestedTypeDeclaration nestedTypeDeclaration, object data)
         {
             StartNode(nestedTypeDeclaration);
-            formatter.WriteComment(CommentType.SingleLine, "Nested Class: " + nestedTypeDeclaration.Type.Name);
+            NewLine();
+            formatter.WriteComment(CommentType.SingleLine, "START Nested Class: " + nestedTypeDeclaration.Type.Name + "****************");
             TypeDeclaration typeDeclaration = nestedTypeDeclaration.Type;
 
+            WriteAccesorModifier(nestedTypeDeclaration.Type.ModifierTokens);
             BraceStyle braceStyle = WriteClassType(typeDeclaration.ClassType);
 
             WriteIdentifier(typeDeclaration.Name);
@@ -1732,6 +1734,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
             CloseBrace(braceStyle);//END OF TYPE
             Semicolon();
+            formatter.WriteComment(CommentType.SingleLine, "END Nested Class *********************");
             NewLine();
             return EndNode(nestedTypeDeclaration);
         }
@@ -2037,9 +2040,14 @@ namespace ICSharpCode.NRefactory.Cpp
 
             Identifier tdecl = methodDeclaration.TypeMember;
 
-            WriteIdentifier(type == null ? (tdecl != null ? (isGenericTemplate ? tdecl.Name + "_T_Base" : tdecl.Name) : String.Empty) : (isGenericTemplate ? type.Name + "_Base" : type.Name), MethodDeclaration.Roles.Identifier);
-            WriteToken("::", MethodDeclaration.Roles.DoubleColon);
-            WritePrivateImplementationType(methodDeclaration.PrivateImplementationType);
+            //TODO: We should implement NestedTypeMethodDeclaration ?
+            //I think it is not necessary...
+            if (!Resolver.IsChildOf(methodDeclaration, typeof(NestedTypeDeclaration)))
+            {
+                WriteIdentifier(type == null ? (tdecl != null ? (isGenericTemplate ? tdecl.Name + "_T_Base" : tdecl.Name) : String.Empty) : (isGenericTemplate ? type.Name + "_Base" : type.Name), MethodDeclaration.Roles.Identifier);
+                WriteToken("::", MethodDeclaration.Roles.DoubleColon);
+                WritePrivateImplementationType(methodDeclaration.PrivateImplementationType);
+            }
 
             methodDeclaration.NameToken.AcceptVisitor(this, data);
             WriteTypeParameters(methodDeclaration.TypeParameters);
@@ -2058,7 +2066,6 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteToken("::", ConversionConstructorDeclaration.Roles.DoubleColon);
             WriteKeyword("operator", OperatorDeclaration.OperatorKeywordRole);
             conversionConstructorDeclaration.ReturnType.AcceptVisitor(this, data);
-            Space();
             LPar();
             RPar();
             WriteMethodBody(conversionConstructorDeclaration.Body);
@@ -2068,16 +2075,18 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitHeaderConversionConstructorDeclaration(HeaderConversionConstructorDeclaration headerConversionConstructorDeclaration, object data)
         {
             StartNode(headerConversionConstructorDeclaration);
+
             WriteAttributes(headerConversionConstructorDeclaration.Attributes);
             WriteAccesorModifier(headerConversionConstructorDeclaration.ModifierTokens);
+            formatter.Indent();
             //WriteModifiers(headerConversionConstructorDeclaration.ModifierTokens);
 
             WriteKeyword("operator", OperatorDeclaration.OperatorKeywordRole);
             headerConversionConstructorDeclaration.ReturnType.AcceptVisitor(this, data);
-            Space();
             LPar();
             RPar();
             Semicolon();
+            formatter.Unindent();
             return EndNode(headerConversionConstructorDeclaration);
         }
 
@@ -2243,25 +2252,6 @@ namespace ICSharpCode.NRefactory.Cpp
                 lastWritten = LastWritten.Other;
             }
             WriteToken("]", ArraySpecifier.Roles.RBracket);
-
-            //if (arraySpecifier.Dimensions <= 0)
-            //    return EndNode(arraySpecifier);
-            //else if (arraySpecifier.Dimensions > 1)
-            //{
-            //    WriteToken("*", ArraySpecifier.Roles.LBracket);
-            //    foreach (var comma in arraySpecifier.GetChildrenByRole(ArraySpecifier.Roles.Comma))
-            //    {
-            //        WriteSpecialsUpToNode(comma);
-            //        formatter.WriteToken("*");
-            //        lastWritten = LastWritten.Other;
-            //    }
-            //}
-            //else
-            //{
-            //    WriteToken("[", ArraySpecifier.Roles.LBracket);
-            //    WriteToken("]", ArraySpecifier.Roles.RBracket);
-            //}
-
 
             return EndNode(arraySpecifier);
         }
