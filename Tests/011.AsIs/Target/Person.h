@@ -2,7 +2,7 @@
 #include "System/System.h"
 
 using namespace System;
-namespace AsIs{
+namespace AsIs {
 	class Person : public virtual Object, public virtual gc_cleanup
 	{
 		protected:

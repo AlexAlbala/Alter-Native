@@ -5,7 +5,7 @@
 #include "System/Console.h"
 
 using namespace System;
-namespace List{
+namespace List {
 	class Program : public virtual Object, public virtual gc_cleanup
 	{
 		private:

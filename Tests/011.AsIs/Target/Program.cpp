@@ -1,5 +1,5 @@
 #include "Program.h"
-namespace AsIs{
+namespace AsIs {
 	void Program::Main(String* args[]){
 		Program* p = new Program();
 		p->AsIsTest();

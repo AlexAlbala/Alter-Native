@@ -1,5 +1,5 @@
 #include "B.h"
-namespace Templates{
+namespace Templates {
 	String* B::getText(){
 		return new String("I'm class B!!");
 	}

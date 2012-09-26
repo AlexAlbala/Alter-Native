@@ -1,5 +1,5 @@
 #include "ClassA.h"
-namespace ForwardDeclaration{
+namespace ForwardDeclaration {
 	ClassA::ClassA(){
 		this->b = new ClassB(this);
 	}

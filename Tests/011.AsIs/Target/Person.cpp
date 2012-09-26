@@ -1,5 +1,5 @@
 #include "Person.h"
-namespace AsIs{
+namespace AsIs {
 	String* Person::getName(){
 		return this->name;
 	}

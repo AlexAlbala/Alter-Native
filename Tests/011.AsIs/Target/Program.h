@@ -6,7 +6,7 @@
 #include "Anne.h"
 
 using namespace System;
-namespace AsIs{
+namespace AsIs {
 	class Program : public virtual Object, public virtual gc_cleanup
 	{
 		public:

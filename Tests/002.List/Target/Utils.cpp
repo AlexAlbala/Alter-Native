@@ -1,5 +1,5 @@
 #include "Utils.h"
-namespace List{
+namespace List {
 	Random* Utils::random = new Random();
 
 }

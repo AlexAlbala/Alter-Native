@@ -447,13 +447,25 @@ namespace ICSharpCode.NRefactory.Cpp
             foreach (KeyValuePair<AstType, List<MethodDeclaration>> kvp in privateImplClass)
             {
                 TypeDeclaration type = new TypeDeclaration();
-                string nestedTypeName = "_nested_" + GetTypeName(kvp.Key);
+                string nestedTypeName = "_interface_" + GetTypeName(kvp.Key);
                 type.NameToken = new Identifier(nestedTypeName, TextLocation.Empty);
                 type.Name = nestedTypeName;
                 type.ModifierTokens.Add(new CppModifierToken(TextLocation.Empty, Modifiers.Public));
 
+                if (kvp.Key is SimpleType)
+                {
+                    foreach (AstType tp in (kvp.Key as SimpleType).TypeArguments)
+                        type.TypeParameters.Add(new TypeParameterDeclaration() { NameToken = new Identifier(GetTypeName(tp), TextLocation.Empty) });
+                }
+
                 //ADD BASE TYPES
-                AstType baseType = new SimpleType(GetTypeName(kvp.Key));
+                SimpleType baseType = new SimpleType(GetTypeName(kvp.Key));
+                if (kvp.Key is SimpleType)
+                {
+                    foreach (AstType tp in (kvp.Key as SimpleType).TypeArguments)
+                        baseType.TypeArguments.Add((AstType)tp.Clone());
+                }
+
                 type.AddChild(baseType, TypeDeclaration.BaseTypeRole);
 
                 //REMOVE THE BASE TYPE BECAUSE THE NESTED TYPE WILL INHERIT FROM IT
@@ -462,34 +474,50 @@ namespace ICSharpCode.NRefactory.Cpp
                 //ADD METHODS
                 type.Members.AddRange(kvp.Value);
 
-                //ADD NESTED TYPE TO THE HEADER DECLARATION
-                Cache.AddHeaderNode(new Ast.NestedTypeDeclaration(type));
+
 
                 //ADD FIELD
                 HeaderFieldDeclaration fdecl = new HeaderFieldDeclaration();
-                AstType nestedType = new SimpleType(nestedTypeName);
+                SimpleType nestedType = new SimpleType(nestedTypeName);
+                foreach (TypeParameterDeclaration tp in type.TypeParameters)
+                    nestedType.TypeArguments.Add(new SimpleType(tp.Name));
+
+                ExplicitInterfaceTypeDeclaration ntype = new Ast.ExplicitInterfaceTypeDeclaration(type);
+
                 fdecl.ReturnType = nestedType;
                 string _tmp = "_" + GetTypeName(fdecl.ReturnType).ToLower();
                 fdecl.Variables.Add(new VariableInitializer(_tmp));
                 //ADD FIELD TO THE GLOBAL CLASS
-                Cache.AddHeaderNode(fdecl);
+                ntype.OutMembers.Add(fdecl);
+
 
                 //ADD OPERATORS TO THE GLOBAL CLASS
                 //ADD OPERATOR HEADER NODE
                 ConversionConstructorDeclaration op = new ConversionConstructorDeclaration();
                 op.ReturnType = new PtrType((AstType)kvp.Key.Clone());
                 op.ModifierTokens.Add(new CppModifierToken(TextLocation.Empty, Modifiers.Public));
-                op.type = currentTypeName;
+
+                //In the first line of this method we have trimed end the string with the _T and the _Base for searching the lists
+                //At this point we have to add that string
+                if (currentType.TypeParameters.Any())
+                    op.type = currentTypeName + "_T_Base";
+                else
+                    op.type = currentTypeName;
                 BlockStatement blck = new BlockStatement();
                 Statement st = new ReturnStatement(new AddressOfExpression(new IdentifierExpression(_tmp)));
                 blck.Add(st);
                 op.Body = blck;
 
+                currentType.Members.Add(op);
+
                 HeaderConversionConstructorDeclaration hc = new HeaderConversionConstructorDeclaration();
                 GetHeaderNode(op, hc);
-                Cache.AddHeaderNode(hc);
 
-                currentType.Members.Add(op);
+                //Add the header member to the out members of the nested type
+                ntype.OutMembers.Add(hc);
+
+                //ADD NESTED TYPE TO THE HEADER DECLARATION
+                Cache.AddHeaderNode(ntype);
             }
         }
 
@@ -763,6 +791,124 @@ namespace ICSharpCode.NRefactory.Cpp
                 m = m.Parent;
             }
             return CSharp.AstNode.Null;
+        }
+
+        //TODO: move this method to C#2CPPCONVERTERVISITOR
+        public static bool TryPatchGenericTemplateType(AstType type, out AstType newType)
+        {
+            newType = (AstType)type.Clone();
+            string name = "";
+            if (type is SimpleType)
+            {
+                SimpleType st = type as SimpleType;
+                name = st.Identifier;
+                if (Cache.GetExcluded().Contains(name))
+                {
+                    newType = new SimpleType("Object");
+                    //if (Resolver.IsChildOf(type, typeof(TypeParameterDeclaration)))
+                    //    newType = new SimpleType("Object");
+                    //else
+                    //    newType = new PtrType(new SimpleType("Object"));
+                    return true;
+                }
+                else
+                {
+                    if (st.TypeArguments.Any())
+                    {
+                        List<AstType> args = new List<AstType>();
+                        bool converted = false;
+                        foreach (AstType t in st.TypeArguments)
+                        {
+                            AstType discard;
+                            if (TryPatchGenericTemplateType(t, out discard))
+                            {
+                                converted = true;
+                                args.Add(new SimpleType("Object"));
+                            }
+                            else
+                                args.Add((AstType)t.Clone());
+                        }
+
+                        SimpleType nType = (SimpleType)st.Clone();
+                        nType.TypeArguments.Clear();
+                        nType.TypeArguments.AddRange(args.ToArray());
+                        newType = nType;
+                        return converted;
+                    }
+                }
+            }
+            if (type is PtrType)
+            {
+                if ((type as PtrType).Target is SimpleType)
+                {
+                    SimpleType pst = (type as PtrType).Target as SimpleType;
+                    AstType tmp;
+                    bool converted = TryPatchGenericTemplateType(pst, out tmp);
+                    newType = new PtrType(tmp);
+                    return converted;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Returns the member string for calling a conversion constructor declaration: i.e. operator IB<Object>*();
+        /// </summary>
+        /// <param name="conv">The conversion constructor declaration</param>
+        /// <returns>The member string</returns>
+        public static string GetConversionConstructorDeclarationCall(ConversionConstructorDeclaration conv)
+        {
+            string ret = "operator ";
+            ret += Resolver.GetTypeName(conv.ReturnType);
+
+            if (conv.ReturnType is SimpleType)
+            {
+                if ((conv.ReturnType as SimpleType).TypeArguments.Any())
+                {
+                    bool first = true;
+                    ret += "<";
+                    foreach (AstType t in (conv.ReturnType as SimpleType).TypeArguments)
+                    {
+                        if (first)
+                            first = false;
+                        else
+                            ret += ",";
+
+                        AstType tmp;
+                        TryPatchGenericTemplateType(t, out tmp);
+                        ret += Resolver.GetTypeName(tmp);
+                    }
+                    ret += ">";
+                }
+            }
+            else if (conv.ReturnType is PtrType)
+            {
+                PtrType ptr = conv.ReturnType as PtrType;
+                if (ptr.Target is SimpleType)
+                {
+                    if ((ptr.Target as SimpleType).TypeArguments.Any())
+                    {
+                        bool first = true;
+                        ret += "<";
+                        foreach (AstType t in (ptr.Target as SimpleType).TypeArguments)
+                        {
+                            if (first)
+                                first = false;
+                            else
+                                ret += ",";
+
+                            AstType tmp;
+                            TryPatchGenericTemplateType(t, out tmp);
+                            ret += Resolver.GetTypeName(tmp);
+                        }
+                        ret += ">";
+                    }
+                }
+                ret += "*";
+            }
+            return ret;
+
         }
     }
 }

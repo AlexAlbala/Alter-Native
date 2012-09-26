@@ -3,7 +3,7 @@
 #include "System/Console.h"
 
 using namespace System;
-namespace Arrays{
+namespace Arrays {
 	class Program : public virtual Object, public virtual gc_cleanup
 	{
 		public:

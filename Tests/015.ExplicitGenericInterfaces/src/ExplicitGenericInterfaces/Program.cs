@@ -20,7 +20,7 @@ namespace ExplicitGenericInterfaces
         T f();
     }
 
-    class C<T> : IA, IB<T>, IC<T>
+    class C<T> : IA, IB<T>, IC<T> where T : new()
     {
         T value;
         void IA.f()
@@ -40,16 +40,20 @@ namespace ExplicitGenericInterfaces
         }
     }
 
+    class A
+    {
+    }
+
     class Program
     {
         static void Main(string[] args)
         {
-            C<int> c = new C<int>();
+            C<A> c = new C<A>();
 
             IA a = c;
             a.f();
 
-            IB<int> b = c;
+            IB<A> b = c;
             b.f();
 
             c.f();

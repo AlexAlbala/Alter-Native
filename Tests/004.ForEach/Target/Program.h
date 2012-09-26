@@ -5,7 +5,7 @@
 
 using namespace System::Collections::Generic;
 using namespace System;
-namespace ForEach{
+namespace ForEach {
 	class Program : public virtual Object, public virtual gc_cleanup
 	{
 		public:

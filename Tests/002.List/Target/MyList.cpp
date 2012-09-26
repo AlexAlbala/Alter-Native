@@ -1,5 +1,5 @@
 #include "MyList.h"
-namespace List{
+namespace List {
 	MyList::MyList(){
 		this->first = null;
 		this->length = 0;

@@ -1522,7 +1522,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 Resolver.AddVistedType(type, type.Identifier);
             }
 
-            if (!Resolver.IsChildOf(simpleType, typeof(CSharp.UsingDeclaration)) && simpleType.Role != CSharp.SimpleType.Roles.TypeArgument)
+            if (!Resolver.IsChildOf(simpleType, typeof(CSharp.UsingDeclaration)))
             {
                 //Add the visited type to the resolver in order to include it after
                 //Also this call adds the type to the include list for detecting forward declarations
@@ -1540,6 +1540,11 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 //If the Role is BaseTypeRole it means that it is a inherited class (i.e. MyClass : public MyInheritedClass)
                 if (simpleType.Parent == null || !isPtr || Resolver.IsChildOf(simpleType, typeof(CSharp.TypeReferenceExpression))
                     || simpleType.Role == CSharp.TypeDeclaration.BaseTypeRole)
+                    return EndNode(simpleType, type);
+
+                //The type is like MyTemplate<MyType> 
+                //Maybe we should not check the TypeParameter ?
+                if (simpleType.Role == CSharp.SimpleType.Roles.TypeArgument || simpleType.Role == CSharp.SimpleType.Roles.TypeParameter)
                     return EndNode(simpleType, type);
 
                 var ptrType = new PtrType(type);

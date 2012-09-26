@@ -1,5 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 PROJECT(FileStreamProj CXX)
+SET_PROPERTY(GLOBAL PROPERTY EXT_LIB_PATH "C:/Users/Alex/Desktop/AlterNative/Tools/External Libraries")
 ADD_SUBDIRECTORY(System)
 ADD_SUBDIRECTORY(gc)
 SET(EXECPATH Test.cpp Test.h main.cpp Test.cpp Test.h main.cpp)

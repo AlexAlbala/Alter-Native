@@ -3,7 +3,7 @@
 #include "ClassA.h"
 
 using namespace System;
-namespace ForwardDeclaration{
+namespace ForwardDeclaration {
 	//Forward Declaration
 	class ClassA;
 

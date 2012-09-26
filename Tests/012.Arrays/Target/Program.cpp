@@ -1,5 +1,5 @@
 #include "Program.h"
-namespace Arrays{
+namespace Arrays {
 	void Program::Main(String* args[]){
 		Program* p = new Program();
 		Array<int>* arr = new Array<int>(15);

@@ -1,12 +1,12 @@
 #pragma once
 #include "System/System.h"
 #include "A.h"
-#include "MyClass_T.h"
-#include "B.h"
-#include "System/Console.h"
+#include "C_T.h"
+#include "IA.h"
+#include "IB_T.h"
 
 using namespace System;
-namespace Templates {
+namespace ExplicitGenericInterfaces {
 	class Program : public virtual Object, public virtual gc_cleanup
 	{
 		public:

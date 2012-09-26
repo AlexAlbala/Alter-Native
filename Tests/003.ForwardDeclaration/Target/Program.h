@@ -4,7 +4,7 @@
 #include "System/Console.h"
 
 using namespace System;
-namespace ForwardDeclaration{
+namespace ForwardDeclaration {
 	class Program : public virtual Object, public virtual gc_cleanup
 	{
 		public:

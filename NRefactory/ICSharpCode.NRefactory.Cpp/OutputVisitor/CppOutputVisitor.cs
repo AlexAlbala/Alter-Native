@@ -24,7 +24,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
         private List<string> currNamespaces;
         public static string WorkingPath;
-        private bool isGenericTemplate;
+        private bool refactorTemplateTypes;
 
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 throw new ArgumentNullException("formattingPolicy");
             this.formatter = new TextWriterOutputFormatter(textWriter);
             this.policy = formattingPolicy;
-            this.isGenericTemplate = false;
+            this.refactorTemplateTypes = false;
         }
 
         public CppOutputVisitor(IOutputFormatter formatter, CppFormattingOptions formattingPolicy)
@@ -63,7 +63,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 throw new ArgumentNullException("formattingPolicy");
             this.formatter = formatter;
             this.policy = formattingPolicy;
-            this.isGenericTemplate = false;
+            this.refactorTemplateTypes = false;
         }
 
         void StartNode(AstNode node)
@@ -1265,6 +1265,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 {
                     WriteKeyword("namespace");
                     WriteIdentifier(s, IncludeDeclaration.Roles.Identifier);
+                    Space();
                     OpenBrace(BraceStyle.EndOfLineWithoutSpace);
                 }
             }
@@ -1278,65 +1279,6 @@ namespace ICSharpCode.NRefactory.Cpp
                     CloseBrace(BraceStyle.NextLine);//END OF NAMESPACES
                     NewLine();
                 }
-        }
-
-        //TODO: move this method to C#2CPPCONVERTERVISITOR
-        private bool TryPatchGenericTemplateType(AstType type, out AstType newType)
-        {
-            newType = (AstType)type.Clone();
-            string name = "";
-            if (type is SimpleType)
-            {
-                SimpleType st = type as SimpleType;
-                name = st.Identifier;
-                if (Cache.GetExcluded().Contains(name))
-                {
-                    newType = new SimpleType("Object");
-                    //if (Resolver.IsChildOf(type, typeof(TypeParameterDeclaration)))
-                    //    newType = new SimpleType("Object");
-                    //else
-                    //    newType = new PtrType(new SimpleType("Object"));
-                    return true;
-                }
-                else
-                {
-                    if (st.TypeArguments.Any())
-                    {
-                        List<AstType> args = new List<AstType>();
-                        bool converted = false;
-                        foreach (AstType t in st.TypeArguments)
-                        {
-                            AstType discard;
-                            if (TryPatchGenericTemplateType(t, out discard))
-                            {
-                                converted = true;
-                                args.Add(new SimpleType("Object"));
-                            }
-                            else
-                                args.Add((AstType)t.Clone());
-                        }
-
-                        SimpleType nType = (SimpleType)st.Clone();
-                        nType.TypeArguments.Clear();
-                        nType.TypeArguments.AddRange(args.ToArray());
-                        newType = nType;
-                        return converted;
-                    }
-                }
-            }
-            if (type is PtrType)
-            {
-                if ((type as PtrType).Target is SimpleType)
-                {
-                    SimpleType pst = (type as PtrType).Target as SimpleType;
-                    AstType tmp;
-                    bool converted = TryPatchGenericTemplateType(pst, out tmp);
-                    newType = new PtrType(tmp);
-                    return converted;
-                }
-            }
-
-            return false;
         }
 
         //TODO: ARREGLAR ESTO
@@ -1369,7 +1311,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     {
                         parametersName.Add(p.Name);
                         AstType tmp;
-                        if (TryPatchGenericTemplateType(p.Type, out tmp))
+                        if (Resolver.TryPatchGenericTemplateType(p.Type, out tmp))
                             needsCast.Add(p.Name);
                     }
 
@@ -1391,7 +1333,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     BlockStatement blck = new BlockStatement();
 
                     AstType _tmp;
-                    if (TryPatchGenericTemplateType(methodDeclaration.ReturnType, out _tmp))//NEEDS CAST
+                    if (Resolver.TryPatchGenericTemplateType(methodDeclaration.ReturnType, out _tmp))//NEEDS CAST
                     {
                         string tmpName = "var_tmp";
                         VariableDeclarationStatement varDeclStmt = new VariableDeclarationStatement(new PtrType(new SimpleType("Object")), tmpName,
@@ -1440,7 +1382,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
                     for (int i = 0; i < pm.Length; i++)
                     {
-                        bool needsCast = TryPatchGenericTemplateType(constDeclaration.Parameters.ElementAt(i).Type, out tmp);
+                        bool needsCast = Resolver.TryPatchGenericTemplateType(constDeclaration.Parameters.ElementAt(i).Type, out tmp);
 
                         if (needsCast)
                             pm[i] = new CastExpression(tmp, new IdentifierExpression(constDeclaration.Parameters.ElementAt(i).Name));
@@ -1453,6 +1395,40 @@ namespace ICSharpCode.NRefactory.Cpp
 
                     WriteMethodBody(blck);
                     EndNode(constDeclaration);
+                }
+                else if (member is ConversionConstructorDeclaration)
+                {
+                    var convConst = member as ConversionConstructorDeclaration;
+                    StartNode(convConst);
+
+                    WriteAttributes(convConst.Attributes);
+                    //WriteAccesorModifier(methodDeclaration.ModifierTokens);
+                    WriteKeyword("inline");
+
+                    WriteKeyword("operator");
+                    convConst.ReturnType.AcceptVisitor(this, null);
+                    LPar();
+                    RPar();
+
+                    //TODO WRITE OPERATOR BODY
+                    BlockStatement blck = new BlockStatement();
+                    blck.Add(new ReturnStatement(new CastExpression((AstType)convConst.ReturnType.Clone(), new InvocationExpression(
+                        new MemberReferenceExpression()
+                        {
+                            Target = new TypeReferenceExpression(new SimpleType(type + "_Base")),
+                            //TODO: Maybe it is possible to do a MemberReferenceExpression that have a target expression and a MEMBER expression instead of a member string / identifier
+                            MemberName = Resolver.GetConversionConstructorDeclarationCall(convConst)
+                        }
+                        ))));
+
+
+
+                    //new TypeReferenceExpression(
+                    //new SimpleType(type + "_Base")),
+                    //"operator " + Resolver.GetTypeName(convConst.ReturnType) + "*")))));
+
+                    WriteMethodBody(blck);
+                    EndNode(convConst);
                 }
                 //I think it is not necessary to handle destructors...
 
@@ -1486,13 +1462,17 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitTypeDeclaration(TypeDeclaration typeDeclaration, object data)
         {
+            refactorTemplateTypes = Resolver.IsChildOf(typeDeclaration, typeof(GenericTemplateTypeDeclaration));
             //WRITE FIRST CPP AND THEN .H
             StartNode(typeDeclaration);
-            isGenericTemplate = false;
             if (typeDeclaration.ClassType != ClassType.Enum)
                 TypeDeclarationCPP(typeDeclaration, data);
 
-            TypeDeclarationHeader(typeDeclaration, data);
+            //TODO: This is temporal
+            if (refactorTemplateTypes)
+                TypeDeclarationTemplatesHeader(typeDeclaration, data);
+            else
+                TypeDeclarationHeader(typeDeclaration, data);
             return EndNode(typeDeclaration);
         }
 
@@ -1509,11 +1489,7 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteNamespace();
 
             foreach (var member in typeDeclaration.Members)
-            {
-                //TODO: DO AbstractTypeDeclaration node
-                if (!(member is HeaderAbstractMethodDeclaration))
-                    member.AcceptVisitor(this, data);
-            }
+                member.AcceptVisitor(this, data);
 
             NewLine();
             CloseNamespaceBraces();
@@ -1524,9 +1500,7 @@ namespace ICSharpCode.NRefactory.Cpp
             formatter.ChangeFile(typeDeclaration.Name + ".h");
             FileWritterManager.AddSourceFile(typeDeclaration.Name + ".h");
 
-            WriteKeyword("#pragma", TypeDeclaration.Roles.Keyword);
-            WriteKeyword("once", TypeDeclaration.Roles.Keyword);
-            NewLine();
+            WritePragmaOnceDirective();
 
             //Write using declarations in header file
             foreach (AstNode n in Cache.GetHeaderNodes())
@@ -1604,23 +1578,15 @@ namespace ICSharpCode.NRefactory.Cpp
             formatter.ChangeFile("tmp");
         }
 
-        public object VisitInterfaceTypeDeclaration(InterfaceTypeDeclaration interfaceTypeDeclaration, object data)
+        private void WritePragmaOnceDirective()
         {
-            StartNode(interfaceTypeDeclaration);
-            TypeDeclarationHeader(interfaceTypeDeclaration.Type, data);
-            return EndNode(interfaceTypeDeclaration);
-        }
-
-        private void TypeDeclarationTemplatesHeader(TypeDeclaration typeDeclaration, object data)
-        {
-            //TODO: Se puede implementar con más claridad ?
-            formatter.ChangeFile(typeDeclaration.Name + ".h");
-            FileWritterManager.AddSourceFile(typeDeclaration.Name + ".h");
-
             WriteKeyword("#pragma", TypeDeclaration.Roles.Keyword);
             WriteKeyword("once", TypeDeclaration.Roles.Keyword);
             NewLine();
+        }
 
+        private void WriteImports(object data)
+        {
             //Write using declarations in header file
             foreach (AstNode n in Cache.GetHeaderNodes())
             {
@@ -1641,8 +1607,85 @@ namespace ICSharpCode.NRefactory.Cpp
             UsingNamespaces();
             Resolver.Restart();
             WriteNamespace();
+        }
+
+        public object VisitInterfaceTypeDeclaration(InterfaceTypeDeclaration interfaceTypeDeclaration, object data)
+        {
+            refactorTemplateTypes = false;
+            TypeDeclaration typeDeclaration = interfaceTypeDeclaration.Type;
+            //TODO: Se puede implementar con más claridad ?
+            formatter.ChangeFile(typeDeclaration.Name + ".h");
+            FileWritterManager.AddSourceFile(typeDeclaration.Name + ".h");
+            WritePragmaOnceDirective();
+
+            WriteImports(data);
+
+            StartNode(interfaceTypeDeclaration);
 
             WriteAttributes(typeDeclaration.Attributes);
+
+            WriteTypeParameters(typeDeclaration.TypeParameters, true);
+            // HERE GOES THE TEMPLATE !
+            BraceStyle braceStyle2 = WriteClassType(typeDeclaration.ClassType);
+            WriteIdentifier(typeDeclaration.Name);
+
+            Space();
+            WriteToken(":", TypeDeclaration.ColonRole);
+            Space();
+
+            //ÑAPA se añade virtual modifier y se quita
+            var modif2 = new CppModifierToken(TextLocation.Empty, Modifiers.Virtual);
+            typeDeclaration.ModifierTokens.Add(modif2);
+            WriteCommaSeparatedListWithModifiers(typeDeclaration.BaseTypes, typeDeclaration.ModifierTokens);
+            typeDeclaration.ModifierTokens.Remove(modif2);
+            OpenBrace(braceStyle2);
+
+            if (typeDeclaration.ClassType == ClassType.Enum)
+            {
+                bool first = true;
+                foreach (var member in typeDeclaration.Members)
+                {
+                    if (first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        Comma(member, noSpaceAfterComma: true);
+                        NewLine();
+                    }
+                    member.AcceptVisitor(this, data);
+                }
+                //OptionalComma();
+                NewLine();
+            }
+            else
+            {
+                foreach (AstNode n in Cache.GetHeaderNodes())
+                    n.AcceptVisitor(this, data);
+            }
+            CloseBrace(braceStyle2);//END OF TYPE
+            Semicolon();
+
+
+            CloseNamespaceBraces();
+            Cache.ClearHeaderNodes();
+            formatter.ChangeFile("tmp");
+            return EndNode(interfaceTypeDeclaration);
+        }
+
+        private void TypeDeclarationTemplatesHeader(TypeDeclaration typeDeclaration, object data)
+        {
+            refactorTemplateTypes = true;
+            //TODO: Se puede implementar con más claridad ?
+            formatter.ChangeFile(typeDeclaration.Name + ".h");
+            FileWritterManager.AddSourceFile(typeDeclaration.Name + ".h");
+
+            WritePragmaOnceDirective();
+            WriteImports(data);
+
+            WriteAttributes(typeDeclaration.Attributes);
+            //WriteTypeParameters(typeDeclaration.TypeParameters, true);
             //WriteModifiers(typeDeclaration.ModifierTokens);
             BraceStyle braceStyle = WriteClassType(typeDeclaration.ClassType);
             WriteIdentifier(typeDeclaration.Name + "_Base");
@@ -1690,7 +1733,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
             //After defining _Base class header, we can define the class template
             //We disable the flag for converting types
-            isGenericTemplate = false;
+            refactorTemplateTypes = false;
             NewLine();
 
             //Write first the template<typename T> with inline methods
@@ -1714,8 +1757,8 @@ namespace ICSharpCode.NRefactory.Cpp
             typeDeclaration.ModifierTokens.Add(modif2);
             typeDeclaration.BaseTypes.Add(new SimpleType(typeDeclaration.Name + "_Base"));
             WriteCommaSeparatedListWithModifiers(typeDeclaration.BaseTypes, typeDeclaration.ModifierTokens);
-            typeDeclaration.ModifierTokens.Remove(modif);
-            OpenBrace(braceStyle);
+            typeDeclaration.ModifierTokens.Remove(modif2);
+            OpenBrace(braceStyle2);
 
             if (typeDeclaration.ClassType == ClassType.Enum)
             {
@@ -1749,18 +1792,19 @@ namespace ICSharpCode.NRefactory.Cpp
             formatter.ChangeFile("tmp");
         }
 
-        public object VisitNestedTypeDeclaration(NestedTypeDeclaration nestedTypeDeclaration, object data)
+        public object VisitExplicitInterfaceTypeDeclaration(ExplicitInterfaceTypeDeclaration explicitInterfaceTypeDeclaration, object data)
         {
-            StartNode(nestedTypeDeclaration);
+            StartNode(explicitInterfaceTypeDeclaration);
             NewLine();
-            formatter.WriteComment(CommentType.SingleLine, "START Nested Class: " + nestedTypeDeclaration.Type.Name + "****************");
-            TypeDeclaration typeDeclaration = nestedTypeDeclaration.Type;
+            formatter.WriteComment(CommentType.SingleLine, "START Explicit interface: " + explicitInterfaceTypeDeclaration.Type.Name + " ****************");
+            TypeDeclaration typeDeclaration = explicitInterfaceTypeDeclaration.Type;
 
-            WriteAccesorModifier(nestedTypeDeclaration.Type.ModifierTokens);
+            WriteAccesorModifier(explicitInterfaceTypeDeclaration.Type.ModifierTokens);
+            WriteTypeParameters(typeDeclaration.TypeParameters, true);
+
             BraceStyle braceStyle = WriteClassType(typeDeclaration.ClassType);
 
             WriteIdentifier(typeDeclaration.Name);
-            WriteTypeParameters(typeDeclaration.TypeParameters);
 
             Space();
             WriteToken(":", TypeDeclaration.ColonRole);
@@ -1768,7 +1812,13 @@ namespace ICSharpCode.NRefactory.Cpp
             //ÑAPA se añade virtual modifier y se quita
             var modif = new CppModifierToken(TextLocation.Empty, Modifiers.Virtual);
             typeDeclaration.ModifierTokens.Add(modif);
+
+            //The base types cannot be refactored for Object types, must be the original ones !
+            bool tmp = refactorTemplateTypes;
+            refactorTemplateTypes = false;
             WriteCommaSeparatedListWithModifiers(typeDeclaration.BaseTypes, typeDeclaration.ModifierTokens);
+            refactorTemplateTypes = tmp;
+
             typeDeclaration.ModifierTokens.Remove(modif);
 
             OpenBrace(braceStyle);
@@ -1780,19 +1830,23 @@ namespace ICSharpCode.NRefactory.Cpp
 
             CloseBrace(braceStyle);//END OF TYPE
             Semicolon();
-            formatter.WriteComment(CommentType.SingleLine, "END Nested Class *********************");
+
+            //The out members of the nested type are placed outside the class declaration, but still belongs to the nested type (Explicit interface) logic
+            foreach (var member in explicitInterfaceTypeDeclaration.OutMembers)
+                member.AcceptVisitor(this, data);
+
+
+            formatter.WriteComment(CommentType.SingleLine, "END Explicit interface *********************");
             NewLine();
-            return EndNode(nestedTypeDeclaration);
+            return EndNode(explicitInterfaceTypeDeclaration);
         }
 
         public object VisitGenericTemplateTypeDeclaration(GenericTemplateTypeDeclaration genericTemplateTypeDeclaration, object data)
         {
             //TODO: If there is generic AND interface type ????
-            isGenericTemplate = true;
+            refactorTemplateTypes = true;
             StartNode(genericTemplateTypeDeclaration);
-            if (genericTemplateTypeDeclaration.Type.ClassType != ClassType.Interface)
-                TypeDeclarationCPP(genericTemplateTypeDeclaration.Type, data);
-            TypeDeclarationTemplatesHeader(genericTemplateTypeDeclaration.Type, data);
+            genericTemplateTypeDeclaration.Type.AcceptVisitor(this, data);
             return EndNode(genericTemplateTypeDeclaration);
         }
 
@@ -1814,7 +1868,6 @@ namespace ICSharpCode.NRefactory.Cpp
                     braceStyle = policy.ClassBraceStyle;
                     break;
             }
-
             return braceStyle;
         }
 
@@ -1857,7 +1910,6 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             throw new NotImplementedException();
         }
-
         #endregion
 
         #region TypeMembers
@@ -1893,10 +1945,10 @@ namespace ICSharpCode.NRefactory.Cpp
             //WriteAccesorModifier(constructorDeclaration.ModifierTokens);
             TypeDeclaration type = constructorDeclaration.Parent as TypeDeclaration;
 
-            WriteIdentifier(type != null ? (isGenericTemplate ? type.Name + "_Base" : type.Name) : (isGenericTemplate ? constructorDeclaration.Name + "_Base" : constructorDeclaration.Name));
+            WriteIdentifier(type != null ? (refactorTemplateTypes ? type.Name + "_Base" : type.Name) : (refactorTemplateTypes ? constructorDeclaration.Name + "_Base" : constructorDeclaration.Name));
             WriteToken("::", MethodDeclaration.Roles.Dot);
 
-            WriteIdentifier(type != null ? (isGenericTemplate ? type.Name + "_Base" : type.Name) : (isGenericTemplate ? constructorDeclaration.Name + "_Base" : constructorDeclaration.Name));
+            WriteIdentifier(type != null ? (refactorTemplateTypes ? type.Name + "_Base" : type.Name) : (refactorTemplateTypes ? constructorDeclaration.Name + "_Base" : constructorDeclaration.Name));
             Space(policy.SpaceBeforeConstructorDeclarationParentheses);
             WriteCommaSeparatedListInParenthesis(constructorDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
             if (!constructorDeclaration.Initializer.IsNull)
@@ -1934,11 +1986,11 @@ namespace ICSharpCode.NRefactory.Cpp
             //WriteAccesorModifier(destructorDeclaration.ModifierTokens);
             TypeDeclaration type = destructorDeclaration.Parent as TypeDeclaration;
 
-            WriteIdentifier(type != null ? (isGenericTemplate ? type.Name + "_Base" : type.Name) : (isGenericTemplate ? destructorDeclaration.Name + "_Base" : destructorDeclaration.Name));
+            WriteIdentifier(type != null ? (refactorTemplateTypes ? type.Name + "_Base" : type.Name) : (refactorTemplateTypes ? destructorDeclaration.Name + "_Base" : destructorDeclaration.Name));
             WriteToken("::", MethodDeclaration.Roles.Dot);
 
             WriteToken("~", DestructorDeclaration.TildeRole);
-            WriteIdentifier(type != null ? (isGenericTemplate ? type.Name + "_Base" : type.Name) : (isGenericTemplate ? destructorDeclaration.Name + "_Base" : destructorDeclaration.Name));
+            WriteIdentifier(type != null ? (refactorTemplateTypes ? type.Name + "_Base" : type.Name) : (refactorTemplateTypes ? destructorDeclaration.Name + "_Base" : destructorDeclaration.Name));
 
             Space(policy.SpaceBeforeConstructorDeclarationParentheses);
             LPar();
@@ -2088,9 +2140,9 @@ namespace ICSharpCode.NRefactory.Cpp
 
             //TODO: We should implement NestedTypeMethodDeclaration ?
             //I think it is not necessary...
-            if (!Resolver.IsChildOf(methodDeclaration, typeof(NestedTypeDeclaration)))
+            if (!Resolver.IsChildOf(methodDeclaration, typeof(ExplicitInterfaceTypeDeclaration)))
             {
-                WriteIdentifier(type == null ? (tdecl != null ? (isGenericTemplate ? tdecl.Name + "_T_Base" : tdecl.Name) : String.Empty) : (isGenericTemplate ? type.Name + "_Base" : type.Name), MethodDeclaration.Roles.Identifier);
+                WriteIdentifier(type == null ? (tdecl != null ? (refactorTemplateTypes ? tdecl.Name + "_T_Base" : tdecl.Name) : String.Empty) : (refactorTemplateTypes ? type.Name + "_Base" : type.Name), MethodDeclaration.Roles.Identifier);
                 WriteToken("::", MethodDeclaration.Roles.DoubleColon);
                 WritePrivateImplementationType(methodDeclaration.PrivateImplementationType);
             }
@@ -2249,10 +2301,10 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitSimpleType(SimpleType simpleType, object data)
         {
             StartNode(simpleType);
-            if (isGenericTemplate)
+            if (refactorTemplateTypes)
             {
                 AstType tmp;
-                if (TryPatchGenericTemplateType(simpleType, out tmp))
+                if (Resolver.TryPatchGenericTemplateType(simpleType, out tmp))
                 {
                     tmp.AcceptVisitor(this, data);
                     return EndNode(simpleType);
@@ -3319,10 +3371,10 @@ namespace ICSharpCode.NRefactory.Cpp
             StartNode(ptrType);
             //WriteKeyword("gc_ptr", PtrType.Roles.Keyword);
             //WriteToken("<", PtrType.Roles.LChevron);
-            if (isGenericTemplate)
+            if (refactorTemplateTypes)
             {
                 AstType tmp;
-                if (TryPatchGenericTemplateType(ptrType, out tmp))
+                if (Resolver.TryPatchGenericTemplateType(ptrType, out tmp))
                 {
                     tmp.AcceptVisitor(this, data);
                     return EndNode(ptrType);
@@ -3372,7 +3424,7 @@ namespace ICSharpCode.NRefactory.Cpp
             formatter.Indent();
 
             TypeDeclaration type = headerConstructorDeclaration.Parent as TypeDeclaration;
-            WriteIdentifier(type != null ? (isGenericTemplate ? type.Name + "_Base" : type.Name) : (isGenericTemplate ? headerConstructorDeclaration.Name + "_T_Base" : headerConstructorDeclaration.Name));
+            WriteIdentifier(type != null ? (refactorTemplateTypes ? type.Name + "_Base" : type.Name) : (refactorTemplateTypes ? headerConstructorDeclaration.Name + "_T_Base" : headerConstructorDeclaration.Name));
 
             Space(policy.SpaceBeforeConstructorDeclarationParentheses);
             WriteCommaSeparatedListInParenthesis(headerConstructorDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
@@ -3401,7 +3453,7 @@ namespace ICSharpCode.NRefactory.Cpp
             formatter.Indent();
             WriteToken("~", DestructorDeclaration.TildeRole);
             TypeDeclaration type = headerDestructorDeclaration.Parent as TypeDeclaration;
-            WriteIdentifier(type != null ? (isGenericTemplate ? type.Name + "_Base" : type.Name) : (isGenericTemplate ? headerDestructorDeclaration.Name + "_T_Base" : headerDestructorDeclaration.Name));
+            WriteIdentifier(type != null ? (refactorTemplateTypes ? type.Name + "_Base" : type.Name) : (refactorTemplateTypes ? headerDestructorDeclaration.Name + "_T_Base" : headerDestructorDeclaration.Name));
             Space(policy.SpaceBeforeConstructorDeclarationParentheses);
             LPar();
             RPar();

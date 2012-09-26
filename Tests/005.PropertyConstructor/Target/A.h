@@ -3,7 +3,7 @@
 #include "System/Console.h"
 
 using namespace System;
-namespace PropertyConstructor{
+namespace PropertyConstructor {
 	class A : public virtual Object, public virtual gc_cleanup
 	{
 		private:

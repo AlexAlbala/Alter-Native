@@ -1,5 +1,5 @@
 #include "MyClassA.h"
-namespace Properties{
+namespace Properties {
 	int MyClassA::getdata(){
 		return this->_data;
 	}

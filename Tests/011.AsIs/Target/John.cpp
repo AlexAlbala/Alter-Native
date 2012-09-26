@@ -1,5 +1,5 @@
 #include "John.h"
-namespace AsIs{
+namespace AsIs {
 	John::John(){
 		this->name = new String("John");
 	}

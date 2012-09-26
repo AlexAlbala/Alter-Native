@@ -6,40 +6,40 @@
 #include "System/Console.h"
 
 using namespace System;
-namespace NestedClasses{
+namespace NestedClasses {
 	class C : public virtual IC, public virtual Object, public virtual gc_cleanup
 	{
 		public:
 			int f();
 
-		//START Nested Class: _nested_IA****************
+		//START Explicit interface: _interface_IA ****************
 		public:
-		class _nested_IA : public virtual IA{
+		class _interface_IA : public virtual IA{
 			private:
 			void f(){
 				Console::WriteLine(new String("a"));
 			}
 		};
-		//END Nested Class *********************
-
 		private:
-			_nested_IA __nested_ia;
+			_interface_IA __interface_ia;
 		public:
 			operator IA*();
+		//END Explicit interface *********************
 
-		//START Nested Class: _nested_IB****************
+
+		//START Explicit interface: _interface_IB ****************
 		public:
-		class _nested_IB : public virtual IB{
+		class _interface_IB : public virtual IB{
 			private:
 			void f(){
 				Console::WriteLine(new String("b"));
 			}
 		};
-		//END Nested Class *********************
-
 		private:
-			_nested_IB __nested_ib;
+			_interface_IB __interface_ib;
 		public:
 			operator IB*();
+		//END Explicit interface *********************
+
 	};
 }

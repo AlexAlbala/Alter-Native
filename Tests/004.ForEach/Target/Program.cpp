@@ -1,5 +1,5 @@
 #include "Program.h"
-namespace ForEach{
+namespace ForEach {
 	void Program::Main(String* args[]){
 		List_T<float>* myList = new List_T<float>();
 		myList->Add(5.6f);

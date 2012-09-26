@@ -3,7 +3,7 @@
 #include "Node.h"
 
 using namespace System;
-namespace List{
+namespace List {
 	class MyList : public virtual Object, public virtual gc_cleanup
 	{
 		private:

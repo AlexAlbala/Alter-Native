@@ -1,5 +1,5 @@
 #include "Program.h"
-namespace ForwardDeclaration{
+namespace ForwardDeclaration {
 	void Program::Main(String* args[]){
 		Program* p = new Program();
 		p->Run();

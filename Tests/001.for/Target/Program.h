@@ -3,7 +3,7 @@
 #include "System/Console.h"
 
 using namespace System;
-namespace For{
+namespace For {
 	class Program : public virtual Object, public virtual gc_cleanup
 	{
 		public:

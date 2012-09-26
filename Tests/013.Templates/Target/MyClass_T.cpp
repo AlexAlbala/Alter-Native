@@ -1,5 +1,5 @@
 #include "MyClass_T.h"
-namespace Templates{
+namespace Templates {
 	void MyClass_T_Base::set(Object* data){
 		this->data = data;
 	}

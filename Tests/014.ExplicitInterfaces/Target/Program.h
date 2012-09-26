@@ -5,7 +5,7 @@
 #include "IB.h"
 
 using namespace System;
-namespace NestedClasses{
+namespace NestedClasses {
 	class Program : public virtual Object, public virtual gc_cleanup
 	{
 		public:

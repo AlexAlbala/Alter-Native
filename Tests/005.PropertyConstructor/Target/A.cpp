@@ -1,5 +1,5 @@
 #include "A.h"
-namespace PropertyConstructor{
+namespace PropertyConstructor {
 	int A::getP(){
 		return this->p;
 	}

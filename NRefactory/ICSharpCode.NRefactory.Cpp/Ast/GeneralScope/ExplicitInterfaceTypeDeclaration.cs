@@ -6,12 +6,13 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
     /// <summary>
     /// Type&lt;[EMPTY]&gt;
     /// </summary>
-    public class NestedTypeDeclaration : AttributedNode
+    public class ExplicitInterfaceTypeDeclaration : AttributedNode
     {
-        public static readonly new NestedTypeDeclaration Null = new NullNestedTypeDeclaration();
+        public static readonly new ExplicitInterfaceTypeDeclaration Null = new NullExplicitInterfaceTypeDeclaration();
         public readonly static Role<TypeDeclaration> TypeRole = new Role<TypeDeclaration>("Type", TypeDeclaration.Null);
+        public readonly static Role<AttributedNode> OutMemberRole = new Role<AttributedNode>("OutMember");
 
-        sealed class NullNestedTypeDeclaration : NestedTypeDeclaration
+        sealed class NullExplicitInterfaceTypeDeclaration : ExplicitInterfaceTypeDeclaration
         {
             public override bool IsNull
             {
@@ -32,9 +33,9 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
             }
         }
 
-        public NestedTypeDeclaration() { }
+        public ExplicitInterfaceTypeDeclaration() { }
 
-        public NestedTypeDeclaration(TypeDeclaration type)
+        public ExplicitInterfaceTypeDeclaration(TypeDeclaration type)
         {
             this.Type = type;
         }
@@ -45,9 +46,17 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
             set { SetChildByRole(TypeRole, value); }
         }
 
+        /// <summary>
+        /// Members used for accessing the nested type. These members are declared in the parent type
+        /// </summary>
+        public AstNodeCollection<AttributedNode> OutMembers
+        {
+            get { return GetChildrenByRole(OutMemberRole); }
+        }
+
         public override S AcceptVisitor<T, S>(IAstVisitor<T, S> visitor, T data = default(T))
         {
-            return visitor.VisitNestedTypeDeclaration(this, data);
+            return visitor.VisitExplicitInterfaceTypeDeclaration(this, data);
         }
 
         protected internal override bool DoMatch(AstNode other, PatternMatching.Match match)

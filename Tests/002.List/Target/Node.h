@@ -3,7 +3,7 @@
 #include "Utils.h"
 
 using namespace System;
-namespace List{
+namespace List {
 	class Node : public virtual Object, public virtual gc_cleanup
 	{
 		public:

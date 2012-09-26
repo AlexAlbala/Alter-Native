@@ -1,5 +1,5 @@
 #include "Program.h"
-namespace Templates{
+namespace Templates {
 	void Program::Main(String* args[]){
 		MyClass_T<A>* myA = new MyClass_T<A>();
 		myA->set(new A());

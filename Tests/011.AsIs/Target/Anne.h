@@ -3,7 +3,7 @@
 #include "Person.h"
 
 using namespace System;
-namespace AsIs{
+namespace AsIs {
 	class Anne : public virtual Person, public virtual Object, public virtual gc_cleanup
 	{
 		public:

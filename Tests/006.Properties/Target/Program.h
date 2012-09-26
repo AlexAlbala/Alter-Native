@@ -3,7 +3,7 @@
 #include "MyClassA.h"
 
 using namespace System;
-namespace Properties{
+namespace Properties {
 	class Program : public virtual Object, public virtual gc_cleanup
 	{
 		public:

@@ -63,6 +63,8 @@ namespace ICSharpCode.NRefactory.Cpp
             return visitor.VisitConversionConstructorDeclaration(this, data);
         }
 
+        
+
         protected internal override bool DoMatch(AstNode other, PatternMatching.Match match)
         {
             OperatorDeclaration o = other as OperatorDeclaration;

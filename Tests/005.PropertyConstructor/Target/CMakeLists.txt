@@ -1,5 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 PROJECT(PropertyConstructorProj CXX)
+SET_PROPERTY(GLOBAL PROPERTY EXT_LIB_PATH "C:/Users/Alex/Desktop/AlterNative/Tools/External Libraries")
 ADD_SUBDIRECTORY(System)
 ADD_SUBDIRECTORY(gc)
 SET(EXECPATH A.cpp A.h main.cpp A.cpp A.h main.cpp)

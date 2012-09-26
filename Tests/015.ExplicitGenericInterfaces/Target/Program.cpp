@@ -1,10 +1,10 @@
 #include "Program.h"
-namespace NestedClasses {
+namespace ExplicitGenericInterfaces {
 	void Program::Main(String* args[]){
-		C* c = new C();
+		C_T<A>* c = new C_T<A>();
 		IA* a = *c;
 		a->f();
-		IB* b = *c;
+		IB_T<A>* b = *c;
 		b->f();
 		c->f();
 	}

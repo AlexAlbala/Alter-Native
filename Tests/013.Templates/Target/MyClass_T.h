@@ -2,7 +2,7 @@
 #include "System/System.h"
 
 using namespace System;
-namespace Templates{
+namespace Templates {
 	class MyClass_T_Base : public virtual Object, public virtual gc_cleanup
 	{
 		private:
