@@ -1291,7 +1291,11 @@ namespace ICSharpCode.NRefactory.Cpp
                 name = st.Identifier;
                 if (Cache.GetExcluded().Contains(name))
                 {
-                    newType = new PtrType(new SimpleType("Object"));
+                    newType = new SimpleType("Object");
+                    //if (Resolver.IsChildOf(type, typeof(TypeParameterDeclaration)))
+                    //    newType = new SimpleType("Object");
+                    //else
+                    //    newType = new PtrType(new SimpleType("Object"));
                     return true;
                 }
                 else
@@ -1299,22 +1303,24 @@ namespace ICSharpCode.NRefactory.Cpp
                     if (st.TypeArguments.Any())
                     {
                         List<AstType> args = new List<AstType>();
+                        bool converted = false;
                         foreach (AstType t in st.TypeArguments)
                         {
                             AstType discard;
                             if (TryPatchGenericTemplateType(t, out discard))
                             {
+                                converted = true;
                                 args.Add(new SimpleType("Object"));
                             }
                             else
-                                args.Add(t);
+                                args.Add((AstType)t.Clone());
                         }
 
-                        st.TypeArguments.Clear();
-                        foreach (AstNode t in args)
-                        {
-                            st.TypeArguments.AddRange(args.ToArray());
-                        }
+                        SimpleType nType = (SimpleType)st.Clone();
+                        nType.TypeArguments.Clear();
+                        nType.TypeArguments.AddRange(args.ToArray());
+                        newType = nType;
+                        return converted;
                     }
                 }
             }
@@ -1323,41 +1329,17 @@ namespace ICSharpCode.NRefactory.Cpp
                 if ((type as PtrType).Target is SimpleType)
                 {
                     SimpleType pst = (type as PtrType).Target as SimpleType;
-                    name = pst.Identifier;
-                    if (Cache.GetExcluded().Contains(name))
-                    {
-                        newType = new PtrType(new SimpleType("Object"));
-                        return true;
-                    }
-                    else
-                    {
-                        if (pst.TypeArguments.Any())
-                        {
-                            List<AstType> args = new List<AstType>();
-                            foreach (AstType t in pst.TypeArguments)
-                            {
-                                AstType discard;
-                                if (TryPatchGenericTemplateType(t, out discard))
-                                {
-                                    args.Add(new SimpleType("Object"));
-                                }
-                                else
-                                    args.Add(t);
-                            }
-
-                            pst.TypeArguments.Clear();
-                            foreach (AstNode t in args)
-                            {
-                                pst.TypeArguments.AddRange(args.ToArray());
-                            }
-                        }
-                    }
+                    AstType tmp;
+                    bool converted = TryPatchGenericTemplateType(pst, out tmp);
+                    newType = new PtrType(tmp);
+                    return converted;
                 }
             }
 
             return false;
         }
 
+        //TODO: ARREGLAR ESTO
         private void WriteInlineMembers(AstNodeCollection<AttributedNode> members, string type)
         {
             foreach (var member in members)
@@ -1389,7 +1371,6 @@ namespace ICSharpCode.NRefactory.Cpp
                         AstType tmp;
                         if (TryPatchGenericTemplateType(p.Type, out tmp))
                             needsCast.Add(p.Name);
-
                     }
 
                     Expression[] parameters = new Expression[parametersName.Count];
@@ -1429,10 +1410,75 @@ namespace ICSharpCode.NRefactory.Cpp
                         blck.Add(rtstm);
                     }
 
-
                     WriteMethodBody(blck);
                     EndNode(methodDeclaration);
                 }
+                else if (member is ConstructorDeclaration)
+                {
+                    WriteAccesorModifier(member.ModifierTokens);
+                    var constDeclaration = member as ConstructorDeclaration;
+                    StartNode(constDeclaration);
+
+                    WriteAttributes(constDeclaration.Attributes);
+                    //WriteAccesorModifier(methodDeclaration.ModifierTokens);
+                    WriteKeyword("inline");
+
+                    WriteIdentifier(constDeclaration.Name + "_T");
+                    WriteToken("::", MethodDeclaration.Roles.Dot);
+                    WriteIdentifier(constDeclaration.Name + "_T");
+
+                    Space(policy.SpaceBeforeConstructorDeclarationParentheses);
+                    WriteCommaSeparatedListInParenthesis(constDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
+                    if (!constDeclaration.Initializer.IsNull)
+                    {
+                        Space();
+                        constDeclaration.Initializer.AcceptVisitor(this, null);
+                    }
+
+                    Expression[] pm = new Expression[constDeclaration.Parameters.Count()];
+                    AstType tmp;
+
+                    for (int i = 0; i < pm.Length; i++)
+                    {
+                        bool needsCast = TryPatchGenericTemplateType(constDeclaration.Parameters.ElementAt(i).Type, out tmp);
+
+                        if (needsCast)
+                            pm[i] = new CastExpression(tmp, new IdentifierExpression(constDeclaration.Parameters.ElementAt(i).Name));
+                        else
+                            pm[i] = new IdentifierExpression(constDeclaration.Parameters.ElementAt(i).Name);
+                    }
+
+                    BlockStatement blck = new BlockStatement();
+                    blck.Add(new InvocationExpression(new IdentifierExpression(constDeclaration.Name + "_T_Base"), pm));
+
+                    WriteMethodBody(blck);
+                    EndNode(constDeclaration);
+                }
+                //I think it is not necessary to handle destructors...
+
+                //else if (member is DestructorDeclaration)
+                //{
+                //    WriteAccesorModifier(member.ModifierTokens);
+                //    var destDeclaration = member as DestructorDeclaration;
+                //    StartNode(destDeclaration);
+
+                //    WriteAttributes(destDeclaration.Attributes);
+                //    //WriteAccesorModifier(methodDeclaration.ModifierTokens);
+                //    WriteKeyword("inline");
+
+                //    WriteIdentifier(destDeclaration.Name + "_T");
+                //    WriteToken("::", MethodDeclaration.Roles.Dot);
+                //    WriteToken("~", DestructorDeclaration.TildeRole);
+                //    WriteIdentifier(destDeclaration.Name + "_T");
+
+                //    Space(policy.SpaceBeforeConstructorDeclarationParentheses);
+
+                //    BlockStatement blck = new BlockStatement();
+                //    blck.Add(new InvocationExpression(new IdentifierExpression(constDeclaration.Name + "_T_Base"), pm));
+
+                //    WriteMethodBody(blck);
+                //    EndNode(constDeclaration);
+                //}
             }
         }
 
