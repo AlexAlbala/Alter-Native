@@ -86,31 +86,6 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             return EndNode(asExpression, invExpr);
         }
 
-        private bool IsPropertyCall(MemberReferenceExpression memberReferenceExpression)
-        {
-            Dictionary<string, List<string>> properties = Cache.GetPropertiesList();
-
-            //The member reference is a property reference ?
-            if (properties.ContainsKey(memberReferenceExpression.MemberName))
-            {
-                if (memberReferenceExpression.Target is ThisReferenceExpression)
-                {
-                    return (properties[memberReferenceExpression.MemberName].Contains(currentType.Name));
-                }
-                else
-                {
-                    if (memberReferenceExpression.Target is IdentifierExpression)
-                    {
-                        IdentifierExpression tmp = memberReferenceExpression.Target as IdentifierExpression;
-                        ICSharpCode.Decompiler.Ast.TypeInformation ann = (ICSharpCode.Decompiler.Ast.TypeInformation)tmp.Annotation(typeof(ICSharpCode.Decompiler.Ast.TypeInformation));
-                        return (properties[memberReferenceExpression.MemberName].Contains(ann.InferredType.Name));
-                    }
-                }
-            }
-
-            return false;
-        }
-
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitAssignmentExpression(CSharp.AssignmentExpression assignmentExpression, object data)
         {
             var left = (Expression)assignmentExpression.Left.AcceptVisitor(this, data);
@@ -120,7 +95,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             if (left is MemberReferenceExpression)
             {
                 MemberReferenceExpression l = left as MemberReferenceExpression;
-                if (IsPropertyCall(l))
+                if (Resolver.IsPropertyCall(l, currentType.Name))
                 {
                     //SET
                     InvocationExpression m = new InvocationExpression(
@@ -134,7 +109,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             if (right is MemberReferenceExpression)
             {
                 MemberReferenceExpression r = right as MemberReferenceExpression;
-                if (IsPropertyCall(r))
+                if (Resolver.IsPropertyCall(r, currentType.Name))
                 {
                     //GET
                     InvocationExpression m = new InvocationExpression(
@@ -325,7 +300,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
             var expr = new IndexerExpression((Expression)indexerExpression.Target.AcceptVisitor(this, data));
             ConvertNodes(indexerExpression.Arguments, expr.Arguments);
-            if (needsDeref)            
+            if (needsDeref)
                 expr.Target = new PointerExpression((Expression)expr.Target.Clone());
 
             return EndNode(indexerExpression, expr);
@@ -370,7 +345,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 {
                     MemberReferenceExpression mre = ex as MemberReferenceExpression;
 
-                    if (IsPropertyCall(mre))
+                    if (Resolver.IsPropertyCall(mre, currentType.Name))
                     {
                         //GET
                         InvocationExpression m = new InvocationExpression(
@@ -815,13 +790,33 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             Cache.AddNamespace("System");
 
             //TODO: I'm not sure...
-            if (isInterface)
-                if (type.TypeParameters.Any())
-                    return EndNode(typeDeclaration, new GenericTemplateTypeDeclaration(new InterfaceTypeDeclaration(type)));
-                else
-                    return EndNode(typeDeclaration, new InterfaceTypeDeclaration(type));
+            if (isInterface)                
+                return EndNode(typeDeclaration, new InterfaceTypeDeclaration(type));
+
             if (type.TypeParameters.Any())
+            {
+                foreach (AstType baseType in type.BaseTypes)
+                {
+                    //If the base class is a template type, we have to dereference the type if it is a basic type
+                    //The template DeRefType<typename T> provides that conversion
+                    if (baseType is SimpleType)
+                    {
+                        for (int i = 0; i < (baseType as SimpleType).TypeArguments.Count; i++)
+                        {
+                            AstType arg = (baseType as SimpleType).TypeArguments.ElementAt(i);
+                            if (Resolver.IsTemplateType(arg))
+                            {
+                                SimpleType st = new SimpleType("DeRefType");
+                                st.TypeArguments.Add((AstType)arg.Clone());
+                                TypeNameType qtype = new TypeNameType(new QualifiedType(st, new Identifier("Type", TextLocation.Empty)));
+                                (baseType as SimpleType).TypeArguments.InsertAfter(arg, qtype);
+                                (baseType as SimpleType).TypeArguments.Remove(arg);
+                            }
+                        }
+                    }
+                }
                 return EndNode(typeDeclaration, new GenericTemplateTypeDeclaration(type));
+            }
 
 
             return EndNode(typeDeclaration, type);
@@ -1011,7 +1006,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             if (expr is MemberReferenceExpression)
             {
                 MemberReferenceExpression r = expr as MemberReferenceExpression;
-                if (IsPropertyCall(r))
+                if (Resolver.IsPropertyCall(r, currentType.Name))
                 {
                     //GET
                     expr = new InvocationExpression(
@@ -1368,9 +1363,17 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
                 if (res.PrivateImplementationType != AstType.Null)
                     Cache.AddPrivateImplementation(res.PrivateImplementationType, res);
+
+                if (Resolver.IsTemplateType(res.ReturnType))
+                {
+                    SimpleType st = new SimpleType("DeRefBasicType");
+                    st.TypeArguments.Add((AstType)res.ReturnType.Clone());
+                    TypeNameType qtype = new TypeNameType(new QualifiedType(st, new Identifier("Type", TextLocation.Empty)));
+                    res.ReturnType = qtype;
+                }
+
                 //END
                 Cache.AddHeaderNode(res);
-
                 return EndNode(methodDeclaration, res);
 
             }
@@ -1466,7 +1469,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             if (vi.Initializer is MemberReferenceExpression)
             {
                 MemberReferenceExpression mre = vi.Initializer as MemberReferenceExpression;
-                if (IsPropertyCall(mre))
+                if (Resolver.IsPropertyCall(mre, currentType.Name))
                 {
                     //GET
                     InvocationExpression m = new InvocationExpression(
@@ -1662,7 +1665,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
             t.Name = typeParameterDeclaration.Name;
             t.NameToken = (Identifier)typeParameterDeclaration.NameToken.AcceptVisitor(this, data);
-            Cache.AddExcludedType(t.Name);
+            Cache.AddTemplateType(t.Name);
             return EndNode(typeParameterDeclaration, t);
         }
 

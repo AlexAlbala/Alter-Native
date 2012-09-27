@@ -150,6 +150,7 @@ namespace ICSharpCode.NRefactory.Cpp
 		S VisitSimpleType(SimpleType simpleType, T data);
         S VisitPtrType(PtrType ptrType, T data);//**************
 		//S VisitMemberType(MemberType memberType, T data);
+        S VisitTypeNameType(TypeNameType typeNameType, T data);
         S VisitQualifiedType(QualifiedType qualifiedType, T data);
 		S VisitComposedType(ComposedType composedType, T data);
 		S VisitArraySpecifier(ArraySpecifier arraySpecifier, T data);

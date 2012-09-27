@@ -268,7 +268,7 @@ namespace ICSharpCode.NRefactory.Cpp
             {
                 if (!kvp.Key.IsBasicType)
                 {
-                    if (!Cache.GetExcluded().Contains(kvp.Value) && !tmp.Contains(GetCppName(kvp.Value)))
+                    if (!Cache.GetTemplateTypes().Contains(kvp.Value) && !tmp.Contains(GetCppName(kvp.Value)))
                         tmp.Add(GetCppName(kvp.Value));
                 }
             }
@@ -395,6 +395,20 @@ namespace ICSharpCode.NRefactory.Cpp
                     }
                 }
             }
+            else if (node is ConversionConstructorDeclaration)
+            {
+                for (int i = 0; i < Cache.GetHeaderNodes().Count; i++)
+                {
+                    if (Cache.GetHeaderNodes().ElementAt(i) is HeaderConversionConstructorDeclaration)
+                    {
+                        var hc = Cache.GetHeaderNodes().ElementAt(i) as HeaderConversionConstructorDeclaration;
+                        if (GetTypeName(hc.ReturnType) == GetTypeName((node as ConversionConstructorDeclaration).ReturnType))
+                        {
+                            Cache.GetHeaderNodes().RemoveAt(i);
+                        }
+                    }
+                }
+            }
         }
 
         public static void GetNestedTypes(TypeDeclaration currentType)
@@ -510,11 +524,23 @@ namespace ICSharpCode.NRefactory.Cpp
 
                 currentType.Members.Add(op);
 
-                HeaderConversionConstructorDeclaration hc = new HeaderConversionConstructorDeclaration();
-                GetHeaderNode(op, hc);
 
-                //Add the header member to the out members of the nested type
-                ntype.OutMembers.Add(hc);
+                //If is generic type, we have to implement the operator inside of the templates header
+                if (currentType.TypeParameters.Any())
+                {
+                    op.type = String.Empty;
+                    ntype.OutMembers.Add((AttributedNode)op.Clone());
+                    //The method is implemented, we must delete the node from the header nodes
+                    RemoveHeaderNode(op);
+                }
+                else
+                {
+                    HeaderConversionConstructorDeclaration hc = new HeaderConversionConstructorDeclaration();
+                    GetHeaderNode(op, hc);
+                    //Add the header member to the out members of the nested type
+                    ntype.OutMembers.Add(hc);
+                }
+                
 
                 //ADD NESTED TYPE TO THE HEADER DECLARATION
                 Cache.AddHeaderNode(ntype);
@@ -713,6 +739,13 @@ namespace ICSharpCode.NRefactory.Cpp
                 return false;
         }
 
+        public static bool IsTemplateType(AstType type)
+        {
+            return Cache.GetTemplateTypes().FirstOrDefault(x => x == GetTypeName(type)) != null;
+            
+
+        }
+
         /// <summary>
         /// Checks if the node is child of other node of the specified type
         /// </summary>
@@ -802,7 +835,7 @@ namespace ICSharpCode.NRefactory.Cpp
             {
                 SimpleType st = type as SimpleType;
                 name = st.Identifier;
-                if (Cache.GetExcluded().Contains(name))
+                if (Cache.GetTemplateTypes().Contains(name))
                 {
                     newType = new SimpleType("Object");
                     //if (Resolver.IsChildOf(type, typeof(TypeParameterDeclaration)))
@@ -857,8 +890,10 @@ namespace ICSharpCode.NRefactory.Cpp
         /// </summary>
         /// <param name="conv">The conversion constructor declaration</param>
         /// <returns>The member string</returns>
-        public static string GetConversionConstructorDeclarationCall(ConversionConstructorDeclaration conv)
+        public static string GetInlineConversionConstructorDeclarationCall(ConversionConstructorDeclaration conv)
         {
+            //ESTA FUNCION NO ME GUSTA NADA !
+            //HAY QUE CREAR NODOS INLINE    
             string ret = "operator ";
             ret += Resolver.GetTypeName(conv.ReturnType);
 
@@ -879,7 +914,7 @@ namespace ICSharpCode.NRefactory.Cpp
                         TryPatchGenericTemplateType(t, out tmp);
                         ret += Resolver.GetTypeName(tmp);
                     }
-                    ret += ">";
+                    ret += "*>";
                 }
             }
             else if (conv.ReturnType is PtrType)
@@ -902,13 +937,38 @@ namespace ICSharpCode.NRefactory.Cpp
                             TryPatchGenericTemplateType(t, out tmp);
                             ret += Resolver.GetTypeName(tmp);
                         }
-                        ret += ">";
+                        ret += "*>";
                     }
                 }
                 ret += "*";
             }
             return ret;
 
+        }
+
+        public static bool IsPropertyCall(MemberReferenceExpression memberReferenceExpression, string currentTypeName)
+        {
+            Dictionary<string, List<string>> properties = Cache.GetPropertiesList();
+
+            //The member reference is a property reference ?
+            if (properties.ContainsKey(memberReferenceExpression.MemberName))
+            {
+                if (memberReferenceExpression.Target is ThisReferenceExpression)
+                {
+                    return (properties[memberReferenceExpression.MemberName].Contains(currentTypeName));
+                }
+                else
+                {
+                    if (memberReferenceExpression.Target is IdentifierExpression)
+                    {
+                        IdentifierExpression tmp = memberReferenceExpression.Target as IdentifierExpression;
+                        ICSharpCode.Decompiler.Ast.TypeInformation ann = (ICSharpCode.Decompiler.Ast.TypeInformation)tmp.Annotation(typeof(ICSharpCode.Decompiler.Ast.TypeInformation));
+                        return (properties[memberReferenceExpression.MemberName].Contains(ann.InferredType.Name));
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }

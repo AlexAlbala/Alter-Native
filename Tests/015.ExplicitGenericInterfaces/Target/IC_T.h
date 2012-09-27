@@ -6,6 +6,6 @@ namespace ExplicitGenericInterfaces {
 	template<typename T>
 	class IC_T : public virtual Object, public virtual gc_cleanup{
 		public:
-			virtual T* f() = 0;
+			virtual typename DeRefBasicType<T*>::Type f() = 0;
 	};
 }

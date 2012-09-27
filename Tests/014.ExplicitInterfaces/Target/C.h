@@ -23,6 +23,7 @@ namespace NestedClasses {
 		private:
 			_interface_IA __interface_ia;
 		public:
+		public:
 			operator IA*();
 		//END Explicit interface *********************
 
@@ -37,6 +38,7 @@ namespace NestedClasses {
 		};
 		private:
 			_interface_IB __interface_ib;
+		public:
 		public:
 			operator IB*();
 		//END Explicit interface *********************

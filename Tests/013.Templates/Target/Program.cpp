@@ -10,6 +10,12 @@ namespace Templates {
 		Console::WriteLine(myA->get()->getText());
 		Console::WriteLine(myB->get()->getText());
 		Console::WriteLine(myString->get());
+		MyClass_T<int>* myInt = new MyClass_T<int>();
+		myInt->set(23);
+		MyClass_T<float>* myFloat = new MyClass_T<float>();
+		myFloat->set(53.6f);
+		Console::WriteLine(myInt->get());
+		Console::WriteLine(myFloat->get());
 	}
 
 }

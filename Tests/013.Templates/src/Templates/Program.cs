@@ -21,6 +21,15 @@ namespace Templates
             Console.WriteLine(myA.get().getText());
             Console.WriteLine(myB.get().getText());
             Console.WriteLine(myString.get());
+
+            //Test basic types
+            MyClass<int> myInt = new MyClass<int>();
+            myInt.set(23);
+            MyClass<float> myFloat = new MyClass<float>();
+            myFloat.set(53.6f);
+
+            Console.WriteLine(myInt.get());
+            Console.WriteLine(myFloat.get());
         }
     }
 

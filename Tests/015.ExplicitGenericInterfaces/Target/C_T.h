@@ -7,58 +7,85 @@
 
 using namespace System;
 namespace ExplicitGenericInterfaces {
-	class C_T_Base : public virtual IC_T<Object>, public virtual Object, public virtual gc_cleanup
-	{
-		private:
-			Object* value;
-		public:
-			Object* f();
+	namespace _Internal {
 
-		//START Explicit interface: _interface_IA ****************
-		public:
-		class _interface_IA : public virtual IA{
-			private:
-			void f(){
-				Console::WriteLine(new String("a"));
-			}
-		};
-		private:
-			_interface_IA __interface_ia;
-		public:
-			operator IA*();
-		//END Explicit interface *********************
+		//The classes defined in namespace _Internal are internal types.
+		//DO NOT modify this code
 
-
-		//START Explicit interface: _interface_IB_T ****************
-		public:
 		template<typename T>
-		class _interface_IB_T : public virtual IB_T<T>{
+		class C_T_Base : public virtual IC_T<typename DeRefType<T>::Type>, public virtual Object, public virtual gc_cleanup{
+
+			//START Explicit interface: _interface_IA ****************
+			public:
+			class _interface_IA : public virtual IA{
+				private:
+				void f(){
+					Console::WriteLine(new String("a"));
+				}
+			};
 			private:
-			void f(){
-				Console::WriteLine(new String("b"));
+				_interface_IA __interface_ia;
+			public:
+			operator IA*() {
+				return &__interface_ia;
+			}
+			//END Explicit interface *********************
+
+
+			//START Explicit interface: _interface_IB_T ****************
+			public:
+			template<typename T>
+			class _interface_IB_T : public virtual IB_T<T>{
+				private:
+				void f(){
+					Console::WriteLine(new String("b"));
+				}
+			};
+			private:
+				_interface_IB_T<T> __interface_ib_t;
+			public:
+			operator IB_T<T>*() {
+				return &__interface_ib_t;
+			}
+			//END Explicit interface *********************
+
+			private:
+			T value;
+			public:
+			T f(){
+				Console::WriteLine(new String("c"));
+				return this->value;
 			}
 		};
-		private:
-			_interface_IB_T<Object> __interface_ib_t;
-		public:
-			operator IB_T<Object>*();
-		//END Explicit interface *********************
 
-	};
+		template<typename T, bool>
+		class C_T  {
+		};
 
-	//Generic template type
+		//Generic template type
+		template<typename T>
+		class C_T<T, false> : public virtual C_T_Base<Object*>{
+			public:
+			inline T* f(){
+				Object* var_tmp = C_T_Base<Object*>::f();
+				return dynamic_cast<T*>(var_tmp);
+			}
+			inline operator IA*() {
+				return (IA*)(C_T_Base<Object*>::operator IA*());
+			}
+			inline operator IB_T<T>*() {
+				return (IB_T<T>*)(C_T_Base<Object*>::operator IB_T<Object*>*());
+			}
+		};
+
+		//Basic types template type
+		template<typename T>
+		class C_T<T, true> : public C_T_Base<T>{
+		};
+	}
+
+	//Type definition
 	template<typename T>
-	class C_T : public virtual IC_T<T>, public virtual Object, public virtual gc_cleanup, public virtual C_T_Base{
-		public:
-		inline T* f(){
-			Object* var_tmp = C_T_Base::f();
-			return dynamic_cast<T*>(var_tmp);
-		}
-		inline operator IA*() {
-			return (IA*)(C_T_Base::operator IA*());
-		}
-		inline operator IB_T<T>*() {
-			return (IB_T<T>*)(C_T_Base::operator IB_T<Object>*());
-		}
+	class C_T : public _Internal::C_T<T, IsFundamentalType<T>::result>{
 	};
 }

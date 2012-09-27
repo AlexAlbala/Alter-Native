@@ -25,7 +25,7 @@ namespace ICSharpCode.NRefactory.Cpp
         private static List<string> namespaces = new List<string>();
         private static Dictionary<string, TypeReference> symbols = new Dictionary<string, TypeReference>();
         private static Dictionary<string, List<string>> includes = new Dictionary<string, List<string>>();
-        private static List<string> excluded = new List<string>();
+        private static List<string> templateTypes = new List<string>();
 
         #region RESOLVER
 
@@ -84,15 +84,15 @@ namespace ICSharpCode.NRefactory.Cpp
             namespaces.Clear();
         }
 
-        public static void AddExcludedType(string type)
+        public static void AddTemplateType(string type)
         {
-            if (!excluded.Contains(type))
-                excluded.Add(type);
+            if (!templateTypes.Contains(type))
+                templateTypes.Add(type);
         }
 
-        public static List<string> GetExcluded()
+        public static List<string> GetTemplateTypes()
         {
-            return excluded;
+            return templateTypes;
         }
 
         public static void AddNamespace(string nameSpace)

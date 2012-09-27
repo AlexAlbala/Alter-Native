@@ -57,6 +57,26 @@ namespace ExplicitGenericInterfaces
             b.f();
 
             c.f();
+
+            C<int> _int_c = new C<int>();
+
+            IA _int_a = _int_c;
+            _int_a.f();
+
+            IB<int> _int_b = _int_c;
+            _int_b.f();
+
+            _int_c.f();
+
+            C<float> _float_c = new C<float>();
+
+            IA _float_a = _float_c;
+            _float_a.f();
+
+            IB<float> _float_b = _float_c;
+            _float_b.f();
+
+            _float_c.f();
         }
     }
 }
