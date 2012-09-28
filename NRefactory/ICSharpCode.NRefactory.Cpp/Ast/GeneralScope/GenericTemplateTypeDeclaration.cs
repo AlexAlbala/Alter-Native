@@ -9,7 +9,7 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
     public class GenericTemplateTypeDeclaration : TypeDeclaration
     {
         public static readonly new GenericTemplateTypeDeclaration Null = new NullGenericTemplateTypeDeclaration();
-        public readonly static Role<TypeDeclaration> TypeRole = new Role<TypeDeclaration>("Type", TypeDeclaration.Null);
+        public readonly static Role<GenericEntryPointDeclaration> EntryTypeRole = new Role<GenericEntryPointDeclaration>("EntryType", GenericEntryPointDeclaration.Null);
 
         sealed class NullGenericTemplateTypeDeclaration : GenericTemplateTypeDeclaration
         {
@@ -34,15 +34,10 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
 
         public GenericTemplateTypeDeclaration() { }
 
-        public GenericTemplateTypeDeclaration(TypeDeclaration type)
+        public GenericEntryPointDeclaration TypeDefinition
         {
-            this.Type = type;
-        }
-
-        public TypeDeclaration Type
-        {
-            get { return GetChildByRole(TypeRole); }
-            set { SetChildByRole(TypeRole, value); }
+            get { return GetChildByRole(EntryTypeRole); }
+            set { SetChildByRole(EntryTypeRole, value); }
         }
 
         public override S AcceptVisitor<T, S>(IAstVisitor<T, S> visitor, T data = default(T))

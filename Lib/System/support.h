@@ -26,7 +26,6 @@ struct DeRefType<System::Object*> {
 	typedef System::Object Type;
 };
 
-
 template <typename T>
 struct DeRefBasicType {
 	typedef T Type;
@@ -113,5 +112,10 @@ struct IsFundamentalType<unsigned long> {
 
 template<>
 struct IsFundamentalType<float> {
+	enum { result = true };
+};
+
+template<>
+struct IsFundamentalType<char> {
 	enum { result = true };
 };

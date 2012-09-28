@@ -87,6 +87,11 @@ namespace ICSharpCode.NRefactory.Cpp
         S VisitExplicitInterfaceTypeDeclaration(ExplicitInterfaceTypeDeclaration explicitInterfaceTypeDeclaration, T data); //******************
         S VisitInterfaceTypeDeclaration(InterfaceTypeDeclaration interfaceTypeDeclaration, T data); //******************
         S VisitGenericTemplateTypeDeclaration(GenericTemplateTypeDeclaration genericTemplateTypeDeclaration, T data); //******************
+        S VisitSpecializedGenericTemplateDeclaration(SpecializedGenericTemplateDeclaration specializedGenericTemplateDeclaration, T data);//*************
+        S VisitSpecializedBasicTemplateDeclaration(SpecializedBasicTemplateDeclaration specializedBasicTemplateDeclaration, T data);//*************
+        S VisitTemplateTypeDeclaration(TemplateTypeDeclaration templateTypeDeclaration, T data);//*********************
+        S VisitBaseTemplateTypeDeclaration(BaseTemplateTypeDeclaration baseTemplateTypeDeclaration, T data);//*********************
+        S VisitGenericEntryPointDeclaration(GenericEntryPointDeclaration genericEntryPointDeclaration, T data);//*********************
 		//S VisitUsingAliasDeclaration(UsingAliasDeclaration usingAliasDeclaration, T data);
 		S VisitIncludeDeclaration(IncludeDeclaration usingDeclaration, T data);
 		S VisitExternAliasDeclaration(ExternAliasDeclaration externAliasDeclaration, T data);

@@ -71,6 +71,8 @@
     <Compile Include="Ast\Expressions\AddressOfExpression.cs" />
     <Compile Include="Ast\Expressions\DynamicCastExpression.cs" />
     <Compile Include="Ast\Expressions\MemberAccessExpression.cs" />
+    <Compile Include="Ast\GeneralScope\BaseTemplateTypeDeclaration.cs" />
+    <Compile Include="Ast\GeneralScope\GenericEntryPointDeclaration.cs" />
     <Compile Include="Ast\GeneralScope\GenericTemplateTypeDeclaration.cs" />
     <Compile Include="Ast\GeneralScope\InterfaceTypeDeclaration.cs" />
     <Compile Include="Ast\GeneralScope\ExplicitInterfaceTypeDeclaration.cs" />
@@ -78,6 +80,9 @@
     <Compile Include="Ast\GeneralScope\CompilationUnit.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Ast\GeneralScope\SpecializedBasicTemplateDeclaration.cs" />
+    <Compile Include="Ast\GeneralScope\SpecializedGenericTemplateDeclaration.cs" />
+    <Compile Include="Ast\GeneralScope\TemplateTypeDeclaration.cs" />
     <Compile Include="Ast\Header\IncludeDeclaration.cs" />
     <Compile Include="Ast\GeneralScope\InterfaceMemberSpecifier.cs" />
     <Compile Include="Ast\Statements\ForeachStatement.cs" />

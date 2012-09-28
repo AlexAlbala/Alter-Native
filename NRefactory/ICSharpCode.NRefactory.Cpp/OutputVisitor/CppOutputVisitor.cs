@@ -1465,6 +1465,266 @@ namespace ICSharpCode.NRefactory.Cpp
 
         #region TypeDeclaration
 
+        #region Generic Templates
+        public object VisitSpecializedGenericTemplateDeclaration(SpecializedGenericTemplateDeclaration specializedGenericTemplateDeclaration, object data)
+        {
+            StartNode(specializedGenericTemplateDeclaration);
+            /********************** DEFINE GENERIC TEMPLATE  *********************/
+            /*********************************************************************/
+            /*********************************************************************/
+            NewLine();
+            Comment c = new Comment("Generic template type", CommentType.SingleLine);
+            c.AcceptVisitor(this, data);
+            WriteAttributes(specializedGenericTemplateDeclaration.Attributes);
+
+            WriteTypeParameters(specializedGenericTemplateDeclaration.TypeParameters, true);
+            // HERE GOES THE TEMPLATE !
+            BraceStyle braceStyle2 = WriteClassType(specializedGenericTemplateDeclaration.ClassType);
+            WriteIdentifier(specializedGenericTemplateDeclaration.Name);
+
+            //TODO: MAYBE IT IS NOT THE BEST WAY TO DO IT...
+            List<AstNode> args = new List<AstNode>();
+            foreach (TypeParameterDeclaration tp in specializedGenericTemplateDeclaration.TypeParameters)
+                args.Add(tp);
+            PrimitiveExpression expr = new PrimitiveExpression(false);
+            args.Add(expr);
+            WriteTypeArguments(args);
+
+            Space();
+            WriteToken(":", TypeDeclaration.ColonRole);
+            Space();
+
+            //ÑAPA se añade virtual modifier y se quita
+            var modif2 = new CppModifierToken(TextLocation.Empty, Modifiers.Virtual);
+            specializedGenericTemplateDeclaration.ModifierTokens.Add(modif2);
+            SimpleType super = new SimpleType(specializedGenericTemplateDeclaration.Name + "_Base");
+            super.TypeArguments.Add(new PtrType(new SimpleType("Object")));
+            specializedGenericTemplateDeclaration.BaseTypes.Add(super);
+            WriteCommaSeparatedListWithModifiers(specializedGenericTemplateDeclaration.BaseTypes, specializedGenericTemplateDeclaration.ModifierTokens);
+            specializedGenericTemplateDeclaration.ModifierTokens.Remove(modif2);
+            OpenBrace(braceStyle2);
+
+            if (specializedGenericTemplateDeclaration.ClassType == ClassType.Enum)
+            {
+                bool first = true;
+                foreach (var member in specializedGenericTemplateDeclaration.Members)
+                {
+                    if (first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        Comma(member, noSpaceAfterComma: true);
+                        NewLine();
+                    }
+                    member.AcceptVisitor(this, data);
+                }
+                //OptionalComma();
+                NewLine();
+            }
+            else
+            {
+                WriteInlineMembers(specializedGenericTemplateDeclaration.Members, specializedGenericTemplateDeclaration.Name);
+            }
+            CloseBrace(braceStyle2);//END OF TYPE
+            Semicolon();
+            return EndNode(specializedGenericTemplateDeclaration);
+        }
+
+        public object VisitSpecializedBasicTemplateDeclaration(SpecializedBasicTemplateDeclaration specializedBasicTemplateDeclaration, object data)
+        {
+            StartNode(specializedBasicTemplateDeclaration);
+            /*********** DEFINE BASIC TYPES TEMPLATE FOR THE BASE CLASS **********/
+            /*********************************************************************/
+            /*********************************************************************/
+            NewLine();
+            formatter.WriteComment(CommentType.SingleLine, "Basic types template type");
+            WriteTypeParameters(specializedBasicTemplateDeclaration.TypeParameters, true);
+            // HERE GOES THE TEMPLATE !
+            WriteClassType(specializedBasicTemplateDeclaration.ClassType);
+            WriteIdentifier(specializedBasicTemplateDeclaration.Name);
+
+            //TODO: MAYBE IT IS NOT THE BEST WAY TO DO IT...
+            List<AstNode> args = new List<AstNode>();
+            foreach (TypeParameterDeclaration tp in specializedBasicTemplateDeclaration.TypeParameters)
+                args.Add(tp);
+            AstNode expr = new PrimitiveExpression(true);
+            args.Add(expr);
+            WriteTypeArguments(args);
+
+
+            Space();
+            WriteToken(":", TypeDeclaration.ColonRole);
+            Space();
+
+            SimpleType b = new SimpleType(specializedBasicTemplateDeclaration.Name + "_Base");
+            b.TypeArguments.Add(new SimpleType("T"));
+
+            List<AstNode> baseTypes = new List<AstNode>() { b };
+            WriteCommaSeparatedListWithModifiers(baseTypes, specializedBasicTemplateDeclaration.ModifierTokens);
+
+            OpenBrace(BraceStyle.DoNotChange);
+            CloseBrace(BraceStyle.DoNotChange);
+            Semicolon();
+            return EndNode(specializedBasicTemplateDeclaration);
+
+        }
+
+        public object VisitTemplateTypeDeclaration(TemplateTypeDeclaration templateTypeDeclaration, object data)
+        {
+            StartNode(templateTypeDeclaration);
+            /**************** DEFINE TEMPLATE FOR THE BASE CLASS *****************/
+            /*********************************************************************/
+            /*********************************************************************/
+
+            WriteTypeParameters(templateTypeDeclaration.TypeParameters);
+            NewLine();
+            WriteClassType(ClassType.Class);
+            WriteIdentifier(templateTypeDeclaration.Name);
+            Space();
+            OpenBrace(BraceStyle.DoNotChange);
+            CloseBrace(BraceStyle.DoNotChange);
+            Semicolon();
+            return EndNode(templateTypeDeclaration);
+        }
+
+        public object VisitBaseTemplateTypeDeclaration(BaseTemplateTypeDeclaration baseTemplateTypeDeclaration, object data)
+        {
+            StartNode(baseTemplateTypeDeclaration);
+            WriteAttributes(baseTemplateTypeDeclaration.Attributes);
+            WriteTypeParameters(baseTemplateTypeDeclaration.TypeParameters, true);
+            //WriteModifiers(typeDeclaration.ModifierTokens);
+            BraceStyle braceStyle = WriteClassType(baseTemplateTypeDeclaration.ClassType);
+            WriteIdentifier(baseTemplateTypeDeclaration.Name + "_Base");
+
+            Space();
+            WriteToken(":", TypeDeclaration.ColonRole);
+            Space();
+            //ÑAPA se añade virtual modifier y se quita
+            var modif = new CppModifierToken(TextLocation.Empty, Modifiers.Virtual);
+            baseTemplateTypeDeclaration.ModifierTokens.Add(modif);
+
+            WriteCommaSeparatedListWithModifiers(baseTemplateTypeDeclaration.BaseTypes, baseTemplateTypeDeclaration.ModifierTokens);
+            //This is the base class,so, all the inherited classes will inherit also the base types, thus, we can clear the list (for avoid duplicated code)
+            baseTemplateTypeDeclaration.BaseTypes.Clear();
+            baseTemplateTypeDeclaration.ModifierTokens.Remove(modif);
+
+            OpenBrace(braceStyle);
+
+            if (baseTemplateTypeDeclaration.ClassType == ClassType.Enum)
+            {
+                bool first = true;
+                foreach (var member in baseTemplateTypeDeclaration.Members)
+                {
+                    if (first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        Comma(member, noSpaceAfterComma: true);
+                        NewLine();
+                    }
+                    member.AcceptVisitor(this, data);
+                }
+                //OptionalComma();
+                NewLine();
+            }
+            else
+            {
+                foreach (ExplicitInterfaceTypeDeclaration n in Cache.GetHeaderNodes().FindAll(x => x is ExplicitInterfaceTypeDeclaration))
+                    n.AcceptVisitor(this, data);
+
+                foreach (var member in baseTemplateTypeDeclaration.Members)
+                {
+                    //TODO: FIX THAT ÑAPA
+                    if (member is ConversionConstructorDeclaration)
+                        continue;
+
+                    WriteAccesorModifier(member.ModifierTokens);
+                    member.AcceptVisitor(this, data);
+                }
+            }
+            CloseBrace(braceStyle);//END OF TYPE
+            Semicolon();
+            Cache.ClearHeaderNodes();
+            //After defining _Base class header, we can define the class template
+            //We disable the flag for converting types
+            avoidPointers = false;
+            NewLine();
+
+            return EndNode(baseTemplateTypeDeclaration);
+        }
+
+        public object VisitGenericEntryPointDeclaration(GenericEntryPointDeclaration genericEntryPointDeclaration, object data)
+        {
+            StartNode(genericEntryPointDeclaration);
+            /************************** DEFINE CLASS *****************************/
+            /*********************************************************************/
+            /*********************************************************************/
+            NewLine();
+            formatter.WriteComment(CommentType.SingleLine, "Type definition");
+            WriteTypeParameters(genericEntryPointDeclaration.TypeParameters, true);
+            // HERE GOES THE TEMPLATE !
+            WriteClassType(genericEntryPointDeclaration.ClassType);
+            WriteIdentifier(genericEntryPointDeclaration.Name);
+
+            Space();
+            WriteToken(":", TypeDeclaration.ColonRole);
+            Space();
+
+            WriteCommaSeparatedListWithModifiers(genericEntryPointDeclaration.BaseTypes, genericEntryPointDeclaration.ModifierTokens);
+
+            OpenBrace(BraceStyle.DoNotChange);
+            CloseBrace(BraceStyle.DoNotChange);
+            Semicolon();
+            return EndNode(genericEntryPointDeclaration);
+        }
+
+        public object VisitGenericTemplateTypeDeclaration(GenericTemplateTypeDeclaration genericTemplateTypeDeclaration, object data)
+        {
+            //TODO: If there is generic AND interface type ????
+            StartNode(genericTemplateTypeDeclaration);
+            //TODO: Se puede implementar con más claridad ?
+            formatter.ChangeFile(genericTemplateTypeDeclaration.Name + ".h");
+            FileWritterManager.AddSourceFile(genericTemplateTypeDeclaration.Name + ".h");
+
+            WritePragmaOnceDirective();
+            WriteImports(data);
+
+            /*********** ADD INTERNAL CLASSES IN _INTERNAL NAMESPACE *************/
+            /*********************************************************************/
+            /*********************************************************************/
+            WriteKeyword("namespace");
+            WriteIdentifier("_Internal", IncludeDeclaration.Roles.Identifier);
+            Space();
+            OpenBrace(BraceStyle.EndOfLineWithoutSpace);
+
+            NewLine();
+            formatter.WriteComment(CommentType.SingleLine, "The classes defined in namespace _Internal are internal types.");
+            formatter.WriteComment(CommentType.SingleLine, "DO NOT modify this code");
+            NewLine();
+
+            avoidPointers = true;
+            foreach (var member in genericTemplateTypeDeclaration.Members)
+                member.AcceptVisitor(this, data);
+
+            CloseBrace(BraceStyle.NextLine);//NAMESPACE _INTERNAL
+            NewLine();
+            genericTemplateTypeDeclaration.TypeDefinition.AcceptVisitor(this, data);
+
+
+
+            CloseNamespaceBraces();
+
+            formatter.ChangeFile("tmp");
+            //TypeDeclarationTemplatesHeader(genericTemplateTypeDeclaration.Type, data);
+            //genericTemplateTypeDeclaration.Type.AcceptVisitor(this, data);
+            return EndNode(genericTemplateTypeDeclaration);
+        }
+        #endregion
+
         public object VisitTypeDeclaration(TypeDeclaration typeDeclaration, object data)
         {
             //WRITE FIRST CPP AND THEN .H
@@ -1676,239 +1936,6 @@ namespace ICSharpCode.NRefactory.Cpp
             return EndNode(interfaceTypeDeclaration);
         }
 
-        private void TypeDeclarationTemplatesHeader(TypeDeclaration typeDeclaration, object data)
-        {
-            avoidPointers = true;
-            //TODO: Se puede implementar con más claridad ?
-            formatter.ChangeFile(typeDeclaration.Name + ".h");
-            FileWritterManager.AddSourceFile(typeDeclaration.Name + ".h");
-
-            WritePragmaOnceDirective();
-            WriteImports(data);
-
-            /*********** ADD INTERNAL CLASSES IN _INTERNAL NAMESPACE *************/
-            /*********************************************************************/
-            /*********************************************************************/
-            WriteKeyword("namespace");
-            WriteIdentifier("_Internal", IncludeDeclaration.Roles.Identifier);
-            Space();
-            OpenBrace(BraceStyle.EndOfLineWithoutSpace);
-
-            NewLine();
-            formatter.WriteComment(CommentType.SingleLine, "The classes defined in namespace _Internal are internal types.");
-            formatter.WriteComment(CommentType.SingleLine, "DO NOT modify this code");
-            NewLine();
-
-
-            WriteAttributes(typeDeclaration.Attributes);
-            WriteTypeParameters(typeDeclaration.TypeParameters, true);
-            //WriteModifiers(typeDeclaration.ModifierTokens);
-            BraceStyle braceStyle = WriteClassType(typeDeclaration.ClassType);
-            WriteIdentifier(typeDeclaration.Name + "_Base");
-
-            Space();
-            WriteToken(":", TypeDeclaration.ColonRole);
-            Space();
-            //ÑAPA se añade virtual modifier y se quita
-            var modif = new CppModifierToken(TextLocation.Empty, Modifiers.Virtual);
-            typeDeclaration.ModifierTokens.Add(modif);
-
-            WriteCommaSeparatedListWithModifiers(typeDeclaration.BaseTypes, typeDeclaration.ModifierTokens);
-            //This is the base class,so, all the inherited classes will inherit also the base types, thus, we can clear the list (for avoid duplicated code)
-            typeDeclaration.BaseTypes.Clear();
-            typeDeclaration.ModifierTokens.Remove(modif);
-
-            OpenBrace(braceStyle);
-
-            if (typeDeclaration.ClassType == ClassType.Enum)
-            {
-                bool first = true;
-                foreach (var member in typeDeclaration.Members)
-                {
-                    if (first)
-                    {
-                        first = false;
-                    }
-                    else
-                    {
-                        Comma(member, noSpaceAfterComma: true);
-                        NewLine();
-                    }
-                    member.AcceptVisitor(this, data);
-                }
-                //OptionalComma();
-                NewLine();
-            }
-            else
-            {
-                foreach (ExplicitInterfaceTypeDeclaration n in Cache.GetHeaderNodes().FindAll(x => x is ExplicitInterfaceTypeDeclaration))
-                    n.AcceptVisitor(this, data);
-
-                foreach (var member in typeDeclaration.Members)
-                {
-                    //TODO: FIX THAT ÑAPA
-                    if (member is ConversionConstructorDeclaration)
-                        continue;
-
-                    WriteAccesorModifier(member.ModifierTokens);
-                    member.AcceptVisitor(this, data);
-                }
-            }
-            CloseBrace(braceStyle);//END OF TYPE
-            Semicolon();
-            Cache.ClearHeaderNodes();
-
-            //After defining _Base class header, we can define the class template
-            //We disable the flag for converting types
-            avoidPointers = false;
-            NewLine();
-
-            /**************** DEFINE TEMPLATE FOR THE BASE CLASS *****************/
-            /*********************************************************************/
-            /*********************************************************************/
-            WriteKeyword("template");
-            WriteToken("<", AstNode.Roles.LChevron);
-            WriteKeyword("typename");
-            List<AstNode> tmp = new List<AstNode>() { new SimpleType("T"), new PrimitiveType("bool") };
-            WriteCommaSeparatedList(tmp);
-            WriteToken(">", AstNode.Roles.RChevron);
-            NewLine();
-            WriteClassType(ClassType.Class);
-            WriteIdentifier(typeDeclaration.Name);
-            Space();
-            OpenBrace(BraceStyle.DoNotChange);
-            CloseBrace(BraceStyle.DoNotChange);
-            Semicolon();
-
-            //Write first the template<typename T> with inline methods
-            #region <template typename T>
-
-            /********************** DEFINE GENERIC TEMPLATE  *********************/
-            /*********************************************************************/
-            /*********************************************************************/
-            NewLine();
-            Comment c = new Comment("Generic template type", CommentType.SingleLine);
-            c.AcceptVisitor(this, data);
-            WriteAttributes(typeDeclaration.Attributes);
-
-            WriteTypeParameters(typeDeclaration.TypeParameters, true);
-            // HERE GOES THE TEMPLATE !
-            BraceStyle braceStyle2 = WriteClassType(typeDeclaration.ClassType);
-            WriteIdentifier(typeDeclaration.Name);
-
-            //TODO: MAYBE IT IS NOT THE BEST WAY TO DO IT...
-            List<AstNode> args = new List<AstNode>();
-            foreach (TypeParameterDeclaration tp in typeDeclaration.TypeParameters)
-                args.Add(tp);
-            PrimitiveExpression expr = new PrimitiveExpression(false);
-            args.Add(expr);
-            WriteTypeArguments(args);
-
-            Space();
-            WriteToken(":", TypeDeclaration.ColonRole);
-            Space();
-
-            //ÑAPA se añade virtual modifier y se quita
-            var modif2 = new CppModifierToken(TextLocation.Empty, Modifiers.Virtual);
-            typeDeclaration.ModifierTokens.Add(modif2);
-            SimpleType super = new SimpleType(typeDeclaration.Name + "_Base");
-            super.TypeArguments.Add(new PtrType(new SimpleType("Object")));
-            typeDeclaration.BaseTypes.Add(super);
-            WriteCommaSeparatedListWithModifiers(typeDeclaration.BaseTypes, typeDeclaration.ModifierTokens);
-            typeDeclaration.ModifierTokens.Remove(modif2);
-            OpenBrace(braceStyle2);
-
-            if (typeDeclaration.ClassType == ClassType.Enum)
-            {
-                bool first = true;
-                foreach (var member in typeDeclaration.Members)
-                {
-                    if (first)
-                    {
-                        first = false;
-                    }
-                    else
-                    {
-                        Comma(member, noSpaceAfterComma: true);
-                        NewLine();
-                    }
-                    member.AcceptVisitor(this, data);
-                }
-                //OptionalComma();
-                NewLine();
-            }
-            else
-            {
-                WriteInlineMembers(typeDeclaration.Members, typeDeclaration.Name);
-            }
-            CloseBrace(braceStyle2);//END OF TYPE
-            Semicolon();
-
-            /*********** DEFINE BASIC TYPES TEMPLATE FOR THE BASE CLASS **********/
-            /*********************************************************************/
-            /*********************************************************************/
-            NewLine();
-            formatter.WriteComment(CommentType.SingleLine, "Basic types template type");
-            WriteTypeParameters(typeDeclaration.TypeParameters, true);
-            // HERE GOES THE TEMPLATE !
-            WriteClassType(typeDeclaration.ClassType);
-            WriteIdentifier(typeDeclaration.Name);
-
-            //TODO: MAYBE IT IS NOT THE BEST WAY TO DO IT...
-            args = new List<AstNode>();
-            foreach (TypeParameterDeclaration tp in typeDeclaration.TypeParameters)
-                args.Add(tp);
-            expr = new PrimitiveExpression(true);
-            args.Add(expr);
-            WriteTypeArguments(args);
-
-
-            Space();
-            WriteToken(":", TypeDeclaration.ColonRole);
-            Space();
-
-            SimpleType b = new SimpleType(typeDeclaration.Name + "_Base");
-            b.TypeArguments.Add(new SimpleType("T"));
-
-            List<AstNode> baseTypes = new List<AstNode>() { b };
-            WriteCommaSeparatedListWithModifiers(baseTypes, typeDeclaration.ModifierTokens);
-
-            OpenBrace(BraceStyle.DoNotChange);
-            CloseBrace(BraceStyle.DoNotChange);
-            Semicolon();
-
-            CloseBrace(BraceStyle.NextLine);//NAMESPACE _INTERNAL
-            NewLine();
-
-            /************************** DEFINE CLASS *****************************/
-            /*********************************************************************/
-            /*********************************************************************/
-            NewLine();
-            formatter.WriteComment(CommentType.SingleLine, "Type definition");
-            WriteTypeParameters(typeDeclaration.TypeParameters, true);
-            // HERE GOES THE TEMPLATE !
-            WriteClassType(typeDeclaration.ClassType);
-            WriteIdentifier(typeDeclaration.Name);
-
-            Space();
-            WriteToken(":", TypeDeclaration.ColonRole);
-            Space();
-
-            baseTypes = new List<AstNode>() { new MemberReferenceExpression(
-               new TypeReferenceExpression(new QualifiedType(new SimpleType("_Internal"), typeDeclaration.Name + "<T, IsFundamentalType<T>"))
-                , "result>") };
-            WriteCommaSeparatedListWithModifiers(baseTypes, typeDeclaration.ModifierTokens);
-
-            OpenBrace(BraceStyle.DoNotChange);
-            CloseBrace(BraceStyle.DoNotChange);
-            Semicolon();
-            #endregion
-
-            CloseNamespaceBraces();
-
-            formatter.ChangeFile("tmp");
-        }
-
         public object VisitExplicitInterfaceTypeDeclaration(ExplicitInterfaceTypeDeclaration explicitInterfaceTypeDeclaration, object data)
         {
             StartNode(explicitInterfaceTypeDeclaration);
@@ -1956,15 +1983,6 @@ namespace ICSharpCode.NRefactory.Cpp
             formatter.WriteComment(CommentType.SingleLine, "END Explicit interface *********************");
             NewLine();
             return EndNode(explicitInterfaceTypeDeclaration);
-        }
-
-        public object VisitGenericTemplateTypeDeclaration(GenericTemplateTypeDeclaration genericTemplateTypeDeclaration, object data)
-        {
-            //TODO: If there is generic AND interface type ????
-            StartNode(genericTemplateTypeDeclaration);
-            TypeDeclarationTemplatesHeader(genericTemplateTypeDeclaration.Type, data);
-            //genericTemplateTypeDeclaration.Type.AcceptVisitor(this, data);
-            return EndNode(genericTemplateTypeDeclaration);
         }
 
         private BraceStyle WriteClassType(ClassType classType)
@@ -2788,6 +2806,17 @@ namespace ICSharpCode.NRefactory.Cpp
                     WriteCommaSeparatedList(typeParameters);
                     WriteToken(">", AstNode.Roles.RChevron);
                 }
+            }
+        }
+
+        public void WriteTypeParameters(IEnumerable<AstType> typeParameters)
+        {
+            if (typeParameters.Any())
+            {
+                WriteKeyword("template");
+                WriteToken("<", AstNode.Roles.LChevron);
+                WriteCommaSeparatedList(typeParameters);
+                WriteToken(">", AstNode.Roles.RChevron);
             }
         }
 

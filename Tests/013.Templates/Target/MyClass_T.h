@@ -27,6 +27,11 @@ namespace Templates {
 		class MyClass_T  {
 		};
 
+		//Basic types template type
+		template<typename T>
+		class MyClass_T<T, true> : public MyClass_T_Base<T>{
+		};
+
 		//Generic template type
 		template<typename T>
 		class MyClass_T<T, false> : public virtual MyClass_T_Base<Object*>{
@@ -39,11 +44,6 @@ namespace Templates {
 				Object* var_tmp = MyClass_T_Base<Object*>::get();
 				return dynamic_cast<T*>(var_tmp);
 			}
-		};
-
-		//Basic types template type
-		template<typename T>
-		class MyClass_T<T, true> : public MyClass_T_Base<T>{
 		};
 	}
 

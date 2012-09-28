@@ -62,6 +62,11 @@ namespace ExplicitGenericInterfaces {
 		class C_T  {
 		};
 
+		//Basic types template type
+		template<typename T>
+		class C_T<T, true> : public C_T_Base<T>{
+		};
+
 		//Generic template type
 		template<typename T>
 		class C_T<T, false> : public virtual C_T_Base<Object*>{
@@ -76,11 +81,6 @@ namespace ExplicitGenericInterfaces {
 			inline operator IB_T<T>*() {
 				return (IB_T<T>*)(C_T_Base<Object*>::operator IB_T<Object*>*());
 			}
-		};
-
-		//Basic types template type
-		template<typename T>
-		class C_T<T, true> : public C_T_Base<T>{
 		};
 	}
 

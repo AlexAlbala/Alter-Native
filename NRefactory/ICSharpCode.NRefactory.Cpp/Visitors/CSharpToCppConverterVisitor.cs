@@ -790,11 +790,30 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             Cache.AddNamespace("System");
 
             //TODO: I'm not sure...
-            if (isInterface)                
+            if (isInterface)
                 return EndNode(typeDeclaration, new InterfaceTypeDeclaration(type));
 
             if (type.TypeParameters.Any())
-            {
+            {               
+                GenericTemplateTypeDeclaration gtempl = new GenericTemplateTypeDeclaration();
+                BaseTemplateTypeDeclaration btempl = new BaseTemplateTypeDeclaration();
+                TemplateTypeDeclaration ttempl = new TemplateTypeDeclaration();
+                SpecializedBasicTemplateDeclaration spec = new SpecializedBasicTemplateDeclaration();
+                SpecializedGenericTemplateDeclaration specGen = new SpecializedGenericTemplateDeclaration();
+                GenericEntryPointDeclaration genEntry = new GenericEntryPointDeclaration();
+
+                btempl.Name = ttempl.Name = spec.Name = specGen.Name = genEntry.Name = gtempl.Name = type.Name;
+
+                foreach (var mod in type.ModifierTokens)
+                {
+                    btempl.ModifierTokens.Add((CppModifierToken)mod.Clone());
+                    ttempl.ModifierTokens.Add((CppModifierToken)mod.Clone());
+                    spec.ModifierTokens.Add((CppModifierToken)mod.Clone());
+                    specGen.ModifierTokens.Add((CppModifierToken)mod.Clone());
+                    genEntry.ModifierTokens.Add((CppModifierToken)mod.Clone());
+                }
+
+                /***************** BASE TYPES *****************/
                 foreach (AstType baseType in type.BaseTypes)
                 {
                     //If the base class is a template type, we have to dereference the type if it is a basic type
@@ -815,7 +834,46 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                         }
                     }
                 }
-                return EndNode(typeDeclaration, new GenericTemplateTypeDeclaration(type));
+
+                foreach (var btype in type.BaseTypes)
+                    btempl.BaseTypes.Add((AstType)btype.Clone());
+
+                List<AstNode> baseTypes = new List<AstNode>() { 
+                    new MemberReferenceExpression(
+                    new TypeReferenceExpression(new QualifiedType(
+                    new SimpleType("_Internal"), genEntry.Name + "<T, IsFundamentalType<T>")), "result>") };
+
+                genEntry.BaseTypes.AddRange(baseTypes);
+
+                /***************** MEMBERS *****************/
+                foreach (var member in type.Members)
+                {
+                    btempl.Members.Add((AttributedNode)member.Clone());
+                    ttempl.Members.Add((AttributedNode)member.Clone());
+                    spec.Members.Add((AttributedNode)member.Clone());
+                    specGen.Members.Add((AttributedNode)member.Clone());
+                    genEntry.Members.Add((AttributedNode)member.Clone());
+                }
+
+                /***************** TYPE PARAMETERS *****************/
+                foreach (var typePar in type.TypeParameters)
+                {
+                    btempl.TypeParameters.Add((TypeParameterDeclaration)typePar.Clone());
+                    spec.TypeParameters.Add((TypeParameterDeclaration)typePar.Clone());
+                    specGen.TypeParameters.Add((TypeParameterDeclaration)typePar.Clone());
+                    genEntry.TypeParameters.Add((TypeParameterDeclaration)typePar.Clone());
+                }
+                List<AstType> tmp = new List<AstType>() { new TypeNameType(new SimpleType("T")), new PrimitiveType("bool") };
+                ttempl.TypeParameters.AddRange(tmp);
+
+                /**************** FILL THE GENERIC TEMPLATE TYPE ***************/
+                gtempl.TypeDefinition = genEntry;
+                gtempl.Members.Add(btempl);
+                gtempl.Members.Add(ttempl);
+                gtempl.Members.Add(spec);
+                gtempl.Members.Add(specGen);
+
+                return EndNode(typeDeclaration, gtempl);
             }
 
 
