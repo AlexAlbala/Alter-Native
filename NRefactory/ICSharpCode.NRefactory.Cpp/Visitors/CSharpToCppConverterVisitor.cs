@@ -822,11 +822,12 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     {
                         for (int i = 0; i < (baseType as SimpleType).TypeArguments.Count; i++)
                         {
-                            AstType arg = (baseType as SimpleType).TypeArguments.ElementAt(i);
+                            AstType arg = (AstType)(baseType as SimpleType).TypeArguments.ElementAt(i);
                             if (Resolver.IsTemplateType(arg))
                             {
-                                SimpleType st = new SimpleType("DeRefType");
+                                SimpleType st = new SimpleType("TypeTrait");
                                 st.TypeArguments.Add((AstType)arg.Clone());
+                                st.TypeArguments.Add(new PrimitiveExpression(true));
                                 TypeNameType qtype = new TypeNameType(new QualifiedType(st, new Identifier("Type", TextLocation.Empty)));
                                 (baseType as SimpleType).TypeArguments.InsertAfter(arg, qtype);
                                 (baseType as SimpleType).TypeArguments.Remove(arg);
@@ -947,6 +948,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         {
             ForeachStatement feach = new ForeachStatement();
 
+            //Add variable declaration to the foreach body (in order to dereference from iterator to the variable)
             string tmpVar = "_" + foreachStatement.VariableName.ToUpper();
             VariableDeclarationStatement vds = new VariableDeclarationStatement(
                 (AstType)foreachStatement.VariableType.AcceptVisitor(this, data),
@@ -960,67 +962,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             feach.ForEachStatement = blckstmt;
 
             feach.VariableIdentifier = new Identifier(tmpVar, TextLocation.Empty);
-            feach.CollectionExpression = (Expression)foreachStatement.InExpression.AcceptVisitor(this, data);
-
-            ///***************************WHILE*************************/
-            /////WHILE STATEMENT            
-            //WhileStatement whilstmt = new WhileStatement();
-
-            /////*embedded statement*/
-            //VariableDeclarationStatement vds = new VariableDeclarationStatement(
-            //    (AstType)foreachStatement.VariableType.AcceptVisitor(this, data),
-            //    foreachStatement.VariableName,
-            //    new PointerExpression(new IdentifierExpression("__begin")));
-
-            //BlockStatement blckstmt = new BlockStatement();
-            //blckstmt.AddChild(vds, BlockStatement.StatementRole);
-            //foreach (CSharp.Statement st in foreachStatement.EmbeddedStatement.GetChildrenByRole(CSharp.BlockStatement.StatementRole))
-            //    blckstmt.AddChild((Statement)st.AcceptVisitor(this, data), BlockStatement.StatementRole);
-            //whilstmt.EmbeddedStatement = blckstmt;
-
-            /////*condition*/
-            //BinaryOperatorExpression bop = new BinaryOperatorExpression();
-            //bop.Operator = BinaryOperatorType.InEquality;
-            //bop.Left = new UnaryOperatorExpression(UnaryOperatorType.PostIncrement, new IdentifierExpression("__begin"));
-            //bop.Right = new IdentifierExpression("__end");
-            //whilstmt.Condition = bop;
-
-            //feach.WhileStatement = whilstmt;
-            ///***************************WHIILE*************************/
-
-            ///***************************RANGE*************************/
-            //VariableDeclarationStatement vdecl_range = new VariableDeclarationStatement();
-            //vdecl_range.Type = new PrimitiveType("auto");
-            //VariableInitializer vinit_range = new VariableInitializer("&&__range", (Expression)foreachStatement.InExpression.AcceptVisitor(this, data));
-            //vdecl_range.AddChild(vinit_range, FieldDeclaration.Roles.Variable);
-            //feach.RangeExpression = vdecl_range;
-            ///***************************RANGE*************************/
-
-            ///***************************BEGIN*************************/
-            //MemberReferenceExpression mref_beg = new MemberReferenceExpression(
-            //   new IdentifierExpression("__range"),
-            //   "begin");
-            //InvocationExpression inv_beg = new InvocationExpression(mref_beg);
-
-            //VariableDeclarationStatement vdecl_beg = new VariableDeclarationStatement();
-            //vdecl_beg.Type = new PrimitiveType("auto");
-            //VariableInitializer vinit_beg = new VariableInitializer("__begin", inv_beg);
-            //vdecl_beg.AddChild(vinit_beg, FieldDeclaration.Roles.Variable);
-            //feach.BeginExpression = vdecl_beg;
-            ///***************************BEGIN*************************/
-
-            ///***************************END*************************/
-            //MemberReferenceExpression mref_end = new MemberReferenceExpression(
-            //    new IdentifierExpression("__range"),
-            //    "end");
-            //InvocationExpression inv_end = new InvocationExpression(mref_end);
-
-            //VariableDeclarationStatement vdecl_end = new VariableDeclarationStatement();
-            //vdecl_end.Type = new PrimitiveType("auto");
-            //VariableInitializer vinit_end = new VariableInitializer("__end", inv_end);
-            //vdecl_end.AddChild(vinit_end, FieldDeclaration.Roles.Variable);
-            //feach.EndExpression = vdecl_end;
-            ///***************************END*************************/
+            feach.CollectionExpression = (Expression)foreachStatement.InExpression.AcceptVisitor(this, data);            
 
             return EndNode(foreachStatement, feach);
         }
@@ -1439,8 +1381,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
                 if (Resolver.IsTemplateType(res.ReturnType))
                 {
-                    SimpleType st = new SimpleType("DeRefBasicType");
+                    SimpleType st = new SimpleType("TypeTrait");
                     st.TypeArguments.Add((AstType)res.ReturnType.Clone());
+                    st.TypeArguments.Add(new PrimitiveExpression(false));
                     TypeNameType qtype = new TypeNameType(new QualifiedType(st, new Identifier("Type", TextLocation.Empty)));
                     res.ReturnType = qtype;
                 }

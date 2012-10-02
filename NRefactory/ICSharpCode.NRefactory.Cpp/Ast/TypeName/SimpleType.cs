@@ -33,6 +33,7 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
 {
     public class SimpleType : AstType
     {
+        public readonly static Role<AstNode> TypeArgumentRole = new Role<AstNode>("Argument", AstNode.Null);
         public SimpleType()
         {
         }
@@ -59,9 +60,9 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
             }
         }
 
-        public AstNodeCollection<AstType> TypeArguments
+        public AstNodeCollection<AstNode> TypeArguments
         {
-            get { return GetChildrenByRole(Roles.TypeArgument); }
+            get { return GetChildrenByRole(TypeArgumentRole); }
         }
 
         public override S AcceptVisitor<T, S>(IAstVisitor<T, S> visitor, T data)

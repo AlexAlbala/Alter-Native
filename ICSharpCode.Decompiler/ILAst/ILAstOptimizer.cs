@@ -35,7 +35,7 @@ namespace ICSharpCode.Decompiler.ILAst
 		InlineVariables,
 		CopyPropagation,
 		YieldReturn,
-		PropertyAccessInstructions,
+		PropertyAccessInstructions,//REMOVED
 		SplitToMovableBlocks,
 		TypeInference,
 		SimplifyShortCircuit,
@@ -48,9 +48,9 @@ namespace ICSharpCode.Decompiler.ILAst
 		SimplifyLdObjAndStObj,
 		SimplifyCustomShortCircuit,
 		SimplifyLiftedOperators,
-		TransformArrayInitializers,
-		TransformMultidimensionalArrayInitializers,
-		TransformObjectInitializers,
+		TransformArrayInitializers,//REMOVED
+        TransformMultidimensionalArrayInitializers,//REMOVED
+        TransformObjectInitializers,//REMOVED
 		MakeAssignmentExpression,
 		IntroducePostIncrement,
 		InlineExpressionTreeParameterDeclarations,

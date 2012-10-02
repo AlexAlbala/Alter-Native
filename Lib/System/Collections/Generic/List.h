@@ -79,8 +79,18 @@ namespace System{
 					ListEnumerator_T<T>* enumerator = new ListEnumerator_T<T>(elements,Count);
 					return (IEnumerator_T<T>*)enumerator;
 				}
-			
+
 				void Add(T element)
+				{
+					if (Count == 0)
+						elements = (T*)malloc(sizeof(T));
+					else
+						elements = (T*)realloc(elements, (Count+1)*sizeof(T));
+			
+					elements[Count++] = element;
+				}
+			
+				void Add(typename TypeTrait<T, false>::Type element)
 				{
 					if (Count == 0)
 						elements = (T*)malloc(sizeof(T));
@@ -93,6 +103,11 @@ namespace System{
 				T* ElementAt(int index)
 				{
 					return (T*)(elements+index);
+				}
+
+				T* operator[](int index)
+				{
+					return this->ElementAt(index);
 				}
 			
 				/*T& operator[](int index)
