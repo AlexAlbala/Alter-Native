@@ -5,18 +5,31 @@ using System.Text;
 
 namespace CustomCollections
 {
+    class A
+    {
+        public A()
+        {
+            value = 35;
+        }
+        public int value;
+    }
     class Program
     {
         static void Main(string[] args)
         {
-            List<int> l = new List<int>();
-            l.Add(12);
-            l.Add(25);
-            l.Add(6);
+            List<int> l = new List<int>() { 3, 6, 25 };
 
             MyList<int> myList = new MyList<int>(l);
+
             foreach (int n in myList)
                 Console.WriteLine(n);
+
+            List<A> al = new List<A>() { new A(), new A(), new A() };
+
+            MyList<A> myListA = new MyList<A>(al);
+
+            foreach (A na in myListA)
+                Console.WriteLine(na.value);
         }
     }
 
@@ -47,7 +60,7 @@ namespace CustomCollections
 
         public MyEnumerator(List<T> values)
         {
-            this.values = new List<T>(values);
+            this.values = values;
             Reset();
         }
         public T Current

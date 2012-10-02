@@ -794,7 +794,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 return EndNode(typeDeclaration, new InterfaceTypeDeclaration(type));
 
             if (type.TypeParameters.Any())
-            {               
+            {
                 GenericTemplateTypeDeclaration gtempl = new GenericTemplateTypeDeclaration();
                 BaseTemplateTypeDeclaration btempl = new BaseTemplateTypeDeclaration();
                 TemplateTypeDeclaration ttempl = new TemplateTypeDeclaration();
@@ -947,65 +947,80 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         {
             ForeachStatement feach = new ForeachStatement();
 
-            /***************************WHILE*************************/
-            ///WHILE STATEMENT            
-            WhileStatement whilstmt = new WhileStatement();
-
-            ///*embedded statement*/
+            string tmpVar = "_" + foreachStatement.VariableName.ToUpper();
             VariableDeclarationStatement vds = new VariableDeclarationStatement(
                 (AstType)foreachStatement.VariableType.AcceptVisitor(this, data),
                 foreachStatement.VariableName,
-                new PointerExpression(new IdentifierExpression("__begin")));
+                new PointerExpression(new IdentifierExpression(tmpVar)));
 
             BlockStatement blckstmt = new BlockStatement();
             blckstmt.AddChild(vds, BlockStatement.StatementRole);
             foreach (CSharp.Statement st in foreachStatement.EmbeddedStatement.GetChildrenByRole(CSharp.BlockStatement.StatementRole))
                 blckstmt.AddChild((Statement)st.AcceptVisitor(this, data), BlockStatement.StatementRole);
-            whilstmt.EmbeddedStatement = blckstmt;
+            feach.ForEachStatement = blckstmt;
 
-            ///*condition*/
-            BinaryOperatorExpression bop = new BinaryOperatorExpression();
-            bop.Operator = BinaryOperatorType.InEquality;
-            bop.Left = new UnaryOperatorExpression(UnaryOperatorType.PostIncrement, new IdentifierExpression("__begin"));
-            bop.Right = new IdentifierExpression("__end");
-            whilstmt.Condition = bop;
+            feach.VariableIdentifier = new Identifier(tmpVar, TextLocation.Empty);
+            feach.CollectionExpression = (Expression)foreachStatement.InExpression.AcceptVisitor(this, data);
 
-            feach.WhileStatement = whilstmt;
-            /***************************WHIILE*************************/
+            ///***************************WHILE*************************/
+            /////WHILE STATEMENT            
+            //WhileStatement whilstmt = new WhileStatement();
 
-            /***************************RANGE*************************/
-            VariableDeclarationStatement vdecl_range = new VariableDeclarationStatement();
-            vdecl_range.Type = new PrimitiveType("auto");
-            VariableInitializer vinit_range = new VariableInitializer("&&__range", (Expression)foreachStatement.InExpression.AcceptVisitor(this, data));
-            vdecl_range.AddChild(vinit_range, FieldDeclaration.Roles.Variable);
-            feach.RangeExpression = vdecl_range;
-            /***************************RANGE*************************/
+            /////*embedded statement*/
+            //VariableDeclarationStatement vds = new VariableDeclarationStatement(
+            //    (AstType)foreachStatement.VariableType.AcceptVisitor(this, data),
+            //    foreachStatement.VariableName,
+            //    new PointerExpression(new IdentifierExpression("__begin")));
 
-            /***************************BEGIN*************************/
-            MemberReferenceExpression mref_beg = new MemberReferenceExpression(
-               new IdentifierExpression("__range"),
-               "begin");
-            InvocationExpression inv_beg = new InvocationExpression(mref_beg);
+            //BlockStatement blckstmt = new BlockStatement();
+            //blckstmt.AddChild(vds, BlockStatement.StatementRole);
+            //foreach (CSharp.Statement st in foreachStatement.EmbeddedStatement.GetChildrenByRole(CSharp.BlockStatement.StatementRole))
+            //    blckstmt.AddChild((Statement)st.AcceptVisitor(this, data), BlockStatement.StatementRole);
+            //whilstmt.EmbeddedStatement = blckstmt;
 
-            VariableDeclarationStatement vdecl_beg = new VariableDeclarationStatement();
-            vdecl_beg.Type = new PrimitiveType("auto");
-            VariableInitializer vinit_beg = new VariableInitializer("__begin", inv_beg);
-            vdecl_beg.AddChild(vinit_beg, FieldDeclaration.Roles.Variable);
-            feach.BeginExpression = vdecl_beg;
-            /***************************BEGIN*************************/
+            /////*condition*/
+            //BinaryOperatorExpression bop = new BinaryOperatorExpression();
+            //bop.Operator = BinaryOperatorType.InEquality;
+            //bop.Left = new UnaryOperatorExpression(UnaryOperatorType.PostIncrement, new IdentifierExpression("__begin"));
+            //bop.Right = new IdentifierExpression("__end");
+            //whilstmt.Condition = bop;
 
-            /***************************END*************************/
-            MemberReferenceExpression mref_end = new MemberReferenceExpression(
-                new IdentifierExpression("__range"),
-                "end");
-            InvocationExpression inv_end = new InvocationExpression(mref_end);
+            //feach.WhileStatement = whilstmt;
+            ///***************************WHIILE*************************/
 
-            VariableDeclarationStatement vdecl_end = new VariableDeclarationStatement();
-            vdecl_end.Type = new PrimitiveType("auto");
-            VariableInitializer vinit_end = new VariableInitializer("__end", inv_end);
-            vdecl_end.AddChild(vinit_end, FieldDeclaration.Roles.Variable);
-            feach.EndExpression = vdecl_end;
-            /***************************END*************************/
+            ///***************************RANGE*************************/
+            //VariableDeclarationStatement vdecl_range = new VariableDeclarationStatement();
+            //vdecl_range.Type = new PrimitiveType("auto");
+            //VariableInitializer vinit_range = new VariableInitializer("&&__range", (Expression)foreachStatement.InExpression.AcceptVisitor(this, data));
+            //vdecl_range.AddChild(vinit_range, FieldDeclaration.Roles.Variable);
+            //feach.RangeExpression = vdecl_range;
+            ///***************************RANGE*************************/
+
+            ///***************************BEGIN*************************/
+            //MemberReferenceExpression mref_beg = new MemberReferenceExpression(
+            //   new IdentifierExpression("__range"),
+            //   "begin");
+            //InvocationExpression inv_beg = new InvocationExpression(mref_beg);
+
+            //VariableDeclarationStatement vdecl_beg = new VariableDeclarationStatement();
+            //vdecl_beg.Type = new PrimitiveType("auto");
+            //VariableInitializer vinit_beg = new VariableInitializer("__begin", inv_beg);
+            //vdecl_beg.AddChild(vinit_beg, FieldDeclaration.Roles.Variable);
+            //feach.BeginExpression = vdecl_beg;
+            ///***************************BEGIN*************************/
+
+            ///***************************END*************************/
+            //MemberReferenceExpression mref_end = new MemberReferenceExpression(
+            //    new IdentifierExpression("__range"),
+            //    "end");
+            //InvocationExpression inv_end = new InvocationExpression(mref_end);
+
+            //VariableDeclarationStatement vdecl_end = new VariableDeclarationStatement();
+            //vdecl_end.Type = new PrimitiveType("auto");
+            //VariableInitializer vinit_end = new VariableInitializer("__end", inv_end);
+            //vdecl_end.AddChild(vinit_end, FieldDeclaration.Roles.Variable);
+            //feach.EndExpression = vdecl_end;
+            ///***************************END*************************/
 
             return EndNode(foreachStatement, feach);
         }
@@ -1486,15 +1501,21 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             param.NameToken = (Identifier)parameterDeclaration.NameToken.AcceptVisitor(this, data);
             if (param.NameToken is ComposedIdentifier)
             {
-                if (param.Type.IsBasicType)
-                {//ARRAY
-                    SimpleType s = new SimpleType("Array");
-                    s.TypeArguments.Add((AstType)param.Type.Clone());
-                    param.Type = new PtrType(s);
+                CSharp.MethodDeclaration m = null;
+                if (Resolver.IsChildOf(parameterDeclaration, typeof(CSharp.MethodDeclaration)))
+                    m = (CSharp.MethodDeclaration)Resolver.GetParentOf(parameterDeclaration, typeof(CSharp.MethodDeclaration));
 
-                    param.NameToken = (Identifier)(param.NameToken as ComposedIdentifier).BaseIdentifier.Clone();
-                }
+                if (m != null)
+                    if (m.Name == "Main")
+                        goto End;
+
+                SimpleType s = new SimpleType("Array");
+                s.TypeArguments.Add((AstType)param.Type.Clone());
+                param.Type = new PtrType(s);
+
+                param.NameToken = (Identifier)(param.NameToken as ComposedIdentifier).BaseIdentifier.Clone();
             }
+        End:
             param.DefaultExpression = (Expression)parameterDeclaration.DefaultExpression.AcceptVisitor(this, data);
 
             Cache.AddParameterDeclaration(currentMethod, param);

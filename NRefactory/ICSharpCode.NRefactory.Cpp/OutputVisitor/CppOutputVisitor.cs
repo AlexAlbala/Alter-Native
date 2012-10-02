@@ -1370,8 +1370,6 @@ namespace ICSharpCode.NRefactory.Cpp
                     WriteKeyword("inline");
 
                     WriteIdentifier(constDeclaration.Name + "_T");
-                    WriteToken("::", MethodDeclaration.Roles.Dot);
-                    WriteIdentifier(constDeclaration.Name + "_T");
 
                     Space(policy.SpaceBeforeConstructorDeclarationParentheses);
                     WriteCommaSeparatedListInParenthesis(constDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
@@ -2082,11 +2080,11 @@ namespace ICSharpCode.NRefactory.Cpp
 
             if (!Resolver.IsChildOf(constructorDeclaration, typeof(GenericTemplateTypeDeclaration)))
             {
-                WriteIdentifier(type != null ? (avoidPointers ? type.Name + "_Base" : type.Name) : (avoidPointers ? constructorDeclaration.Name + "_Base" : constructorDeclaration.Name));
+                WriteIdentifier(type != null ? (avoidPointers ? type.Name + "_T_Base" : type.Name) : (avoidPointers ? constructorDeclaration.Name + "_T_Base" : constructorDeclaration.Name));
                 WriteToken("::", MethodDeclaration.Roles.Dot);
             }
 
-            WriteIdentifier(type != null ? (avoidPointers ? type.Name + "_Base" : type.Name) : (avoidPointers ? constructorDeclaration.Name + "_Base" : constructorDeclaration.Name));
+            WriteIdentifier(type != null ? (avoidPointers ? type.Name + "_T_Base" : type.Name) : (avoidPointers ? constructorDeclaration.Name + "_T_Base" : constructorDeclaration.Name));
             Space(policy.SpaceBeforeConstructorDeclarationParentheses);
             WriteCommaSeparatedListInParenthesis(constructorDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
             if (!constructorDeclaration.Initializer.IsNull)
@@ -3180,10 +3178,17 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitForeachStatement(ForeachStatement foreachStatement, object data)
         {
             StartNode(foreachStatement);
-            foreachStatement.RangeExpression.AcceptVisitor(this, data);
-            foreachStatement.BeginExpression.AcceptVisitor(this, data);
-            foreachStatement.EndExpression.AcceptVisitor(this, data);
-            foreachStatement.WhileStatement.AcceptVisitor(this, data);
+            WriteKeyword("FOREACH");
+            LPar();
+            foreachStatement.VariableIdentifier.AcceptVisitor(this, data);
+            Comma(foreachStatement.CollectionExpression);
+            foreachStatement.CollectionExpression.AcceptVisitor(this, data);
+            RPar();
+            //foreachStatement.RangeExpression.AcceptVisitor(this, data);
+            //foreachStatement.BeginExpression.AcceptVisitor(this, data);
+            //foreachStatement.EndExpression.AcceptVisitor(this, data);
+            //foreachStatement.WhileStatement.AcceptVisitor(this, data);
+            foreachStatement.ForEachStatement.AcceptVisitor(this , data);
             return EndNode(foreachStatement);
         }
 
@@ -3551,7 +3556,7 @@ namespace ICSharpCode.NRefactory.Cpp
             //}
             //}
             ptrType.Target.AcceptVisitor(this, data);
-            if (!avoidPointers)
+            if (!(avoidPointers && Resolver.IsTemplateType(ptrType)))
                 WriteToken("*", PtrType.PointerRole);
             //WriteToken(">", PtrType.Roles.RChevron);
             return EndNode(ptrType);

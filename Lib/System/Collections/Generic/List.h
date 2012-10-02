@@ -95,7 +95,7 @@ namespace System{
 					return (T*)(elements+index);
 				}
 			
-				T& operator[](int index)
+				/*T& operator[](int index)
 				{
 					return *this->ElementAt(index);
 				}
@@ -103,7 +103,7 @@ namespace System{
 				const T& operator[](int index) const
 				{
 					return *this->ElementAt(index);
-				}
+				}*/
 
 				int IndexOf(T* element)
 				{

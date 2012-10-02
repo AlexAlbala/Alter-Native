@@ -9,11 +9,8 @@ namespace ForEach {
 		myList->Add(3.6f);
 		myList->Add(52.6f);
 		myList->Add(523.6f);
-		auto &&__range = myList;
-		auto __begin = __range->begin();
-		auto __end = __range->end();
-		while (__begin++ != __end){
-			float f = *__begin;
+		FOREACH(_F, myList){
+			float f = *_F;
 			Console::WriteLine(f);
 		}
 	}

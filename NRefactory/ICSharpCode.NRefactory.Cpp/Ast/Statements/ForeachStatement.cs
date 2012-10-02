@@ -32,32 +32,24 @@ namespace ICSharpCode.NRefactory.Cpp
     /// </summary>
     public class ForeachStatement : Statement
     {
-        public readonly static Role<Statement> Begin = new Role<Statement>("BeginExpression", Statement.Null);
-        public readonly static Role<Statement> End = new Role<Statement>("EndExpression", Statement.Null);
-        public readonly static Role<Statement> Range = new Role<Statement>("RangeExpression", Statement.Null);
-
-        public Statement BeginExpression
-        {
-            get { return GetChildByRole(Begin); }
-            set { SetChildByRole(Begin, value); }
-        }
-
-        public Statement EndExpression
-        {
-            get { return GetChildByRole(End); }
-            set { SetChildByRole(End, value); }
-        }
-
-        public Statement RangeExpression
-        {
-            get { return GetChildByRole(Range); }
-            set { SetChildByRole(Range, value); }
-        }
-
-        public Statement WhileStatement
+        public readonly static Role<Identifier> VariableRole = new Role<Identifier>("VarId", Identifier.Null);
+        public readonly static Role<Expression> CollectionRole = new Role<Expression>("ColEx", Expression.Null);
+        public Statement ForEachStatement
         {
             get { return GetChildByRole(Roles.EmbeddedStatement); }
             set { SetChildByRole(Roles.EmbeddedStatement, value); }
+        }
+
+        public Identifier VariableIdentifier
+        {
+            get { return GetChildByRole(VariableRole); }
+            set { SetChildByRole(VariableRole, value); }
+        }
+
+        public Expression CollectionExpression
+        {
+            get { return GetChildByRole(CollectionRole); }
+            set { SetChildByRole(CollectionRole, value); }
         }
 
         public override S AcceptVisitor<T, S>(IAstVisitor<T, S> visitor, T data = default(T))
@@ -68,7 +60,7 @@ namespace ICSharpCode.NRefactory.Cpp
         protected internal override bool DoMatch(AstNode other, PatternMatching.Match match)
         {
             ForeachStatement o = other as ForeachStatement;
-            return o != null && this.WhileStatement.DoMatch(o.WhileStatement, match);
+            return o != null && this.ForEachStatement.DoMatch(o.ForEachStatement, match);
         }
     }
 }
