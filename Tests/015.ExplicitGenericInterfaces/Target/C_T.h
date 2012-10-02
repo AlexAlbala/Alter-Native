@@ -13,7 +13,7 @@ namespace ExplicitGenericInterfaces {
 		//DO NOT modify this code
 
 		template<typename T>
-		class C_T_Base : public virtual IC_T<typename DeRefType<T>::Type>, public virtual Object, public virtual gc_cleanup{
+		class C_T_Base : public virtual IC_T<TypeTrait(T, true)>, public virtual Object, public virtual gc_cleanup{
 
 			//START Explicit interface: _interface_IA ****************
 			public:
@@ -50,9 +50,9 @@ namespace ExplicitGenericInterfaces {
 			//END Explicit interface *********************
 
 			private:
-			T value;
+			TypeTrait(T, false) value;
 			public:
-			T f(){
+			TypeTrait(T, false) f(){
 				Console::WriteLine(new String("c"));
 				return this->value;
 			}
@@ -86,6 +86,6 @@ namespace ExplicitGenericInterfaces {
 
 	//Type definition
 	template<typename T>
-	class C_T : public _Internal::C_T<T, IsFundamentalType<T>::result>{
+	class C_T : public _Internal::C_T<T, IsBasic(T)>{
 	};
 }

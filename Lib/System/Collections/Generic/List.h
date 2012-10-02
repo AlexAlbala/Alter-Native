@@ -7,7 +7,7 @@ namespace System{
 		namespace Generic{
 
 			template<typename T>
-			class ListEnumerator_T : public IEnumerator_T<T>, public gc_cleanup
+			class ListEnumerator_T : public IEnumerator_T<TypeTrait(T, true)>, public gc_cleanup
 			{
 			private:
 				T* initialPos;
@@ -46,7 +46,7 @@ namespace System{
 			};
 			
 			template<typename T>
-			class List_T : public IEnumerable_T<T>, public gc_cleanup /*, public IList*/ //TODO Implement IList(<T>) and inherit from it
+			class List_T : public IEnumerable_T<TypeTrait(T, true)>, public gc_cleanup /*, public IList*/ //TODO Implement IList(<T>) and inherit from it
 			{
 			
 			private:	
@@ -90,7 +90,7 @@ namespace System{
 					elements[Count++] = element;
 				}
 			
-				void Add(typename TypeTrait<T, false>::Type element)
+				void Add(TypeTrait(T, false) element)
 				{
 					if (Count == 0)
 						elements = (T*)malloc(sizeof(T));

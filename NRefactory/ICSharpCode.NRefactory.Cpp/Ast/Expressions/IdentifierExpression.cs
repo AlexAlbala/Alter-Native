@@ -72,5 +72,10 @@ namespace ICSharpCode.NRefactory.Cpp
 			IdentifierExpression o = other as IdentifierExpression;
 			return o != null && MatchString(this.Identifier, o.Identifier) && this.TypeArguments.DoMatch(o.TypeArguments, match);
 		}
+
+        public override string ToString()
+        {
+            return Identifier;
+        }
 	}
 }

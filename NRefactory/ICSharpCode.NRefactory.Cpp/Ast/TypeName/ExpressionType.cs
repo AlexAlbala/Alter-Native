@@ -31,60 +31,39 @@ using System.Text;
 
 namespace ICSharpCode.NRefactory.Cpp.Ast
 {
-    public class SimpleType : AstType
+    public class ExpressionType : AstType
     {
-        public readonly static Role<AstType> TypeArgumentRole = new Role<AstType>("Argument", AstType.Null);
-        public SimpleType()
+        public readonly static Role<Expression> ExpressionRole = new Role<Expression>("Expression", Expression.Null);
+        public ExpressionType()
         {
         }
 
-        public SimpleType(string identifier)
+        public ExpressionType(Expression Target)
         {
-            this.Identifier = identifier;
+            this.Target = Target;
         }
 
-        public SimpleType(string identifier, TextLocation location)
+        public Expression Target
         {
-            SetChildByRole(Roles.Identifier, new Identifier(identifier, location));
-        }
-
-        public string Identifier
-        {
-            get
-            {
-                return GetChildByRole(Roles.Identifier).Name;
-            }
-            set
-            {
-                SetChildByRole(Roles.Identifier, new Identifier(value, TextLocation.Empty));
-            }
-        }
-
-        public AstNodeCollection<AstType> TypeArguments
-        {
-            get { return GetChildrenByRole(TypeArgumentRole); }
+            get { return GetChildByRole(ExpressionRole); }
+            set { SetChildByRole(ExpressionRole, value); }
         }
 
         public override S AcceptVisitor<T, S>(IAstVisitor<T, S> visitor, T data)
         {
-            return visitor.VisitSimpleType(this, data);
+            return visitor.VisitExpressionType(this, data);
         }
 
         protected internal override bool DoMatch(AstNode other, PatternMatching.Match match)
         {
-            SimpleType o = other as SimpleType;
-            return o != null && MatchString(this.Identifier, o.Identifier) && this.TypeArguments.DoMatch(o.TypeArguments, match);
+            ExpressionType o = other as ExpressionType;
+            return o != null && Target.DoMatch(o.Target, match);
         }
 
         public override string ToString()
         {
-            StringBuilder b = new StringBuilder(this.Identifier);
-            if (this.TypeArguments.Any())
-            {
-                b.Append('<');
-                b.Append(string.Join(", ", this.TypeArguments));
-                b.Append('>');
-            }
+            StringBuilder b = new StringBuilder();
+            b.Append(Target.ToString());            
             return b.ToString();
         }
     }

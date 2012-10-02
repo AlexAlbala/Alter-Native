@@ -813,6 +813,18 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     genEntry.ModifierTokens.Add((CppModifierToken)mod.Clone());
                 }
 
+                /***************** TYPE PARAMETERS *****************/
+                foreach (var typePar in type.TypeParameters)
+                {
+                    btempl.TypeParameters.Add((TypeParameterDeclaration)typePar.Clone());
+                    spec.TypeParameters.Add((TypeParameterDeclaration)typePar.Clone());
+                    specGen.TypeParameters.Add((TypeParameterDeclaration)typePar.Clone());
+                    genEntry.TypeParameters.Add((TypeParameterDeclaration)typePar.Clone());
+                }
+                List<AstType> tmp = new List<AstType>() { new TypeNameType(new SimpleType("T")), new PrimitiveType("bool") };
+                ttempl.TypeParameters.AddRange(tmp);
+
+
                 /***************** BASE TYPES *****************/
                 foreach (AstType baseType in type.BaseTypes)
                 {
@@ -825,11 +837,10 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                             AstType arg = (AstType)(baseType as SimpleType).TypeArguments.ElementAt(i);
                             if (Resolver.IsTemplateType(arg))
                             {
-                                SimpleType st = new SimpleType("TypeTrait");
-                                st.TypeArguments.Add((AstType)arg.Clone());
-                                st.TypeArguments.Add(new PrimitiveExpression(true));
-                                TypeNameType qtype = new TypeNameType(new QualifiedType(st, new Identifier("Type", TextLocation.Empty)));
-                                (baseType as SimpleType).TypeArguments.InsertAfter(arg, qtype);
+                                List<Expression> arguments = new List<Expression>() { new IdentifierExpression(Resolver.GetTypeName(arg)), new PrimitiveExpression(true) };
+                                InvocationExpression ic = new InvocationExpression(new IdentifierExpression("TypeTrait"), arguments);
+                                ExpressionType exprT = new ExpressionType(ic);
+                                (baseType as SimpleType).TypeArguments.InsertAfter(arg, exprT);
                                 (baseType as SimpleType).TypeArguments.Remove(arg);
                             }
                         }
@@ -839,10 +850,28 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 foreach (var btype in type.BaseTypes)
                     btempl.BaseTypes.Add((AstType)btype.Clone());
 
+                List<Expression> tmp_args = new List<Expression>();
+                //WHAT TO DO IF THERE ARE MORE THAN ONE TEMPLATE TYPE ?
+                //MAYBE FOR EACH TYPE: template< typename T1, bool isT1Basic, typename T2, bool isT2Basic ... ??
+                if (genEntry.TypeParameters.Count > 1)
+                    throw new NotImplementedException("Not supported");
+
+                foreach (var typePar in genEntry.TypeParameters)
+                {
+                    Expression argument = new IdentifierExpression(typePar.Name);
+                    tmp_args.Add(argument);
+                }
+                InvocationExpression _ic = new InvocationExpression(new IdentifierExpression("IsBasic"), tmp_args);
+                ExpressionType _exprT = new ExpressionType(_ic);
+
+                SimpleType _base = new SimpleType(genEntry.Name);
+                _base.TypeArguments.Add(new ExpressionType((Expression)tmp_args[0].Clone()));
+                _base.TypeArguments.Add(_exprT);
+
                 List<AstNode> baseTypes = new List<AstNode>() { 
                     new MemberReferenceExpression(
-                    new TypeReferenceExpression(new QualifiedType(
-                    new SimpleType("_Internal"), genEntry.Name + "<T, IsFundamentalType<T>")), "result>") };
+                    new TypeReferenceExpression(new SimpleType("_Internal")),_base.ToString())
+                };
 
                 genEntry.BaseTypes.AddRange(baseTypes);
 
@@ -855,17 +884,6 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     specGen.Members.Add((AttributedNode)member.Clone());
                     genEntry.Members.Add((AttributedNode)member.Clone());
                 }
-
-                /***************** TYPE PARAMETERS *****************/
-                foreach (var typePar in type.TypeParameters)
-                {
-                    btempl.TypeParameters.Add((TypeParameterDeclaration)typePar.Clone());
-                    spec.TypeParameters.Add((TypeParameterDeclaration)typePar.Clone());
-                    specGen.TypeParameters.Add((TypeParameterDeclaration)typePar.Clone());
-                    genEntry.TypeParameters.Add((TypeParameterDeclaration)typePar.Clone());
-                }
-                List<AstType> tmp = new List<AstType>() { new TypeNameType(new SimpleType("T")), new PrimitiveType("bool") };
-                ttempl.TypeParameters.AddRange(tmp);
 
                 /**************** FILL THE GENERIC TEMPLATE TYPE ***************/
                 gtempl.TypeDefinition = genEntry;
@@ -962,7 +980,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             feach.ForEachStatement = blckstmt;
 
             feach.VariableIdentifier = new Identifier(tmpVar, TextLocation.Empty);
-            feach.CollectionExpression = (Expression)foreachStatement.InExpression.AcceptVisitor(this, data);            
+            feach.CollectionExpression = (Expression)foreachStatement.InExpression.AcceptVisitor(this, data);
 
             return EndNode(foreachStatement, feach);
         }
@@ -1381,11 +1399,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
                 if (Resolver.IsTemplateType(res.ReturnType))
                 {
-                    SimpleType st = new SimpleType("TypeTrait");
-                    st.TypeArguments.Add((AstType)res.ReturnType.Clone());
-                    st.TypeArguments.Add(new PrimitiveExpression(false));
-                    TypeNameType qtype = new TypeNameType(new QualifiedType(st, new Identifier("Type", TextLocation.Empty)));
-                    res.ReturnType = qtype;
+                    List<Expression> arguments = new List<Expression>() { new IdentifierExpression(Resolver.GetTypeName(res.ReturnType)), new PrimitiveExpression(false) };
+                    InvocationExpression ic = new InvocationExpression(new IdentifierExpression("TypeTrait"), arguments);
+                    res.ReturnType = new ExpressionType(ic);
                 }
 
                 //END

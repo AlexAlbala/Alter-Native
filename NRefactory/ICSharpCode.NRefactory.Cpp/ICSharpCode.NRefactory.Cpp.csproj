@@ -144,6 +144,7 @@
     <Compile Include="Ast\Header\NamespaceDeclaration.cs" />
     <Compile Include="Ast\GeneralScope\TypeDeclaration.cs" />
     <Compile Include="Ast\GeneralScope\TypeParameterDeclaration.cs" />
+    <Compile Include="Ast\TypeName\ExpressionType.cs" />
     <Compile Include="Ast\TypeName\PtrType.cs" />
     <Compile Include="Ast\TypeName\QualifiedType.cs" />
     <Compile Include="Ast\ComposedIdentifier.cs" />

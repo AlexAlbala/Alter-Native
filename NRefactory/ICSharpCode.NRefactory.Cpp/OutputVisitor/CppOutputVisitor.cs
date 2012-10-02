@@ -3188,7 +3188,7 @@ namespace ICSharpCode.NRefactory.Cpp
             //foreachStatement.BeginExpression.AcceptVisitor(this, data);
             //foreachStatement.EndExpression.AcceptVisitor(this, data);
             //foreachStatement.WhileStatement.AcceptVisitor(this, data);
-            foreachStatement.ForEachStatement.AcceptVisitor(this , data);
+            foreachStatement.ForEachStatement.AcceptVisitor(this, data);
             return EndNode(foreachStatement);
         }
 
@@ -3555,9 +3555,20 @@ namespace ICSharpCode.NRefactory.Cpp
             //    return EndNode(ptrType);
             //}
             //}
-            ptrType.Target.AcceptVisitor(this, data);
-            if (!(avoidPointers && Resolver.IsTemplateType(ptrType)))
+
+            if (avoidPointers && Resolver.IsTemplateType(ptrType))
+            {
+                //TODO: Move it to C#2CPP OUTPUT VISITOR
+                List<Expression> arguments = new List<Expression>() { new IdentifierExpression(Resolver.GetTypeName((AstType)ptrType.Clone())), new PrimitiveExpression(false) };
+                InvocationExpression ic = new InvocationExpression(new IdentifierExpression("TypeTrait"), arguments);
+                ExpressionType exprt = new ExpressionType(ic);
+                exprt.AcceptVisitor(this, data);
+            }
+            else
+            {
+                ptrType.Target.AcceptVisitor(this, data);
                 WriteToken("*", PtrType.PointerRole);
+            }
             //WriteToken(">", PtrType.Roles.RChevron);
             return EndNode(ptrType);
         }
@@ -3721,5 +3732,13 @@ namespace ICSharpCode.NRefactory.Cpp
             return EndNode(headerAbstractMethodDeclaration);
         }
         #endregion
+
+
+        public object VisitExpressionType(ExpressionType expressionType, object data)
+        {
+            StartNode(expressionType);
+            expressionType.Target.AcceptVisitor(this, true);
+            return EndNode(expressionType);
+        }
     }
 }

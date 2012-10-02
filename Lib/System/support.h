@@ -4,7 +4,9 @@
 /*********************************************************************************************************/
 /******************************************** SUPPORT MACROS  ********************************************/
 /*********************************************************************************************************/
-#define FOREACH(var, container)  for(auto var = (container)->begin()++; var != (container)->end(); ++var) 
+#define FOREACH(var, container)  for(auto var = (container)->begin()++; var != (container)->end(); ++var)
+#define TypeTrait(T, isA) typename ::__Internal__::TypeTrait<T, isA>::Type
+#define IsBasic(T) ::__Internal__::IsFundamentalType<T>::result
 
 /*********************************************************************************************************/
 /*********************************************** AS IS CASTS  ********************************************/
@@ -102,50 +104,52 @@ namespace __Internal__{
 /*********************************************************************************************************/
 /*********************************** ISFUNDAMENTALTYPE TEMPLATES  ****************************************/
 /*********************************************************************************************************/
-template<typename T>
-struct IsFundamentalType {
-	enum { result = false };
-};
+namespace __Internal__{
+	template<typename T>
+	struct IsFundamentalType {
+		enum { result = false };
+	};
 
-template<>
-struct IsFundamentalType<int> {
-	enum { result = true };
-};
+	template<>
+	struct IsFundamentalType<int> {
+		enum { result = true };
+	};
 
-template<>
-struct IsFundamentalType<unsigned int> {
-	enum { result = true };
-};
+	template<>
+	struct IsFundamentalType<unsigned int> {
+		enum { result = true };
+	};
 
-template<>
-struct IsFundamentalType<short> {
-	enum { result = true };
-};
+	template<>
+	struct IsFundamentalType<short> {
+		enum { result = true };
+	};
 
-template<>
-struct IsFundamentalType<unsigned short> {
-	enum { result = true };
-};
+	template<>
+	struct IsFundamentalType<unsigned short> {
+		enum { result = true };
+	};
 
-template<>
-struct IsFundamentalType<long> {
-	enum { result = true };
-};
+	template<>
+	struct IsFundamentalType<long> {
+		enum { result = true };
+	};
 
-template<>
-struct IsFundamentalType<unsigned long> {
-	enum { result = true };
-};
+	template<>
+	struct IsFundamentalType<unsigned long> {
+		enum { result = true };
+	};
 
-template<>
-struct IsFundamentalType<float> {
-	enum { result = true };
-};
+	template<>
+	struct IsFundamentalType<float> {
+		enum { result = true };
+	};
 
-template<>
-struct IsFundamentalType<char> {
-	enum { result = true };
-};
+	template<>
+	struct IsFundamentalType<char> {
+		enum { result = true };
+	};
+}
 
 /*********************************************************************************************************/
 /********************************* TYPETRAITS PUBLIC CONVERSIONS  ****************************************/
@@ -168,17 +172,17 @@ namespace __Internal__{
 
 	template <typename T>
 	struct _TypeTrait<T, false, true> {
-		typedef typename Boxing<typename DeRefBasicType<T>::Type, IsFundamentalType<T>::result>::Type Type;
+		typedef typename Boxing<typename DeRefBasicType<T>::Type, true>::Type Type;
 	};
 
 	template <typename T>
 	struct _TypeTrait<T, false, false>{
 		typedef typename DeRefType<T>::Type* Type;
 	};
-}
 
-template <typename T, bool isTypeArgument>
-struct TypeTrait {
-	typedef typename __Internal__::_TypeTrait<T, isTypeArgument, IsFundamentalType<T>::result>::Type Type;
-	//typedef typename __Internal__::_TypeTrait<typename DeRefBasicType<T>::Type, isTypeArgument, IsFundamentalType<T>::result>::Type Type;
-};
+	template <typename T, bool isTypeArgument>
+	struct TypeTrait {
+		typedef typename __Internal__::DeRefBasicType<T>::Type Dereferenced; 
+		typedef typename __Internal__::_TypeTrait<typename Dereferenced, isTypeArgument, IsFundamentalType<typename Dereferenced>::result>::Type Type;
+	};
+}

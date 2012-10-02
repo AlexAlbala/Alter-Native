@@ -155,6 +155,7 @@ namespace ICSharpCode.NRefactory.Cpp
 		S VisitSimpleType(SimpleType simpleType, T data);
         S VisitPtrType(PtrType ptrType, T data);//**************
 		//S VisitMemberType(MemberType memberType, T data);
+        S VisitExpressionType(ExpressionType expressionType, T data);//************
         S VisitTypeNameType(TypeNameType typeNameType, T data);
         S VisitQualifiedType(QualifiedType qualifiedType, T data);
 		S VisitComposedType(ComposedType composedType, T data);
