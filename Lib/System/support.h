@@ -4,8 +4,11 @@
 /*********************************************************************************************************/
 /******************************************** SUPPORT MACROS  ********************************************/
 /*********************************************************************************************************/
-#define FOREACH(var, container)  for(auto var = (container)->begin()++; var != (container)->end(); ++var)
-#define TypeTrait(T, isA) typename ::__Internal__::TypeTrait<T, isA>::Type
+#define FOREACH(var, container)  container->GetEnumerator()->Reset(); for(auto var = (container)->begin()++; var != (container)->end(); ++var)
+#define TypeArg(T) typename ::__Internal__::TypeTrait<T, true>::Type
+#define TypeDecl(T) typename ::__Internal__::TypeTrait<T,false>::Type
+#define TypeParam(T) typename ::__Internal__::ParamTrait<T>::Type
+#define TypeRet(T) typename ::__Internal__::ParamTrait<T>::Type
 #define IsBasic(T) ::__Internal__::IsFundamentalType<T>::result
 
 /*********************************************************************************************************/
@@ -182,7 +185,27 @@ namespace __Internal__{
 
 	template <typename T, bool isTypeArgument>
 	struct TypeTrait {
-		typedef typename __Internal__::DeRefBasicType<T>::Type Dereferenced; 
-		typedef typename __Internal__::_TypeTrait<typename Dereferenced, isTypeArgument, IsFundamentalType<typename Dereferenced>::result>::Type Type;
+		typedef typename DeRefBasicType<T>::Type Dereferenced; 
+		typedef typename _TypeTrait<typename Dereferenced, isTypeArgument, IsFundamentalType<typename Dereferenced>::result>::Type Type;
+	};
+
+	//PARAMETERS
+	template <typename T, bool isBasic>
+	struct _ParamTrait {
+	};
+
+	template <typename T>
+	struct _ParamTrait<T,true> {
+		typedef T Type;
+	};
+
+	template <typename T>
+	struct _ParamTrait<T,false> {
+		typedef T* Type;
+	};
+
+	template <typename T>
+	struct ParamTrait {
+		typedef typename _ParamTrait<T, IsFundamentalType<T>::result>::Type Type;	
 	};
 }

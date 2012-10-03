@@ -10,7 +10,7 @@ namespace System{
 			template<typename T> class IEnumerator_T : public IEnumerator{
 			
 			public:	
-				virtual TypeTrait(T,false) getCurrent() = 0;
+				virtual TypeDecl(T) getCurrent() = 0;
 				//virtual typename Boxing<T,IsFundamentalType<T>::result>::Type getCurrent() = 0;
 			};
 		}

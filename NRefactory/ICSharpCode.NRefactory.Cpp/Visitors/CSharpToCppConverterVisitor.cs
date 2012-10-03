@@ -836,9 +836,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                         {
                             AstType arg = (AstType)(baseType as SimpleType).TypeArguments.ElementAt(i);
                             if (Resolver.IsTemplateType(arg))
-                            {
-                                List<Expression> arguments = new List<Expression>() { new IdentifierExpression(Resolver.GetTypeName(arg)), new PrimitiveExpression(true) };
-                                InvocationExpression ic = new InvocationExpression(new IdentifierExpression("TypeTrait"), arguments);
+                            {                                
+                                InvocationExpression ic = new InvocationExpression(new IdentifierExpression("TypeArg"), new IdentifierExpression(Resolver.GetTypeName(arg)));
                                 ExpressionType exprT = new ExpressionType(ic);
                                 (baseType as SimpleType).TypeArguments.InsertAfter(arg, exprT);
                                 (baseType as SimpleType).TypeArguments.Remove(arg);
@@ -854,7 +853,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 //WHAT TO DO IF THERE ARE MORE THAN ONE TEMPLATE TYPE ?
                 //MAYBE FOR EACH TYPE: template< typename T1, bool isT1Basic, typename T2, bool isT2Basic ... ??
                 if (genEntry.TypeParameters.Count > 1)
-                    throw new NotImplementedException("Not supported");
+                    throw new NotImplementedException("Not supported yet");
 
                 foreach (var typePar in genEntry.TypeParameters)
                 {
@@ -1144,8 +1143,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             }
             else if (arrayCreation)
             {
-                AstType t = new SimpleType("Array");
-                t.AddChild((AstType)vds.Type.Clone(), SimpleType.Roles.TypeArgument);
+                SimpleType t = new SimpleType("Array");
+                t.TypeArguments.Add((AstType)vds.Type.Clone());
 
                 VariableInitializer vinit = vds.Variables.ElementAt(0);
                 vinit.NameToken = new Identifier(vinit.Name, TextLocation.Empty);
@@ -1398,9 +1397,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     Cache.AddPrivateImplementation(res.PrivateImplementationType, res);
 
                 if (Resolver.IsTemplateType(res.ReturnType))
-                {
-                    List<Expression> arguments = new List<Expression>() { new IdentifierExpression(Resolver.GetTypeName(res.ReturnType)), new PrimitiveExpression(false) };
-                    InvocationExpression ic = new InvocationExpression(new IdentifierExpression("TypeTrait"), arguments);
+                {                    
+                    InvocationExpression ic = new InvocationExpression(new IdentifierExpression("TypeDecl"), new IdentifierExpression(Resolver.GetTypeName(res.ReturnType)));
                     res.ReturnType = new ExpressionType(ic);
                 }
 

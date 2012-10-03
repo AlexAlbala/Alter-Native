@@ -12,8 +12,10 @@ namespace RegressionTest
         private bool Debug = false;
         private bool Verbose = false;
         private bool Unlimited = false;
+        private bool fast = false;
+        private bool overwriteTarget = false;
         Dictionary<DirectoryInfo, TestResult> Tests = new Dictionary<DirectoryInfo, TestResult>();
-        List<string> ignoreFolders = new List<string>() { "gc", "boost", "System" };
+        List<string> ignoreFolders = new List<string>() { "gc", "boost", "System", "build" };
         string testPath = Environment.CurrentDirectory;
         string alternativePath = Environment.CurrentDirectory + "/../AlterNative/bin/Debug/AlterNative.exe";
 
@@ -40,6 +42,10 @@ namespace RegressionTest
                     p.Verbose = true;
                 if (s.ToLowerInvariant().Contains("u"))
                     p.Unlimited = true;
+                if (s.ToLowerInvariant().Contains("f"))
+                    p.fast = true;
+                if (s.ToLowerInvariant().Contains("o"))
+                    p.overwriteTarget = true;
             }
 
 
@@ -84,18 +90,21 @@ namespace RegressionTest
             return false;
         }
 
-        private void CleanDirectory(DirectoryInfo d)
+        private void CleanDirectory(DirectoryInfo d, bool cleanRoot = true, bool ignoreFolders = false)
         {
             try
             {
                 if (d.Exists)
                 {
                     foreach (DirectoryInfo di in d.GetDirectories())
-                        CleanDirectory(di);
+                        if (!(ignoreFolders && this.ignoreFolders.Contains(di.Name)))
+                            CleanDirectory(di);
 
                     foreach (FileInfo fi in d.GetFiles())
                         fi.Delete();
-                    d.Delete();
+
+                    if (cleanRoot)
+                        d.Delete();
                 }
             }
             catch (IOException e)
@@ -187,7 +196,7 @@ namespace RegressionTest
             final.WaitForExit();
             String finalOutput = final.StandardOutput.ReadToEnd();
 
-            res.output = string.Compare(originalOutput, finalOutput) == 0;
+            res.output = (short)string.Compare(originalOutput, finalOutput);
 
             int maxLengthMsg;
             if (Unlimited)
@@ -317,6 +326,44 @@ namespace RegressionTest
             DebugMessage("Exit Code: " + res.diffCode);
         }
 
+        public void CopyAll(DirectoryInfo source, DirectoryInfo target)
+        {
+            // Copy each file into it’s new directory.
+            foreach (FileInfo fi in source.GetFiles())
+                fi.CopyTo(System.IO.Path.Combine(target.ToString(), fi.Name), true);
+
+
+            // Copy each subdirectory using recursion.
+            foreach (DirectoryInfo diSourceSubDir in source.GetDirectories())
+            {
+                DirectoryInfo nextTargetSubDir =
+                    target.CreateSubdirectory(diSourceSubDir.Name);
+                CopyAll(diSourceSubDir, nextTargetSubDir);
+            }
+        }
+
+        private void OverwriteTarget(DirectoryInfo di)
+        {
+            Directory.SetCurrentDirectory(di.FullName);
+            DirectoryInfo output = new DirectoryInfo(di.FullName + "/Output");
+            DirectoryInfo target = new DirectoryInfo(di.FullName + "/Target");
+
+            CleanDirectory(target, false, true);
+
+            foreach (FileInfo f in output.GetFiles())
+                File.Copy(f.FullName, Path.Combine(target.ToString(), f.Name));
+
+            foreach (DirectoryInfo d in output.GetDirectories())
+            {                
+                if (!ignoreFolders.Contains(d.Name))
+                {
+                    Directory.CreateDirectory(target.FullName + "/" + d.Name);
+                    CopyAll(d, new DirectoryInfo(target.FullName + "/" + d.Name));
+                    d.Delete(true);
+                }
+            }
+        }
+
         public void RunTests(string[] tests)
         {
             foreach (string s in tests)
@@ -334,6 +381,13 @@ namespace RegressionTest
 
                 //Diff files
                 diff(di, res);
+                if (res.diffCode == 0 && fast)
+                {
+                    res.output = -10;
+                    res.msbuildCode = -10;
+                    res.cmakeCode = -10;
+                    continue;
+                }
 
                 //Create folder and run cmake                
                 Directory.CreateDirectory(di.FullName + "/Output/build");
@@ -345,6 +399,10 @@ namespace RegressionTest
                     msbuild(di, res);
                 if (kvp.Value.msbuildCode == 0)
                     compareOutput(di, res);
+
+
+                if (res.AllSuccess() && overwriteTarget)
+                    OverwriteTarget(di);
             }
 
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -354,9 +412,9 @@ namespace RegressionTest
             string[,] arr = new string[tests.Length + 1, 6];
             arr[0, 0] = "NAME";
             arr[0, 1] = "ALTERNATIVE";
-            arr[0, 2] = "CMAKE CODE";
-            arr[0, 3] = "MSBUILD CODE";
-            arr[0, 4] = "FILE DIFFER";
+            arr[0, 2] = "FILE DIFFER";
+            arr[0, 3] = "CMAKE CODE";
+            arr[0, 4] = "MSBUILD CODE";
             arr[0, 5] = "OUTPUT";
             int i = 1;
             foreach (string s in tests)
@@ -364,10 +422,10 @@ namespace RegressionTest
                 KeyValuePair<DirectoryInfo, TestResult> kvp = Tests.First(x => x.Key.Name == s);
                 arr[i, 0] = kvp.Key.Name;
                 arr[i, 1] = kvp.Value.alternative == 0 ? "SUCCESS" : "FAIL. Code: " + kvp.Value.alternative;
-                arr[i, 2] = kvp.Value.cmakeCode == 0 ? "SUCCESS" : "FAIL. Code: " + kvp.Value.cmakeCode;
-                arr[i, 3] = kvp.Value.msbuildCode == 0 ? "BUILD SUCCEEDED" : "FAIL. Code: " + kvp.Value.msbuildCode;
-                arr[i, 4] = (kvp.Value.diffCode == 0 ? "No Differ" : (kvp.Value.diffCode == 1 ? "Differ" : "Error. Code: " + kvp.Value.diffCode));
-                arr[i, 5] = (kvp.Value.output ? "OK" : "FAIL");
+                arr[i, 2] = kvp.Value.diffCode == 0 ? "No Differ" : (kvp.Value.diffCode == 1 ? "Differ" : "Error. Code: " + kvp.Value.diffCode);
+                arr[i, 3] = kvp.Value.cmakeCode == 0 ? "SUCCESS" : (kvp.Value.cmakeCode == -10 ? "SKIPPED" : "FAIL. Code: " + kvp.Value.cmakeCode);
+                arr[i, 4] = kvp.Value.msbuildCode == 0 ? "BUILD SUCCEEDED" : (kvp.Value.msbuildCode == -10 ? "SKIPPED" : "FAIL. Code: " + kvp.Value.msbuildCode);
+                arr[i, 5] = kvp.Value.output == 0 ? "OK" : (kvp.Value.output == -10 ? "SKIPPED" : "FAIL");
 
                 i++;
             }

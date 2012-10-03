@@ -540,7 +540,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     //Add the header member to the out members of the nested type
                     ntype.OutMembers.Add(hc);
                 }
-                
+
 
                 //ADD NESTED TYPE TO THE HEADER DECLARATION
                 Cache.AddHeaderNode(ntype);
@@ -690,7 +690,8 @@ namespace ICSharpCode.NRefactory.Cpp
                             var vdecl = (CSharp.VariableDeclarationStatement)GetParentOf(node, typeof(CSharp.VariableDeclarationStatement));
                             if (Resolver.GetTypeName(vdecl.Type) != Resolver.GetTypeName(Resolver.GetType(identifierExpression.Identifier, null, currentMethod, null)))
                             {
-                                return true;
+                                CSharp.MethodDeclaration m = (CSharp.MethodDeclaration)Resolver.GetParentOf(node, typeof(CSharp.MethodDeclaration));
+                                return IsPointer(identifierExpression.Identifier, null, m == null ? String.Empty : m.Name, null);
                             }
                         }
                         else if (IsChildOf(node, typeof(CSharp.ParameterDeclaration)))
@@ -742,7 +743,7 @@ namespace ICSharpCode.NRefactory.Cpp
         public static bool IsTemplateType(AstType type)
         {
             return Cache.GetTemplateTypes().FirstOrDefault(x => x == GetTypeName(type)) != null;
-            
+
 
         }
 

@@ -3543,24 +3543,10 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitPtrType(PtrType ptrType, object data)
         {
             StartNode(ptrType);
-            //WriteKeyword("gc_ptr", PtrType.Roles.Keyword);
-            //WriteToken("<", PtrType.Roles.LChevron);
-            //if (avoidPointers)
-            //{
-
-            //AstType tmp;
-            //if (Resolver.TryPatchGenericTemplateType(ptrType, out tmp))
-            //{
-            //    tmp.AcceptVisitor(this, data);
-            //    return EndNode(ptrType);
-            //}
-            //}
-
             if (avoidPointers && Resolver.IsTemplateType(ptrType))
             {
                 //TODO: Move it to C#2CPP OUTPUT VISITOR
-                List<Expression> arguments = new List<Expression>() { new IdentifierExpression(Resolver.GetTypeName((AstType)ptrType.Clone())), new PrimitiveExpression(false) };
-                InvocationExpression ic = new InvocationExpression(new IdentifierExpression("TypeTrait"), arguments);
+                InvocationExpression ic = new InvocationExpression(new IdentifierExpression("TypeDecl"), new IdentifierExpression(Resolver.GetTypeName((AstType)ptrType.Clone())));
                 ExpressionType exprt = new ExpressionType(ic);
                 exprt.AcceptVisitor(this, data);
             }
@@ -3569,7 +3555,6 @@ namespace ICSharpCode.NRefactory.Cpp
                 ptrType.Target.AcceptVisitor(this, data);
                 WriteToken("*", PtrType.PointerRole);
             }
-            //WriteToken(">", PtrType.Roles.RChevron);
             return EndNode(ptrType);
         }
 

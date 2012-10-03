@@ -12,7 +12,7 @@ namespace System{
 			
 			template<typename T> class IEnumerable_T : public virtual IEnumerable{
 			public:
-				virtual IEnumerator_T<TypeTrait(T, true)>* GetEnumerator()=0;
+				virtual IEnumerator_T<TypeArg(T)>* GetEnumerator()=0;
 			
 				iteratorcxx<T> begin()
 				{
