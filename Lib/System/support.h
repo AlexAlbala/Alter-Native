@@ -8,7 +8,7 @@
 #define TypeArg(T) typename ::__Internal__::TypeTrait<T, true>::Type
 #define TypeDecl(T) typename ::__Internal__::TypeTrait<T,false>::Type
 #define TypeParam(T) typename ::__Internal__::ParamTrait<T>::Type
-#define TypeRet(T) typename ::__Internal__::ParamTrait<T>::Type
+#define TypeRet(T, element) (IsBasic(T) ? new System::Box_T<T>(*(element)) : (T*)(elements));
 #define IsBasic(T) ::__Internal__::IsFundamentalType<T>::result
 
 /*********************************************************************************************************/

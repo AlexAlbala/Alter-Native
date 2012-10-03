@@ -39,9 +39,9 @@ namespace System{
 					return;
 				}
 			
-				virtual Box_T<T>* getCurrent()
+				virtual TypeDecl(T) getCurrent()
 				{		
-					return new Box_T<T>(elements);
+					TypeRet(T, elements);
 				}
 			};
 			
@@ -74,23 +74,13 @@ namespace System{
 					delete(elements);
 				}
 			
-				virtual IEnumerator_T<T>* GetEnumerator()
+				virtual IEnumerator_T<TypeArg(T)>* GetEnumerator()
 				{
-					ListEnumerator_T<T>* enumerator = new ListEnumerator_T<T>(elements,Count);
-					return (IEnumerator_T<T>*)enumerator;
+					ListEnumerator_T<TypeArg(T)>* enumerator = new ListEnumerator_T<TypeArg(T)>(elements,Count);
+					return (IEnumerator_T<TypeArg(T)>*)enumerator;
 				}
 
-				void Add(T element)
-				{
-					if (Count == 0)
-						elements = (T*)malloc(sizeof(T));
-					else
-						elements = (T*)realloc(elements, (Count+1)*sizeof(T));
-			
-					elements[Count++] = element;
-				}
-			
-				/*void Add(TypeArg(T) element)
+				/*void Add(T element)
 				{
 					if (Count == 0)
 						elements = (T*)malloc(sizeof(T));
@@ -100,12 +90,22 @@ namespace System{
 					elements[Count++] = element;
 				}*/
 			
-				T* ElementAt(int index)
+				void Add(TypeParam(T) element)
 				{
-					return (T*)(elements+index);
+					if (Count == 0)
+						elements = (T*)malloc(sizeof(T));
+					else
+						elements = (T*)realloc(elements, (Count+1)*sizeof(T));
+			
+					elements[Count++] = element;
+				}
+			
+				TypeDecl(T) ElementAt(int index)
+				{
+					return TypeRet(T,elements + index);					
 				}
 
-				T* operator[](int index)
+				TypeDecl(T) operator[](int index)
 				{
 					return this->ElementAt(index);
 				}
