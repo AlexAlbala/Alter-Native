@@ -7,7 +7,7 @@
 #define FOREACH(var, container)  container->GetEnumerator()->Reset(); for(auto var = (container)->begin()++; var != (container)->end(); ++var)
 #define TypeArg(T) typename ::__Internal__::TypeTrait<T, true>::Type
 #define TypeDecl(T) typename ::__Internal__::TypeTrait<T,false>::Type
-#define TypeParam(T) typename ::__Internal__::ParamTrait<T>::Type
+//#define TypeParam(T) typename ::__Internal__::ParamTrait<T>::Type
 #define TypeRet(T, element) (IsBasic(T) ? new System::Box_T<T>(*(element)) : (T*)(elements));
 #define IsBasic(T) ::__Internal__::IsFundamentalType<T>::result
 
@@ -175,7 +175,7 @@ namespace __Internal__{
 
 	template <typename T>
 	struct _TypeTrait<T, false, true> {
-		typedef typename Boxing<typename DeRefBasicType<T>::Type, true>::Type Type;
+		typedef T Type;//Boxing<typename DeRefBasicType<T>::Type, true>::Type Type;
 	};
 
 	template <typename T>
@@ -201,7 +201,7 @@ namespace __Internal__{
 
 	template <typename T>
 	struct _ParamTrait<T,false> {
-		typedef T* Type;
+		typedef T Type;
 	};
 
 	template <typename T>

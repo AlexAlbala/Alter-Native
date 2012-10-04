@@ -1332,6 +1332,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     //CALL SPECIALIZED OBJECT METHOD
                     BlockStatement blck = new BlockStatement();
 
+                    bool needsReturn = Resolver.GetTypeName(methodDeclaration.ReturnType) != "void";
                     AstType _tmp;
                     if (Resolver.TryPatchTemplateToObjectType(methodDeclaration.ReturnType, out _tmp))//NEEDS CAST
                     {
@@ -1343,17 +1344,29 @@ namespace ICSharpCode.NRefactory.Cpp
 
                         blck.Add(varDeclStmt);
 
-                        ReturnStatement rtstm = new ReturnStatement(new DynamicCastExpression((AstType)methodDeclaration.ReturnType.Clone(), new IdentifierExpression(tmpName)));
-                        blck.Add(rtstm);
+                        Expression e = new DynamicCastExpression((AstType)methodDeclaration.ReturnType.Clone(), new IdentifierExpression(tmpName));
+                        if (needsReturn)
+                        {
+                            ReturnStatement rtstm = new ReturnStatement(e);
+                            blck.Add(rtstm);
+                        }
+                        else
+                            blck.Add(e);
                     }
                     else
                     {
                         SimpleType destType = new SimpleType(type + "_Base");
                         destType.TypeArguments.Add(new PtrType(new SimpleType("Object")));
-                        ReturnStatement rtstm = new ReturnStatement(new InvocationExpression(
+                        Expression e = new InvocationExpression(
                             new MemberReferenceExpression(
-                                new TypeReferenceExpression(destType), methodDeclaration.Name), parameters));
-                        blck.Add(rtstm);
+                                new TypeReferenceExpression(destType), methodDeclaration.Name), parameters);
+                        if (needsReturn)
+                        {
+                            ReturnStatement rtstm = new ReturnStatement(e);
+                            blck.Add(rtstm);
+                        }
+                        else
+                            blck.Add(e);
                     }
 
                     WriteMethodBody(blck);
@@ -1744,7 +1757,7 @@ namespace ICSharpCode.NRefactory.Cpp
         }
 
         private void TypeDeclarationCPP(TypeDeclaration typeDeclaration, object data)
-        {
+        {            
             formatter.ChangeFile(typeDeclaration.Name + ".cpp");
             FileWritterManager.AddSourceFile(typeDeclaration.Name + ".cpp");
 
@@ -2463,6 +2476,7 @@ namespace ICSharpCode.NRefactory.Cpp
             //        return EndNode(simpleType);
             //    }
             //}
+
             WriteIdentifier(simpleType.Identifier);
             WriteTypeArguments(simpleType.TypeArguments);
             return EndNode(simpleType);

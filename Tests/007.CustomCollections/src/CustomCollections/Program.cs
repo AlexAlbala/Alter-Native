@@ -17,14 +17,20 @@ namespace CustomCollections
     {
         static void Main(string[] args)
         {
-            List<int> l = new List<int>() { 3, 6, 25 };
+            int[] l = new int[3];
+            l[0] = 2;
+            l[1] = 3;
+            l[2] = 4;
 
             MyList<int> myList = new MyList<int>(l);
 
             foreach (int n in myList)
                 Console.WriteLine(n);
 
-            List<A> al = new List<A>() { new A(), new A(), new A() };
+            A[] al = new A[3];
+            al[0] = new A();
+            al[1] = new A();
+            al[2] = new A();
 
             MyList<A> myListA = new MyList<A>(al);
 
@@ -35,9 +41,9 @@ namespace CustomCollections
 
     class MyList<T> : IEnumerable<T>
     {
-        private List<T> mylist;
+        private T[] mylist;
 
-        public MyList(List<T> values)
+        public MyList(T[] values)
         {
             this.mylist = values;
         }
@@ -55,10 +61,10 @@ namespace CustomCollections
 
     public class MyEnumerator<T> : IEnumerator<T>
     {
-        private List<T> values;
+        private T[] values;
         private int currentIndex;
 
-        public MyEnumerator(List<T> values)
+        public MyEnumerator(T[] values)
         {
             this.values = values;
             Reset();
@@ -70,7 +76,7 @@ namespace CustomCollections
 
         public void Dispose()
         {
-           
+
         }
 
         object System.Collections.IEnumerator.Current
@@ -81,7 +87,7 @@ namespace CustomCollections
         public bool MoveNext()
         {
             currentIndex++;
-            return currentIndex < values.Count;
+            return currentIndex < values.Length;
         }
 
         public void Reset()

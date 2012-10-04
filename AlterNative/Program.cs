@@ -29,7 +29,7 @@ namespace AlterNative
                 }
                 catch (Exception e)
                 {
-                    Utils.WriteToConsole("Exception: " + e.Message);
+                    Utils.WriteToConsole("Exception: " + e.ToString());
                 }
             }
             else
@@ -104,11 +104,11 @@ namespace AlterNative
 
             //CONFIGURE OUTPUT LANGUAGE
             Language lang = OutputLanguage(args[2]);
-
+            
             //DECOMPILE FIRST TIME AND FILL THE TABLES
             foreach (TypeDefinition tdef in adef.MainModule.Types)
-            {
-                if (tdef.Name != "<Module>")
+            {   
+                if (!tdef.Name.Contains("<"))
                 {
                     lang.DecompileType(tdef, textOutput, new DecompilationOptions() { FullDecompilation = true });
                 }
@@ -117,7 +117,7 @@ namespace AlterNative
             //DECOMPILE
             foreach (TypeDefinition tdef in adef.MainModule.Types)
             {
-                if (tdef.Name != "<Module>")
+                if (!tdef.Name.Contains("<"))
                 {
                     lang.DecompileType(tdef, textOutput, new DecompilationOptions() { FullDecompilation = true });
                     Utils.WriteToConsole("Decompiled: " + tdef.FullName);

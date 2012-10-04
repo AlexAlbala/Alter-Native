@@ -12,6 +12,8 @@ namespace System{
 		int Length;
 		char* Data;
 		String(void);
+		String(int txt);
+		String(long txt);
 		String(char txt);
 		String(const char* txt);
 		String* operator =(char* text);

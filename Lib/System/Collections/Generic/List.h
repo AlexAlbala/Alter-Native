@@ -10,13 +10,13 @@ namespace System{
 			class ListEnumerator_T : public IEnumerator_T<TypeArg(T)>, public gc_cleanup
 			{
 			private:
-				TypeDecl(T*) initialPos;
-				TypeDecl(T*) elements;
+				T* initialPos;
+				T* elements;
 				int count;
 				int position;
 
 			public:
-				ListEnumerator_T(TypeParam(T*) elements, int count)
+				ListEnumerator_T(T* elements, int count)
 				{
 					this->elements = elements;
 					this->initialPos = elements-1;
@@ -39,18 +39,18 @@ namespace System{
 					return;
 				}
 			
-				virtual TypeDecl(T*) getCurrent()
+				virtual T* getCurrent()
 				{		
-					return TypeRet(T*, elements);
+					return (T*)(elements);
 				}
 			};
 			
 			template<typename T>
-			class List_T : public IEnumerable_T<TypeArg(T)>, public gc_cleanup /*, public IList*/ //TODO Implement IList(<T>) and inherit from it
+			class List_T : public IEnumerable_T<T>, public gc_cleanup /*, public IList*/ //TODO Implement IList(<T>) and inherit from it
 			{
 			
 			private:	
-				TypeDecl(T*) elements;
+				T* elements;
 			
 			public:
 				int Count;
@@ -59,11 +59,11 @@ namespace System{
 					Count = 0;		
 				}
 			
-				List_T(List_T<TypeArg(T)>* values)
+				List_T(List_T<T>* values)
 				{
 					for(int i=0; i<values->Count;i++)
 					{
-						TypeDecl(T) val = values->ElementAt(i);
+						T* val = values->ElementAt(i);
 						this->Add(*val);
 					}
 				}
@@ -74,10 +74,10 @@ namespace System{
 					delete(elements);
 				}
 			
-				virtual IEnumerator_T<TypeArg(T)>* GetEnumerator()
+				virtual IEnumerator_T<T>* GetEnumerator()
 				{
-					ListEnumerator_T<TypeArg(T)>* enumerator = new ListEnumerator_T<TypeArg(T)>(elements,Count);
-					return (IEnumerator_T<TypeArg(T)>*)enumerator;
+					ListEnumerator_T<T>* enumerator = new ListEnumerator_T<T>(elements,Count);
+					return (IEnumerator_T<T>*)enumerator;
 				}
 
 				/*void Add(T element)
@@ -93,19 +93,19 @@ namespace System{
 				void Add(TypeParam(T) element)
 				{
 					if (Count == 0)
-						elements = (TypeDecl(T))malloc(sizeof(T));
+						elements = (T*)malloc(sizeof(T));
 					else
-						elements = (TypeDecl(T))realloc(elements, (Count+1)*sizeof(T));
+						elements = (T*)realloc(elements, (Count+1)*sizeof(T));
 			
 					elements[Count++] = element;
 				}
 			
-				TypeDecl(T) ElementAt(int index)
+				T* ElementAt(int index)
 				{
-					return TypeRet(T,elements + index);					
+					return (T*)(elements + index);					
 				}
 
-				TypeDecl(T) operator[](int index)
+				T* operator[](int index)
 				{
 					return this->ElementAt(index);
 				}
@@ -124,7 +124,7 @@ namespace System{
 				{
 					for(int i = 0; i <Count; i++)
 					{
-						if((TypeDecl(T))(elements + i) == element)
+						if((T*)(elements + i) == element)
 							return i;
 					}
 					return -1;
@@ -153,7 +153,7 @@ namespace System{
 						elements[j]=elements[j+1];
 					}
 
-					elements = (TypeDecl(T))realloc(elements, (Count-1)*sizeof(T));
+					elements = (T*)realloc(elements, (Count-1)*sizeof(T));
 					Count--;
 				}
 			};

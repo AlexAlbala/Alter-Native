@@ -1,10 +1,29 @@
 #include "String.h"
+#include <stdlib.h>
 
 namespace System{
 
 	String::String() {
 		Data = null;
 		Length = 0;
+	}
+
+	String::String(int val) {	
+		char* tmp = new char[33];
+		itoa(val,tmp,10);	
+		Length = strlen(tmp);
+		Data = new char[Length];
+		memcpy(Data, tmp, Length);
+		delete tmp;
+	}
+
+	String::String(long val) {	
+		char* tmp = new char[66];
+		itoa(val,tmp,10);	
+		Length = strlen(tmp);
+		Data = new char[Length];
+		memcpy(Data, tmp, Length);
+		delete tmp;
 	}
 
 	String::String(char txt) {

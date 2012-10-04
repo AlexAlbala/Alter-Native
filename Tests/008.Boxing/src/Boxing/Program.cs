@@ -5,6 +5,15 @@ using System.Text;
 
 namespace Boxing
 {
+    class A
+    {
+        public void f(Object arg)
+        {
+            Console.WriteLine("I'm A");
+            Console.WriteLine(arg);
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
@@ -20,8 +29,12 @@ namespace Boxing
 
             i = 456;  // change the contents of i
 
-            System.Console.WriteLine("The value-type value = {0}", i);
-            System.Console.WriteLine("The object-type value = {0}", o);
+            f(i);
+            A a = new A();
+            a.f(i);
+
+            System.Console.WriteLine(i);
+            System.Console.WriteLine(o);
         }
 
         static void UnBox()
@@ -31,8 +44,16 @@ namespace Boxing
 
             o = 456;  // change the contents of i
 
-            System.Console.WriteLine("The value-type value = {0}", i);
-            System.Console.WriteLine("The object-type value = {0}", o);
+            
+
+            System.Console.WriteLine(i);
+            System.Console.WriteLine(o);
+        }
+
+        static void f(Object arg)
+        {
+            Console.WriteLine("I'm P");
+            Console.WriteLine(arg);
         }
     }
 }

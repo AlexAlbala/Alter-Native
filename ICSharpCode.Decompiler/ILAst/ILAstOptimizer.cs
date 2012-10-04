@@ -154,7 +154,7 @@ namespace ICSharpCode.Decompiler.ILAst
 
 					if (abortBeforeStep == ILAstOptimizationStep.SimplifyLiftedOperators) return;
 					modified |= block.RunOptimization(SimplifyLiftedOperators);
-					
+
                     //if (abortBeforeStep == ILAstOptimizationStep.TransformArrayInitializers) return;
                     //modified |= block.RunOptimization(TransformArrayInitializers);
 

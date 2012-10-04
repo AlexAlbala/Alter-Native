@@ -952,8 +952,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     def_const.ModifierTokens.Add(new CppModifierToken(TextLocation.Empty, Modifiers.Public));
                     def_const.Body = new BlockStatement();
                     btempl.Members.Add(def_const);
-                }
-                
+                }               
 
                 /**************** FILL THE GENERIC TEMPLATE TYPE ***************/
                 gtempl.TypeDefinition = genEntry;
