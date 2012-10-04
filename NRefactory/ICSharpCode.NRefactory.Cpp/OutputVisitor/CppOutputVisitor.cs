@@ -1311,7 +1311,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     {
                         parametersName.Add(p.Name);
                         AstType tmp;
-                        if (Resolver.TryPatchGenericTemplateType(p.Type, out tmp))
+                        if (Resolver.TryPatchTemplateToObjectType(p.Type, out tmp))
                             needsCast.Add(p.Name);
                     }
 
@@ -1333,7 +1333,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     BlockStatement blck = new BlockStatement();
 
                     AstType _tmp;
-                    if (Resolver.TryPatchGenericTemplateType(methodDeclaration.ReturnType, out _tmp))//NEEDS CAST
+                    if (Resolver.TryPatchTemplateToObjectType(methodDeclaration.ReturnType, out _tmp))//NEEDS CAST
                     {
                         SimpleType destType = new SimpleType(type + "_Base");
                         destType.TypeArguments.Add(new PtrType(new SimpleType("Object")));
@@ -1377,6 +1377,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     {
                         Space();
                         constDeclaration.Initializer.AcceptVisitor(this, null);
+                        NewLine();
                     }
 
                     Expression[] pm = new Expression[constDeclaration.Parameters.Count()];
@@ -1384,7 +1385,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
                     for (int i = 0; i < pm.Length; i++)
                     {
-                        bool needsCast = Resolver.TryPatchGenericTemplateType(constDeclaration.Parameters.ElementAt(i).Type, out tmp);
+                        bool needsCast = Resolver.TryPatchTemplateToObjectType(constDeclaration.Parameters.ElementAt(i).Type, out tmp);
 
                         if (needsCast)
                             pm[i] = new CastExpression(tmp, new IdentifierExpression(constDeclaration.Parameters.ElementAt(i).Name));
@@ -1393,7 +1394,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     }
 
                     BlockStatement blck = new BlockStatement();
-                    blck.Add(new InvocationExpression(new IdentifierExpression(constDeclaration.Name + "_T_Base"), pm));
+                    //blck.Add(new InvocationExpression(new IdentifierExpression(constDeclaration.Name + "_T_Base"), pm));
 
                     WriteMethodBody(blck);
                     EndNode(constDeclaration);
@@ -1495,9 +1496,7 @@ namespace ICSharpCode.NRefactory.Cpp
             //ÑAPA se añade virtual modifier y se quita
             var modif2 = new CppModifierToken(TextLocation.Empty, Modifiers.Virtual);
             specializedGenericTemplateDeclaration.ModifierTokens.Add(modif2);
-            SimpleType super = new SimpleType(specializedGenericTemplateDeclaration.Name + "_Base");
-            super.TypeArguments.Add(new PtrType(new SimpleType("Object")));
-            specializedGenericTemplateDeclaration.BaseTypes.Add(super);
+
             WriteCommaSeparatedListWithModifiers(specializedGenericTemplateDeclaration.BaseTypes, specializedGenericTemplateDeclaration.ModifierTokens);
             specializedGenericTemplateDeclaration.ModifierTokens.Remove(modif2);
             OpenBrace(braceStyle2);
@@ -1556,13 +1555,14 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteToken(":", TypeDeclaration.ColonRole);
             Space();
 
-            SimpleType b = new SimpleType(specializedBasicTemplateDeclaration.Name + "_Base");
-            b.TypeArguments.Add(new SimpleType("T"));
-
-            List<AstNode> baseTypes = new List<AstNode>() { b };
-            WriteCommaSeparatedListWithModifiers(baseTypes, specializedBasicTemplateDeclaration.ModifierTokens);
+            WriteCommaSeparatedListWithModifiers(specializedBasicTemplateDeclaration.BaseTypes, specializedBasicTemplateDeclaration.ModifierTokens);
 
             OpenBrace(BraceStyle.DoNotChange);
+            foreach (var member in specializedBasicTemplateDeclaration.Members)
+            {
+                WriteAccesorModifier(member.ModifierTokens);
+                member.AcceptVisitor(this, data);
+            }
             CloseBrace(BraceStyle.DoNotChange);
             Semicolon();
             return EndNode(specializedBasicTemplateDeclaration);
@@ -1675,6 +1675,13 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteCommaSeparatedListWithModifiers(genericEntryPointDeclaration.BaseTypes, genericEntryPointDeclaration.ModifierTokens);
 
             OpenBrace(BraceStyle.DoNotChange);
+
+            foreach (var member in genericEntryPointDeclaration.Members)
+            {
+                WriteAccesorModifier(member.ModifierTokens);
+                member.AcceptVisitor(this, data);
+            }
+
             CloseBrace(BraceStyle.DoNotChange);
             Semicolon();
             return EndNode(genericEntryPointDeclaration);
@@ -2080,11 +2087,15 @@ namespace ICSharpCode.NRefactory.Cpp
 
             if (!Resolver.IsChildOf(constructorDeclaration, typeof(GenericTemplateTypeDeclaration)))
             {
-                WriteIdentifier(type != null ? (avoidPointers ? type.Name + "_T_Base" : type.Name) : (avoidPointers ? constructorDeclaration.Name + "_T_Base" : constructorDeclaration.Name));
+                WriteIdentifier(constructorDeclaration.Name ?? (type.Name + (avoidPointers ? "_T" : "")));
                 WriteToken("::", MethodDeclaration.Roles.Dot);
             }
 
-            WriteIdentifier(type != null ? (avoidPointers ? type.Name + "_T_Base" : type.Name) : (avoidPointers ? constructorDeclaration.Name + "_T_Base" : constructorDeclaration.Name));
+            bool needsT = Resolver.IsChildOf(constructorDeclaration, typeof(GenericTemplateTypeDeclaration));
+            bool needsBase = Resolver.IsChildOf(constructorDeclaration, typeof(BaseTemplateTypeDeclaration));
+            string trim = "" + (needsT ? "_T" : "") + (needsBase ? "_Base" : "");
+
+            WriteIdentifier(constructorDeclaration.Name + trim);
             Space(policy.SpaceBeforeConstructorDeclarationParentheses);
             WriteCommaSeparatedListInParenthesis(constructorDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
             if (!constructorDeclaration.Initializer.IsNull)
@@ -2102,14 +2113,7 @@ namespace ICSharpCode.NRefactory.Cpp
             StartNode(constructorInitializer);
             WriteToken(":", ConstructorInitializer.Roles.Colon);
             Space();
-            if (constructorInitializer.ConstructorInitializerType == ConstructorInitializerType.This)
-            {
-                WriteKeyword("this");
-            }
-            else
-            {
-                WriteKeyword("base");
-            }
+            constructorInitializer.Base.AcceptVisitor(this, data);
             Space(policy.SpaceBeforeMethodCallParentheses);
             WriteCommaSeparatedListInParenthesis(constructorInitializer.Arguments, policy.SpaceWithinMethodCallParentheses);
             return EndNode(constructorInitializer);

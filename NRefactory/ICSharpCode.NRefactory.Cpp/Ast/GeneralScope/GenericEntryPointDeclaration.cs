@@ -13,7 +13,7 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
     {
         public static readonly new GenericEntryPointDeclaration Null = new NullGenericEntryPointDeclaration();
         //public readonly static Role<CppTokenNode> ColonRole = Roles.Colon;
-        public readonly static Role<AstNode> BaseTypeRole = new Role<AstNode>("BaseType", AstNode.Null);
+        public readonly static Role<AstType> BaseTypeRole = new Role<AstType>("BaseType", AstType.Null);
         public readonly static Role<AttributedNode> MemberRole = new Role<AttributedNode>("Member");
 
         sealed class NullGenericEntryPointDeclaration : GenericEntryPointDeclaration
@@ -72,7 +72,7 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
             get { return GetChildrenByRole(Roles.TypeParameter); }
         }
 
-        public AstNodeCollection<AstNode> BaseTypes
+        public AstNodeCollection<AstType> BaseTypes
         {
             get { return GetChildrenByRole(BaseTypeRole); }
         }

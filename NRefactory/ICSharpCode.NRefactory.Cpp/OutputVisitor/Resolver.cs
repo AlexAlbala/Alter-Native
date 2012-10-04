@@ -828,7 +828,7 @@ namespace ICSharpCode.NRefactory.Cpp
         }
 
         //TODO: move this method to C#2CPPCONVERTERVISITOR
-        public static bool TryPatchGenericTemplateType(AstType type, out AstType newType)
+        public static bool TryPatchTemplateToObjectType(AstType type, out AstType newType)
         {
             newType = (AstType)type.Clone();
             string name = "";
@@ -854,7 +854,7 @@ namespace ICSharpCode.NRefactory.Cpp
                         foreach (AstType t in st.TypeArguments)
                         {
                             AstType discard;
-                            if (TryPatchGenericTemplateType(t, out discard))
+                            if (TryPatchTemplateToObjectType(t, out discard))
                             {
                                 converted = true;
                                 args.Add(new SimpleType("Object"));
@@ -877,7 +877,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 {
                     SimpleType pst = (type as PtrType).Target as SimpleType;
                     AstType tmp;
-                    bool converted = TryPatchGenericTemplateType(pst, out tmp);
+                    bool converted = TryPatchTemplateToObjectType(pst, out tmp);
                     newType = new PtrType(tmp);
                     return converted;
                 }
@@ -912,7 +912,7 @@ namespace ICSharpCode.NRefactory.Cpp
                             ret += ",";
 
                         AstType tmp;
-                        TryPatchGenericTemplateType(t, out tmp);
+                        TryPatchTemplateToObjectType(t, out tmp);
                         ret += Resolver.GetTypeName(tmp);
                     }
                     ret += "*>";
@@ -935,7 +935,7 @@ namespace ICSharpCode.NRefactory.Cpp
                                 ret += ",";
 
                             AstType tmp;
-                            TryPatchGenericTemplateType(t, out tmp);
+                            TryPatchTemplateToObjectType(t, out tmp);
                             ret += Resolver.GetTypeName(tmp);
                         }
                         ret += "*>";

@@ -14,11 +14,11 @@ namespace System{
 			public:
 				virtual IEnumerator_T<TypeArg(T)>* GetEnumerator()=0;
 			
-				iteratorcxx<T> begin()
+				iteratorcxx<TypeArg(T)> begin()
 				{
 					return iteratorcxx<T>(GetEnumerator());
 				}
-				iteratorcxx<T> end()
+				iteratorcxx<TypeArg(T)> end()
 				{
 					return iteratorcxx<T>(0);
 				}

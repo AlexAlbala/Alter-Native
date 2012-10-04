@@ -97,6 +97,7 @@ namespace ICSharpCode.NRefactory.Cpp
 	public class ConstructorInitializer : AstNode
 	{
 		public static readonly new ConstructorInitializer Null = new NullConstructorInitializer ();
+        public static readonly Role<AstType> BaseTypeRole = new Role<AstType>("BaseType", AstType.Null);
 		class NullConstructorInitializer : ConstructorInitializer
 		{
             //public override NodeType NodeType {
@@ -128,11 +129,17 @@ namespace ICSharpCode.NRefactory.Cpp
         //    }
         //}
 		
-		public ConstructorInitializerType ConstructorInitializerType {
-			get;
-			set;
-		}
-		
+        //public ConstructorInitializerType ConstructorInitializerType {
+        //    get;
+        //    set;
+        //}
+
+        public AstType Base
+        {
+            get { return GetChildByRole(BaseTypeRole); }
+            set { SetChildByRole(BaseTypeRole, value); }
+        }
+
 		public CppTokenNode LParToken {
 			get { return GetChildByRole (Roles.LPar); }
 		}
@@ -153,7 +160,7 @@ namespace ICSharpCode.NRefactory.Cpp
 		protected internal override bool DoMatch(AstNode other, PatternMatching.Match match)
 		{
 			ConstructorInitializer o = other as ConstructorInitializer;
-			return o != null && !o.IsNull && this.ConstructorInitializerType == o.ConstructorInitializerType && this.Arguments.DoMatch(o.Arguments, match);
+			return o != null && !o.IsNull && this.Base.DoMatch(o.Base, match) && this.Arguments.DoMatch(o.Arguments, match);
 		}
 	}
 }

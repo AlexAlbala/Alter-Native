@@ -14,8 +14,15 @@ namespace System {
 		static void WriteLine(char* txt);
 		static void WriteLine(int i);
 		static void WriteLine(float i);
+		
 		static void WriteLine(Array<char>* c);
 		static void WriteLine(String* s);
+
+		template<typename T>
+		static void WriteLine(Box_T<T>* i)
+		{
+			WriteLine(*i);
+		}
 
 		static char* ReadLine();
 	};

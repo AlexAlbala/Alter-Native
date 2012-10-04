@@ -10,13 +10,13 @@ namespace System{
 			class ListEnumerator_T : public IEnumerator_T<TypeArg(T)>, public gc_cleanup
 			{
 			private:
-				T* initialPos;
-				T* elements;
+				TypeDecl(T*) initialPos;
+				TypeDecl(T*) elements;
 				int count;
 				int position;
 
 			public:
-				ListEnumerator_T(T* elements, int count)
+				ListEnumerator_T(TypeParam(T*) elements, int count)
 				{
 					this->elements = elements;
 					this->initialPos = elements-1;
@@ -39,9 +39,9 @@ namespace System{
 					return;
 				}
 			
-				virtual TypeDecl(T) getCurrent()
+				virtual TypeDecl(T*) getCurrent()
 				{		
-					TypeRet(T, elements);
+					return TypeRet(T*, elements);
 				}
 			};
 			
@@ -50,7 +50,7 @@ namespace System{
 			{
 			
 			private:	
-				T *elements;
+				TypeDecl(T*) elements;
 			
 			public:
 				int Count;
@@ -59,11 +59,11 @@ namespace System{
 					Count = 0;		
 				}
 			
-				List_T(List_T<T>* values)
+				List_T(List_T<TypeArg(T)>* values)
 				{
 					for(int i=0; i<values->Count;i++)
 					{
-						T* val = values->ElementAt(i);
+						TypeDecl(T) val = values->ElementAt(i);
 						this->Add(*val);
 					}
 				}
@@ -93,9 +93,9 @@ namespace System{
 				void Add(TypeParam(T) element)
 				{
 					if (Count == 0)
-						elements = (T*)malloc(sizeof(T));
+						elements = (TypeDecl(T))malloc(sizeof(T));
 					else
-						elements = (T*)realloc(elements, (Count+1)*sizeof(T));
+						elements = (TypeDecl(T))realloc(elements, (Count+1)*sizeof(T));
 			
 					elements[Count++] = element;
 				}
@@ -120,17 +120,17 @@ namespace System{
 					return *this->ElementAt(index);
 				}*/
 
-				int IndexOf(T* element)
+				int IndexOf(TypeParam(T) element)
 				{
 					for(int i = 0; i <Count; i++)
 					{
-						if((T*)(elements + i) == element)
+						if((TypeDecl(T))(elements + i) == element)
 							return i;
 					}
 					return -1;
 				}
 
-				void Remove(T* element)
+				void Remove(TypeParam(T) element)
 				{		
 					int i = IndexOf(element);
 
@@ -139,7 +139,7 @@ namespace System{
 						elements[j]=elements[j+1];
 					}
 
-					elements = (T*)realloc(elements, (Count-1)*sizeof(T));
+					elements = (TypeDecl(T))realloc(elements, (Count-1)*sizeof(T));
 					Count--;
 				}
 
@@ -153,7 +153,7 @@ namespace System{
 						elements[j]=elements[j+1];
 					}
 
-					elements = (T*)realloc(elements, (Count-1)*sizeof(T));
+					elements = (TypeDecl(T))realloc(elements, (Count-1)*sizeof(T));
 					Count--;
 				}
 			};

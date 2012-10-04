@@ -836,7 +836,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                         {
                             AstType arg = (AstType)(baseType as SimpleType).TypeArguments.ElementAt(i);
                             if (Resolver.IsTemplateType(arg))
-                            {                                
+                            {
                                 InvocationExpression ic = new InvocationExpression(new IdentifierExpression("TypeArg"), new IdentifierExpression(Resolver.GetTypeName(arg)));
                                 ExpressionType exprT = new ExpressionType(ic);
                                 (baseType as SimpleType).TypeArguments.InsertAfter(arg, exprT);
@@ -863,26 +863,97 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 InvocationExpression _ic = new InvocationExpression(new IdentifierExpression("IsBasic"), tmp_args);
                 ExpressionType _exprT = new ExpressionType(_ic);
 
+                //ENTRY POINT
                 SimpleType _base = new SimpleType(genEntry.Name);
                 _base.TypeArguments.Add(new ExpressionType((Expression)tmp_args[0].Clone()));
                 _base.TypeArguments.Add(_exprT);
+                genEntry.BaseTypes.Add(new QualifiedType(new SimpleType("_Internal"), new Identifier(_base.ToString(), TextLocation.Empty)));
 
-                List<AstNode> baseTypes = new List<AstNode>() { 
-                    new MemberReferenceExpression(
-                    new TypeReferenceExpression(new SimpleType("_Internal")),_base.ToString())
-                };
+                //GENERIC SPECIALIZATION
+                SimpleType spec_gen_super = new SimpleType(specGen.Name + "_Base");
+                spec_gen_super.TypeArguments.Add(new PtrType(new SimpleType("Object")));
+                specGen.BaseTypes.Add(spec_gen_super);
 
-                genEntry.BaseTypes.AddRange(baseTypes);
+                //BASIC SPECIALIZATION
+                SimpleType b = new SimpleType(spec.Name + "_Base");
+                b.TypeArguments.Add(new SimpleType("T"));
+                spec.BaseTypes.Add(b);
 
+                bool hasDefaultConstructor = false;
                 /***************** MEMBERS *****************/
                 foreach (var member in type.Members)
                 {
+                    //Add the member to the base template before modify anything
                     btempl.Members.Add((AttributedNode)member.Clone());
+                    if (member is ConstructorDeclaration)
+                    {
+                        String naturalName = genEntry.Name.TrimEnd("_Base".ToCharArray()).TrimEnd("_T".ToCharArray());
+                        hasDefaultConstructor = true;
+                        //********************ENTRY POINT
+                        var constr = member as ConstructorDeclaration;
+                        if(!constr.HasModifier(Modifiers.Public))
+                            constr.ModifierTokens.Add(new CppModifierToken(TextLocation.Empty,Modifiers.Public));
+
+                        constr.Body = new BlockStatement();
+                        constr.Initializer = new ConstructorInitializer();
+                        constr.Initializer.Base = (AstType)genEntry.BaseTypes.ElementAt(0).Clone();
+                        constr.Name = naturalName;
+
+                        foreach (var arg in constr.Parameters)
+                        {
+                            hasDefaultConstructor = false;
+                            constr.Initializer.Arguments.Add(new IdentifierExpression(arg.Name));
+                        }
+
+                        genEntry.Members.Add((AttributedNode)constr.Clone());
+
+                        //********************GENERIC SPECIALIZATION
+                        var spec_constr = member as ConstructorDeclaration;
+
+                        spec_constr.Body = new BlockStatement();
+                        spec_constr.Initializer = new ConstructorInitializer();
+                        spec_constr.Initializer.Base = (AstType)specGen.BaseTypes.ElementAt(0).Clone();
+                        spec_constr.Name = naturalName;
+
+                        foreach (var arg in constr.Parameters)
+                        {
+                            AstType _tmp;
+                            Resolver.TryPatchTemplateToObjectType(arg.Type, out _tmp);
+                            constr.Initializer.Arguments.Add(new CastExpression(_tmp, new IdentifierExpression(arg.Name)));
+                        }
+
+                        specGen.Members.Add((AttributedNode)spec_constr.Clone());
+
+                        //********************BASIC SPECIALIZATION
+                        var spec_B_constr = member as ConstructorDeclaration;
+
+                        spec_B_constr.Body = new BlockStatement();
+                        spec_B_constr.Initializer = new ConstructorInitializer();
+                        spec_B_constr.Initializer.Base = (AstType)spec.BaseTypes.ElementAt(0).Clone();
+                        spec_B_constr.Name = naturalName;
+
+                        foreach (var arg in constr.Parameters)
+                            constr.Initializer.Arguments.Add(new IdentifierExpression(arg.Name));
+
+                        spec.Members.Add((AttributedNode)spec_B_constr.Clone());
+                    }
+                    else
+                    {//ADD ALL MEMBERS BUT NOT THE CONSTRUCTORS
+                        specGen.Members.Add((AttributedNode)member.Clone());
+                    }                   
                     ttempl.Members.Add((AttributedNode)member.Clone());
-                    spec.Members.Add((AttributedNode)member.Clone());
-                    specGen.Members.Add((AttributedNode)member.Clone());
-                    genEntry.Members.Add((AttributedNode)member.Clone());
+                    
                 }
+
+                if (!hasDefaultConstructor)
+                {
+                    var def_const = new ConstructorDeclaration();
+                    def_const.Name = btempl.Name.TrimEnd("_Base".ToArray()).TrimEnd("_T".ToCharArray());//REMEMBER IN THE MEMBERS IS BETTER TO STORE THE ORIGINAL TYPE NAME
+                    def_const.ModifierTokens.Add(new CppModifierToken(TextLocation.Empty, Modifiers.Public));
+                    def_const.Body = new BlockStatement();
+                    btempl.Members.Add(def_const);
+                }
+                
 
                 /**************** FILL THE GENERIC TEMPLATE TYPE ***************/
                 gtempl.TypeDefinition = genEntry;
@@ -1287,8 +1358,13 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitConstructorInitializer(CSharp.ConstructorInitializer constructorInitializer, object data)
         {
             var cinit = new ConstructorInitializer();
-            cinit.ConstructorInitializerType = (ConstructorInitializerType)constructorInitializer.ConstructorInitializerType;
-            ConvertNodes(constructorInitializer.Arguments, cinit.Arguments);
+            if (constructorInitializer.ConstructorInitializerType == CSharp.ConstructorInitializerType.Base)//BASE
+            {
+                //cinit.Base = (ConstructorInitializerType)constructorInitializer.ConstructorInitializerType;
+            }
+            else //THIS
+
+                ConvertNodes(constructorInitializer.Arguments, cinit.Arguments);
             return EndNode(constructorInitializer, cinit);
         }
 
@@ -1397,7 +1473,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     Cache.AddPrivateImplementation(res.PrivateImplementationType, res);
 
                 if (Resolver.IsTemplateType(res.ReturnType))
-                {                    
+                {
                     InvocationExpression ic = new InvocationExpression(new IdentifierExpression("TypeDecl"), new IdentifierExpression(Resolver.GetTypeName(res.ReturnType)));
                     res.ReturnType = new ExpressionType(ic);
                 }

@@ -27,5 +27,17 @@ namespace System{
 		operator T& () {
 			return data;
 		}
+
+		/*operator T () {
+			return data;
+		}*/
+
+		T operator =(Box_T<T>  other){
+			return data;
+		}
+
+		Box_T<T>& operator =(T other){
+			return new Box_T<T>(other);
+		}
 	};
 }
