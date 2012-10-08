@@ -67,13 +67,12 @@ namespace CustomCollections {
 		template<typename T>
 		class MyList_T<T, false> : public virtual MyList_T_Base<Object*>{
 			public:
-			inline MyList_T(System::Array<T>* values) : MyList_T_Base<Object*>((System::Array<Object>*)(values))
-			{
+			inline MyList_T(System::Array<T>* values) : MyList_T_Base<Object*>((System::Array<Object>*)(values)){
 			}
 			public:
 			inline IEnumerator_T<T>* GetEnumerator() {
 				Object* var_tmp = MyList_T_Base<Object*>::GetEnumerator();
-				return dynamic_cast<IEnumerator_T<T>*>(var_tmp);
+				return dynamic_cast<IEnumerator_T<T>*>(var_tmp);//CAST!!
 			}
 			inline operator IEnumerable*() {
 				return (IEnumerable*)(MyList_T_Base<Object*>::operator IEnumerable*());

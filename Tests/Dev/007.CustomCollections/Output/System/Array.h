@@ -107,11 +107,11 @@ namespace System{
 			inline Array(int Length) : Array_T_Base<Object*>(Length){}
  			inline Array(T* elements, int Length) : Array_T_Base<Object*>((Object*)(elements), Length){}
 			inline T* GetData(){
-				return dynamic_cast<T*>(Array_T_Base<Object*>::GetData());
+				return dynamic_cast<T*>(Array_T_Base<Object*>::GetData());//CAST !
 			}
 
 			inline T& operator[](int index){
-				return (T&)(Array_T_Base<Object*>::operator[](index));//CUIDADO EL CAST
+				return reinterpret_cast<T&>(Array_T_Base<Object*>::operator[](index));//CUIDADO EL CAST
 			}
 		};
 	}

@@ -23,8 +23,8 @@ namespace CustomCollections {
 				Object* getCurrent(){
 					return this->getCurrent();
 				}
-
-				bool MoveNext(){return null;}//IMPLEMENT INTERFACEMEMBERS
+												//IF THE BASE CLASS IS AN INTERFACE (ABSTRACT CLASS)
+				bool MoveNext(){return null;}	//IMPLEMENT INTERFACEMEMBERS
 				void Reset(){}
 			};
 			private:
@@ -112,7 +112,7 @@ namespace CustomCollections {
 				return (IEnumerator*)(MyEnumerator_T_Base<Object*>::operator IEnumerator*());
 			}
 
-			inline T* getCurrent(){ //PROPERTIES !!!!
+			inline T* getCurrent(){ //PROPERTIES INLINE!!!!
 				return (T*)(MyEnumerator_T_Base<Object*>::getCurrent());
 			}
 		};
