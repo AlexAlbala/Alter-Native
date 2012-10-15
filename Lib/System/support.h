@@ -7,9 +7,12 @@
 #define FOREACH(var, container)  container->GetEnumerator()->Reset(); for(auto var = (container)->begin()++; var != (container)->end(); ++var)
 #define TypeArg(T) typename ::__Internal__::TypeTrait<T, true>::Type
 #define TypeDecl(T) typename ::__Internal__::TypeTrait<T,false>::Type
-//#define TypeParam(T) typename ::__Internal__::ParamTrait<T>::Type
-#define TypeRet(T, element) (IsBasic(T) ? new System::Box_T<T>(*(element)) : (T*)(elements));
+#define BoxRef(T) typename ::__Internal__::Boxing<T, ::__Internal__::IsFundamentalType<T>::result, true>::Type
+#define BoxDecl(T) typename ::__Internal__::Boxing<T, ::__Internal__::IsFundamentalType<T>::result, false>::Type
 #define IsBasic(T) ::__Internal__::IsFundamentalType<T>::result
+
+//#define TypeParam(T) typename ::__Internal__::ParamTrait<T>::Type
+//#define TypeRet(T, element) (IsBasic(T) ? new System::Box_T<T>(*(element)) : (T*)(elements));
 
 /*********************************************************************************************************/
 /*********************************************** AS IS CASTS  ********************************************/
@@ -87,19 +90,34 @@ namespace __Internal__{
 /*********************************************************************************************************/
 /********************************************** BOXING UNBOXING ******************************************/
 /*********************************************************************************************************/
+template<typename T>
+System::Box_T<T>* Box(T t){
+	return new Box_T<T>(t);	
+}
+
 namespace __Internal__{
-	template<typename T, bool isFundamental>
+	template<typename T, bool isFundamental, bool isRef>
 	struct Boxing{	
 	};
 
 	template<typename T>
-	struct Boxing<T, true>{
-		typedef System::Box_T<typename DeRefType<T>::Type>* Type;
+	struct Boxing<T, true, false>{
+		typedef System::Box_T<typename DeRefBasicType<T>::Type>* Type;
 	};
 
 	template<typename T>
-	struct Boxing<T, false>{
+	struct Boxing<T, false, false>{
 		typedef typename DeRefType<T>::Type* Type;
+	};
+
+	template<typename T>
+	struct Boxing<T, true, true>{
+		typedef System::Box_T<typename DeRefBasicType<T>::Type>& Type;
+	};
+
+	template<typename T>
+	struct Boxing<T, false, true>{
+		typedef typename DeRefType<T>::Type& Type;
 	};
 }
 
@@ -175,7 +193,7 @@ namespace __Internal__{
 
 	template <typename T>
 	struct _TypeTrait<T, false, true> {
-		typedef T Type;//Boxing<typename DeRefBasicType<T>::Type, true>::Type Type;
+		typedef T Type;
 	};
 
 	template <typename T>
