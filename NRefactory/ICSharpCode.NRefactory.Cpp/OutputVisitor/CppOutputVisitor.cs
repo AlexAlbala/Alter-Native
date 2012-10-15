@@ -3743,5 +3743,34 @@ namespace ICSharpCode.NRefactory.Cpp
             expressionType.Target.AcceptVisitor(this, true);
             return EndNode(expressionType);
         }
+
+
+        public object VisitBoxExpression(BoxExpression boxExpression, object data)
+        {
+            StartNode(boxExpression);
+            WriteKeyword("BOX");
+            WriteToken("<", CppTokenNode.Roles.LChevron);
+            boxExpression.type.AcceptVisitor(this, data);
+            WriteToken(">", CppTokenNode.Roles.RChevron);
+
+            WriteToken("(", CppTokenNode.Roles.LPar);
+            boxExpression.Expression.AcceptVisitor(this, data);
+            WriteToken(")", CppTokenNode.Roles.RPar);
+            return EndNode(boxExpression);
+        }
+
+        public object VisitUnBoxExpression(UnBoxExpression unBoxExpression, object data)
+        {
+            StartNode(unBoxExpression);
+            WriteKeyword("UNBOX");
+            WriteToken("<", CppTokenNode.Roles.LChevron);
+            unBoxExpression.type.AcceptVisitor(this, data);
+            WriteToken(">", CppTokenNode.Roles.RChevron);
+
+            WriteToken("(", CppTokenNode.Roles.LPar);
+            unBoxExpression.Expression.AcceptVisitor(this, data);
+            WriteToken(")", CppTokenNode.Roles.RPar);
+            return EndNode(unBoxExpression);
+        }
     }
 }

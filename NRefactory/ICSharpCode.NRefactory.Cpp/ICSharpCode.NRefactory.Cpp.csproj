@@ -69,8 +69,10 @@
     <Compile Include="Ast\AstNode.cs" />
     <Compile Include="Ast\AstNodeCollection.cs" />
     <Compile Include="Ast\Expressions\AddressOfExpression.cs" />
+    <Compile Include="Ast\Expressions\BoxExpression.cs" />
     <Compile Include="Ast\Expressions\DynamicCastExpression.cs" />
     <Compile Include="Ast\Expressions\MemberAccessExpression.cs" />
+    <Compile Include="Ast\Expressions\UnBoxExpression.cs" />
     <Compile Include="Ast\GeneralScope\BaseTemplateTypeDeclaration.cs" />
     <Compile Include="Ast\GeneralScope\GenericEntryPointDeclaration.cs" />
     <Compile Include="Ast\GeneralScope\GenericTemplateTypeDeclaration.cs" />

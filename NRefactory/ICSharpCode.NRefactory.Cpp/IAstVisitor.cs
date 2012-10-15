@@ -67,6 +67,8 @@ namespace ICSharpCode.NRefactory.Cpp
 		S VisitUnaryOperatorExpression(UnaryOperatorExpression unaryOperatorExpression, T data);
 		S VisitUncheckedExpression(UncheckedExpression uncheckedExpression, T data);
 		S VisitEmptyExpression (EmptyExpression emptyExpression, T data);
+        S VisitBoxExpression(BoxExpression boxExpression, T data);
+        S VisitUnBoxExpression(UnBoxExpression unBoxExpression, T data);
 		
 		S VisitQueryExpression(QueryExpression queryExpression, T data);
 		S VisitQueryContinuationClause(QueryContinuationClause queryContinuationClause, T data);

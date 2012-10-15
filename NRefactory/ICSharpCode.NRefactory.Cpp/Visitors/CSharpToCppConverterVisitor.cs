@@ -1214,7 +1214,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             else if (arrayCreation)
             {
                 SimpleType t = new SimpleType("Array");
-                t.TypeArguments.Add((AstType)vds.Type.Clone());
+                t.TypeArguments.Add(vds.Type is PtrType ? (AstType)(vds.Type as PtrType).Target.Clone() : (AstType)vds.Type.Clone());
 
                 VariableInitializer vinit = vds.Variables.ElementAt(0);
                 vinit.NameToken = new Identifier(vinit.Name, TextLocation.Empty);
@@ -1542,7 +1542,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                         goto End;
 
                 SimpleType s = new SimpleType("Array");
-                s.TypeArguments.Add((AstType)param.Type.Clone());
+                s.TypeArguments.Add(param.Type is PtrType ? (AstType)(param.Type as PtrType).Target.Clone() : (AstType)param.Type.Clone());
                 param.Type = new PtrType(s);
 
                 param.NameToken = (Identifier)(param.NameToken as ComposedIdentifier).BaseIdentifier.Clone();
@@ -1840,14 +1840,32 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             }
         }
 
-        T EndNode<T>(CSharp.AstNode node, T result) where T : Cpp.AstNode
+        //CHANGED RETURNTYPE FROM T TO ASTNODE (THIS METHOD SHOULD ALLOW THE CHANGE OF THE NODE (IF IT IS A BOX/UNBOX NODE)
+        AstNode EndNode<T>(CSharp.AstNode node, T result) where T : Cpp.AstNode
         {
             if (result != null)
             {
                 CopyAnnotations(node, result);
             }
 
-            return result;
+            if (node.isBox)
+            {
+                BoxExpression b = new BoxExpression((Expression)(AstNode)result);
+                b.type = (AstType)node.boxingType.AcceptVisitor(this, null);
+                AstNode t = b;
+                return t;
+            }
+            else if (node.isUnBox)
+            {
+                UnBoxExpression ub = new UnBoxExpression((Expression)(AstNode)result);
+                ub.type = (AstType)node.boxingType.AcceptVisitor(this, null);
+                AstNode t = ub;
+                return t;
+            }
+            else
+            {
+                return result;
+            }
         }
 
         void CopyAnnotations<T>(CSharp.AstNode node, T result) where T : Cpp.AstNode

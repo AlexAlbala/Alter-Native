@@ -101,6 +101,13 @@ T& UNBOX(System::Object* t){
 	return *tmp;
 }
 
+/*
+template<typename T>
+T& UNBOX(System::Object t){
+	System::Box_T<T>* tmp = (System::Box_T<T>*)(&t);
+	return *tmp;
+}*/
+
 namespace __Internal__{
 	template<typename T, bool isFundamental, bool isRef>
 	struct Boxing{	

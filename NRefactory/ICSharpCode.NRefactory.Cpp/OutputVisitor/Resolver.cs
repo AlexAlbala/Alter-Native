@@ -642,6 +642,9 @@ namespace ICSharpCode.NRefactory.Cpp
             //This method can be implemented in a more optimized way, but I prefer distinguish all the cases for control better the process
             if (node is CSharp.IdentifierExpression)
             {
+                //I THINK THAT WITH IDENTIFIER EXPRESSIONS WE DO NOT NEED TO CHECK ANYTHING...
+                return false;
+                #region unused code
                 var identifierExpression = node as CSharp.IdentifierExpression;
                 //We must check if the return type is different to the original type, if that is, it is necessar or maybe a cast, or maybe there is an operator. In both cases the identifier must be de-referenced:
                 //From IA* a = c; we must obtain IA* a = *c;
@@ -709,6 +712,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 {
                     return false;
                 }
+                #endregion
             }
             else if (node is CSharp.IndexerExpression)
             {

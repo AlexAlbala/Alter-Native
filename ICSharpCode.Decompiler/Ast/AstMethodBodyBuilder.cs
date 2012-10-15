@@ -545,7 +545,10 @@ namespace ICSharpCode.Decompiler.Ast
 					}
 				case ILCode.Castclass:
 					return arg1.CastTo(operandAsTypeRef);
-				case ILCode.Unbox_Any:
+				case ILCode.Unbox_Any:                    
+                    arg1.isBox = false;
+                    arg1.isUnBox = true;
+                    arg1.boxingType = operandAsTypeRef.Clone();
 					// unboxing does not require a cast if the argument was an isinst instruction
 					if (arg1 is AsExpression && byteCode.Arguments[0].Code == ILCode.Isinst && TypeAnalysis.IsSameType(operand as TypeReference, byteCode.Arguments[0].Operand as TypeReference))
 						return arg1;
@@ -554,8 +557,14 @@ namespace ICSharpCode.Decompiler.Ast
 				case ILCode.Isinst:
 					return arg1.CastAs(operandAsTypeRef);
 				case ILCode.Box:
+                    arg1.isBox = true;
+                    arg1.isUnBox = false;
+                    arg1.boxingType = operandAsTypeRef.Clone();
 					return arg1;
-				case ILCode.Unbox:
+				case ILCode.Unbox:                    
+                    arg1.isBox = false;
+                    arg1.isUnBox = true;
+                    arg1.boxingType = operandAsTypeRef.Clone();
 					return MakeRef(arg1.CastTo(operandAsTypeRef));
 					#endregion
 					#region Indirect
