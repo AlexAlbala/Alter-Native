@@ -56,6 +56,10 @@ namespace ExplicitGenericInterfaces {
 				Console::WriteLine(new String("c"));
 				return this->value;
 			}
+			public:
+			C_T_Base()
+			{
+			}
 		};
 
 		template<typename T, bool>

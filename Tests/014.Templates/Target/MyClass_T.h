@@ -11,15 +11,19 @@ namespace Templates {
 		template<typename T>
 		class MyClass_T_Base : public virtual Object, public virtual gc_cleanup{
 			private:
-			T data;
+			TypeDecl(T) data;
 			public:
-			void set(T data){
+			void set(TypeDecl(T) data){
 				this->data = data;
 			}
 			public:
-			T get()
+			TypeDecl(T) get()
 			{
 				return this->data;
+			}
+			public:
+			MyClass_T_Base()
+			{
 			}
 		};
 
@@ -37,7 +41,7 @@ namespace Templates {
 		class MyClass_T<T, false> : public virtual MyClass_T_Base<Object*>{
 			public:
 			inline void set(T* data){
-				return MyClass_T_Base<Object*>::set((Object*)(data));
+				MyClass_T_Base<Object*>::set((Object*)(data));
 			}
 			public:
 			inline T* get() {
@@ -49,6 +53,6 @@ namespace Templates {
 
 	//Type definition
 	template<typename T>
-	class MyClass_T : public _Internal::MyClass_T<T, IsFundamentalType<T>::result>{
+	class MyClass_T : public _Internal::MyClass_T<T, IsBasic(T)>{
 	};
 }

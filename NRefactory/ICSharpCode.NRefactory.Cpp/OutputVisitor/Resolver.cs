@@ -642,13 +642,13 @@ namespace ICSharpCode.NRefactory.Cpp
             //This method can be implemented in a more optimized way, but I prefer distinguish all the cases for control better the process
             if (node is CSharp.IdentifierExpression)
             {
-                //I THINK THAT WITH IDENTIFIER EXPRESSIONS WE DO NOT NEED TO CHECK ANYTHING...
-                return false;
-                #region unused code
                 var identifierExpression = node as CSharp.IdentifierExpression;
                 //We must check if the return type is different to the original type, if that is, it is necessar or maybe a cast, or maybe there is an operator. In both cases the identifier must be de-referenced:
                 //From IA* a = c; we must obtain IA* a = *c;
                 //TODO: MAYBE we should add a cast for security ?
+                if (node.isBox || node.isUnBox)
+                    return false;
+
                 if (IsChildOf(node, typeof(CSharp.VariableInitializer)))
                 {
                     //TODO: IS CHILD OF INVOCATION EXPRESSION, SO, THE IDENTIFIEREXPRESSION IS A PARAMETER, 
@@ -678,31 +678,44 @@ namespace ICSharpCode.NRefactory.Cpp
                     {
                         return false;
                     }
+
                     else
                     {
                         if (IsChildOf(node, typeof(CSharp.FieldDeclaration)))
                         {
+
                             var fdecl = (CSharp.FieldDeclaration)GetParentOf(node, typeof(CSharp.FieldDeclaration));
-                            if (Resolver.GetTypeName(fdecl.ReturnType) != Resolver.GetTypeName(Resolver.GetType(identifierExpression.Identifier, currentType, null, null)))
+
+                            string ret = Resolver.GetTypeName(fdecl.ReturnType);
+                            string id = Resolver.GetTypeName(Resolver.GetType(identifierExpression.Identifier, currentType, null, null));
+                            if (ret != id)
                             {
-                                return true;
+                                return !((fdecl.ReturnType is CSharp.PrimitiveType && id == "Object") ||
+                                    (ret == "Object" && Resolver.GetType(identifierExpression.Identifier, currentType, null, null).IsBasicType));
                             }
                         }
                         else if (IsChildOf(node, typeof(CSharp.VariableDeclarationStatement)))
                         {
                             var vdecl = (CSharp.VariableDeclarationStatement)GetParentOf(node, typeof(CSharp.VariableDeclarationStatement));
-                            if (Resolver.GetTypeName(vdecl.Type) != Resolver.GetTypeName(Resolver.GetType(identifierExpression.Identifier, null, currentMethod, null)))
+                            if (vdecl.Variables.ElementAt(0).isBox || vdecl.Variables.ElementAt(0).isUnBox)
+                                return false;
+                            string ret = Resolver.GetTypeName(vdecl.Type);
+                            string id = Resolver.GetTypeName(Resolver.GetType(identifierExpression.Identifier, null, currentMethod, null));
+                            if (ret != id)
                             {
-                                CSharp.MethodDeclaration m = (CSharp.MethodDeclaration)Resolver.GetParentOf(node, typeof(CSharp.MethodDeclaration));
-                                return IsPointer(identifierExpression.Identifier, null, m == null ? String.Empty : m.Name, null);
+                                return !((vdecl.Type is CSharp.PrimitiveType && id == "Object") ||
+                                    (ret == "Object" && Resolver.GetType(identifierExpression.Identifier, currentType, null, null).IsBasicType));
                             }
                         }
                         else if (IsChildOf(node, typeof(CSharp.ParameterDeclaration)))
                         {
                             var pdecl = (CSharp.ParameterDeclaration)GetParentOf(node, typeof(CSharp.ParameterDeclaration));
-                            if (Resolver.GetTypeName(pdecl.Type) != Resolver.GetTypeName(Resolver.GetType(identifierExpression.Identifier, null, currentMethod, pdecl.Name)))
+                            string ret = Resolver.GetTypeName(pdecl.Type);
+                            string id = Resolver.GetTypeName(Resolver.GetType(identifierExpression.Identifier, currentType, null, null));
+                            if (ret != id)
                             {
-                                return true;
+                                return !((pdecl.Type is CSharp.PrimitiveType && id == "Object") ||
+                                    (ret == "Object" && Resolver.GetType(identifierExpression.Identifier, null, currentMethod, pdecl.Name).IsBasicType));
                             }
                         }
                         return false;
@@ -712,7 +725,6 @@ namespace ICSharpCode.NRefactory.Cpp
                 {
                     return false;
                 }
-                #endregion
             }
             else if (node is CSharp.IndexerExpression)
             {
