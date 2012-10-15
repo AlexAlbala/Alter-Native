@@ -1729,6 +1729,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     typeName = "float";
                     break;
                 case "object":
+                     if (primitiveType.Role == CSharp.SimpleType.Roles.TypeArgument || primitiveType.Role == CSharp.SimpleType.Roles.TypeParameter)
+                        return EndNode(primitiveType, new SimpleType("Object"));
                     return EndNode(primitiveType, new PtrType(new SimpleType("Object")));
                 case "string":
                     if (primitiveType.Role == CSharp.SimpleType.Roles.TypeArgument || primitiveType.Role == CSharp.SimpleType.Roles.TypeParameter)
