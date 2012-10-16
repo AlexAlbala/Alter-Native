@@ -61,6 +61,13 @@ namespace CustomCollections {
 			public:
 			MyList_T(System::Array<T>* values) : MyList_T_Base<T>(values){
 			}
+
+			public:
+			inline IEnumerator_T<T>* GetEnumerator() {
+				Object* var_tmp = MyList_T_Base<T>::GetEnumerator();
+				return dynamic_cast<IEnumerator_T<T>*>(var_tmp);//CAST!!
+			}
+
 		};
 
 		//Generic template type

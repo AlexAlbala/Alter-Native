@@ -9,4 +9,4 @@ Included open-source libraries:
 
 Alter-Native Contributors:
 	Alex Albalá (alejandro.albala@upc.edu)
-	Juan López
+	Juan López  (Juan.Lopez-Rubio@upc.edu)

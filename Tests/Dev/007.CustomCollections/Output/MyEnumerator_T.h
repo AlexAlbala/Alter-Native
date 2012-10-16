@@ -40,7 +40,7 @@ namespace CustomCollections {
 			private:
 			int currentIndex;
 			public:
-			BoxDecl(T) getCurrent(){ //Si Return Type de la clase abstracta es Object* --> BoxDecl(T)	
+			T getCurrent(){ //Si Return Type de la clase abstracta es Object* --> BoxDecl(T)	
 				return (*this->values)[this->currentIndex];
 			}
 
