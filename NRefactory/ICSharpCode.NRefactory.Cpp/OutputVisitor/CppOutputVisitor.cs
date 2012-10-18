@@ -3564,6 +3564,7 @@ namespace ICSharpCode.NRefactory.Cpp
             if (avoidPointers && Resolver.IsTemplateType(ptrType))
             {
                 //TODO: Move it to C#2CPP OUTPUT VISITOR
+                //TODO: MMM REVISE
                 InvocationExpression ic = new InvocationExpression(new IdentifierExpression("TypeDecl"), new IdentifierExpression(Resolver.GetTypeName((AstType)ptrType.Clone())));
                 ExpressionType exprt = new ExpressionType(ic);
                 exprt.AcceptVisitor(this, data);

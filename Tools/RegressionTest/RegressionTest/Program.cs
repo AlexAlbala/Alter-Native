@@ -183,8 +183,10 @@ namespace RegressionTest
             orig.StartInfo.RedirectStandardOutput = true;
             orig.StartInfo.CreateNoWindow = true;
             orig.StartInfo.UseShellExecute = false;
+            DateTime orig_di = DateTime.Now;
             orig.Start();
             orig.WaitForExit();
+            DateTime orig_df = DateTime.Now;
             String originalOutput = orig.StandardOutput.ReadToEnd();
 
             Process final = new Process();
@@ -192,8 +194,10 @@ namespace RegressionTest
             final.StartInfo.RedirectStandardOutput = true;
             final.StartInfo.CreateNoWindow = true;
             final.StartInfo.UseShellExecute = false;
+            DateTime final_di = DateTime.Now;
             final.Start();
             final.WaitForExit();
+            DateTime final_df = DateTime.Now;
             String finalOutput = final.StandardOutput.ReadToEnd();
 
             res.output = (short)string.Compare(originalOutput, finalOutput);
@@ -204,10 +208,23 @@ namespace RegressionTest
             else
                 maxLengthMsg = 100;
 
+            //Timespan original
+            TimeSpan tso = orig_df - orig_di;
+            long ot = (long)tso.TotalMilliseconds;
+
+            //Timespan final
+            TimeSpan tsf = final_df - final_di;
+            long ft = (long)tsf.TotalMilliseconds;
+
             DebugMessage("ORIGINAL");
             DebugMessage(originalOutput.Length > maxLengthMsg ? originalOutput.Substring(0, maxLengthMsg) + " [......] " : originalOutput);
+            DebugMessage("TimeSpan: " + ot);
+
             DebugMessage("FINAL");
             DebugMessage(finalOutput.Length > maxLengthMsg ? finalOutput.Substring(0, maxLengthMsg) + " [......] " : finalOutput);
+            DebugMessage("TimeSpan: " + ft);
+
+            res.msTimeSpan = ot - ft;
         }
 
         private void alternative(DirectoryInfo di, TestResult res)
@@ -253,7 +270,7 @@ namespace RegressionTest
             if (Verbose)
                 runAlt.BeginOutputReadLine();
             runAlt.WaitForExit();
-            res.alternative = 0;
+            res.alternative = (short)runAlt.ExitCode;
         }
 
         private int diffDirectory(DirectoryInfo di1, DirectoryInfo di2)
@@ -354,7 +371,7 @@ namespace RegressionTest
                 File.Copy(f.FullName, Path.Combine(target.ToString(), f.Name));
 
             foreach (DirectoryInfo d in output.GetDirectories())
-            {                
+            {
                 if (!ignoreFolders.Contains(d.Name))
                 {
                     Directory.CreateDirectory(target.FullName + "/" + d.Name);
@@ -409,23 +426,25 @@ namespace RegressionTest
             Console.WriteLine("******************************************************************** TEST RESULTS ***************************************************************");
             Console.ResetColor();
 
-            string[,] arr = new string[tests.Length + 1, 6];
+            string[,] arr = new string[tests.Length + 1, 7];
             arr[0, 0] = "NAME";
             arr[0, 1] = "ALTERNATIVE";
             arr[0, 2] = "FILE DIFFER";
             arr[0, 3] = "CMAKE CODE";
             arr[0, 4] = "MSBUILD CODE";
             arr[0, 5] = "OUTPUT";
+            arr[0, 6] = "TIME GAIN";
             int i = 1;
             foreach (string s in tests)
             {
                 KeyValuePair<DirectoryInfo, TestResult> kvp = Tests.First(x => x.Key.Name == s);
                 arr[i, 0] = kvp.Key.Name;
-                arr[i, 1] = kvp.Value.alternative == 0 ? "SUCCESS" : "FAIL. Code: " + kvp.Value.alternative;
-                arr[i, 2] = kvp.Value.diffCode == 0 ? "No Differ" : (kvp.Value.diffCode == 1 ? "Differ" : "Error. Code: " + kvp.Value.diffCode);
-                arr[i, 3] = kvp.Value.cmakeCode == 0 ? "SUCCESS" : (kvp.Value.cmakeCode == -10 ? "SKIPPED" : "FAIL. Code: " + kvp.Value.cmakeCode);
-                arr[i, 4] = kvp.Value.msbuildCode == 0 ? "BUILD SUCCEEDED" : (kvp.Value.msbuildCode == -10 ? "SKIPPED" : "FAIL. Code: " + kvp.Value.msbuildCode);
-                arr[i, 5] = kvp.Value.output == 0 ? "OK" : (kvp.Value.output == -10 ? "SKIPPED" : "FAIL");
+                arr[i, 1] = kvp.Value.alternative == 0 ? "#gSUCCESS" : "#rFAIL. Code: " + kvp.Value.alternative;
+                arr[i, 2] = kvp.Value.diffCode == 0 ? "#gNo Differ" : (kvp.Value.diffCode == 1 ? "#rDiffer" : "#rError. Code: " + kvp.Value.diffCode);
+                arr[i, 3] = kvp.Value.cmakeCode == 0 ? "#gSUCCESS" : (kvp.Value.cmakeCode == -10 ? "#ySKIPPED" : "#rFAIL. Code: " + kvp.Value.cmakeCode);
+                arr[i, 4] = kvp.Value.msbuildCode == 0 ? "#gBUILD SUCCEEDED" : (kvp.Value.msbuildCode == -10 ? "#ySKIPPED" : "#rFAIL. Code: " + kvp.Value.msbuildCode);
+                arr[i, 5] = kvp.Value.output == 0 ? "#gOK" : (kvp.Value.output == -10 ? "#ySKIPPED" : "#rFAIL");
+                arr[i, 6] = (kvp.Value.msTimeSpan >= 0 ? (kvp.Value.msTimeSpan == 0 ? "#y" : "#g") : "#r") + kvp.Value.msTimeSpan.ToString() + " ms";
 
                 i++;
             }

@@ -17,8 +17,9 @@ namespace AlterNative
         /// Application Entry Point.
         /// </summary>
         [System.STAThreadAttribute()]
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
+            int exitcode;
             ICSharpCode.ILSpy.App app = new ICSharpCode.ILSpy.App();
             if (args.Length > 1 && !args[0].Equals("/separate"))
             {
@@ -26,17 +27,21 @@ namespace AlterNative
                 {
                     Program p = new Program();
                     p.ConsoleMain(args);
+                    exitcode = 0;
                 }
                 catch (Exception e)
                 {
                     Utils.WriteToConsole("Exception: " + e.ToString());
+                    exitcode = 1;                   
                 }
             }
             else
             {
                 app.InitializeComponent();
                 app.Run();
+                exitcode = 0;
             }
+            return exitcode;            
         }
 
         #region Console

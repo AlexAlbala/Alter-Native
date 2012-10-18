@@ -51,17 +51,54 @@ class ArrayPrinter
         int dimension2Length = arrValues.GetLength(1);
 
         int maxCellWidth = GetMaxCellWidth(arrValues);
+
+        int width = maxCellWidth * dimension2Length + dimension2Length + 2;
+        //if (width > Console.WindowWidth)
+        //    Console.WindowWidth = width;
+        if (width > Console.BufferWidth)
+            Console.BufferWidth = width;
+
         int indentLength = (dimension2Length * maxCellWidth) + (dimension2Length - 1);
         //printing top line;
+        Console.Write(string.Format("{0}{1}{2}{3}", cellLeftTop, Indent(indentLength), cellRightTop, System.Environment.NewLine));
         formattedString = string.Format("{0}{1}{2}{3}", cellLeftTop, Indent(indentLength), cellRightTop, System.Environment.NewLine);
 
         for (int i = 0; i < dimension1Length; i++)
         {
             string lineWithValues = cellVerticalLine;
+            Console.Write(cellVerticalLine);
             string line = cellVerticalJointLeft;
             for (int j = 0; j < dimension2Length; j++)
             {
                 string value = (isLeftAligned) ? arrValues[i, j].PadRight(maxCellWidth, ' ') : arrValues[i, j].PadLeft(maxCellWidth, ' ');
+                if (value.Contains("#"))
+                {
+                    int pos = value.IndexOf("#");
+                    if (value[pos + 1] == 'r')
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        value = value.Replace("#r", "  ");
+                    }
+                    else if (value[pos + 1] == 'g')
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        value = value.Replace("#g", "  ");
+                    }
+                    else if (value[pos + 1] == 'y')
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        value = value.Replace("#y", "  ");
+                    }
+                    else
+                        Console.ResetColor();
+                }
+                else
+                    Console.ResetColor();
+                
+                Console.Write(value);
+                Console.ResetColor();
+                Console.Write(cellVerticalLine);
+
                 lineWithValues += string.Format("{0}{1}", value, cellVerticalLine);
                 line += Indent(maxCellWidth);
                 if (j < (dimension2Length - 1))
@@ -70,15 +107,19 @@ class ArrayPrinter
                 }
             }
             line += cellVerticalJointRight;
+            Console.WriteLine();
             formattedString += string.Format("{0}{1}", lineWithValues, System.Environment.NewLine);
             if (i < (dimension1Length - 1))
             {
+                Console.WriteLine(line);
                 formattedString += string.Format("{0}{1}", line, System.Environment.NewLine);
             }
         }
 
         //printing bottom line
+        Console.ResetColor();
         formattedString += string.Format("{0}{1}{2}{3}", cellLeftBottom, Indent(indentLength), cellRightBottom, System.Environment.NewLine);
+        Console.WriteLine(string.Format("{0}{1}{2}{3}", cellLeftBottom, Indent(indentLength), cellRightBottom, System.Environment.NewLine));
         return formattedString;
     }
 
@@ -107,7 +148,7 @@ class ArrayPrinter
         if (arrValues == null)
             return;
 
-        Console.WriteLine(GetDataInTableFormat(arrValues));
+        GetDataInTableFormat(arrValues);
     }
 
     #endregion
