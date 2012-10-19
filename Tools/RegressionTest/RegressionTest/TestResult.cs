@@ -13,6 +13,7 @@ namespace RegressionTest
         public short cmakeCode;
         public short msbuildCode;
         public long msTimeSpan;
+        public float relativeTime;
 
         public TestResult()
         {
@@ -22,6 +23,7 @@ namespace RegressionTest
             msbuildCode = -1;
             alternative = -1;
             msTimeSpan = 0;
+            relativeTime = 0;
         }
 
         public bool AllSuccess()

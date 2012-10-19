@@ -224,7 +224,8 @@ namespace RegressionTest
             DebugMessage(finalOutput.Length > maxLengthMsg ? finalOutput.Substring(0, maxLengthMsg) + " [......] " : finalOutput);
             DebugMessage("TimeSpan: " + ft);
 
-            res.msTimeSpan = ot - ft;
+            res.msTimeSpan = ft - ot;
+            res.relativeTime = 100 * ((float)res.msTimeSpan / (float)ot);
         }
 
         private void alternative(DirectoryInfo di, TestResult res)
@@ -400,9 +401,7 @@ namespace RegressionTest
                 diff(di, res);
                 if (res.diffCode == 0 && fast)
                 {
-                    res.output = -10;
-                    res.msbuildCode = -10;
-                    res.cmakeCode = -10;
+                    res.output = res.msbuildCode = res.cmakeCode = -10;
                     continue;
                 }
 
@@ -412,10 +411,16 @@ namespace RegressionTest
 
                 if (res.alternative == 0)
                     Cmake(res);
+                else
+                    res.output = res.msbuildCode = res.cmakeCode = -10;
                 if (res.cmakeCode == 0)
                     msbuild(di, res);
+                else
+                    res.output = res.msbuildCode = -10;
                 if (kvp.Value.msbuildCode == 0)
                     compareOutput(di, res);
+                else
+                    res.output = -10;
 
 
                 if (res.AllSuccess() && overwriteTarget)
@@ -433,7 +438,7 @@ namespace RegressionTest
             arr[0, 3] = "CMAKE CODE";
             arr[0, 4] = "MSBUILD CODE";
             arr[0, 5] = "OUTPUT";
-            arr[0, 6] = "TIME GAIN";
+            arr[0, 6] = "TIME DIFFERENCE";
             int i = 1;
             foreach (string s in tests)
             {
@@ -444,7 +449,7 @@ namespace RegressionTest
                 arr[i, 3] = kvp.Value.cmakeCode == 0 ? "#gSUCCESS" : (kvp.Value.cmakeCode == -10 ? "#ySKIPPED" : "#rFAIL. Code: " + kvp.Value.cmakeCode);
                 arr[i, 4] = kvp.Value.msbuildCode == 0 ? "#gBUILD SUCCEEDED" : (kvp.Value.msbuildCode == -10 ? "#ySKIPPED" : "#rFAIL. Code: " + kvp.Value.msbuildCode);
                 arr[i, 5] = kvp.Value.output == 0 ? "#gOK" : (kvp.Value.output == -10 ? "#ySKIPPED" : "#rFAIL");
-                arr[i, 6] = (kvp.Value.msTimeSpan >= 0 ? (kvp.Value.msTimeSpan == 0 ? "#y" : "#g") : "#r") + kvp.Value.msTimeSpan.ToString() + " ms";
+                arr[i, 6] = (kvp.Value.msTimeSpan >= 0 ? (kvp.Value.msTimeSpan == 0 ? "#y" : "#r") : "#g") + kvp.Value.msTimeSpan.ToString() + " ms " + "(" + kvp.Value.relativeTime.ToString("N2") + "%)";
 
                 i++;
             }

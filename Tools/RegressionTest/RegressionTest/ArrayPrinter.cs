@@ -55,8 +55,14 @@ class ArrayPrinter
         int width = maxCellWidth * dimension2Length + dimension2Length + 2;
         //if (width > Console.WindowWidth)
         //    Console.WindowWidth = width;
-        if (width > Console.BufferWidth)
-            Console.BufferWidth = width;
+
+        try
+        {
+            if (width > Console.BufferWidth)
+                Console.BufferWidth = width;
+        }
+        catch { }//Some consoles does not accept that parameter
+
 
         int indentLength = (dimension2Length * maxCellWidth) + (dimension2Length - 1);
         //printing top line;

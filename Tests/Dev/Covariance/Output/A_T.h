@@ -15,9 +15,9 @@ namespace Covariance {
 		template<typename T>
 		class A_T_Base : public virtual CovIEnumerable_T<TypeArg(T)>, public virtual Object, public virtual gc_cleanup{
 			public:
-			CovIEnumerator_T<T>* Get(){
+			CovIEnumerator_T<TypeArg(T)>* Get(){
 				Console::WriteLine(new String("A<T>.Get()"));
-				return new B_T<T>();
+				return new Covariance::B_T<TypeArg(T)>();
 			}
 			public:
 			A_T_Base()
@@ -36,11 +36,21 @@ namespace Covariance {
 
 		//Generic template type
 		template<typename T>
-		class A_T<T, false> : public virtual A_T_Base<Object*>{
+		class A_T<T, false> : public virtual A_T_Base<Object*> {			
 			public:
-			inline CovIEnumerator_T<T>* Get(){
-				Object* var_tmp = A_T_Base<Object*>::Get();
-				return dynamic_cast<CovIEnumerator_T<T>*>(var_tmp);
+			template<typename U>
+			class A_adapter
+			{
+				public:
+				static inline CovIEnumerator_T<U>* Get(){
+					Object* var_tmp = A_T_Base<Object*>::Get();
+					return dynamic_cast<CovIEnumerator_T<U>*>(var_tmp);
+				}
+			};		
+			
+			public:
+			inline CovIEnumerator_T<Object>* Get(){				
+				return dynamic_cast<CovIEnumerator_T<Object>*>(A_adapter<T>::Get());
 			}
 		};
 	}
