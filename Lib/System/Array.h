@@ -41,7 +41,7 @@ namespace System{
 				return data->data();
 			}
 
-			BoxRef(T) operator[](int index)
+			T& operator[](int index)
 			{
 				return (BoxRef(T))data->at(index);
 			}
@@ -93,7 +93,7 @@ namespace System{
 		};
 
 		template<typename T>
-		class Array<T, true> : public virtual Array_T_Base<T>{
+		class Array<T, true> : public Array_T_Base<T>{
 			public:
 			Array() : Array_T_Base<T>(){}
 			Array(int Length) : Array_T_Base<T>(Length){}
@@ -101,7 +101,7 @@ namespace System{
 		};
 
 		template<typename T>
-		class Array<T, false> : public virtual Array_T_Base<Object*>{
+		class Array<T, false> : public Array_T_Base<Object*>{
 			public:
 			inline  Array() : Array_T_Base<Object*>(){}
 			inline Array(int Length) : Array_T_Base<Object*>(Length){}
