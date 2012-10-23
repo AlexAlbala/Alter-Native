@@ -251,8 +251,13 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitCastExpression(CSharp.CastExpression castExpression, object data)
         {
-            CastExpression cexp = new CastExpression((AstType)castExpression.Type.AcceptVisitor(this, data), (Expression)castExpression.Expression.AcceptVisitor(this, data));
-            return EndNode(castExpression, cexp);
+            if (castExpression.Expression is CSharp.UnBoxExpression)
+                return EndNode(castExpression, (AstNode)castExpression.Expression.AcceptVisitor(this, data));
+            else
+            {
+                CastExpression cexp = new CastExpression((AstType)castExpression.Type.AcceptVisitor(this, data), (Expression)castExpression.Expression.AcceptVisitor(this, data));
+                return EndNode(castExpression, cexp);
+            }
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitCheckedExpression(CSharp.CheckedExpression checkedExpression, object data)
@@ -891,8 +896,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                         hasDefaultConstructor = true;
                         //********************ENTRY POINT
                         var constr = member as ConstructorDeclaration;
-                        if(!constr.HasModifier(Modifiers.Public))
-                            constr.ModifierTokens.Add(new CppModifierToken(TextLocation.Empty,Modifiers.Public));
+                        if (!constr.HasModifier(Modifiers.Public))
+                            constr.ModifierTokens.Add(new CppModifierToken(TextLocation.Empty, Modifiers.Public));
 
                         constr.Body = new BlockStatement();
                         constr.Initializer = new ConstructorInitializer();
@@ -940,9 +945,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     else
                     {//ADD ALL MEMBERS BUT NOT THE CONSTRUCTORS
                         specGen.Members.Add((AttributedNode)member.Clone());
-                    }                   
+                    }
                     ttempl.Members.Add((AttributedNode)member.Clone());
-                    
+
                 }
 
                 if (!hasDefaultConstructor)
@@ -952,7 +957,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     def_const.ModifierTokens.Add(new CppModifierToken(TextLocation.Empty, Modifiers.Public));
                     def_const.Body = new BlockStatement();
                     btempl.Members.Add(def_const);
-                }               
+                }
 
                 /**************** FILL THE GENERIC TEMPLATE TYPE ***************/
                 gtempl.TypeDefinition = genEntry;
@@ -1729,7 +1734,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     typeName = "float";
                     break;
                 case "object":
-                     if (primitiveType.Role == CSharp.SimpleType.Roles.TypeArgument || primitiveType.Role == CSharp.SimpleType.Roles.TypeParameter)
+                    if (primitiveType.Role == CSharp.SimpleType.Roles.TypeArgument || primitiveType.Role == CSharp.SimpleType.Roles.TypeParameter)
                         return EndNode(primitiveType, new SimpleType("Object"));
                     return EndNode(primitiveType, new PtrType(new SimpleType("Object")));
                 case "string":
@@ -1840,32 +1845,13 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             }
         }
 
-        //CHANGED RETURNTYPE FROM T TO ASTNODE (THIS METHOD SHOULD ALLOW THE CHANGE OF THE NODE (IF IT IS A BOX/UNBOX NODE)
-        AstNode EndNode<T>(CSharp.AstNode node, T result) where T : Cpp.AstNode
+        T EndNode<T>(CSharp.AstNode node, T result) where T : Cpp.AstNode
         {
             if (result != null)
             {
                 CopyAnnotations(node, result);
             }
-
-            if (node.isBox)
-            {
-                BoxExpression b = new BoxExpression((Expression)(AstNode)result);
-                b.type = (AstType)node.boxingType.AcceptVisitor(this, null);
-                AstNode t = b;
-                return t;
-            }
-            else if (node.isUnBox)
-            {
-                UnBoxExpression ub = new UnBoxExpression((Expression)(AstNode)result);
-                ub.type = (AstType)node.boxingType.AcceptVisitor(this, null);
-                AstNode t = ub;
-                return t;
-            }
-            else
-            {
-                return result;
-            }
+            return result;
         }
 
         void CopyAnnotations<T>(CSharp.AstNode node, T result) where T : Cpp.AstNode
@@ -1921,6 +1907,20 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             }
             foundAttribute = null;
             return false;
+        }
+
+        public AstNode VisitBoxExpression(CSharp.BoxExpression boxExpression, object data)
+        {
+            var box = new BoxExpression((Expression)boxExpression.Expression.AcceptVisitor(this, data));
+            box.type = (AstType)boxExpression.type.AcceptVisitor(this, data);
+            return EndNode(boxExpression, box);
+        }
+
+        public AstNode VisitUnBoxExpression(CSharp.UnBoxExpression unBoxExpression, object data)
+        {
+            var unbox = new UnBoxExpression((Expression)unBoxExpression.Expression.AcceptVisitor(this, data));
+            unbox.type = (AstType)unBoxExpression.type.AcceptVisitor(this, data);
+            return EndNode(unBoxExpression, unbox);
         }
     }
 }

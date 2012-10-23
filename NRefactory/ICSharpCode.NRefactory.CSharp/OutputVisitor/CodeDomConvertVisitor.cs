@@ -1298,5 +1298,16 @@ namespace ICSharpCode.NRefactory.CSharp
 		{
 			return null;
 		}
-	}
+
+
+        public CodeObject VisitBoxExpression(BoxExpression boxExpression, object data)
+        {
+            return boxExpression.Expression.AcceptVisitor(this, data);
+        }
+
+        public CodeObject VisitUnBoxExpression(UnBoxExpression unBoxExpression, object data)
+        {
+            return unBoxExpression.Expression.AcceptVisitor(this, data);
+        }
+    }
 }

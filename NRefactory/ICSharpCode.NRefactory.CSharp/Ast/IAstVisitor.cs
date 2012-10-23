@@ -145,5 +145,9 @@ namespace ICSharpCode.NRefactory.CSharp
 		S VisitIdentifier(Identifier identifier, T data);
 		
 		S VisitPatternPlaceholder(AstNode placeholder, PatternMatching.Pattern pattern, T data);
+
+        //Added for Cpp compatibility !
+        S VisitBoxExpression(BoxExpression boxExpression, T data);
+        S VisitUnBoxExpression(UnBoxExpression unBoxExpression, T data);
 	}
 }

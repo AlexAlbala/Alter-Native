@@ -646,7 +646,9 @@ namespace ICSharpCode.NRefactory.Cpp
                 //We must check if the return type is different to the original type, if that is, it is necessar or maybe a cast, or maybe there is an operator. In both cases the identifier must be de-referenced:
                 //From IA* a = c; we must obtain IA* a = *c;
                 //TODO: MAYBE we should add a cast for security ?
-                if (node.isBox || node.isUnBox)
+
+                //IF IS CHILD OF BOX OR UNBOXEXPRESSION, THE CONVERSION WILL BE DONE AUTOMATICALLY, IS NOT NEEDED A DEREFERENCE
+                if (IsChildOf(node, typeof(CSharp.BoxExpression)) || IsChildOf(node, typeof(CSharp.UnBoxExpression)))
                     return false;
 
                 if (IsChildOf(node, typeof(CSharp.VariableInitializer)))
@@ -697,8 +699,6 @@ namespace ICSharpCode.NRefactory.Cpp
                         else if (IsChildOf(node, typeof(CSharp.VariableDeclarationStatement)))
                         {
                             var vdecl = (CSharp.VariableDeclarationStatement)GetParentOf(node, typeof(CSharp.VariableDeclarationStatement));
-                            if (vdecl.Variables.ElementAt(0).isBox || vdecl.Variables.ElementAt(0).isUnBox)
-                                return false;
                             string ret = Resolver.GetTypeName(vdecl.Type);
                             string id = Resolver.GetTypeName(Resolver.GetType(identifierExpression.Identifier, null, currentMethod, null));
                             if (ret != id)

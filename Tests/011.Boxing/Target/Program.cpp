@@ -18,7 +18,7 @@ namespace Boxing {
 	void Program::UnBox()
 	{
 		Object* o = BOX<int>(123);
-		int i = (int)(UNBOX<int>(o));
+		int i = UNBOX<int>(o);
 		o = BOX<int>(456);
 		Console::WriteLine(i);
 		Console::WriteLine(o);

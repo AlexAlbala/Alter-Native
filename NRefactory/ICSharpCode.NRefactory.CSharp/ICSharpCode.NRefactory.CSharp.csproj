@@ -62,6 +62,8 @@
     <Compile Include="Ast\AstNode.cs" />
     <Compile Include="Ast\AstNodeCollection.cs" />
     <Compile Include="Ast\AstType.cs" />
+    <Compile Include="Ast\Expressions\BoxExpression.cs" />
+    <Compile Include="Ast\Expressions\UnBoxExpression.cs" />
     <Compile Include="Ast\IdentifierExpressionBackreference.cs" />
     <Compile Include="Ast\CompilationUnit.cs" />
     <Compile Include="Ast\ComposedType.cs" />

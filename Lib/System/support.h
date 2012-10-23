@@ -18,7 +18,7 @@
 /*********************************************************************************************************/
 /***************************************** INCLUDE TEMPLATES  ********************************************/
 /*********************************************************************************************************/
-#include "asis.h"
-#include "internal/TypeRefs.h"
-#include "Boxing.h"
-#include "internal/TypeTraits.h"
+#include "templates/asis.h"
+#include "templates/internal/TypeRefs.h"
+#include "templates/Boxing.h"
+#include "templates/internal/TypeTraits.h"

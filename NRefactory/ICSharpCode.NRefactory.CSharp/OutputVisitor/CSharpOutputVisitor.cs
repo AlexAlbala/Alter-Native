@@ -2462,5 +2462,20 @@ namespace ICSharpCode.NRefactory.CSharp
 			}
 		}
 		#endregion
-	}
+
+
+        public object VisitBoxExpression(BoxExpression boxExpression, object data)
+        {
+            StartNode(boxExpression);
+            boxExpression.Expression.AcceptVisitor(this, data);
+            return EndNode(boxExpression);
+        }
+
+        public object VisitUnBoxExpression(UnBoxExpression unBoxExpression, object data)
+        {
+            StartNode(unBoxExpression);
+            unBoxExpression.Expression.AcceptVisitor(this, data);
+            return EndNode(unBoxExpression);
+        }
+    }
 }

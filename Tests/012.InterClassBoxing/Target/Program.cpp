@@ -11,7 +11,7 @@ namespace InterClassBoxing {
 	{
 		Container_T<int>* a = new Container_T<int>();
 		Object* i = BOX<int>(5);
-		a->Set((int)(UNBOX<int>(i)));
+		a->Set(UNBOX<int>(i));
 		Object* j = BOX<int>(a->Get());
 		Console::WriteLine(j);
 	}
@@ -20,7 +20,7 @@ namespace InterClassBoxing {
 		Container_T<Object>* a = new Container_T<Object>();
 		int i = 5;
 		a->Set(BOX<int>(i));
-		int j = (int)(UNBOX<int>(a->Get()));
+		int j = UNBOX<int>(a->Get());
 		Console::WriteLine(j);
 	}
 	void Program::Case4()

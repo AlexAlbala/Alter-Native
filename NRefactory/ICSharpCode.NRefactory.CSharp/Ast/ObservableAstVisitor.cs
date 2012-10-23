@@ -1155,7 +1155,18 @@ namespace ICSharpCode.NRefactory.CSharp
 		{
 			return VisitChildren (placeholder, data);
 		}
-	}
+
+
+        public S VisitBoxExpression(BoxExpression boxExpression, T data)
+        {
+            return boxExpression.Expression.AcceptVisitor(this, data);
+        }
+
+        public S VisitUnBoxExpression(UnBoxExpression unBoxExpression, T data)
+        {
+            return unBoxExpression.Expression.AcceptVisitor(this, data);
+        }
+    }
 }
 
 

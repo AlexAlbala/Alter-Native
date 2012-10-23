@@ -631,26 +631,26 @@ namespace ICSharpCode.Decompiler.Ast
                 case ILCode.Castclass:
                     return arg1.CastTo(operandAsTypeRef);
                 case ILCode.Unbox_Any:
-                    arg1.isBox = false;
-                    arg1.isUnBox = true;
-                    arg1.boxingType = operandAsTypeRef.Clone();
+                    var unboxa = new UnBoxExpression();
+                    unboxa.Expression = arg1;
+                    unboxa.type = operandAsTypeRef.Clone();
                     // unboxing does not require a cast if the argument was an isinst instruction
                     if (arg1 is AsExpression && byteCode.Arguments[0].Code == ILCode.Isinst && TypeAnalysis.IsSameType(operand as TypeReference, byteCode.Arguments[0].Operand as TypeReference))
-                        return arg1;
+                        return unboxa;
                     else
-                        return arg1.CastTo(operandAsTypeRef);
+                        return unboxa.CastTo(operandAsTypeRef);
                 case ILCode.Isinst:
                     return arg1.CastAs(operandAsTypeRef);
                 case ILCode.Box:
-                    arg1.isBox = true;
-                    arg1.isUnBox = false;
-                    arg1.boxingType = operandAsTypeRef.Clone();
-                    return arg1;
+                    var box = new BoxExpression();
+                    box.Expression = arg1;
+                    box.type = operandAsTypeRef.Clone();
+                    return box;
                 case ILCode.Unbox:
-                    arg1.isBox = false;
-                    arg1.isUnBox = true;
-                    arg1.boxingType = operandAsTypeRef.Clone();
-                    return MakeRef(arg1.CastTo(operandAsTypeRef));
+                    var unbox = new UnBoxExpression();
+                    unbox.Expression = arg1;
+                    unbox.type = operandAsTypeRef.Clone();
+                    return MakeRef(unbox.CastTo(operandAsTypeRef));
                 #endregion
                 #region Indirect
                 case ILCode.Ldind_Ref:

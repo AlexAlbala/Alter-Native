@@ -3568,5 +3568,16 @@ namespace ICSharpCode.NRefactory.CSharp.Resolver
 			return voidResult;
 		}
 		#endregion
-	}
+
+
+        public ResolveResult VisitBoxExpression(BoxExpression boxExpression, object data)
+        {
+            return boxExpression.Expression.AcceptVisitor(this, data);
+        }
+
+        public ResolveResult VisitUnBoxExpression(UnBoxExpression unBoxExpression, object data)
+        {
+            return unBoxExpression.Expression.AcceptVisitor(this, data);
+        }
+    }
 }

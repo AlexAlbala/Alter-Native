@@ -2215,5 +2215,16 @@ namespace ICSharpCode.NRefactory.VB.Visitors
 			foundAttribute = null;
 			return false;
 		}
-	}
+
+
+        public AstNode VisitBoxExpression(CSharp.BoxExpression boxExpression, object data)
+        {
+            return boxExpression.Expression.AcceptVisitor(this, data);
+        }
+
+        public AstNode VisitUnBoxExpression(CSharp.UnBoxExpression unBoxExpression, object data)
+        {
+            return unBoxExpression.Expression.AcceptVisitor(this, data);
+        }
+    }
 }
