@@ -143,10 +143,11 @@ namespace ICSharpCode.NRefactory.CSharp
 			return StartLocation <= location && location <= EndLocation;
 		}
 
-        //BOXING FLAGS AND TYPES
+        //BOXING FLAGS AND TYPES FLAGS
         public bool isBox = false;
         public bool isUnBox = false;
         public AstType boxingType = null;
+        public bool needsCast = false;
 		
 		/// <summary>
 		/// Returns true, if the given coordinates (line, column) are in the node.
