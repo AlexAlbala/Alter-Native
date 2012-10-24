@@ -38,14 +38,14 @@ namespace InterClassBoxing {
 
 		//Generic template type
 		template<typename T>
-		class Container_T<T, false> : public virtual Container_T_Base<Object*>{
+		class Container_T<T, false> : public virtual Container_T_Base<Object>{
 			public:
 			inline void Set(T* t){
-				Container_T_Base<Object*>::Set((Object*)(t));
+				Container_T_Base<Object>::Set((Object*)(t));
 			}
 			public:
 			inline T* Get() {
-				Object* var_tmp = Container_T_Base<Object*>::Get();
+				Object* var_tmp = Container_T_Base<Object>::Get();
 				return dynamic_cast<T*>(var_tmp);
 			}
 		};

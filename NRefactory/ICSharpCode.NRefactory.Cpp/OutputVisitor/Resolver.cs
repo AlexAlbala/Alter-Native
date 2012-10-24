@@ -954,7 +954,7 @@ namespace ICSharpCode.NRefactory.Cpp
                             TryPatchTemplateToObjectType(t, out tmp);
                             ret += Resolver.GetTypeName(tmp);
                         }
-                        ret += "*>";
+                        ret += ">";
                     }
                 }
                 ret += "*";

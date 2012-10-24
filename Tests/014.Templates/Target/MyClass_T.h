@@ -38,14 +38,14 @@ namespace Templates {
 
 		//Generic template type
 		template<typename T>
-		class MyClass_T<T, false> : public virtual MyClass_T_Base<Object*>{
+		class MyClass_T<T, false> : public virtual MyClass_T_Base<Object>{
 			public:
 			inline void set(T* data){
-				MyClass_T_Base<Object*>::set((Object*)(data));
+				MyClass_T_Base<Object>::set((Object*)(data));
 			}
 			public:
 			inline T* get() {
-				Object* var_tmp = MyClass_T_Base<Object*>::get();
+				Object* var_tmp = MyClass_T_Base<Object>::get();
 				return dynamic_cast<T*>(var_tmp);
 			}
 		};

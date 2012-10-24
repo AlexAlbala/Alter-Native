@@ -1337,7 +1337,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     if (Resolver.TryPatchTemplateToObjectType(methodDeclaration.ReturnType, out _tmp))//NEEDS CAST
                     {
                         SimpleType destType = new SimpleType(type + "_Base");
-                        destType.TypeArguments.Add(new PtrType(new SimpleType("Object")));
+                        destType.TypeArguments.Add(new SimpleType("Object"));
                         string tmpName = "var_tmp";
                         VariableDeclarationStatement varDeclStmt = new VariableDeclarationStatement(new PtrType(new SimpleType("Object")), tmpName,
                             new InvocationExpression(new MemberReferenceExpression(new TypeReferenceExpression(destType), methodDeclaration.Name), parameters));
@@ -1356,7 +1356,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     else
                     {
                         SimpleType destType = new SimpleType(type + "_Base");
-                        destType.TypeArguments.Add(new PtrType(new SimpleType("Object")));
+                        destType.TypeArguments.Add(new SimpleType("Object"));
                         Expression e = new InvocationExpression(
                             new MemberReferenceExpression(
                                 new TypeReferenceExpression(destType), methodDeclaration.Name), parameters);
@@ -1427,7 +1427,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     RPar();
 
                     SimpleType destType = new SimpleType(type + "_Base");
-                    destType.TypeArguments.Add(new PtrType(new SimpleType("Object")));
+                    destType.TypeArguments.Add(new SimpleType("Object"));
                     BlockStatement blck = new BlockStatement();
                     blck.Add(new ReturnStatement(new CastExpression((AstType)convConst.ReturnType.Clone(), new InvocationExpression(
                         new MemberReferenceExpression()

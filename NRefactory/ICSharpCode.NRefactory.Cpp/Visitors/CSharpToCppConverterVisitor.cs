@@ -835,20 +835,21 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 {
                     //If the base class is a template type, we have to dereference the type if it is a basic type
                     //The template DeRefType<typename T> provides that conversion
-                    if (baseType is SimpleType)
-                    {
-                        for (int i = 0; i < (baseType as SimpleType).TypeArguments.Count; i++)
-                        {
-                            AstType arg = (AstType)(baseType as SimpleType).TypeArguments.ElementAt(i);
-                            if (Resolver.IsTemplateType(arg))
-                            {
-                                InvocationExpression ic = new InvocationExpression(new IdentifierExpression("TypeArg"), new IdentifierExpression(Resolver.GetTypeName(arg)));
-                                ExpressionType exprT = new ExpressionType(ic);
-                                (baseType as SimpleType).TypeArguments.InsertAfter(arg, exprT);
-                                (baseType as SimpleType).TypeArguments.Remove(arg);
-                            }
-                        }
-                    }
+                    //NOT NEEDED ANYMORE !
+                    //if (baseType is SimpleType)
+                    //{
+                    //    for (int i = 0; i < (baseType as SimpleType).TypeArguments.Count; i++)
+                    //    {
+                    //        AstType arg = (AstType)(baseType as SimpleType).TypeArguments.ElementAt(i);
+                    //        if (Resolver.IsTemplateType(arg))
+                    //        {
+                    //            InvocationExpression ic = new InvocationExpression(new IdentifierExpression("TypeArg"), new IdentifierExpression(Resolver.GetTypeName(arg)));
+                    //            ExpressionType exprT = new ExpressionType(ic);
+                    //            (baseType as SimpleType).TypeArguments.InsertAfter(arg, exprT);
+                    //            (baseType as SimpleType).TypeArguments.Remove(arg);
+                    //        }
+                    //    }
+                    //}
                 }
 
                 foreach (var btype in type.BaseTypes)
@@ -876,7 +877,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
                 //GENERIC SPECIALIZATION
                 SimpleType spec_gen_super = new SimpleType(specGen.Name + "_Base");
-                spec_gen_super.TypeArguments.Add(new PtrType(new SimpleType("Object")));
+                spec_gen_super.TypeArguments.Add(new SimpleType("Object"));
                 specGen.BaseTypes.Add(spec_gen_super);
 
                 //BASIC SPECIALIZATION
