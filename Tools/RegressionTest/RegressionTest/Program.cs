@@ -211,10 +211,12 @@ namespace RegressionTest
             //Timespan original
             TimeSpan tso = orig_df - orig_di;
             long ot = (long)tso.TotalMilliseconds;
+            res.originalTime = ot;
 
             //Timespan final
             TimeSpan tsf = final_df - final_di;
             long ft = (long)tsf.TotalMilliseconds;
+            res.finalTime = ft;
 
             DebugMessage("ORIGINAL");
             DebugMessage(originalOutput.Length > maxLengthMsg ? originalOutput.Substring(0, maxLengthMsg) + " [......] " : originalOutput);
@@ -344,6 +346,48 @@ namespace RegressionTest
             DebugMessage("Exit Code: " + res.diffCode);
         }
 
+        private long CountTotalDirectoryLines(DirectoryInfo di)
+        {
+            long lines = 0;
+            foreach (FileInfo fi in di.GetFiles())
+            {
+                if (fi.Extension == ".cs" || fi.Extension == ".c" || fi.Extension == ".cpp" || fi.Extension == ".h")
+                    lines += CountLinesInFile(fi);
+            }
+            foreach (DirectoryInfo d in di.GetDirectories())
+            {
+                if (!ignoreFolders.Contains(d.Name))
+                    lines += CountTotalDirectoryLines(d);
+            }
+
+            return lines;
+        }
+        private long CountLinesInFile(FileInfo fi)
+        {
+            long count = 0;
+            using (StreamReader r = new StreamReader(fi.FullName))
+            {
+                string line;
+                while ((line = r.ReadLine()) != null)
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        private void CountLines(DirectoryInfo di, TestResult res)
+        {
+            Directory.SetCurrentDirectory(di.FullName);
+            res.finalLines = CountTotalDirectoryLines(new DirectoryInfo(di.FullName + "/Output"));
+            res.originalLines = CountTotalDirectoryLines(new DirectoryInfo(di.FullName + "/src"));
+            res.linesDifference = res.finalLines - res.originalLines;
+            res.relativeLines = ((float)100 * res.linesDifference / (float)res.originalLines);
+
+            DebugMessage("Original Lines: " + res.originalLines);
+            DebugMessage("Final Lines: " + res.finalLines);
+        }
+
         public void CopyAll(DirectoryInfo source, DirectoryInfo target)
         {
             // Copy each file into it’s new directory.
@@ -425,13 +469,16 @@ namespace RegressionTest
 
                 if (res.AllSuccess() && overwriteTarget)
                     OverwriteTarget(di);
+
+                if (res.alternative == 0)
+                    CountLines(di, res);
             }
 
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("******************************************************************** TEST RESULTS ***************************************************************");
             Console.ResetColor();
 
-            string[,] arr = new string[tests.Length + 1, 7];
+            string[,] arr = new string[tests.Length + 1, 8];
             arr[0, 0] = "NAME";
             arr[0, 1] = "ALTERNATIVE";
             arr[0, 2] = "FILE DIFFER";
@@ -439,6 +486,7 @@ namespace RegressionTest
             arr[0, 4] = "MSBUILD CODE";
             arr[0, 5] = "OUTPUT";
             arr[0, 6] = "TIME DIFFERENCE";
+            arr[0, 7] = "LINES DIFFERENCE";
             int i = 1;
             foreach (string s in tests)
             {
@@ -450,6 +498,7 @@ namespace RegressionTest
                 arr[i, 4] = kvp.Value.msbuildCode == 0 ? "#gBUILD SUCCEEDED" : (kvp.Value.msbuildCode == -10 ? "#ySKIPPED" : "#rFAIL. Code: " + kvp.Value.msbuildCode);
                 arr[i, 5] = kvp.Value.output == 0 ? "#gOK" : (kvp.Value.output == -10 ? "#ySKIPPED" : "#rFAIL");
                 arr[i, 6] = (kvp.Value.msTimeSpan >= 0 ? (kvp.Value.msTimeSpan == 0 ? "#y" : "#r") : "#g") + kvp.Value.msTimeSpan.ToString() + " ms " + "(" + kvp.Value.relativeTime.ToString("N2") + "%)";
+                arr[i, 7] = (kvp.Value.linesDifference >= 0 ? (kvp.Value.linesDifference == 0 ? "#y" : "#r") : "#g") + kvp.Value.linesDifference.ToString() + " lines " + "(" + kvp.Value.relativeLines.ToString("N2") + "%)";
 
                 i++;
             }

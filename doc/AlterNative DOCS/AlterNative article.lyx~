@@ -1,0 +1,165 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+AlterNative: An executable to executable Cross-platform system for translating
+ high level applications to native applications
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+Nowadays all the service sectors like industrial, energy, healthcare, security
+ among others are including new technological devices connected in the network.
+ The number of interconnected devices is increasing exponentially in the
+ last years.
+ Therefore there are appearing huge variety of devices, with different operating
+ systems and different programming languages.
+ In other words the future situation can be described as an heterogeneous
+ distributed system.
+ The future of the devices tends to converge in a multiplatform environment
+ composed by different devices and elements but with similar capabilites
+ and possibilities, not only smartphones, smart TVs or tablets but also
+ all kind of elements.
+ In this work we present the AlterNative software as a cross-platform code
+ translation tool focused on the performance of applications maintaining
+ the maximum number of functionalities.
+ AlterNative tries to solve the problem of multiplatform software avoiding
+ the use of elements which can be perjudicial to the performance like virtual
+ machines and aims to increase the efficiency of the code by using native
+ languages.
+\end_layout
+
+\begin_layout Section
+State Of The Art (projects, research...)
+\end_layout
+
+\begin_layout Section
+Concept (Portable)
+\end_layout
+
+\begin_layout Standard
+The concept of AlterNative is to maximize the idea of Internet of Things
+ by providing a tool for easy port applications from high-level languages
+ (such as .NET) to native languages (such as C++).
+ Most of the actual systems are C++ compatible, thus if the application
+ is ported to this language, it can be executed in several platforms (i.e.
+ smartphones, tablets, embedded systems, computers with different operating
+ systems).
+ The philosophy of AlterNative is to provide the user with a system for
+ taking the advantage of fast developing of high-level languages and also
+ take the advantage of performance of low-level languages, and also exploit
+ the possibility of run the native code in several systems, in other words,
+ this philosophy is similar to the WORA (Write Once, Run Anywhere) slogan
+ created by Sun Microsystem to illustrate the cross-platform benets of the
+ Java Virtual Machine.
+ The difference is focused on the final performance since AlterNative outputs
+ in native language and does not depend on any virtual machine.
+\end_layout
+
+\begin_layout Section
+Architecture(process)
+\end_layout
+
+\begin_layout Standard
+The process of the AlterNative software is divided in three parts: Decompilation
+, translation and compilation.
+ First of all the assembly received is passed through a decompiler in order
+ to extract the source code.
+ In this case the code extracted is C#.
+ The code is not extracted in text format, but in an AST (Abstract Syntax
+ Tree) that is an abstract representation with nodes and hierarchies of
+ the code.
+ This representation is organized in a tree from the top-level (Assembly)
+ until de low-level (instructions, types and constants).
+ The step of translation consists on apply different conversions to the
+ AST in order to obtain a second AST representing the source code but in
+ other language (in this case C++).
+ The final step consists on compile the C++ code into a new assembly.
+ This final assembly maintains the same funcionalities of the first assembly
+ but takes benet of the native code performance.
+ The effort of this software is not focused on the code translation, but
+ it is focused in maintaining all the features and functionalities of the
+ original code.
+ The problem is that these features and functionalities often are directly
+ related to the language, for instance a garbage collector, specic expressions
+ or even language syntax.
+ AlterNative is able to provide most of the features of the original code
+ to the final code using external open-source libraries and propietary libraries
+ in order to be fully compatible with high-level languages.
+\end_layout
+
+\begin_layout Section
+Use cases (mobile, embedded, smart TVs)
+\end_layout
+
+\begin_layout Section
+Results (performance vs source code lines)
+\end_layout
+
+\begin_layout Section
+Conclusions
+\end_layout
+
+\end_body
+\end_document
