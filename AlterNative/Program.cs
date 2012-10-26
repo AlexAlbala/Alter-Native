@@ -32,7 +32,7 @@ namespace AlterNative
                 catch (Exception e)
                 {
                     Utils.WriteToConsole("Exception: " + e.ToString());
-                    exitcode = 1;                   
+                    exitcode = 1;
                 }
             }
             else
@@ -41,7 +41,7 @@ namespace AlterNative
                 app.Run();
                 exitcode = 0;
             }
-            return exitcode;            
+            return exitcode;
         }
 
         #region Console
@@ -109,10 +109,10 @@ namespace AlterNative
 
             //CONFIGURE OUTPUT LANGUAGE
             Language lang = OutputLanguage(args[2]);
-            
+
             //DECOMPILE FIRST TIME AND FILL THE TABLES
             foreach (TypeDefinition tdef in adef.MainModule.Types)
-            {   
+            {
                 if (!tdef.Name.Contains("<"))
                 {
                     lang.DecompileType(tdef, textOutput, new DecompilationOptions() { FullDecompilation = true });
@@ -135,7 +135,10 @@ namespace AlterNative
 
             //TRIM END .EXE : BUG If The name is File.exe, trim end ".exe" returns Fil !!!!
             string name = adef.MainModule.Name.Substring(0, adef.MainModule.Name.Length - 4);
-            CMakeGenerator.GenerateCMakeLists(name + "Proj", name, outputDir, FileWritterManager.GetSourceFiles());
+            if (args.Contains("-r") || args.Contains("-R"))
+                CMakeGenerator.GenerateCMakeLists(name + "Proj", name, outputDir, FileWritterManager.GetSourceFiles(), true);
+            else
+                CMakeGenerator.GenerateCMakeLists(name + "Proj", name, outputDir, FileWritterManager.GetSourceFiles());
 
             Console.ForegroundColor = ConsoleColor.Green;
             Utils.WriteToConsole("Done");
