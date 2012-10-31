@@ -1,6 +1,6 @@
 #include "Program.h"
 using namespace System;
-using namespace For;
+using namespace Statements;
 
 int main(int argc, char *argv[])
 {

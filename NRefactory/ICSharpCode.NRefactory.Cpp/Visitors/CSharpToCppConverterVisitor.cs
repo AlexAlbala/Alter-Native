@@ -1013,12 +1013,15 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitContinueStatement(CSharp.ContinueStatement continueStatement, object data)
         {
-            throw new NotImplementedException();
+            return EndNode(continueStatement, new ContinueStatement());            
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitDoWhileStatement(CSharp.DoWhileStatement doWhileStatement, object data)
         {
-            throw new NotImplementedException();
+            var doWhile = new DoWhileStatement();
+            doWhile.Condition = (Expression)doWhileStatement.Condition.AcceptVisitor(this, data);
+            doWhile.EmbeddedStatement = (Statement)doWhileStatement.EmbeddedStatement.AcceptVisitor(this, data);
+            return EndNode(doWhileStatement, doWhile);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitEmptyStatement(CSharp.EmptyStatement emptyStatement, object data)
@@ -1128,17 +1131,24 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitSwitchStatement(CSharp.SwitchStatement switchStatement, object data)
         {
-            throw new NotImplementedException();
+            var _switch = new SwitchStatement();
+            _switch.Expression = (Expression)switchStatement.Expression.AcceptVisitor(this, data);
+            ConvertNodes(switchStatement.SwitchSections, _switch.SwitchSections);
+            return EndNode(switchStatement, _switch);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitSwitchSection(CSharp.SwitchSection switchSection, object data)
         {
-            throw new NotImplementedException();
+            var ssection = new SwitchSection();
+            ConvertNodes(switchSection.CaseLabels, ssection.CaseLabels);
+            ConvertNodes(switchSection.Statements, ssection.Statements);
+            return EndNode(switchSection, ssection);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitCaseLabel(CSharp.CaseLabel caseLabel, object data)
         {
-            throw new NotImplementedException();
+            var cLabel = new CaseLabel((Expression)caseLabel.Expression.AcceptVisitor(this, data));
+            return EndNode(caseLabel, cLabel);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitThrowStatement(CSharp.ThrowStatement throwStatement, object data)
@@ -1148,12 +1158,21 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitTryCatchStatement(CSharp.TryCatchStatement tryCatchStatement, object data)
         {
-            throw new NotImplementedException();
+            var tryCatch = new TryCatchStatement();
+            tryCatch.TryBlock = (BlockStatement)tryCatchStatement.TryBlock.AcceptVisitor(this, data);
+            ConvertNodes(tryCatchStatement.CatchClauses, tryCatch.CatchClauses);
+            tryCatch.FinallyBlock = (BlockStatement)tryCatchStatement.FinallyBlock.AcceptVisitor(this, data);
+            return EndNode(tryCatchStatement, tryCatch);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitCatchClause(CSharp.CatchClause catchClause, object data)
         {
-            throw new NotImplementedException();
+            var catchC = new CatchClause();
+            catchC.Body = (BlockStatement)catchClause.Body.AcceptVisitor(this, data);
+            //TODO: Now is ignored the type !!
+            //catchC.Type = (AstType)catchClause.Type.AcceptVisitor(this, data);
+            catchC.VariableNameToken = (Identifier)catchClause.VariableNameToken.AcceptVisitor(this, data);
+            return EndNode(catchClause, catchC);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitUncheckedStatement(CSharp.UncheckedStatement uncheckedStatement, object data)

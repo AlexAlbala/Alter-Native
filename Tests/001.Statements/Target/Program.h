@@ -3,10 +3,18 @@
 #include "System/Console.h"
 
 using namespace System;
-namespace For {
+namespace Statements {
 	class Program : public virtual Object, public virtual gc_cleanup
 	{
 		public:
 			static void Main(String* args[]);
+		public:
+			void For();
+		public:
+			void TryCatch();
+		public:
+			void While();
+		public:
+			void DoWhile();
 	};
 }

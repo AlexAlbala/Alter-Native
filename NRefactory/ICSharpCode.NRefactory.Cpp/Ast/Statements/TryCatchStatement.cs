@@ -80,6 +80,7 @@ namespace ICSharpCode.NRefactory.Cpp
 	/// </summary>
 	public class CatchClause : AstNode
 	{
+        public static readonly Role<CppTokenNode> AllTypesRole = new Role<CppTokenNode>("AllTypesCatch", CppTokenNode.Null);
 		#region PatternPlaceholder
 		public static implicit operator CatchClause(PatternMatching.Pattern pattern)
 		{

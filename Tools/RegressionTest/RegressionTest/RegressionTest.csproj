@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AndroidTest.cs" />
     <Compile Include="ArrayPrinter.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="ITest.cs" />

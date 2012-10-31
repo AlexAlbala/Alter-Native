@@ -3410,7 +3410,8 @@ namespace ICSharpCode.NRefactory.Cpp
                 catchClause.AcceptVisitor(this, data);
             if (!tryCatchStatement.FinallyBlock.IsNull)
             {
-                WriteKeyword("finally", TryCatchStatement.FinallyKeywordRole);
+                //WriteKeyword("finally", TryCatchStatement.FinallyKeywordRole);
+                formatter.WriteComment(CommentType.SingleLine, "Finally block deleted");
                 tryCatchStatement.FinallyBlock.AcceptVisitor(this, data);
             }
             return EndNode(tryCatchStatement);
@@ -3420,7 +3421,7 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             StartNode(catchClause);
             WriteKeyword("catch");
-            if (!catchClause.Type.IsNull)
+            /*if (!catchClause.Type.IsNull)
             {
                 Space(policy.SpaceBeforeCatchParentheses);
                 LPar();
@@ -3433,7 +3434,10 @@ namespace ICSharpCode.NRefactory.Cpp
                 }
                 Space(policy.SpacesWithinCatchParentheses);
                 RPar();
-            }
+            }*/
+
+            //TODO, we MUST distinguish the types !!
+            WriteToken("(...)", CatchClause.AllTypesRole);
             catchClause.Body.AcceptVisitor(this, data);
             return EndNode(catchClause);
         }

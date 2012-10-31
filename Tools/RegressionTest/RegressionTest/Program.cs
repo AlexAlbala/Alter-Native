@@ -102,6 +102,7 @@ namespace RegressionTest
             Utils.DebugMessage("CONFIGURATION:");
             Utils.DebugMessage("");
             Utils.DebugMessage("TEST PLATFORM: " + Config.platform.ToString());
+            Utils.DebugMessage("");
             Utils.DebugMessage("VERBOSE: " + Config.Verbose.ToString());
             Utils.DebugMessage("OUTPUT UNLIMITED: " + Config.Unlimited.ToString());
             Utils.DebugMessage("FAST MODE: " + Config.fast.ToString());
