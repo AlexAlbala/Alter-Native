@@ -26,18 +26,6 @@ MACRO(HEADER_DIRECTORIES return_list)
 ENDMACRO()
 
 ##################################################
-#include and library path variables for boost library
-##################################################
-GET_PROPERTY(External_Library_Path GLOBAL PROPERTY EXT_LIB_PATH)
-if(WIN32 OR WIN64)
-SET(Boost_include_path "${External_Library_Path}/boost_1_51/win/include/boost-1_51")
-SET(Boost_library_path "${External_Library_Path}/boost_1_51/win/lib")
-ELSE()
-SET(Boost_include_path "${External_Library_Path}/boost_1_51/unix/include/boost-1_51")
-SET(Boost_library_path "${External_Library_Path}/boost_1_51/unix/lib")
-ENDIF()
-
-##################################################
 #useful variables for make source groups
 ##################################################
 SET(root ${CMAKE_CURRENT_SOURCE_DIR})
@@ -69,19 +57,38 @@ ENDFOREACH()
 ADD_LIBRARY(System ${SysLib})
 SET_TARGET_PROPERTIES(System PROPERTIES LINKER_LANGUAGE CXX)
 
-INCLUDE_DIRECTORIES(${Boost_include_path})
+SET(Boost_USE_STATIC_LIBS        ON)
+SET(Boost_USE_MULTITHREADED      ON)
+SET(Boost_USE_STATIC_RUNTIME    OFF)
+SET(Boost_ADDITIONAL_VERSIONS "1.33" "1.33.0" "1.33.1" "1.34" "1.34.0" "1.34.1" "1.35" "1.35.0" "1.35.1" "1.36" "1.36.0" "1.36.1" "1.37" "1.37.0" "1.38" "1.38.0" "1.39" "1.39.0" "1.40" "1.40.0" "1.41" "1.41.0" "1.42" "1.42.0" "1.43" "1.43.0" "1.44" "1.44.0" "1.45" "1.45.0" "1.46" "1.46.0" "1.46.1" "1.47" "1.47.0" "1.48" "1.48.0" "1.49" "1.49.0" "1.50" "1.50.0" "1.51" "1.51.0" "1.52" "1.52.0" "1.53" "1.53.0" "1.54" "1.54.0" "1.55" "1.55.0" "1.56" "1.56.0")
+FIND_PACKAGE( Boost 1.33.0 COMPONENTS date_time filesystem system locale)
 
-GET_PROPERTY(IS_RELEASE GLOBAL PROPERTY GL_IS_RELEASE)
-IF(IS_RELEASE EQUAL 1)
-FIND_LIBRARY(BOOST_SYS_LIBR libboost_system-vc100-mt-1_51 ${Boost_library_path})
-FIND_LIBRARY(BOOST_LOC_LIBR libboost_locale-vc100-mt-1_51 ${Boost_library_path})
-TARGET_LINK_LIBRARIES(System ${BOOST_SYS_LIBR})
-TARGET_LINK_LIBRARIES(System ${BOOST_LOC_LIBR})
+IF(Boost_FOUND)
+  INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
+  TARGET_LINK_LIBRARIES(System ${Boost_LIBRARIES})
 ELSE()
-FIND_LIBRARY(BOOST_SYS_LIB libboost_system-vc100-mt-gd-1_51 ${Boost_library_path})
-FIND_LIBRARY(BOOST_LOC_LIB libboost_locale-vc100-mt-gd-1_51 ${Boost_library_path})
-TARGET_LINK_LIBRARIES(System ${BOOST_SYS_LIB})
-TARGET_LINK_LIBRARIES(System ${BOOST_LOC_LIB})
+  ##################################################
+  #include and library path variables for boost library
+  ##################################################
+  GET_PROPERTY(External_Library_Path GLOBAL PROPERTY EXT_LIB_PATH)
+  IF(WIN32 OR WIN64)
+    SET(Boost_include_path "${External_Library_Path}/boost_1_51/win/include/boost-1_51")
+    SET(Boost_library_path "${External_Library_Path}/boost_1_51/win/lib")
+  ELSE()
+    SET(Boost_include_path "${External_Library_Path}/boost_1_51/unix/include/boost-1_51")
+    SET(Boost_library_path "${External_Library_Path}/boost_1_51/unix/lib")
+  ENDIF()
+  INCLUDE_DIRECTORIES(${Boost_include_path})
+  GET_PROPERTY(IS_RELEASE GLOBAL PROPERTY GL_IS_RELEASE)
+  IF(IS_RELEASE EQUAL 1)
+    FIND_LIBRARY(BOOST_SYS_LIBR libboost_system-vc100-mt-1_51 ${Boost_library_path})
+    FIND_LIBRARY(BOOST_LOC_LIBR libboost_locale-vc100-mt-1_51 ${Boost_library_path})
+    TARGET_LINK_LIBRARIES(System ${BOOST_SYS_LIBR})
+    TARGET_LINK_LIBRARIES(System ${BOOST_LOC_LIBR})
+  ELSE()
+    FIND_LIBRARY(BOOST_SYS_LIB libboost_system-vc100-mt-gd-1_51 ${Boost_library_path})
+    FIND_LIBRARY(BOOST_LOC_LIB libboost_locale-vc100-mt-gd-1_51 ${Boost_library_path})
+    TARGET_LINK_LIBRARIES(System ${BOOST_SYS_LIB})
+    TARGET_LINK_LIBRARIES(System ${BOOST_LOC_LIB})
+  ENDIF()
 ENDIF()
-
-
