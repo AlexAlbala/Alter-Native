@@ -1,0 +1,9 @@
+[submodule "Tools/android-ndk/ndk"]
+	path = Tools/android-ndk/ndk
+	url = https://android.googlesource.com/platform/ndk.git
+[submodule "Tools/Android/ndk"]
+	path = Tools/Android/ndk
+	url = https://android.googlesource.com/platform/ndk.git
+[submodule "Tools/Android/android-cmake"]
+	path = Tools/Android/android-cmake
+	url = git://gitorious.org/android-cmake/android-cmake.git
