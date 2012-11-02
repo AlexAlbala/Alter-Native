@@ -1,6 +1,3 @@
-[submodule "Tools/android-ndk/ndk"]
-	path = Tools/android-ndk/ndk
-	url = https://android.googlesource.com/platform/ndk.git
 [submodule "Tools/Android/ndk"]
 	path = Tools/Android/ndk
 	url = https://android.googlesource.com/platform/ndk.git
