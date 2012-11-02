@@ -7,6 +7,7 @@ namespace RegressionTest
 {
     public class TestResult
     {
+        public string name { get; set; }
         public short alternative;
         public short output;
         public short diffCode;

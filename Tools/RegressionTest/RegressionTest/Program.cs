@@ -91,7 +91,7 @@ namespace RegressionTest
                     /*ContainsDirectory(di, "Output") &&*/
                     Utils.ContainsDirectory(di, "NETbin"))
                 {
-                    Tests.Add(di, new TestResult());
+                    Tests.Add(di, new TestResult() { name = di.Name });
                     Utils.DebugMessage("Found test " + di.Name);
                 }
             }
@@ -170,7 +170,7 @@ namespace RegressionTest
             foreach (string s in tests)
             {
                 KeyValuePair<DirectoryInfo, TestResult> kvp = Tests.First(x => x.Key.Name == s);
-                arr[i, 0] = kvp.Key.Name;
+                arr[i, 0] = kvp.Value.name;
                 arr[i, 1] = kvp.Value.alternative == 0 ? "#gSUCCESS" : "#rFAIL. Code: " + kvp.Value.alternative;
                 arr[i, 2] = kvp.Value.diffCode == 0 ? "#gNo Differ" : (kvp.Value.diffCode == 1 ? "#rDiffer" : "#rError. Code: " + kvp.Value.diffCode);
                 arr[i, 3] = kvp.Value.cmakeCode == 0 ? "#gSUCCESS" : (kvp.Value.cmakeCode == -10 ? "#ySKIPPED" : "#rFAIL. Code: " + kvp.Value.cmakeCode);
