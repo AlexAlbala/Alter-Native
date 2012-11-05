@@ -12,6 +12,7 @@ namespace RegressionTest
         {
             //Create file
             XmlTextWriter xml = new XmlTextWriter(Utils.testPath + "/junit.Output" + String.Format("{HH:mm:ss}", DateTime.Now) + ".xml", ASCIIEncoding.UTF8);
+            
         }
     }
 }
