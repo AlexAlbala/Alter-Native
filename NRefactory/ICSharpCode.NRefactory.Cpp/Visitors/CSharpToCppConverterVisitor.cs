@@ -1067,9 +1067,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         {
             ForStatement for_stmt = new ForStatement();
             for_stmt.Condition = (Expression)forStatement.Condition.AcceptVisitor(this, data);
-            for_stmt.EmbeddedStatement = (Statement)forStatement.EmbeddedStatement.AcceptVisitor(this, data);
             ConvertNodes(forStatement.Initializers, for_stmt.Initializers);
             ConvertNodes(forStatement.Iterators, for_stmt.Iterators);
+            for_stmt.EmbeddedStatement = (Statement)forStatement.EmbeddedStatement.AcceptVisitor(this, data);            
             return EndNode(forStatement, for_stmt);
         }
 

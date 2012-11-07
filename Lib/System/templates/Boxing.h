@@ -5,7 +5,7 @@
 /*********************************************************************************************************/
 template<typename T>
 System::Box_T<T>* BOX(T t){
-	return new Box_T<T>(t);	
+	return new System::Box_T<T>(t);	
 }
 
 template<typename T>

@@ -1,5 +1,6 @@
 #include "String.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 namespace System{
 
@@ -10,7 +11,7 @@ namespace System{
 
 	String::String(int val) {	
 		char* tmp = new char[33];
-		itoa(val,tmp,10);	
+		sprintf(tmp, "%d", val);
 		Length = strlen(tmp);
 		Data = new char[Length];
 		memcpy(Data, tmp, Length);
@@ -19,7 +20,7 @@ namespace System{
 
 	String::String(long val) {	
 		char* tmp = new char[66];
-		itoa(val,tmp,10);	
+		sprintf(tmp, "%d", val);
 		Length = strlen(tmp);
 		Data = new char[Length];
 		memcpy(Data, tmp, Length);

@@ -3,7 +3,7 @@
 /*********************************************************************************************************/
 template < class T, class U > 
 bool is_inst_of(U u) {
-   return dynamic_cast< T >(u) != nullptr;
+   return dynamic_cast< T >(u) != (T)0;
 };
 
 template < class T, class U > 

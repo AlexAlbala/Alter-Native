@@ -6,7 +6,8 @@ namespace System{
 	{
 		if(value < 0 || value > 65535)
 		{
-			throw exception("Overflow exception");
+			//TODO: CREATE EXCEPTIONS !
+			throw exception();
 		}
 		return (char)value;
 	}

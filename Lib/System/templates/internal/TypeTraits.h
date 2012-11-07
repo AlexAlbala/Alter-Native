@@ -81,7 +81,7 @@ namespace __Internal__{
 	template <typename T, bool isTypeArgument>
 	struct TypeTrait {
 		typedef typename DeRefBasicType<T>::Type Dereferenced; 
-		typedef typename _TypeTrait<typename Dereferenced, isTypeArgument, IsFundamentalType<typename Dereferenced>::result>::Type Type;
+		typedef typename _TypeTrait<typename TypeTrait<T, isTypeArgument>::Dereferenced, isTypeArgument, IsFundamentalType<typename TypeTrait<T, isTypeArgument>::Dereferenced>::result>::Type Type;
 	};
 
 	//PARAMETERS

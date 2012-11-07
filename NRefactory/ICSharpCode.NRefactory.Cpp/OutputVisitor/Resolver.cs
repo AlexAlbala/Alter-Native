@@ -17,6 +17,7 @@ namespace ICSharpCode.NRefactory.Cpp
             libraryMap.Add("System", "\"System/System.h\"");
             libraryMap.Add("Console", "\"System/Console.h\"");
             libraryMap.Add("Random", "\"System/Random.h\"");
+            libraryMap.Add("Math", "\"System/Math.h\"");
             libraryMap.Add("GC", "\"System/GC.h\"");
             libraryMap.Add("List_T", "\"System/Collections/Generic/List.h\"");
             libraryMap.Add("IEnumerable_T", "\"System/Collections/Generic/IEnumerable.h\"");
@@ -704,14 +705,14 @@ namespace ICSharpCode.NRefactory.Cpp
                             if (ret != id)
                             {
                                 return !((vdecl.Type is CSharp.PrimitiveType && id == "Object") ||
-                                    (ret == "Object" && Resolver.GetType(identifierExpression.Identifier, currentType, null, null).IsBasicType));
+                                    (ret == "Object" && Resolver.GetType(identifierExpression.Identifier, null, currentMethod, null).IsBasicType));
                             }
                         }
                         else if (IsChildOf(node, typeof(CSharp.ParameterDeclaration)))
                         {
                             var pdecl = (CSharp.ParameterDeclaration)GetParentOf(node, typeof(CSharp.ParameterDeclaration));
                             string ret = Resolver.GetTypeName(pdecl.Type);
-                            string id = Resolver.GetTypeName(Resolver.GetType(identifierExpression.Identifier, currentType, null, null));
+                            string id = Resolver.GetTypeName(Resolver.GetType(identifierExpression.Identifier, null, currentMethod, pdecl.Name));
                             if (ret != id)
                             {
                                 return !((pdecl.Type is CSharp.PrimitiveType && id == "Object") ||
