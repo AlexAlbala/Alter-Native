@@ -24,6 +24,7 @@
 \output_sync 0
 \bibtex_command default
 \index_command default
+\float_placement H
 \paperfontsize default
 \spacing single
 \use_hyperref false
@@ -62,7 +63,7 @@
 
 \begin_layout Title
 AlterNative: An executable to executable Cross-platform system for translating
- high level applications to native applications
+ high-level to native applications
 \end_layout
 
 \begin_layout Section
@@ -95,8 +96,152 @@ Nowadays all the service sectors like industrial, energy, healthcare, security
 State Of The Art (projects, research...)
 \end_layout
 
+\begin_layout Standard
+The rising market of Internet of Things devices promotes the development
+ of software and tools for maintaining the interoperability between devices
+ it is necessary to compile applications written in the specific language
+ that accepts the processor.
+ One option is to deploy Virtual Machines in all the devices benefiting
+ of the portability of the code, but the performance it is not ideal.
+ The State of the Art can be dividide in three main groups: Code translators,
+ Decompilers and Research projects.
+\end_layout
+
+\begin_layout Subsection
+Code Translators
+\end_layout
+
+\begin_layout Standard
+The translator is a tool for converting the code compiled for one system
+ to the same application but compiled for other system.
+ The translation can be done in the source code level (change text strings)
+ or in other levels like byte code level (change instructions).
+ The translation provides the user with a tool which for developing the
+ application in a comfortable language (high-level language) benefiting
+ of all the high-level features and gaining time in the programming stage.
+ When the code is finished, the translator is able to port this application
+ developed in a high-level language to a low-level language programmed applicati
+on, benefitting of the speed and performance of these languages.
+ In this section the more relevant considered translators are explained.
+ 
+\end_layout
+
+\begin_layout Subsection
+Decompilers
+\end_layout
+
+\begin_layout Standard
+For this work it is important to study different tools for extract code
+ from applications or assemblies.
+ This feature allows extracting information of the code and program structure
+ from a file which is previously compiled.
+ In this section will be studied different decompilers and assembly browsers.
+ All of them have approximately the same features, the only difference is
+ the languages supported (input and output languages).
+ 
+\end_layout
+
+\begin_layout Subsection
+Research projects
+\end_layout
+
+\begin_layout Subsubsection
+Particle code
+\end_layout
+
+\begin_layout Standard
+The Particle Platform is an open and extensible cross-platform end-to-end
+ solution that enables developers to create native applications for smartphone
+ platforms as well as HTML5 web applications.
+ It allows developers to code in modern object-oriented languages like Java
+ and ActionScript3, while working in the popular Eclipse IDE with a robust
+ WYSIWYG front-end to manage User Interface design on various devices.
+ 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+CAMBIAR
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/ParticleCode.png
+	lyxscale 50
+	width 70col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Particle Code engine
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Rhodes
+\end_layout
+
+\begin_layout Standard
+Rhodes is an open source Ruby-based framework to rapidly build native apps
+ for all major smartphone operating systems (iPhone, Android, RIM, Windows
+ Mobile and Windows Phone 7).
+ These are true native device applications (NOT mobile web apps) which work
+ with synchronized local data and take advantage of device capabilities
+ such as GPS, PIM contacts and calendar, camera, native mapping, push, barcode,
+ signature capture, Bluetooth and Near Field Communications (NFC).
+\end_layout
+
+\begin_layout Standard
+Rhodes is the ONLY framework with: support for Model View Controller (other
+ frameworks force you to put all business logic into the view as JavaScript),
+ synchronized data (the price of entry for enterprise apps), support for
+ ALL devices (Android and iPhone is not "crossplatform"), a hosted build
+ service (RhoHub – which changes the game for mobile app development entirely)
+ and true industrial device capabilities such as NFC.
+ Rhodes has many other major advantages over every other framework and underlyin
+g SDK, which can be summarized as modern development goodness for mobile
+ apps.
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+MODIFICAR
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
-Concept (Portable)
+Concept
 \end_layout
 
 \begin_layout Standard
@@ -107,25 +252,106 @@ The concept of AlterNative is to maximize the idea of Internet of Things
  is ported to this language, it can be executed in several platforms (i.e.
  smartphones, tablets, embedded systems, computers with different operating
  systems).
- The philosophy of AlterNative is to provide the user with a system for
- taking the advantage of fast developing of high-level languages and also
- take the advantage of performance of low-level languages, and also exploit
- the possibility of run the native code in several systems, in other words,
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/Concpet.PNG
+	width 80col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+AlterNative concept
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The philosophy of AlterNative is to provide the user with a system for taking
+ the advantage of fast developing of high-level languages and also take
+ the advantage of performance of low-level languages, and also exploit the
+ possibility of run the native code in several systems, in other words,
  this philosophy is similar to the WORA (Write Once, Run Anywhere) slogan
- created by Sun Microsystem to illustrate the cross-platform benets of the
- Java Virtual Machine.
+ created by Sun Microsystems to illustrate the cross-platform benets of
+ the Java Virtual Machine.
  The difference is focused on the final performance since AlterNative outputs
  in native language and does not depend on any virtual machine.
 \end_layout
 
 \begin_layout Section
-Architecture(process)
+Process
 \end_layout
 
 \begin_layout Standard
 The process of the AlterNative software is divided in three parts: Decompilation
 , translation and compilation.
- First of all the assembly received is passed through a decompiler in order
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/Process.PNG
+	width 80col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+AlterNative process
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+First of all the assembly received is passed through a decompiler in order
  to extract the source code.
  In this case the code extracted is C#.
  The code is not extracted in text format, but in an AST (Abstract Syntax
@@ -151,11 +377,88 @@ The process of the AlterNative software is divided in three parts: Decompilation
 \end_layout
 
 \begin_layout Section
-Use cases (mobile, embedded, smart TVs)
+Use case
+\end_layout
+
+\begin_layout Standard
+In general the major advantage of this platform can be obtained when an
+ application or library is very complex in a computational way.
+ The more complex is the target, the more the benefit can be obtained.
+\end_layout
+
+\begin_layout Standard
+Suppose the following scenario:
+\end_layout
+
+\begin_layout Standard
+You have an application for Android written in Java.
+ The Android system is composed by a Java application running over a DalvikVM
+ (Java Virtual Machine) which is running over a unix distribution.
+ This application takes several images from the camera and processes each
+ frame in order to change from YUV format (Android standard) to RGB format.
+ After trying your application in Java environment you obtain a framerate
+ of 7 frames per second.
+ After this test you want to upgrade your application improving the performance.
+ AlterNative platform allows you to take the Java code layer in charge of
+ processing the image and convert it to C++ code (and also provides you
+ the code with JNI naming ready to use in Android or Java environments)
+ which allows you to run code below the DalvikVM.
+ After that you repeat the test but with the processing layer running in
+ C++ and you obtain 14 frames per second (two times faster than the first
+ one).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/JavaProc.png
+	lyxscale 40
+	width 25text%
+	height 17text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename Figures/nativeProc.png
+	lyxscale 40
+	width 25text%
+	height 17text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Java vs C++ performance
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
-Results (performance vs source code lines)
+Results (performance, source code lines...)
 \end_layout
 
 \begin_layout Section

@@ -78,7 +78,8 @@ Nowadays the technology world is converging into a totally distributed system
  processor.
  One option is to deploy Virtual Machines in all the devices benefiting
  of the portability of the code, but the performance it is not ideal.
- For this reason some code translators have taken into account for accom
+ For this reason some code translators have taken into account for accomplish
+ the multi-platform objective.
  After that, several assembly browsers and decompilers are explained which
  are able to extract source code from executables or assemblied files.
  Also is discussed different related projects and memory management solutions
