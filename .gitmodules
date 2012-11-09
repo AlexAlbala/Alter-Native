@@ -4,3 +4,6 @@
 [submodule "Tools/Android/android-cmake"]
 	path = Tools/Android/android-cmake
 	url = git://gitorious.org/android-cmake/android-cmake.git
+[submodule "Tools/Android/Boost-for-Android"]
+	path = Tools/Android/Boost-for-Android
+	url = ../../MysticTreeGames/Boost-for-Android.git
