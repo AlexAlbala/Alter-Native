@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 namespace RegressionTest
 {
@@ -97,6 +97,16 @@ namespace RegressionTest
             }
         }
 
+        //private  KeyValuePair<DirectoryInfo, TestResult> SearchFirstWithName(string name)
+        //{
+        //    foreach (KeyValuePair<DirectoryInfo, TestResult> kvp in Tests)
+        //    {
+        //        if (kvp.Key.Name == name)
+        //            return kvp;
+        //    }
+        //    throw new KeyNotFoundException("name");
+        //}
+
         public void RunTests(string[] tests)
         {
             Utils.DebugMessage("CONFIGURATION:");
@@ -111,10 +121,12 @@ namespace RegressionTest
             foreach (string s in tests)
             {
                 KeyValuePair<DirectoryInfo, TestResult> kvp = Tests.First(x => x.Key.Name == s);
+
+                //KeyValuePair<DirectoryInfo, TestResult> kvp = SearchFirstWithName(s);
                 DirectoryInfo di = kvp.Key;
                 TestResult res = kvp.Value;
 
-                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Running test " + di.Name);
                 Console.ResetColor();
 
@@ -170,6 +182,7 @@ namespace RegressionTest
             foreach (string s in tests)
             {
                 KeyValuePair<DirectoryInfo, TestResult> kvp = Tests.First(x => x.Key.Name == s);
+                //KeyValuePair<DirectoryInfo, TestResult> kvp = SearchFirstWithName(s);
                 arr[i, 0] = kvp.Value.name;
                 arr[i, 1] = kvp.Value.alternative == 0 ? "#gSUCCESS" : "#rFAIL. Code: " + kvp.Value.alternative;
                 arr[i, 2] = kvp.Value.diffCode == 0 ? "#gNo Differ" : (kvp.Value.diffCode == 1 ? "#rDiffer" : "#rError. Code: " + kvp.Value.diffCode);

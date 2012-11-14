@@ -14,7 +14,7 @@ namespace BinaryTree
 
         public static void Main(String[] args)
         {
-            int n = 16;//DEPTH HARDCPDED !
+            int n = 12;//DEPTH HARDCPDED !
             // if (args.Length > 0) n = Int32.Parse(args[0]);
 
             int maxDepth = Math.Max(minDepth + 2, n);

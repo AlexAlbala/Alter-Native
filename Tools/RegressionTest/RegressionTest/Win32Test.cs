@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace RegressionTest
@@ -21,7 +20,7 @@ namespace RegressionTest
             string altArgs = di.FullName + "/NETbin/" + di.Name.Split('.')[1] + ".exe" + " "
                                                     + di.FullName + "/Output/" + " "
                                                     + "CXX" + " "
-                                                    + Utils.testPath + "/../Lib/"
+                                                    + Utils.cxxLibraryPath
                                                     + Utils.GetAltCompileArg(Config.compileMode);
 
             Utils.DebugMessage("ALTERNATIVE COMMAND:");

@@ -11,10 +11,24 @@ namespace RegressionTest
         private static List<string> ignoreFolders;
         public static string testPath = Environment.CurrentDirectory;
         public static string alternativePath = Environment.CurrentDirectory + "/../AlterNative/bin/Debug/AlterNative.exe";
+        public static string cxxLibraryPath = testPath + "/../Lib";
 
         static Utils()
         {
              ignoreFolders = new List<string>() { "gc", "boost", "System", "build" };
+             string alt_var_tmp = Environment.GetEnvironmentVariable("ALTERNATIVE_BIN_PATH");
+             string lib_var_tmp = Environment.GetEnvironmentVariable("CPP_LIBRARY_PATH");
+             
+            if (alt_var_tmp != null)
+                 alternativePath = alt_var_tmp;
+             else
+                 WarningMessage("Variable <ALTERNATIVE_BIN_PATH> should be setted. Default is: " + alternativePath);
+
+            if (lib_var_tmp != null)
+                cxxLibraryPath = lib_var_tmp;
+            else
+                WarningMessage("Variable <CPP_LIBRARY_PATH> should be setted. Default is: " + cxxLibraryPath);
+                
         }
 
         public static ITest CreateTest(Platform platform)
@@ -91,6 +105,20 @@ namespace RegressionTest
                 Console.WriteLine("DEBUG >>> " + message);
                 Console.ResetColor();
             }
+        }
+
+        public static void WarningMessage(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("WARNING >>> " + message);
+            Console.ResetColor();
+        }
+
+        public static void ErrorMessage(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("ERROR >>> " + message);
+            Console.ResetColor();
         }
 
         public static void CleanDirectory(DirectoryInfo d, bool cleanRoot = true, bool ignoreFolders = false)

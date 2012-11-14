@@ -1013,7 +1013,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitContinueStatement(CSharp.ContinueStatement continueStatement, object data)
         {
-            return EndNode(continueStatement, new ContinueStatement());            
+            return EndNode(continueStatement, new ContinueStatement());
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitDoWhileStatement(CSharp.DoWhileStatement doWhileStatement, object data)
@@ -1069,7 +1069,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             for_stmt.Condition = (Expression)forStatement.Condition.AcceptVisitor(this, data);
             ConvertNodes(forStatement.Initializers, for_stmt.Initializers);
             ConvertNodes(forStatement.Iterators, for_stmt.Iterators);
-            for_stmt.EmbeddedStatement = (Statement)forStatement.EmbeddedStatement.AcceptVisitor(this, data);            
+            for_stmt.EmbeddedStatement = (Statement)forStatement.EmbeddedStatement.AcceptVisitor(this, data);
             return EndNode(forStatement, for_stmt);
         }
 
@@ -1085,7 +1085,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitGotoStatement(CSharp.GotoStatement gotoStatement, object data)
         {
-            throw new NotImplementedException();
+            var gotoS = new GotoStatement(gotoStatement.Label);
+            return EndNode(gotoStatement, gotoS);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitIfElseStatement(CSharp.IfElseStatement ifElseStatement, object data)
@@ -1101,7 +1102,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitLabelStatement(CSharp.LabelStatement labelStatement, object data)
         {
-            throw new NotImplementedException();
+            var label = new LabelStatement();
+            label.Label = labelStatement.Label;
+            return EndNode(labelStatement, label);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitLockStatement(CSharp.LockStatement lockStatement, object data)
@@ -1238,21 +1241,22 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             }
             else if (arrayCreation)
             {
-                SimpleType t = new SimpleType("Array");
-                t.TypeArguments.Add(vds.Type is PtrType ? (AstType)(vds.Type as PtrType).Target.Clone() : (AstType)vds.Type.Clone());
+                //SimpleType t = new SimpleType("Array");
+                //t.TypeArguments.Add(vds.Type is PtrType ? (AstType)(vds.Type as PtrType).Target.Clone() : (AstType)vds.Type.Clone());
 
                 VariableInitializer vinit = vds.Variables.ElementAt(0);
                 vinit.NameToken = new Identifier(vinit.Name, TextLocation.Empty);
                 if (vinit.Initializer is ArrayCreateExpression)
                 {
-                    var obj = new ObjectCreateExpression((AstType)t.Clone());
+                    //var obj = new ObjectCreateExpression((AstType)t.Clone());
+                    var obj = new ObjectCreateExpression(vds.Type is PtrType ? (AstType)(vds.Type as PtrType).Target.Clone() : (AstType)vds.Type.Clone());
                     foreach (var n in (vinit.Initializer as ArrayCreateExpression).Arguments)
                     {
                         obj.Arguments.Add(n.Clone());
                     }
                     vinit.Initializer = obj;
                 }
-                vds.Type = new PtrType((AstType)t.Clone());
+                //vds.Type = new PtrType((AstType)t.Clone());
             }
             Cache.AddMethodVariableDeclaration(currentMethod, vds);
             return EndNode(variableDeclarationStatement, vds);
@@ -1718,7 +1722,20 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         {
             //If there is ArraySpecifier, get it and return the simpleType or primitiveType
             if (composedType.ArraySpecifiers.Any())
+            {
+                if (composedType.ArraySpecifiers.Count == 1)
+                {
+                    if (!(currentMethod == "Main" && Resolver.IsChildOf(composedType, typeof(CSharp.ParameterDeclaration))))
+                    {
+                        SimpleType type = new SimpleType("Array");
+                        AstType args = (AstType)composedType.BaseType.AcceptVisitor(this, data);
+                        type.TypeArguments.Add((args is PtrType) ? (AstType)(args as PtrType).Target.Clone() : (AstType)args.Clone());
+                        return EndNode(composedType, new PtrType(type));
+                    }
+                }
+
                 Cache.AddRangeArraySpecifiers(composedType.ArraySpecifiers);
+            }
 
             if (composedType.HasNullableSpecifier)
             {

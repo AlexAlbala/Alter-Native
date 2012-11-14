@@ -206,6 +206,7 @@ namespace ICSharpCode.NRefactory.Cpp
             if (currentMethod != null && currentField_Variable != null)
             {
                 Dictionary<string, List<VariableDeclarationStatement>> variablesMethod = Cache.GetVariablesMethod();
+                Dictionary<string, List<ParameterDeclaration>> parameters = Cache.GetParameters();
                 if (variablesMethod.ContainsKey(currentMethod))
                 {
                     foreach (VariableDeclarationStatement fd in variablesMethod[currentMethod])
@@ -218,6 +219,15 @@ namespace ICSharpCode.NRefactory.Cpp
 
                     }
                 }
+
+                //if (parameters.ContainsKey(currentMethod))
+                //{
+                //    foreach (ParameterDeclaration pd in parameters[currentMethod])
+                //    {
+                //        if (pd.Name == currentField_Variable)
+                //            return pd.Type;
+                //    }
+                //}
             }
             return AstType.Null;
         }
@@ -681,7 +691,6 @@ namespace ICSharpCode.NRefactory.Cpp
                     {
                         return false;
                     }
-
                     else
                     {
                         if (IsChildOf(node, typeof(CSharp.FieldDeclaration)))
@@ -690,7 +699,10 @@ namespace ICSharpCode.NRefactory.Cpp
                             var fdecl = (CSharp.FieldDeclaration)GetParentOf(node, typeof(CSharp.FieldDeclaration));
 
                             string ret = Resolver.GetTypeName(fdecl.ReturnType);
-                            string id = Resolver.GetTypeName(Resolver.GetType(identifierExpression.Identifier, currentType, null, null));
+                            AstType _type = Resolver.GetType(identifierExpression.Identifier, currentType, null, null);
+                            if (_type.IsBasicType)
+                                return false;
+                            string id = Resolver.GetTypeName(_type);
                             if (ret != id)
                             {
                                 return !((fdecl.ReturnType is CSharp.PrimitiveType && id == "Object") ||
@@ -701,7 +713,10 @@ namespace ICSharpCode.NRefactory.Cpp
                         {
                             var vdecl = (CSharp.VariableDeclarationStatement)GetParentOf(node, typeof(CSharp.VariableDeclarationStatement));
                             string ret = Resolver.GetTypeName(vdecl.Type);
-                            string id = Resolver.GetTypeName(Resolver.GetType(identifierExpression.Identifier, null, currentMethod, null));
+                            AstType _type = Resolver.GetType(identifierExpression.Identifier, null, currentMethod, identifierExpression.Identifier);
+                            if (_type.IsBasicType)
+                                return false;
+                            string id = Resolver.GetTypeName(_type);
                             if (ret != id)
                             {
                                 return !((vdecl.Type is CSharp.PrimitiveType && id == "Object") ||
@@ -712,13 +727,16 @@ namespace ICSharpCode.NRefactory.Cpp
                         {
                             var pdecl = (CSharp.ParameterDeclaration)GetParentOf(node, typeof(CSharp.ParameterDeclaration));
                             string ret = Resolver.GetTypeName(pdecl.Type);
-                            string id = Resolver.GetTypeName(Resolver.GetType(identifierExpression.Identifier, null, currentMethod, pdecl.Name));
+                            AstType _type = Resolver.GetType(identifierExpression.Identifier, null, currentMethod, pdecl.Name);
+                            if (_type.IsBasicType)
+                                return false;
+                            string id = Resolver.GetTypeName(_type);
                             if (ret != id)
                             {
                                 return !((pdecl.Type is CSharp.PrimitiveType && id == "Object") ||
                                     (ret == "Object" && Resolver.GetType(identifierExpression.Identifier, null, currentMethod, pdecl.Name).IsBasicType));
                             }
-                        }
+                        }                        
                         return false;
                     }
                 }

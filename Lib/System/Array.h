@@ -43,7 +43,7 @@ namespace System{
 
 			T& operator[](int index)
 			{
-				return (BoxRef(T))data->at(index);
+				return data->at(index);
 			}
 
 			System::Collections::Generic::iteratorcxx<TypeArg(T)>* begin()

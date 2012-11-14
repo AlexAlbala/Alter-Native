@@ -2,18 +2,22 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace RegressionTest
 {
     class AndroidTest : ITest
     {
-        private string NDK_CMAKE_PATH;
-        public AndroidTest(string NDK_CMAKE_PATH)
-        {
-            this.NDK_CMAKE_PATH = NDK_CMAKE_PATH;
-            Utils.DebugMessage("NDK_CMAKE_PATH: " + NDK_CMAKE_PATH);
+        private string CMAKE_ANDROID_TOOLCHAIN = Utils.testPath + "/../Tools/Android/android_cmake/android.toolchain.cmake";
+        public AndroidTest()
+        {            
+
+            string cmake_var_tmp = Environment.GetEnvironmentVariable("CMAKE_ANDROID_TOOLCHAIN");
+
+            if (cmake_var_tmp != null)
+                CMAKE_ANDROID_TOOLCHAIN = cmake_var_tmp;
+            else
+                Utils.WarningMessage("Variable <CMAKE_ANDROID_TOOLCHAIN> should be setted. Default is: " + CMAKE_ANDROID_TOOLCHAIN);
         }
 
         public void Alternative(DirectoryInfo di, TestResult res)
@@ -28,7 +32,7 @@ namespace RegressionTest
             string altArgs = di.FullName + "/NETbin/" + di.Name.Split('.')[1] + ".exe" + " "
                                                     + di.FullName + "/Output/" + " "
                                                     + "CXX" + " "
-                                                    + Utils.testPath + "/../Lib/"
+                                                    + Utils.cxxLibraryPath
                                                     + Utils.GetAltCompileArg(Config.compileMode)
                                                     + " -android";
 
@@ -72,7 +76,7 @@ namespace RegressionTest
 
             Console.WriteLine("Configuring native source project...");
 
-            string cmakeArgs = "-DCMAKE_TOOLCHAIN_FILE=" + NDK_CMAKE_PATH + "/toolchain/android.toolchain.cmake ..";
+            string cmakeArgs = "-G \"Unix Makefiles\" -DCMAKE_TOOLCHAIN_FILE=" + this.CMAKE_ANDROID_TOOLCHAIN + " ..";
             //Run cmake
             Process runCmake = new Process();
             runCmake.StartInfo = new ProcessStartInfo("cmake", cmakeArgs);
@@ -96,7 +100,31 @@ namespace RegressionTest
         public void Compile(DirectoryInfo di, TestResult res)
         {
             //DO MAKE
-            throw new NotImplementedException();
+            //Create folder and run cmake                
+            Directory.CreateDirectory(di.FullName + "/Output/build");
+            Directory.SetCurrentDirectory(di.FullName + "/Output/build");
+
+            Console.WriteLine("Building code...");
+
+            //string cmakeArgs = "-G \"Unix Makefiles\" -DCMAKE_TOOLCHAIN_FILE=" + NDK_CMAKE_PATH.TrimEnd("/".ToCharArray()) + "/android.toolchain.cmake ..";
+            //Run cmake
+            Process runMake = new Process();
+            runMake.StartInfo = new ProcessStartInfo("make");
+
+            runMake.StartInfo.CreateNoWindow = true;
+            runMake.StartInfo.UseShellExecute = false;
+            if (Config.Verbose)
+            {
+                runMake.StartInfo.RedirectStandardOutput = true;
+                runMake.OutputDataReceived += (sender, args) => Console.WriteLine(args.Data);
+            }
+            runMake.Start();
+            if (Config.Verbose)
+                runMake.BeginOutputReadLine();
+            runMake.WaitForExit();
+
+            res.cmakeCode = (short)runMake.ExitCode;
+            Utils.DebugMessage("Exit Code: " + res.cmakeCode);
         }
 
         public void CompareOutputs(DirectoryInfo di, TestResult res)
@@ -104,6 +132,7 @@ namespace RegressionTest
             //TODO: HOW WE RUN IN ANDROID ?
 
             //START AVD
+            //PUSH MONO
             //PUSH FILE
             //RUN FILE
             throw new NotImplementedException();

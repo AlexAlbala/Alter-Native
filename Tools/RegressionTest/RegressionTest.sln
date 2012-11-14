@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegressionTest", "RegressionTest\RegressionTest.csproj", "{4DE5BFEC-92A3-4787-9985-ABBBD179D6D8}"
 EndProject
 Global
