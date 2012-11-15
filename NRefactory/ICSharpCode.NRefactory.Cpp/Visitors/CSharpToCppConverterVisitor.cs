@@ -1560,23 +1560,23 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             param.ParameterModifier = (ParameterModifier)parameterDeclaration.ParameterModifier;
             param.Type = (AstType)parameterDeclaration.Type.AcceptVisitor(this, data);
             param.NameToken = (Identifier)parameterDeclaration.NameToken.AcceptVisitor(this, data);
-            if (param.NameToken is ComposedIdentifier)
-            {
-                CSharp.MethodDeclaration m = null;
-                if (Resolver.IsChildOf(parameterDeclaration, typeof(CSharp.MethodDeclaration)))
-                    m = (CSharp.MethodDeclaration)Resolver.GetParentOf(parameterDeclaration, typeof(CSharp.MethodDeclaration));
+            //if (param.NameToken is ComposedIdentifier)
+            //{
+            //    CSharp.MethodDeclaration m = null;
+            //    if (Resolver.IsChildOf(parameterDeclaration, typeof(CSharp.MethodDeclaration)))
+            //        m = (CSharp.MethodDeclaration)Resolver.GetParentOf(parameterDeclaration, typeof(CSharp.MethodDeclaration));
 
-                if (m != null)
-                    if (m.Name == "Main")
-                        goto End;
+            //    if (m != null)
+            //        if (m.Name == "Main")
+            //            goto End;
 
-                SimpleType s = new SimpleType("Array");
-                s.TypeArguments.Add(param.Type is PtrType ? (AstType)(param.Type as PtrType).Target.Clone() : (AstType)param.Type.Clone());
-                param.Type = new PtrType(s);
+            //    SimpleType s = new SimpleType("Array");
+            //    s.TypeArguments.Add(param.Type is PtrType ? (AstType)(param.Type as PtrType).Target.Clone() : (AstType)param.Type.Clone());
+            //    param.Type = new PtrType(s);
 
-                param.NameToken = (Identifier)(param.NameToken as ComposedIdentifier).BaseIdentifier.Clone();
-            }
-        End:
+            //    param.NameToken = (Identifier)(param.NameToken as ComposedIdentifier).BaseIdentifier.Clone();
+            //}
+        //End:
             param.DefaultExpression = (Expression)parameterDeclaration.DefaultExpression.AcceptVisitor(this, data);
 
             Cache.AddParameterDeclaration(currentMethod, param);

@@ -95,6 +95,9 @@ namespace RegressionTest
                     Utils.DebugMessage("Found test " + di.Name);
                 }
             }
+            Console.WriteLine();
+            Utils.DebugMessage("Found " + Tests.Count + " Tests");
+            Console.WriteLine();
         }
 
         //private  KeyValuePair<DirectoryInfo, TestResult> SearchFirstWithName(string name)
@@ -109,15 +112,17 @@ namespace RegressionTest
 
         public void RunTests(string[] tests)
         {
-            Utils.DebugMessage("CONFIGURATION:");
-            Utils.DebugMessage("");
+            Utils.DebugMessage("************* CONFIGURATION ***************");
             Utils.DebugMessage("TEST PLATFORM: " + Config.platform.ToString());
             Utils.DebugMessage("");
             Utils.DebugMessage("VERBOSE: " + Config.Verbose.ToString());
             Utils.DebugMessage("OUTPUT UNLIMITED: " + Config.Unlimited.ToString());
             Utils.DebugMessage("FAST MODE: " + Config.fast.ToString());
             Utils.DebugMessage("OVERWRITE TARGET CODE: " + Config.overwriteTarget.ToString());
-            Utils.DebugMessage("RELEASE MODE: " + Config.compileMode.ToString());
+            Utils.DebugMessage("COMPILATION MODE: " + Config.compileMode.ToString());
+            Utils.DebugMessage("*******************************************");
+            Console.WriteLine();
+            Console.WriteLine();
             foreach (string s in tests)
             {
                 KeyValuePair<DirectoryInfo, TestResult> kvp = Tests.First(x => x.Key.Name == s);
