@@ -9,7 +9,7 @@
 using namespace System::IO;
 using namespace System;
 using namespace System::Text;
-class Test : public virtual Object, public virtual gc_cleanup
+class Test : public virtual Object
 {
 	public:
 		static void Main();

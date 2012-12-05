@@ -9,7 +9,7 @@ namespace Templates {
 		//DO NOT modify this code
 
 		template<typename T>
-		class MyClass_T_Base : public virtual Object, public virtual gc_cleanup{
+		class MyClass_T_Base : public virtual Object{
 			private:
 			TypeDecl(T) data;
 			public:

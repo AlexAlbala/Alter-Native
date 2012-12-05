@@ -4,7 +4,7 @@
 
 using namespace System;
 namespace AsIs {
-	class Anne : public virtual Person, public virtual Object, public virtual gc_cleanup
+	class Anne : public virtual Person, public virtual Object
 	{
 		public:
 			Anne();

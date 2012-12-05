@@ -13,7 +13,7 @@ namespace ExplicitGenericInterfaces {
 		//DO NOT modify this code
 
 		template<typename T>
-		class C_T_Base : public virtual IC_T<T>, public virtual Object, public virtual gc_cleanup{
+		class C_T_Base : public virtual IC_T<T>, public virtual Object{
 
 			//START Explicit interface: _interface_IA ****************
 			public:

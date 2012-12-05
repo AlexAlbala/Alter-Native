@@ -6,7 +6,7 @@
 
 using namespace System;
 namespace ImplicitCast {
-	class Program : public virtual Object, public virtual gc_cleanup
+	class Program : public virtual Object
 	{
 		public:
 			static void Main(String* args[]);

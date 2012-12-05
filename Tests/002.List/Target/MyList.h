@@ -4,7 +4,7 @@
 
 using namespace System;
 namespace List {
-	class MyList : public virtual Object, public virtual gc_cleanup
+	class MyList : public virtual Object
 	{
 		private:
 			Node* first;

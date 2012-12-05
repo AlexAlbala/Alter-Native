@@ -15,8 +15,8 @@ Array<int>* Program::fannkuch(int n){
 	while (true) {
 		int q2 = (*p)[0];
 		if (q2 != 0) {
-			for (int j = 1; j < n; j += 1) {
-				(*q)[j] = (*p)[j];
+			for (int k = 1; k < n; k += 1) {
+				(*q)[k] = (*p)[k];
 			}
 			int flips = 1;
 			while (true) {
@@ -26,16 +26,16 @@ Array<int>* Program::fannkuch(int n){
 				}
 				(*q)[q2] = q2;
 				if (q2 >= 3) {
-					int j = 1;
-					int k = q2 - 1;
+					int l = 1;
+					int m = q2 - 1;
 					do {
-						int t = (*q)[j];
-						(*q)[j] = (*q)[k];
-						(*q)[k] = t;
-						j += 1;
-						k -= 1;
+						int t = (*q)[l];
+						(*q)[l] = (*q)[m];
+						(*q)[m] = t;
+						l += 1;
+						m -= 1;
 					}
-					while (j < k);
+					while (l < m);
 				}
 				q2 = qq;
 				flips += 1;
@@ -46,31 +46,31 @@ Array<int>* Program::fannkuch(int n){
 			}
 		}
 		if (sign == 1) {
-			int t = (*p)[1];
+			int t2 = (*p)[1];
 			(*p)[1] = (*p)[0];
-			(*p)[0] = t;
+			(*p)[0] = t2;
 			sign = -1;
 		}
 		else {
-			int t = (*p)[1];
+			int t3 = (*p)[1];
 			(*p)[1] = (*p)[2];
-			(*p)[2] = t;
+			(*p)[2] = t3;
 			sign = 1;
-			for (int j = 2; j < n; j += 1) {
-				int sx = (*s)[j];
+			for (int i2 = 2; i2 < n; i2 += 1) {
+				int sx = (*s)[i2];
 				if (sx != 0) {
-					(*s)[j] = sx - 1;
+					(*s)[i2] = sx - 1;
 					break;
 				}
-				if (j == i) {
+				if (i2 == i) {
 					goto Block_8;
 				}
-				(*s)[j] = j;
-				t = (*p)[0];
-				for (int k = 0; k <= j; k += 1) {
-					(*p)[k] = (*p)[k + 1];
+				(*s)[i2] = i2;
+				t3 = (*p)[0];
+				for (int j2 = 0; j2 <= i2; j2 += 1) {
+					(*p)[j2] = (*p)[j2 + 1];
 				}
-				(*p)[j + 1] = t;
+				(*p)[i2 + 1] = t3;
 			}
 		}
 	}

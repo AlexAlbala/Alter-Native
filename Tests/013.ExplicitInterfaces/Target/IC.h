@@ -3,7 +3,7 @@
 
 using namespace System;
 namespace NestedClasses {
-	class IC : public virtual Object, public virtual gc_cleanup{
+	class IC : public virtual Object{
 		public:
 			virtual int f() = 0;
 	};

@@ -4,7 +4,7 @@
 
 using namespace System;
 namespace Boxing {
-	class A : public virtual Object, public virtual gc_cleanup
+	class A : public virtual Object
 	{
 		public:
 			void f(Object* arg);

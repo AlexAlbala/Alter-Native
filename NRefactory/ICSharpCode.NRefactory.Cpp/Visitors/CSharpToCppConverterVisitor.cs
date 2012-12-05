@@ -785,9 +785,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
             //HERE SHOULD BE BaseType or InheritedType or something similar
             AstType objectType = new SimpleType("Object");
-            AstType gcType = new SimpleType("gc_cleanup");
+            //AstType gcType = new SimpleType("gc_cleanup");
             type.AddChild(objectType, TypeDeclaration.BaseTypeRole);
-            type.AddChild(gcType, TypeDeclaration.BaseTypeRole);
+            //type.AddChild(gcType, TypeDeclaration.BaseTypeRole);
 
             //Fill the nested types
             Resolver.GetNestedTypes(type);

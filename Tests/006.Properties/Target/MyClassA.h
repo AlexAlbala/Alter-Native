@@ -5,7 +5,7 @@
 
 using namespace System;
 namespace Properties {
-	class MyClassA : public virtual Object, public virtual gc_cleanup
+	class MyClassA : public virtual Object
 	{
 		private:
 			int _data;

@@ -20,7 +20,6 @@ namespace AlterNative
         public static int Main(string[] args)
         {
             int exitcode;
-            ICSharpCode.ILSpy.App app = new ICSharpCode.ILSpy.App();
             if (args.Length > 1 && !args[0].Equals("/separate"))
             {
                 try
@@ -37,9 +36,14 @@ namespace AlterNative
             }
             else
             {
+#if !CONSOLE
+                ICSharpCode.ILSpy.App app = new ICSharpCode.ILSpy.App();
                 app.InitializeComponent();
                 app.Run();
                 exitcode = 0;
+#else
+                exitcode = 1;
+#endif
             }
             return exitcode;
         }

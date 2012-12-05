@@ -6,7 +6,7 @@
 
 using namespace System;
 namespace List {
-	class Program : public virtual Object, public virtual gc_cleanup
+	class Program : public virtual Object
 	{
 		private:
 			MyList* list;

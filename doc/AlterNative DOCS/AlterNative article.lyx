@@ -93,7 +93,7 @@ Nowadays all the service sectors like industrial, energy, healthcare, security
 \end_layout
 
 \begin_layout Section
-State Of The Art (projects, research...)
+State Of The Art
 \end_layout
 
 \begin_layout Standard
@@ -150,9 +150,16 @@ Particle code
 \end_layout
 
 \begin_layout Standard
-The Particle Platform is an open and extensible cross-platform end-to-end
- solution that enables developers to create native applications for smartphone
- platforms as well as HTML5 web applications.
+The Particle Platform 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-1"
+
+\end_inset
+
+ is an open and extensible cross-platform end-to-end solution that enables
+ developers to create native applications for smartphone platforms as well
+ as HTML5 web applications.
  It allows developers to code in modern object-oriented languages like Java
  and ActionScript3, while working in the popular Eclipse IDE with a robust
  WYSIWYG front-end to manage User Interface design on various devices.
@@ -209,9 +216,16 @@ Rhodes
 \end_layout
 
 \begin_layout Standard
-Rhodes is an open source Ruby-based framework to rapidly build native apps
- for all major smartphone operating systems (iPhone, Android, RIM, Windows
- Mobile and Windows Phone 7).
+Rhodes 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-2"
+
+\end_inset
+
+ is an open source Ruby-based framework to rapidly build native apps for
+ all major smartphone operating systems (iPhone, Android, RIM, Windows Mobile
+ and Windows Phone 7).
  These are true native device applications (NOT mobile web apps) which work
  with synchronized local data and take advantage of device capabilities
  such as GPS, PIM contacts and calendar, camera, native mapping, push, barcode,
@@ -458,7 +472,101 @@ Java vs C++ performance
 \end_layout
 
 \begin_layout Section
-Results (performance, source code lines...)
+Results
+\end_layout
+
+\begin_layout Standard
+For the evaluation of the system a CPU stress performance test will be executed.
+ The test selected is the fannkuch-redux benchmark 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-3"
+
+\end_inset
+
+.
+ The C# code used is listed below.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float algorithm
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/fannkuch-redux.png
+	width 80col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Fannkuch-redux test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We have compared three languages with three compilation targets.
+ The languages are C# (original), C++ original (manually translated) and
+ C++ alternative (obtained automatically).
+ The three compilation targets are Windows 32 bits, Linux and Android) all
+ of them with Release optimizations
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/CompVsLang.emf
+	lyxscale 30
+	width 80col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Time in function of the target platform
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -476,6 +584,36 @@ on.
  power, the main advantage of AlterNative software is that it is able to
  run code with native performance while the user is programming its code
  without taking into account the final application performance.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-1"
+
+\end_inset
+
+http://www.particlecode.com/
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-2"
+
+\end_inset
+
+http://www.motorola.com/Business/US-EN/RhoMobile+Suite/Rhodes
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-3"
+
+\end_inset
+
+(http://shootout.alioth.debian.org/u32/performance.php?test=fannkuchredux)
 \end_layout
 
 \end_body

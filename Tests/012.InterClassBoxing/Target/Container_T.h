@@ -9,7 +9,7 @@ namespace InterClassBoxing {
 		//DO NOT modify this code
 
 		template<typename T>
-		class Container_T_Base : public virtual Object, public virtual gc_cleanup{
+		class Container_T_Base : public virtual Object{
 			private:
 			TypeDecl(T) data;
 			public:

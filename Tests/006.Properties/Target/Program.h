@@ -4,7 +4,7 @@
 
 using namespace System;
 namespace Properties {
-	class Program : public virtual Object, public virtual gc_cleanup
+	class Program : public virtual Object
 	{
 		public:
 			static void Main(String* args[]);

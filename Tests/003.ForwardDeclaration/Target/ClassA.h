@@ -7,7 +7,7 @@ namespace ForwardDeclaration {
 	//Forward Declaration
 	class ClassB;
 
-	class ClassA : public virtual Object, public virtual gc_cleanup{
+	class ClassA : public virtual Object{
 		private:
 			ClassB* b;
 		public:

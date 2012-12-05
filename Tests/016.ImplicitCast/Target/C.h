@@ -5,7 +5,7 @@
 
 using namespace System;
 namespace ImplicitCast {
-	class C : public virtual A, public virtual Object, public virtual gc_cleanup
+	class C : public virtual A, public virtual Object
 	{
 		public:
 		virtual void f();

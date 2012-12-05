@@ -3,7 +3,7 @@
 #include "System/Console.h"
 
 using namespace System;
-class Program : public virtual Object, public virtual gc_cleanup
+class Program : public virtual Object
 {
 	public:
 	static Array<int>* fannkuch(int n);

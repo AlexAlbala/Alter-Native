@@ -3,7 +3,7 @@
 
 using namespace System;
 namespace AsIs {
-	class Person : public virtual Object, public virtual gc_cleanup
+	class Person : public virtual Object
 	{
 		protected:
 			String* name;

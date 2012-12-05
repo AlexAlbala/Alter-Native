@@ -3,7 +3,7 @@
 
 using namespace System;
 namespace Templates {
-	class A : public virtual Object, public virtual gc_cleanup
+	class A : public virtual Object
 	{
 		public:
 			String* getText();
