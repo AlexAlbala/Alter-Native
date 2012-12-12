@@ -9,7 +9,6 @@ namespace System{
 	public:
 		Exception();
 		Exception(String* message);	
-		String* message;
+		String* Message;
 	};
 }
-#include "exceptions/SystemException.h"

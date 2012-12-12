@@ -14,23 +14,43 @@ namespace ICSharpCode.NRefactory.Cpp
         static Resolver()
         {
             Dictionary<string, string> libraryMap = new Dictionary<string, string>();
+            //********************** SYSTEM:
             libraryMap.Add("System", "\"System/System.h\"");
             libraryMap.Add("Console", "\"System/Console.h\"");
             libraryMap.Add("Random", "\"System/Random.h\"");
             libraryMap.Add("Math", "\"System/Math.h\"");
             libraryMap.Add("GC", "\"System/GC.h\"");
+            libraryMap.Add("IDisposable", "\"System/IDisposable.h\"");
+            libraryMap.Add("Convert", "\"System/Convert.h\"");
+            //exceptions:
+            libraryMap.Add("Exception", "\"System/Exception.h\"");
+            //                          SystemExceptions
+            libraryMap.Add("NotImplementedException", "\"System/exceptions/systemException/NotImplementedException.h\"");
+            //*************************************************************//
+
+            //********************** SYSTEM COLLECTIONS:
+            libraryMap.Add("IEnumerable", "\"System/Collections/IEnumerable.h\"");
+            libraryMap.Add("IEnumerator", "\"System/Collections/IEnumeratorCXX.h\"");
+            //*************************************************************//
+            
+            //********************** SYSTEM COLLECTIONS GENERIC:
             libraryMap.Add("List_T", "\"System/Collections/Generic/List.h\"");
             libraryMap.Add("IEnumerable_T", "\"System/Collections/Generic/IEnumerable.h\"");
             libraryMap.Add("IEnumerator_T", "\"System/Collections/Generic/IEnumeratorCXX.h\"");
-            libraryMap.Add("IEnumerable", "\"System/Collections/IEnumerable.h\"");
-            libraryMap.Add("IEnumerator", "\"System/Collections/IEnumeratorCXX.h\"");
-            libraryMap.Add("IDisposable", "\"System/IDisposable.h\"");
+            //*************************************************************//
+
+            //********************** SYSTEM TEXT:
+            libraryMap.Add("UTF8Encoding", "\"System/Text/UTF8Encoding.h\"");
+            //*************************************************************//
+
+            //********************** SYSTEM IO:
             libraryMap.Add("StreamReader", "\"System/IO/StreamReaderCXX.h\"");
             libraryMap.Add("StreamWriter", "\"System/IO/StreamWriterCXX.h\"");
-            libraryMap.Add("FileStream", "\"System/IO/FileStream.h\"");
-            libraryMap.Add("Convert", "\"System/Convert.h\"");
+            libraryMap.Add("FileStream", "\"System/IO/FileStream.h\"");            
             libraryMap.Add("File", "\"System/IO/File.h\"");
-            libraryMap.Add("UTF8Encoding", "\"System/Text/UTF8Encoding.h\"");
+            //*************************************************************//
+
+          
             Cache.InitLibrary(libraryMap);
         }
 

@@ -3421,7 +3421,7 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             StartNode(catchClause);
             WriteKeyword("catch");
-            /*if (!catchClause.Type.IsNull)
+            if (!catchClause.Type.IsNull)
             {
                 Space(policy.SpaceBeforeCatchParentheses);
                 LPar();
@@ -3434,10 +3434,10 @@ namespace ICSharpCode.NRefactory.Cpp
                 }
                 Space(policy.SpacesWithinCatchParentheses);
                 RPar();
-            }*/
+            }
 
             //TODO, we MUST distinguish the types !!
-            WriteToken("(...)", CatchClause.AllTypesRole);
+            //WriteToken("(...)", CatchClause.AllTypesRole);
             catchClause.Body.AcceptVisitor(this, data);
             return EndNode(catchClause);
         }

@@ -1173,7 +1173,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             var catchC = new CatchClause();
             catchC.Body = (BlockStatement)catchClause.Body.AcceptVisitor(this, data);
             //TODO: Now is ignored the type !!
-            //catchC.Type = (AstType)catchClause.Type.AcceptVisitor(this, data);
+            catchC.Type = (AstType)catchClause.Type.AcceptVisitor(this, data);
             catchC.VariableNameToken = (Identifier)catchClause.VariableNameToken.AcceptVisitor(this, data);
             return EndNode(catchClause, catchC);
         }

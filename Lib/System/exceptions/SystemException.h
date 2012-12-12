@@ -10,5 +10,3 @@ namespace System{
 		SystemException(String* message);
 	};
 }
-
-#include "systemException/ArgumentException.h"

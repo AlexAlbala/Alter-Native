@@ -10,6 +10,3 @@ namespace System{
 		ArgumentException(String* message);
 	};
 }
-
-#include "argumentException/ArgumentNullException.h"
-#include "argumentException/ArgumentOutOfRangeException.h"

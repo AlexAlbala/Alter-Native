@@ -3,10 +3,10 @@
 namespace System{
 	Exception::Exception(){
 		std::exception();
-		message = new String("");
+		Message = new String("");
 	}
 	Exception::Exception(String* message){
 		std::exception();
-		this->message = message;
+		this->Message = message;
 	}
 }
