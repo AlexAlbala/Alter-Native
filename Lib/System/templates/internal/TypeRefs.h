@@ -2,6 +2,10 @@
 /******************************** TYPETRAITS INTERNAL CONVERSIONS  ***************************************/
 /*********************************************************************************************************/
 namespace __Internal__{	
+
+	/*
+	Converts from System::Object* to System::Object 
+	*/
 	template <typename T>
 	struct DeRefType {
 		typedef T Type;
@@ -12,6 +16,9 @@ namespace __Internal__{
 		typedef System::Object Type;
 	};
 
+	/*
+	Dereferences any basic type: {int, short, long, char, float} if there are pointer types
+	*/
 	template <typename T>
 	struct DeRefBasicType {
 		typedef T Type;

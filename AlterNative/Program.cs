@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Mono.Cecil;
 using System.IO;
-using System.Runtime.InteropServices;
 using ICSharpCode.NRefactory.Cpp.Formatters;
+#if !CONSOLE
 using ICSharpCode.ILSpy;
+#endif
 using AlterNative.BuildTools;
 
 namespace AlterNative
@@ -58,23 +57,23 @@ namespace AlterNative
             return adef;
         }
 
-        private Language OutputLanguage(string language)
+        private ICSharpCode.ILSpy.Language OutputLanguage(string language)
         {
             //CONFIGURE OUTPUT LANGUAGE
-            Language lang;
+            ICSharpCode.ILSpy.Language lang;
             switch (language)
             {
                 case "CXX":
                     lang = new ICSharpCode.ILSpy.Cpp.CppLanguage();
                     break;
                 case "C#":
-                    lang = new CSharpLanguage();
+                    lang = new ICSharpCode.ILSpy.CSharpLanguage();
                     break;
                 case "VB":
                     lang = new ICSharpCode.ILSpy.VB.VBLanguage();
                     break;
                 case "IL":
-                    lang = new ILLanguage(true);
+                    lang = new ICSharpCode.ILSpy.ILLanguage(true);
                     break;
                 default:
                     throw new InvalidOperationException("");
@@ -108,18 +107,18 @@ namespace AlterNative
             }
 
             //Each visitor is responsible of changing the file if necessary (from here it is ipmossible to know the file names)
-            ICSharpCode.Decompiler.ITextOutput textOutput = new FileTextOutput(outputDir);
+            ICSharpCode.Decompiler.ITextOutput textOutput = new ICSharpCode.ILSpy.FileTextOutput(outputDir);
             FileWritterManager.WorkingPath = outputDir;
 
             //CONFIGURE OUTPUT LANGUAGE
-            Language lang = OutputLanguage(args[2]);
+            ICSharpCode.ILSpy.Language lang = OutputLanguage(args[2]);
 
             //DECOMPILE FIRST TIME AND FILL THE TABLES
             foreach (TypeDefinition tdef in adef.MainModule.Types)
             {
                 if (!tdef.Name.Contains("<"))
                 {
-                    lang.DecompileType(tdef, textOutput, new DecompilationOptions() { FullDecompilation = true });
+                    lang.DecompileType(tdef, textOutput, new ICSharpCode.ILSpy.DecompilationOptions() { FullDecompilation = true });
                 }
             }
 
@@ -128,7 +127,7 @@ namespace AlterNative
             {
                 if (!tdef.Name.Contains("<"))
                 {
-                    lang.DecompileType(tdef, textOutput, new DecompilationOptions() { FullDecompilation = true });
+                    lang.DecompileType(tdef, textOutput, new ICSharpCode.ILSpy.DecompilationOptions() { FullDecompilation = true });
                     Utils.WriteToConsole("Decompiled: " + tdef.FullName);
                 }
             }

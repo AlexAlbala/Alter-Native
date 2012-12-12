@@ -11,8 +11,6 @@ namespace Statements {
 		public:
 			void For();
 		public:
-			void TryCatch();
-		public:
 			void While();
 		public:
 			void DoWhile();

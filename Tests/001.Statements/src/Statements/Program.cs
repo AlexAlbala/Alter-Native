@@ -12,7 +12,6 @@ namespace Statements
         {
             Program p = new Program();
             p.For();
-            p.TryCatch();
             p.While();
             p.DoWhile();
         }
@@ -23,24 +22,6 @@ namespace Statements
             for (int i = 0; i < 5; i++)
             {
                 Console.WriteLine(i);
-            }
-        }
-
-        public void TryCatch()
-        {
-            Console.WriteLine("Testing try catch");
-            try
-            {
-                int[] a = new int[3];
-                a[4] = 8;
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine("exception catched");
-            }
-            finally
-            {
-                Console.WriteLine("Finally block");
             }
         }
 
