@@ -25,9 +25,7 @@ namespace ICSharpCode.NRefactory.Cpp
             writer.WriteLine("\t\targs[i] = argv[i];");
             writer.WriteLine();
             writer.WriteLine("\t" + entryType + "::Main(" + (inputArgs ? "&args" : "") + ");");
-            writer.WriteLine("\t//TODO");
-            writer.WriteLine("\t//delete args;");
-            writer.WriteLine("}");
+            writer.Write("}");
 
             writer.Flush();
             writer.Close();

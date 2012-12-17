@@ -1164,7 +1164,33 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             var tryCatch = new TryCatchStatement();
             tryCatch.TryBlock = (BlockStatement)tryCatchStatement.TryBlock.AcceptVisitor(this, data);
             ConvertNodes(tryCatchStatement.CatchClauses, tryCatch.CatchClauses);
-            tryCatch.FinallyBlock = (BlockStatement)tryCatchStatement.FinallyBlock.AcceptVisitor(this, data);
+
+            tryCatch.ExitScopeStatement = new ExitScopeStatement();
+            tryCatch.ExitScopeStatement.Block = (BlockStatement)tryCatchStatement.FinallyBlock.AcceptVisitor(this, data);
+            if (!tryCatchStatement.FinallyBlock.IsNull)
+            {
+                Resolver.boostLink = true;
+                List<string> idsUsed = new List<string>();
+                foreach (Statement s in tryCatch.ExitScopeStatement.Block.Children)
+                {
+                    if (Resolver.HasChildOf(s, typeof(IdentifierExpression)))
+                    {
+                        List<AstNode> res = Resolver.GetChildrenOf(s, typeof(IdentifierExpression));
+
+                        foreach (AstNode n in res)
+                        {
+                            IdentifierExpression iexpr = (IdentifierExpression)n;
+                            if (!idsUsed.Contains(iexpr.Identifier))
+                                idsUsed.Add(iexpr.Identifier);
+                        }
+                    }
+                }
+                foreach (String s in idsUsed)
+                {
+                    tryCatch.ExitScopeStatement.Variables.Add(new AddressOfExpression(new IdentifierExpression(s)));
+                }
+                //TODO: FULLFILL THE tryCatchStatement.FinallyBlock.Variables of the variables will be used in the finally block !
+            }
             return EndNode(tryCatchStatement, tryCatch);
         }
 
@@ -1576,7 +1602,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
             //    param.NameToken = (Identifier)(param.NameToken as ComposedIdentifier).BaseIdentifier.Clone();
             //}
-        //End:
+            //End:
             param.DefaultExpression = (Expression)parameterDeclaration.DefaultExpression.AcceptVisitor(this, data);
 
             Cache.AddParameterDeclaration(currentMethod, param);

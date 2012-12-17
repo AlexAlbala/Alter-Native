@@ -120,6 +120,7 @@ namespace ICSharpCode.NRefactory.Cpp
 		S VisitCaseLabel(CaseLabel caseLabel, T data);
 		S VisitThrowStatement(ThrowStatement throwStatement, T data);
 		S VisitTryCatchStatement(TryCatchStatement tryCatchStatement, T data);
+        S VisitEndScopeStatement(ExitScopeStatement endScopeStatement, T data);
 		S VisitCatchClause(CatchClause catchClause, T data);
 		S VisitUncheckedStatement(UncheckedStatement uncheckedStatement, T data);
 		S VisitUnsafeStatement(UnsafeStatement unsafeStatement, T data);

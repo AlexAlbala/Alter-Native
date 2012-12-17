@@ -45,9 +45,9 @@ FOREACH(subdir ${SUBDIRS})
 	SET(subdir_cpp "Source Files\\${subdir}")
 	SET(subdir_h "Header Files\\${subdir}")
 	FILE(GLOB tmpcpp ${subdir}/*.cpp)
-	SOURCE_GROUP(${subdir_cpp} FILES ${tmpcpp})   
+	SOURCE_GROUP(${subdir_cpp} FILES ${tmpcpp})
 	FILE(GLOB tmph ${subdir}/*.h)
-	SOURCE_GROUP(${subdir_h} FILES ${tmph}) 
+	SOURCE_GROUP(${subdir_h} FILES ${tmph})
 ENDFOREACH()
 
 ##################################################
@@ -85,11 +85,11 @@ ELSE()
 			TARGET_LINK_LIBRARIES(System $ENV{USR_BOOST_LIBRARY}/libboost_system-gcc-mt-1_49.a)
 		ELSE()					
 			IF(IS_RELEASE EQUAL 1)
-				#HOW TO DETECT THE NAME (THE VERSION NUMBER) AUTOMATICALLY ?
+				#TODO: HOW TO DETECT THE NAME (THE VERSION NUMBER) AUTOMATICALLY ?
 				TARGET_LINK_LIBRARIES(System $ENV{USR_BOOST_LIBRARY}/libboost_system-vc100-mt-1_51.so)
 				TARGET_LINK_LIBRARIES(System $ENV{USR_BOOST_LIBRARY}/libboost_locale-vc100-mt-1_51.so)
 			ELSE()
-				#HOW TO DETECT THE NAME (THE VERSION NUMBER) AUTOMATICALLY ?
+				#TODO: HOW TO DETECT THE NAME (THE VERSION NUMBER) AUTOMATICALLY ?
 				TARGET_LINK_LIBRARIES(System $ENV{USR_BOOST_LIBRARY}/libboost_system-vc100-mt-gd-1_51.so)
 				TARGET_LINK_LIBRARIES(System $ENV{USR_BOOST_LIBRARY}/libboost_locale-vc100-mt-gd-1_51.so)
 			ENDIF()

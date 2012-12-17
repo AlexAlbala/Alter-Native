@@ -10,6 +10,7 @@ namespace ICSharpCode.NRefactory.Cpp
     public class Resolver
     {
         private static List<string> ltmp = new List<string>();
+        public static bool boostLink = false;
 
         static Resolver()
         {
@@ -860,7 +861,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 m = m.Parent;
             }
             return AstNode.Null;
-        }
+        }       
 
         /// <summary>
         /// Returns the first parent node of type specified by variable type
@@ -880,6 +881,92 @@ namespace ICSharpCode.NRefactory.Cpp
                 m = m.Parent;
             }
             return CSharp.AstNode.Null;
+        }
+
+        /// <summary>
+        /// Returns if the node has a child of a specified type
+        /// </summary>
+        /// <param name="member">Original node</param>
+        /// <param name="type">Target type of</param>
+        /// <returns>The resulting node</returns>
+        public static bool HasChildOf(AstNode member, Type type)
+        {            
+            AstNode m = member as AstNode;
+            foreach (AstNode n in m.Children)
+            {
+                if (n.GetType() == type)
+                {
+                    return true;
+                }
+                bool tmp = HasChildOf(n, type);
+                if (tmp)
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns if the node has a child of a specified type
+        /// </summary>
+        /// <param name="member">Original node</param>
+        /// <param name="type">Target type of</param>
+        /// <returns>The resulting node</returns>
+        public static bool HasChildOf(CSharp.AstNode member, Type type)
+        {
+            CSharp.AstNode m = member as CSharp.AstNode;
+            foreach (CSharp.AstNode n in m.Children)
+            {
+                if (n.GetType() == type)
+                {
+                    return true;
+                }
+                bool tmp = HasChildOf(n, type);
+                if (tmp)
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns the childs nodes of type specified by variable type
+        /// </summary>
+        /// <param name="member">Original node</param>
+        /// <param name="type">Target type of</param>
+        /// <returns>The resulting node</returns>
+        public static List<AstNode> GetChildrenOf(AstNode member, Type type)
+        {
+            List<AstNode> result = new List<AstNode>();
+            AstNode m = member as AstNode;
+            foreach (AstNode n in m.Children)
+            {
+                if (n.GetType() == type)
+                {
+                    result.Add(n);
+                }
+                result.AddRange(GetChildrenOf(n, type));
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Returns the childs nodes of type specified by variable type
+        /// </summary>
+        /// <param name="member">Original node</param>
+        /// <param name="type">Target type of</param>
+        /// <returns>The resulting node</returns>
+        public static List<CSharp.AstNode> GetChildrenOf(CSharp.AstNode member, Type type)
+        {
+            List<CSharp.AstNode> result = new List<CSharp.AstNode>();
+            CSharp.AstNode m = member as CSharp.AstNode;
+            foreach (CSharp.AstNode n in m.Children)
+            {
+                if (n.GetType() == type)
+                {
+                    result.Add(n);
+                }
+                result.AddRange(GetChildrenOf(n, type));
+            }
+            return result;
         }
 
         //TODO: move this method to C#2CPPCONVERTERVISITOR

@@ -38,8 +38,9 @@ namespace ICSharpCode.NRefactory.Cpp
 		public static readonly Role<CppTokenNode> TryKeywordRole = new Role<CppTokenNode>("TryKeyword", CppTokenNode.Null);
 		public static readonly Role<BlockStatement> TryBlockRole = new Role<BlockStatement>("TryBlock", BlockStatement.Null);
 		public static readonly Role<CatchClause> CatchClauseRole = new Role<CatchClause>("CatchClause");
-		public static readonly Role<CppTokenNode> FinallyKeywordRole = new Role<CppTokenNode>("FinallyKeyword", CppTokenNode.Null);
-		public static readonly Role<BlockStatement> FinallyBlockRole = new Role<BlockStatement>("FinallyBlock", BlockStatement.Null);
+
+        public static readonly Role<ExitScopeStatement> EndScopeRole = new Role<ExitScopeStatement>("EndScope", ExitScopeStatement.Null);
+
 		
 		public CppTokenNode TryToken {
 			get { return GetChildByRole (TryKeywordRole); }
@@ -53,15 +54,12 @@ namespace ICSharpCode.NRefactory.Cpp
 		public AstNodeCollection<CatchClause> CatchClauses {
 			get { return GetChildrenByRole (CatchClauseRole); }
 		}
-		
-		public CppTokenNode FinallyToken {
-			get { return GetChildByRole (FinallyKeywordRole); }
-		}
-		
-		public BlockStatement FinallyBlock {
-			get { return GetChildByRole (FinallyBlockRole); }
-			set { SetChildByRole (FinallyBlockRole, value); }
-		}
+
+        public ExitScopeStatement ExitScopeStatement
+        {
+            get { return GetChildByRole (EndScopeRole); }
+            set { SetChildByRole(EndScopeRole, value); }
+        }
 		
 		public override S AcceptVisitor<T, S> (IAstVisitor<T, S> visitor, T data = default(T))
 		{
@@ -71,7 +69,7 @@ namespace ICSharpCode.NRefactory.Cpp
 		protected internal override bool DoMatch(AstNode other, PatternMatching.Match match)
 		{
 			TryCatchStatement o = other as TryCatchStatement;
-			return o != null && this.TryBlock.DoMatch(o.TryBlock, match) && this.CatchClauses.DoMatch(o.CatchClauses, match) && this.FinallyBlock.DoMatch(o.FinallyBlock, match);
+            return o != null && this.TryBlock.DoMatch(o.TryBlock, match) && this.CatchClauses.DoMatch(o.CatchClauses, match) && this.ExitScopeStatement.DoMatch(o.ExitScopeStatement, match);
 		}
 	}
 	

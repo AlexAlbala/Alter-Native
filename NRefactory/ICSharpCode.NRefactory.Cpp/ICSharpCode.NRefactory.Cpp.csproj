@@ -87,6 +87,7 @@
     <Compile Include="Ast\GeneralScope\TemplateTypeDeclaration.cs" />
     <Compile Include="Ast\Header\IncludeDeclaration.cs" />
     <Compile Include="Ast\GeneralScope\InterfaceMemberSpecifier.cs" />
+    <Compile Include="Ast\Statements\EndScopeStatement.cs" />
     <Compile Include="Ast\Statements\ForeachStatement.cs" />
     <Compile Include="Ast\TypeMembers\ConversionConstructorDeclaration.cs" />
     <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderAbstractMethodDeclaration.cs" />

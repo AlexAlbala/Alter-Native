@@ -9,6 +9,4 @@ int main(int argc, char *argv[])
 		args[i] = argv[i];
 
 	Program::Main(&args);
-	//TODO
-	//delete args;
 }

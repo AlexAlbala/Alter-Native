@@ -1757,7 +1757,7 @@ namespace ICSharpCode.NRefactory.Cpp
         }
 
         private void TypeDeclarationCPP(TypeDeclaration typeDeclaration, object data)
-        {            
+        {
             formatter.ChangeFile(typeDeclaration.Name + ".cpp");
             FileWritterManager.AddSourceFile(typeDeclaration.Name + ".cpp");
 
@@ -3404,17 +3404,43 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitTryCatchStatement(TryCatchStatement tryCatchStatement, object data)
         {
             StartNode(tryCatchStatement);
+            
+            if (!tryCatchStatement.ExitScopeStatement.Block.IsNull)
+            {
+                NewLine();
+                formatter.WriteComment(CommentType.SingleLine, "NEW SCOPE CREATED FOR FINALLY BLOCK!");
+                OpenBrace(BraceStyle.NextLine);
+                formatter.WriteComment(CommentType.SingleLine, "Change finally block for BOOST_SCOPE_EXIT");
+                tryCatchStatement.ExitScopeStatement.AcceptVisitor(this, data);
+            }
             WriteKeyword("try", TryCatchStatement.TryKeywordRole);
             tryCatchStatement.TryBlock.AcceptVisitor(this, data);
             foreach (var catchClause in tryCatchStatement.CatchClauses)
                 catchClause.AcceptVisitor(this, data);
-            if (!tryCatchStatement.FinallyBlock.IsNull)
+
+            if (!tryCatchStatement.ExitScopeStatement.Block.IsNull)
             {
-                //WriteKeyword("finally", TryCatchStatement.FinallyKeywordRole);
-                formatter.WriteComment(CommentType.SingleLine, "Finally block deleted");
-                tryCatchStatement.FinallyBlock.AcceptVisitor(this, data);
+                formatter.WriteComment(CommentType.SingleLine, "END OF TRY/CATCH/FINALLY SCOPE");
+                CloseBrace(BraceStyle.NextLine);
+                NewLine();
             }
             return EndNode(tryCatchStatement);
+        }
+
+        public object VisitEndScopeStatement(ExitScopeStatement endScopeStatement, object data)
+        {
+            StartNode(endScopeStatement);
+            WriteKeyword("BOOST_SCOPE_EXIT", ExitScopeStatement.BoostExitScopeKeywordRole);
+            LPar();
+            if (endScopeStatement.Variables.Any())
+                WriteCommaSeparatedList(endScopeStatement.Variables);
+            else
+                WriteKeyword("void", ExitScopeStatement.Roles.Keyword);
+            RPar();
+            endScopeStatement.Block.AcceptVisitor(this, data);
+            WriteKeyword("BOOST_SCOPE_EXIT_END", ExitScopeStatement.BoostExitScopeKeywordRole);
+            NewLine();
+            return EndNode(endScopeStatement);
         }
 
         public object VisitCatchClause(CatchClause catchClause, object data)

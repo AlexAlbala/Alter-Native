@@ -9,6 +9,4 @@ int main(int argc, char *argv[])
 		args[i] = argv[i];
 
 	BinaryTrees::Main(&args);
-	//TODO
-	//delete args;
 }

@@ -40,3 +40,8 @@ BOOLEAN: returns if it is a basic type or not
 #include "templates/internal/TypeRefs.h"
 #include "templates/Boxing.h"
 #include "templates/internal/TypeTraits.h"
+
+/*********************************************************************************************************/
+/************************************* INCLUDE EXCEPTIONS SUPPORT  ***************************************/
+/*********************************************************************************************************/
+#include "exceptions/exceptionSupport.h"

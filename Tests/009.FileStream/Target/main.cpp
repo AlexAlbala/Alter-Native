@@ -8,6 +8,4 @@ int main(int argc, char *argv[])
 		args[i] = argv[i];
 
 	Test::Main();
-	//TODO
-	//delete args;
 }
