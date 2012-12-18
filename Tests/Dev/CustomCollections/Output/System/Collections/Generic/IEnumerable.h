@@ -12,11 +12,11 @@ namespace System{
 			
 			template<typename T> class IEnumerable_T : public virtual IEnumerable{
 			public:
-				virtual IEnumerator_T<TypeArg(T)>* GetEnumerator()=0;
+				virtual Object* GetEnumerator()=0;
 			
 				iteratorcxx<TypeArg(T)> begin()
 				{
-					return iteratorcxx<T>(GetEnumerator());
+					return iteratorcxx<T>((IEnumerator*)GetEnumerator());
 				}
 				iteratorcxx<TypeArg(T)> end()
 				{

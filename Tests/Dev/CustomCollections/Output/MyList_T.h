@@ -16,13 +16,13 @@ namespace CustomCollections {
 		//DO NOT modify this code
 
 		template<typename T>
-		class MyList_T_Base : public virtual IEnumerable_T<TypeArg(T)>, public virtual Object, public virtual gc_cleanup{
+		class MyList_T_Base : public virtual IEnumerable_T<T>, public virtual Object{
 
 			//START Explicit interface: _interface_IEnumerable ****************
 			public:
 			class _interface_IEnumerable : public virtual IEnumerable{
 				private:
-				IEnumerator* GetEnumerator(){
+				Object* GetEnumerator(){
 					return this->GetEnumerator();
 				}
 			};
@@ -35,15 +35,15 @@ namespace CustomCollections {
 			//END Explicit interface *********************
 
 			private:
-			System::Array<TypeArg(T)>* mylist;
+			Array<T>* mylist;
 			public:
-			MyList_T_Base(System::Array<TypeArg(T)>* values){
+			MyList_T_Base(Array<T>* values){
 				this->mylist = values;
 			}
 			public:
-			IEnumerator_T<TypeArg(T)>* GetEnumerator()
+			Object* GetEnumerator()
 			{
-				return new CustomCollections::MyEnumerator_T<TypeArg(T)>(this->mylist);
+				return (Object*)(IEnumerable_T<T>*)(new CustomCollections::MyEnumerator_T<T>(this->mylist));
 			}
 			public:
 			MyList_T_Base()
@@ -59,30 +59,30 @@ namespace CustomCollections {
 		template<typename T>
 		class MyList_T<T, true> : public MyList_T_Base<T>{
 			public:
-			MyList_T(System::Array<T>* values) : MyList_T_Base<T>(values){
+			MyList_T(Array<T>* values) : MyList_T_Base<T>(values){
 			}
 
 			public:
 			inline IEnumerator_T<T>* GetEnumerator() {
-				Object* var_tmp = MyList_T_Base<T>::GetEnumerator();
-				return dynamic_cast<IEnumerator_T<T>*>(var_tmp);//CAST!!
+				Object* var_tmp = MyList_T_Base<Object>::GetEnumerator();
+				return dynamic_cast<IEnumerator_T<T>*>(var_tmp);
 			}
-
 		};
 
 		//Generic template type
 		template<typename T>
-		class MyList_T<T, false> : public virtual MyList_T_Base<Object*>{
+		class MyList_T<T, false> : public virtual MyList_T_Base<Object>{
 			public:
-			inline MyList_T(System::Array<T>* values) : MyList_T_Base<Object*>((System::Array<Object>*)(values)){
+			inline MyList_T(Array<T>* values) : MyList_T_Base<Object>((Array<Object>*)(values))
+			{
 			}
 			public:
 			inline IEnumerator_T<T>* GetEnumerator() {
-				Object* var_tmp = MyList_T_Base<Object*>::GetEnumerator();
-				return dynamic_cast<IEnumerator_T<T>*>(var_tmp);//CAST!!
+				Object* var_tmp = MyList_T_Base<Object>::GetEnumerator();
+				return dynamic_cast<IEnumerator_T<T>*>(var_tmp);
 			}
 			inline operator IEnumerable*() {
-				return (IEnumerable*)(MyList_T_Base<Object*>::operator IEnumerable*());
+				return (IEnumerable*)(MyList_T_Base<Object>::operator IEnumerable*());
 			}
 		};
 	}
@@ -91,7 +91,7 @@ namespace CustomCollections {
 	template<typename T>
 	class MyList_T : public _Internal::MyList_T<T, IsBasic(T)>{
 		public:
-		MyList_T(Array<T>* values) : _Internal::MyList_T<T, IsBasic(T)>(values){//Remove pointer from Array<T*>
+		MyList_T(Array<T>* values) : _Internal::MyList_T<T, IsBasic(T)>(values){
 		}
 	};
 }

@@ -8,13 +8,13 @@ using namespace System;
 namespace System{
 	namespace Collections{
 
-		class IEnumerable{
+		class IEnumerable : public virtual Object{
 		public:
-			virtual IEnumerator* GetEnumerator()=0;
+			virtual Object* GetEnumerator()=0;
 		
 			iteratorcxx* begin()
 			{
-				return new iteratorcxx(GetEnumerator());
+				return new iteratorcxx((IEnumerator*)GetEnumerator());
 			}
 			iteratorcxx* end()
 			{

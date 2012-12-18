@@ -1,7 +1,6 @@
 #pragma once
 #include "../String.h"
 #include "../System.h"
-#include "../Array.h"
 
 using namespace std;
 
@@ -12,7 +11,7 @@ namespace System{
 		public:
 			Array<char>* GetBytes(String* value);
 			String* GetString(char* bytes);
-			String* GetString(Array<char>* bytes);			
+			String* GetString(Array<char>* bytes);
 		};
 	}
 }

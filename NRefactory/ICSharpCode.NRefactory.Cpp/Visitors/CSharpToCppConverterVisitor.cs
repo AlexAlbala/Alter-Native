@@ -849,7 +849,34 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
             //TODO: I'm not sure...
             if (isInterface)
+            {
+                //If the returning type is a templated type, with a variable template, it has to be replaced with Object* to assure covariance
+                foreach (var member in type.HeaderNodes)
+                {
+                    if (member is HeaderAbstractMethodDeclaration)
+                    {
+                        var abstMethod = member as HeaderAbstractMethodDeclaration;
+
+                        if (abstMethod.ReturnType is PtrType)
+                        {
+                            PtrType p = abstMethod.ReturnType as PtrType;
+                            if (p.Target is SimpleType)
+                            {
+                                if ((p.Target as SimpleType).TypeArguments.Any())
+                                {
+                                    foreach (var arg in (p.Target as SimpleType).TypeArguments)
+                                    {
+                                        if (Resolver.IsTemplateType(arg))
+                                            abstMethod.ReturnType = new PtrType(new SimpleType("Object"));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
                 return EndNode(typeDeclaration, new InterfaceTypeDeclaration(type));
+            }
 
             if (type.TypeParameters.Any())
             {

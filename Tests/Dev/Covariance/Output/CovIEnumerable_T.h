@@ -5,8 +5,8 @@
 using namespace System;
 namespace Covariance {
 	template<typename T>
-	class CovIEnumerable_T : public virtual Object, public virtual gc_cleanup{
+	class CovIEnumerable_T : public virtual Object{
 		public:
-			virtual CovIEnumerator_T<T>* Get() = 0;
+			virtual Object* Get() = 0;
 	};
 }

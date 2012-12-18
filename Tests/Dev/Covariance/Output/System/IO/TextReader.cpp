@@ -36,22 +36,22 @@ namespace System{
 		{
 			if (buffer == null)
 			{
-				throw std::exception("buffer is null");
+				throw std::exception();//TODO: Argument null exception
 				//throw new ArgumentNullException("buffer", Environment.GetResourceString("ArgumentNull_Buffer"));
 			}
 			if (index < 0)
 			{
-				throw std::exception("index out of range");
+				throw std::exception();//TODO: Index out of range exception
 				//throw new ArgumentOutOfRangeException("index", Environment.GetResourceString("ArgumentOutOfRange_NeedNonNegNum"));
 			}
 			if (count < 0)
 			{
-				throw std::exception("count out of range");
+				throw std::exception();//TODO: Out of range exception
 				//throw new ArgumentOutOfRangeException("count", Environment.GetResourceString("ArgumentOutOfRange_NeedNonNegNum"));
 			}
 			if (buffer->Length - index < count)
 			{
-				throw std::exception("Invalid length");
+				throw std::exception();//Invalid argument exception
 				//throw new ArgumentException(Environment.GetResourceString("Argument_InvalidOffLen"));
 			}
 			int num = 0;

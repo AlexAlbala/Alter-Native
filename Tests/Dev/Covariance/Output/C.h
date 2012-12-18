@@ -3,7 +3,7 @@
 
 using namespace System;
 namespace Covariance {
-	class C : public virtual Object, public virtual gc_cleanup
+	class C : public virtual Object
 	{
 	};
 }

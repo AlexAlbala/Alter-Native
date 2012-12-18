@@ -17,12 +17,6 @@ namespace System{
 					return dynamic_cast<IEnumerator_T<Object>*>(this);
 				}
 
-				template <class Q> 
-				operator IEnumerator_T<Q> () const
-				{ 
-					return IEnumerator_T<Q>((IEnumerator_T<Q>)this); 
-				}
-
 				//virtual typename Boxing<T,IsFundamentalType<T>::result>::Type getCurrent() = 0;
 			};
 		}

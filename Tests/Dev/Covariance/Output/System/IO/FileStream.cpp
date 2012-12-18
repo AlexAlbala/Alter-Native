@@ -3,9 +3,10 @@
 namespace System{
 	namespace IO{
 
+		//TODO: ENUMS AND NAMESPACES !!
 		FileStream::FileStream(String* path, FileMode mode)
 		{
-			FileStream(path, mode, mode == FileMode::Append ? FileAccess::Write : FileAccess::ReadWrite);			
+			FileStream(path, mode, mode == System::IO::Append ? System::IO::Write : System::IO::ReadWrite);			
 		}
 
 		FileStream::FileStream(String* path, FileMode mode, FileAccess access)
@@ -13,14 +14,14 @@ namespace System{
 			Length = 0;
 			Position = 0;
 
-			if(access == FileAccess::Read)
+			if(access == System::IO::Read)
 			{
 				CanRead = true;
 				CanWrite = false;
 
 				sr = new StreamReader(path);
 			}
-			else if(access == FileAccess::Write)
+			else if(access == System::IO::Write)
 			{
 				CanRead = false;
 				CanWrite = true;

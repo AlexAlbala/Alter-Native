@@ -3,7 +3,7 @@
 
 using namespace System;
 namespace CustomCollections {
-	class A : public virtual Object, public virtual gc_cleanup
+	class A : public virtual Object
 	{
 		public:
 			int value;

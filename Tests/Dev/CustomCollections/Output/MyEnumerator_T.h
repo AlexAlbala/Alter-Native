@@ -14,7 +14,7 @@ namespace CustomCollections {
 		//DO NOT modify this code
 
 		template<typename T>
-		class MyEnumerator_T_Base : public virtual IEnumerator_T<TypeArg(T)>, public virtual IDisposable, public virtual Object, public virtual gc_cleanup{
+		class MyEnumerator_T_Base : public virtual IEnumerator_T<T>, public virtual IDisposable, public virtual Object{
 
 			//START Explicit interface: _interface_IEnumerator ****************
 			public:
@@ -23,8 +23,10 @@ namespace CustomCollections {
 				Object* getCurrent(){
 					return this->getCurrent();
 				}
-												//IF THE BASE CLASS IS AN INTERFACE (ABSTRACT CLASS)
-				bool MoveNext(){return null;}	//IMPLEMENT INTERFACEMEMBERS
+
+				bool MoveNext()
+				{return false;}
+
 				void Reset(){}
 			};
 			private:
@@ -36,22 +38,20 @@ namespace CustomCollections {
 			//END Explicit interface *********************
 
 			private:
-			System::Array<T>* values;
+			Array<T>* values;
 			private:
 			int currentIndex;
 			public:
-			T getCurrent(){ //Si Return Type de la clase abstracta es Object* --> BoxDecl(T)	
+			Object* getCurrent(){
 				return (*this->values)[this->currentIndex];
 			}
-
-			/*private://DUPLICATED METHOD !
+			/*private:
 			Object* getCurrent()
 			{
-				return this->getCurrent();
+				return BOX<TypeDecl(T)>(this->Current);
 			}*/
-
 			public:
-			MyEnumerator_T_Base(System::Array<T>* values)
+			MyEnumerator_T_Base(Array<T>* values)
 			{
 				this->values = values;
 				this->Reset();
@@ -83,37 +83,33 @@ namespace CustomCollections {
 
 		//Basic types template type
 		template<typename T>
-		class MyEnumerator_T<T, true> : public MyEnumerator_T_Base<T>{
+		class MyEnumerator_T<T, true> : public virtual MyEnumerator_T_Base<T>{
 			public:
-			MyEnumerator_T(System::Array<T>* values) : MyEnumerator_T_Base<T>(values){ //REMOVE POINTER FROM Array<T*>
+			MyEnumerator_T(Array<T>* values) : MyEnumerator_T_Base<T>(values){
 			}
 		};
 
 		//Generic template type
 		template<typename T>
-		class MyEnumerator_T<T, false> : public virtual MyEnumerator_T_Base<Object*>{
+		class MyEnumerator_T<T, false> : public virtual MyEnumerator_T_Base<Object>{
 			public:
-			inline MyEnumerator_T(System::Array<T>* values) : MyEnumerator_T_Base<Object*>((System::Array<Object*>*)(values))
+			inline MyEnumerator_T(Array<T>* values) : MyEnumerator_T_Base<Object>((Array<Object>*)(values))
 			{
 			}
 			public:
 			inline void Dispose() {
-				MyEnumerator_T_Base<Object*>::Dispose();
+				MyEnumerator_T_Base<Object>::Dispose();
 			}
 			public:
 			inline bool MoveNext() {
-				return MyEnumerator_T_Base<Object*>::MoveNext();
+				return MyEnumerator_T_Base<Object>::MoveNext();
 			}
 			public:
 			inline void Reset() {
-				MyEnumerator_T_Base<Object*>::Reset();
+				MyEnumerator_T_Base<Object>::Reset();
 			}
 			inline operator IEnumerator*() {
-				return (IEnumerator*)(MyEnumerator_T_Base<Object*>::operator IEnumerator*());
-			}
-
-			inline T* getCurrent(){ //PROPERTIES INLINE!!!!
-				return (T*)(MyEnumerator_T_Base<Object*>::getCurrent());
+				return (IEnumerator*)(MyEnumerator_T_Base<Object>::operator IEnumerator*());
 			}
 		};
 	}

@@ -11,7 +11,7 @@ namespace Covariance {
 		//DO NOT modify this code
 
 		template<typename T>
-		class B_T_Base : public virtual CovIEnumerator_T<TypeArg(T)>, public virtual Object, public virtual gc_cleanup{
+		class B_T_Base : public virtual CovIEnumerator_T<T>, public virtual Object{
 			public:
 			B_T_Base(){
 				Console::WriteLine(new String("Building B..."));
@@ -32,9 +32,9 @@ namespace Covariance {
 
 		//Generic template type
 		template<typename T>
-		class B_T<T, false> : public virtual B_T_Base<Object*>{
+		class B_T<T, false> : public virtual B_T_Base<Object>{
 			public:
-			inline B_T() : B_T_Base<Object*>()
+			inline B_T() : B_T_Base<Object>()
 			{
 			}
 		};

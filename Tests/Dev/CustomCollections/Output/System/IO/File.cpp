@@ -1,4 +1,6 @@
 #include "File.h"
+#include "FileMode.h"
+#include "FileAccess.h"
 namespace System{
 	namespace IO{
 		bool File::Exists(String* path)
@@ -13,17 +15,17 @@ namespace System{
 
 		FileStream* File::Create(String* path)
 		{
-			return new FileStream(path, FileMode::CreateNew,FileAccess::ReadWrite);
+			return new FileStream(path, System::IO::CreateNew,System::IO::ReadWrite);//TODO mmm ENUMS AND NAMESPACES?
 		}
 
 		FileStream* File::OpenRead(String* path)
 		{
 			if(File::Exists(path))
 			{
-				return new FileStream(path,FileMode::Open, FileAccess::Read);
+				return new FileStream(path,System::IO::Open, System::IO::Read);//TODO mmm ENUMS AND NAMESPACES?
 			}
 			else
-				throw std::exception("File not found");
+				throw std::exception();//TODO: FILENOTFOUNDEXCEPTION
 		}
 	}
 }

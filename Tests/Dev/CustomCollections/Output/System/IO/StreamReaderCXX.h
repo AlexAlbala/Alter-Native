@@ -2,8 +2,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "TextReader.h";
-#include "../String.h";
+#include "TextReader.h"
+#include "../String.h"
 #include "../GC.h"
 #include "../Array.h"
 

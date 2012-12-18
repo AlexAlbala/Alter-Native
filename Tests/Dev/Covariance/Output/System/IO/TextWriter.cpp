@@ -42,19 +42,19 @@ namespace System{
 		{
 			if (buffer == null)
 				{
-					throw std::exception("buffer is null");
+					throw std::exception();//TODO: NULL exception
 				}
 				if (index < 0)
 				{
-					throw std::exception("index is out of range");
+					throw std::exception();//TODO: index out of range exception
 				}
 				if (count < 0)
 				{
-					throw std::exception("count is out of range");
+					throw std::exception();//TODO: index out of range exception
 				}
 				if (buffer->Length - index < count)
 				{
-					throw std::exception("Invalid length");
+					throw std::exception();//TODO: Argument exception
 					//throw new ArgumentException(Environment.GetResourceString("Argument_InvalidOffLen"));
 				}
 				for (int i = 0; i < count; i++)
@@ -140,19 +140,19 @@ namespace System{
 		{
 			if (buffer == null)
 				{
-					throw std::exception("buffer is null");
+					throw std::exception();//TODO: NULL exception
 				}
 				if (index < 0)
 				{
-					throw std::exception("index is out of range");
+					throw std::exception();//TODO: index out of range exception
 				}
 				if (count < 0)
 				{
-					throw std::exception("count is out of range");
+					throw std::exception();//TODO: index out of range exception
 				}
 				if (buffer->Length - index < count)
 				{
-					throw std::exception("Invalid length");
+					throw std::exception();//TODO: Argument exception
 					//throw new ArgumentException(Environment.GetResourceString("Argument_InvalidOffLen"));
 				}
 				for (int i = 0; i < count; i++)

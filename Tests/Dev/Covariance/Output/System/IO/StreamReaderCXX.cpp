@@ -85,7 +85,11 @@ namespace System{
 			//Get file length
 			file->seekg(0,ios::end);
 			int length = file->tellg();
-			file->seekg(0,actualPos);
+#ifdef _WIN32
+			file->seekg(0, actualPos);
+#elif LINUX
+			file->seekg(0,(ios::seekdir)actualPos);
+#endif
 
 			if(length - index < count)
 				count = length - index;
