@@ -9,12 +9,9 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
     /// <summary>
     /// class Name&lt;TypeParameters&gt; : BaseTypes where Constraints;
     /// </summary>
-    public class GenericEntryPointDeclaration : AttributedNode
+    public class GenericEntryPointDeclaration : TypeDeclaration
     {
         public static readonly new GenericEntryPointDeclaration Null = new NullGenericEntryPointDeclaration();
-        //public readonly static Role<CppTokenNode> ColonRole = Roles.Colon;
-        public readonly static Role<AstType> BaseTypeRole = new Role<AstType>("BaseType", AstType.Null);
-        public readonly static Role<AttributedNode> MemberRole = new Role<AttributedNode>("Member");
 
         sealed class NullGenericEntryPointDeclaration : GenericEntryPointDeclaration
         {

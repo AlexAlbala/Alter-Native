@@ -6,11 +6,12 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
     /// <summary>
     /// Type&lt;[EMPTY]&gt;
     /// </summary>
-    public class InterfaceTypeDeclaration : TypeDeclaration
+    public class NestedTypeDeclaration : TypeDeclaration
     {
-        public static readonly new InterfaceTypeDeclaration Null = new NullInterfaceTypeDeclaration();
+        public static readonly new NestedTypeDeclaration Null = new NullNestedTypeDeclaration();
+        public readonly static Role<TypeDeclaration> TypeRole = new Role<TypeDeclaration>("Type", TypeDeclaration.Null);
 
-        sealed class NullInterfaceTypeDeclaration : InterfaceTypeDeclaration
+        sealed class NullNestedTypeDeclaration : NestedTypeDeclaration
         {
             public override bool IsNull
             {
@@ -31,34 +32,24 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
             }
         }
 
-        public InterfaceTypeDeclaration() { }
+        public NestedTypeDeclaration() { }
 
-        public InterfaceTypeDeclaration(TypeDeclaration type)
+        public NestedTypeDeclaration(TypeDeclaration type)
         {
-            this.Name = type.Name;
-
             foreach (var member in type.Members)
                 this.Members.Add((AttributedNode)member.Clone());
 
-            foreach (var header in type.HeaderNodes)
-                this.HeaderNodes.Add(header.Clone());
+            this.Name = type.Name;
+            this.Modifiers = type.Modifiers;
+            this.ClassType = type.ClassType;
 
-            foreach (var baseType in type.BaseTypes)
-                this.BaseTypes.Add((AstType)baseType.Clone());
-
-            foreach (var mod in type.ModifierTokens)
-                this.ModifierTokens.Add((CppModifierToken)mod.Clone());
-
-            foreach (var typePar in type.TypeParameters)
-            {
-                this.TypeParameters.Add((TypeParameterDeclaration)typePar.Clone());
-            }
-            
-        }      
+            foreach (var n in type.BaseTypes)
+                this.BaseTypes.Add((AstType)n.Clone());
+        }
 
         public override S AcceptVisitor<T, S>(IAstVisitor<T, S> visitor, T data = default(T))
         {
-            return visitor.VisitInterfaceTypeDeclaration(this, data);
+            return visitor.VisitNestedTypeDeclaration(this, data);
         }
 
         protected internal override bool DoMatch(AstNode other, PatternMatching.Match match)

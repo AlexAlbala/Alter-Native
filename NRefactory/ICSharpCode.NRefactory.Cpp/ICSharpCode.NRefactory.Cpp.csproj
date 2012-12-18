@@ -82,6 +82,7 @@
     <Compile Include="Ast\GeneralScope\CompilationUnit.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Ast\GeneralScope\NestedTypeDeclaration.cs" />
     <Compile Include="Ast\GeneralScope\SpecializedBasicTemplateDeclaration.cs" />
     <Compile Include="Ast\GeneralScope\SpecializedGenericTemplateDeclaration.cs" />
     <Compile Include="Ast\GeneralScope\TemplateTypeDeclaration.cs" />

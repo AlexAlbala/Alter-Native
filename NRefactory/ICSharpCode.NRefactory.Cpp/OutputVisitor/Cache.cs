@@ -16,7 +16,7 @@ namespace ICSharpCode.NRefactory.Cpp
         private static Dictionary<string, List<FieldDeclaration>> fields = new Dictionary<string, List<FieldDeclaration>>();
         private static Dictionary<string, List<VariableDeclarationStatement>> variablesMethod = new Dictionary<string, List<VariableDeclarationStatement>>();
         private static Dictionary<string, List<ParameterDeclaration>> parameters = new Dictionary<string, List<ParameterDeclaration>>();
-        private static List<AstNode> headerNodes = new List<AstNode>();
+        private static List<IncludeDeclaration> includeDeclaration = new List<IncludeDeclaration>();
         private static Dictionary<Ast.AstType, List<MethodDeclaration>> privateImplementations = new Dictionary<Ast.AstType, List<MethodDeclaration>>();
 
         //RESOLVER
@@ -160,20 +160,20 @@ namespace ICSharpCode.NRefactory.Cpp
 
         #region OutputVisitor
 
-        public static void AddHeaderNode(AstNode node)
+        public static void AddIncludeDeclaration(IncludeDeclaration node)
         {
-            if (!headerNodes.Contains(node))
-                headerNodes.Add(node);
+            if (!includeDeclaration.Contains(node))
+                includeDeclaration.Add(node);
         }
 
-        public static List<AstNode> GetHeaderNodes()
+        public static List<IncludeDeclaration> GetIncludeDeclaration()
         {
-            return headerNodes;
-        }       
+            return includeDeclaration;
+        }
 
-        public static void ClearHeaderNodes()
+        public static void ClearIncludeDeclaration()
         {
-            headerNodes.Clear();
+            includeDeclaration.Clear();
         }
 
         public static void AddField(string type, FieldDeclaration field)

@@ -19,11 +19,13 @@ namespace ICSharpCode.ILSpy
 
         public FileTextOutput(string WorkingDirectory)
         {
+            indent = 0;
             this.WorkingDirectory = WorkingDirectory;
         }       
 
         public void NewFile(string FileName)
         {
+            indent = 0;
             if (output != null)
             {
                 output.Flush();

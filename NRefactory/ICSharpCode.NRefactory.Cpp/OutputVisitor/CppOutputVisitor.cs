@@ -1644,7 +1644,7 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             else
             {
-                foreach (ExplicitInterfaceTypeDeclaration n in Cache.GetHeaderNodes().FindAll(x => x is ExplicitInterfaceTypeDeclaration))
+                foreach (ExplicitInterfaceTypeDeclaration n in baseTemplateTypeDeclaration.HeaderNodes.ToList().FindAll(x => x is ExplicitInterfaceTypeDeclaration))
                     n.AcceptVisitor(this, data);
 
                 foreach (var member in baseTemplateTypeDeclaration.Members)
@@ -1659,7 +1659,7 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             CloseBrace(braceStyle);//END OF TYPE
             Semicolon();
-            Cache.ClearHeaderNodes();
+            //Cache.ClearHeaderNodes();
             //After defining _Base class header, we can define the class template
             //We disable the flag for converting types
             avoidPointers = false;
@@ -1709,7 +1709,7 @@ namespace ICSharpCode.NRefactory.Cpp
             FileWritterManager.AddSourceFile(genericTemplateTypeDeclaration.Name + ".h");
 
             WritePragmaOnceDirective();
-            WriteImports(data);
+            WriteImports(data, genericTemplateTypeDeclaration);
 
             /*********** ADD INTERNAL CLASSES IN _INTERNAL NAMESPACE *************/
             /*********************************************************************/
@@ -1769,10 +1769,65 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteNamespace();
 
             foreach (var member in typeDeclaration.Members)
+            {
                 member.AcceptVisitor(this, data);
+            }
 
             NewLine();
             CloseNamespaceBraces();
+        }
+
+        public object VisitNestedTypeDeclaration(NestedTypeDeclaration nestedTypeDeclaration, object data)
+        {
+            TypeDeclaration typeDeclaration = nestedTypeDeclaration;
+
+            StartNode(nestedTypeDeclaration);
+
+            WriteAttributes(typeDeclaration.Attributes);
+
+            BraceStyle braceStyle2 = WriteClassType(typeDeclaration.ClassType);
+            WriteIdentifier(typeDeclaration.Name);
+
+            Space();
+            WriteToken(":", TypeDeclaration.ColonRole);
+            Space();
+
+            //ÑAPA se añade virtual modifier y se quita
+            var modif2 = new CppModifierToken(TextLocation.Empty, Modifiers.Virtual);
+            typeDeclaration.ModifierTokens.Add(modif2);
+            WriteCommaSeparatedListWithModifiers(typeDeclaration.BaseTypes, typeDeclaration.ModifierTokens);
+            typeDeclaration.ModifierTokens.Remove(modif2);
+            OpenBrace(braceStyle2);
+
+            if (typeDeclaration.ClassType == ClassType.Enum)
+            {
+                bool first = true;
+                foreach (var member in typeDeclaration.Members)
+                {
+                    if (first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        Comma(member, noSpaceAfterComma: true);
+                        NewLine();
+                    }
+                    member.AcceptVisitor(this, data);
+                }
+                //OptionalComma();
+                NewLine();
+            }
+            else
+            {
+                foreach (AstNode n in typeDeclaration.Members)
+                    n.AcceptVisitor(this, data);
+            }
+            CloseBrace(braceStyle2);//END OF TYPE
+            Semicolon();
+
+            //Cache.ClearHeaderNodes();
+            return EndNode(nestedTypeDeclaration);
         }
 
         private void TypeDeclarationHeader(TypeDeclaration typeDeclaration, object data)
@@ -1783,25 +1838,7 @@ namespace ICSharpCode.NRefactory.Cpp
             WritePragmaOnceDirective();
 
             //Write using declarations in header file
-            foreach (AstNode n in Cache.GetHeaderNodes())
-            {
-                if (n is IncludeDeclaration)
-                {
-                    VisitIncludeDeclarationHeader(n as IncludeDeclaration, data);
-                }
-            }
-
-            //WRITE RESOLVED TYPE DEPENDENCES
-            foreach (string s in Resolver.GetTypeIncludes())
-            {
-                WriteKeyword("#include");
-                WriteIdentifier(s);
-                NewLine();
-            }
-            NewLine();
-            UsingNamespaces();
-            Resolver.Restart();
-            WriteNamespace();
+            WriteImports(data, typeDeclaration);
 
             string type2 = String.Empty;
             if (Resolver.NeedsForwardDeclaration(typeDeclaration.Name, out type2))
@@ -1847,13 +1884,15 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             else
             {
-                foreach (AstNode n in Cache.GetHeaderNodes())
+
+                foreach (AstNode n in typeDeclaration.HeaderNodes)
                     n.AcceptVisitor(this, data);
+
             }
             CloseBrace(braceStyle);//END OF TYPE
             Semicolon();
             CloseNamespaceBraces();
-            Cache.ClearHeaderNodes();
+            //Cache.ClearHeaderNodes();
 
             formatter.ChangeFile("tmp");
         }
@@ -1865,16 +1904,14 @@ namespace ICSharpCode.NRefactory.Cpp
             NewLine();
         }
 
-        private void WriteImports(object data)
+        private void WriteImports(object data, TypeDeclaration type)
         {
             //Write using declarations in header file
-            foreach (AstNode n in Cache.GetHeaderNodes())
+            foreach (IncludeDeclaration n in Cache.GetIncludeDeclaration())
             {
-                if (n is IncludeDeclaration)
-                {
-                    VisitIncludeDeclarationHeader(n as IncludeDeclaration, data);
-                }
+                VisitIncludeDeclarationHeader(n, data);
             }
+            Cache.ClearIncludeDeclaration();
 
             //WRITE RESOLVED TYPE DEPENDENCES
             foreach (string s in Resolver.GetTypeIncludes())
@@ -1892,13 +1929,13 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitInterfaceTypeDeclaration(InterfaceTypeDeclaration interfaceTypeDeclaration, object data)
         {
             avoidPointers = false;
-            TypeDeclaration typeDeclaration = interfaceTypeDeclaration.Type;
+            TypeDeclaration typeDeclaration = interfaceTypeDeclaration;
             //TODO: Se puede implementar con más claridad ?
             formatter.ChangeFile(typeDeclaration.Name + ".h");
             FileWritterManager.AddSourceFile(typeDeclaration.Name + ".h");
             WritePragmaOnceDirective();
 
-            WriteImports(data);
+            WriteImports(data, interfaceTypeDeclaration);
 
             StartNode(interfaceTypeDeclaration);
 
@@ -1941,7 +1978,7 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             else
             {
-                foreach (AstNode n in Cache.GetHeaderNodes())
+                foreach (AstNode n in interfaceTypeDeclaration.HeaderNodes)
                     n.AcceptVisitor(this, data);
             }
             CloseBrace(braceStyle2);//END OF TYPE
@@ -1949,7 +1986,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
 
             CloseNamespaceBraces();
-            Cache.ClearHeaderNodes();
+            //Cache.ClearHeaderNodes();
             formatter.ChangeFile("tmp");
             return EndNode(interfaceTypeDeclaration);
         }
@@ -1992,8 +2029,7 @@ namespace ICSharpCode.NRefactory.Cpp
             //The out members of the nested type are placed outside the class declaration, but still belongs to the nested type (Explicit interface) logic
             foreach (var member in explicitInterfaceTypeDeclaration.OutMembers)
             {
-                //TODO: FIX THAT ÑAPA
-                if (!(member is HeaderFieldDeclaration))
+                if (member is ConversionConstructorDeclaration)
                     WriteAccesorModifier(member.ModifierTokens);
                 member.AcceptVisitor(this, data);
             }
@@ -2039,7 +2075,9 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitIncludeDeclaration(IncludeDeclaration includeDeclaration, object data)
         {
             StartNode(includeDeclaration);
-            Cache.AddHeaderNode(includeDeclaration);
+            //Cache.AddHeaderNode(includeDeclaration); 
+            Cache.AddIncludeDeclaration(includeDeclaration);
+
             return EndNode(includeDeclaration);
         }
 
@@ -3404,7 +3442,7 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitTryCatchStatement(TryCatchStatement tryCatchStatement, object data)
         {
             StartNode(tryCatchStatement);
-            
+
             if (!tryCatchStatement.ExitScopeStatement.Block.IsNull)
             {
                 NewLine();
@@ -3688,8 +3726,7 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             StartNode(headerFieldDeclaration);
             WriteAttributes(headerFieldDeclaration.Attributes);
-            if (!Resolver.IsChildOf(headerFieldDeclaration, typeof(GenericTemplateTypeDeclaration)))
-                WriteAccesorModifier(headerFieldDeclaration.ModifierTokens);
+            WriteAccesorModifier(headerFieldDeclaration.ModifierTokens);
             formatter.Indent();
             headerFieldDeclaration.ReturnType.AcceptVisitor(this, data);
             Space();
@@ -3707,7 +3744,7 @@ namespace ICSharpCode.NRefactory.Cpp
             if (headerMethodDeclaration.Name == "Main")
             {
                 MainWritter.GenerateMain(headerMethodDeclaration.TypeMember.Name,
-                    headerMethodDeclaration.Namespace, headerMethodDeclaration.Parameters.Any());
+                    Resolver.entryPointNamespace, headerMethodDeclaration.Parameters.Any());
                 //<ÑAPA>
                 //Force the Main to be public because it will be called from main.cpp and has to be accessible
                 WriteKeyword("public:");

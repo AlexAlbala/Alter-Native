@@ -725,7 +725,61 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 type.Name += "_T";
 
             types.Push(type);
-            ConvertNodes(typeDeclaration.Members, type.Members);
+
+            for (int i = 0; i < typeDeclaration.Members.Count; i++)
+            {
+                var member = typeDeclaration.Members.ElementAt(i);
+                AstNode n = member.AcceptVisitor(this, data);
+                if (n is TypeDeclaration)
+                {
+                    //Cache.AddHeaderNode(new NestedTypeDeclaration((TypeDeclaration)n.Clone()));
+                    type.HeaderNodes.Add(new NestedTypeDeclaration((TypeDeclaration)n.Clone()));
+                }
+                else
+                {
+                    AstNode tmp = null;
+
+                    if (n is HeaderAbstractMethodDeclaration)
+                    {
+                        type.HeaderNodes.Add(n);
+                        continue;
+                    }
+                    else if (n is PropertyDeclaration)
+                    {
+                        PropertyDeclaration prop = n as PropertyDeclaration;
+                        tmp = new HeaderMethodDeclaration();
+                        Resolver.GetHeaderNode(prop.Getter, tmp);
+                        if (tmp != null)
+                            type.HeaderNodes.Add(tmp);
+
+                        tmp = new HeaderMethodDeclaration();
+                        Resolver.GetHeaderNode(prop.Setter, tmp);
+                        if (tmp != null)
+                            type.HeaderNodes.Add(tmp);
+
+                        type.Members.Add((AttributedNode)n);
+                        continue;
+                    }
+                    else if (n is MethodDeclaration)
+                        tmp = new HeaderMethodDeclaration();
+                    else if (n is FieldDeclaration)
+                        tmp = new HeaderFieldDeclaration();
+                    else if (n is ConstructorDeclaration)
+                        tmp = new HeaderConstructorDeclaration();
+                    else if (n is DestructorDeclaration)
+                        tmp = new HeaderDestructorDeclaration();                  
+                   
+
+                    Resolver.GetHeaderNode(n, tmp);
+
+                    if(tmp != null)
+                        type.HeaderNodes.Add(tmp);
+
+                    type.Members.Add((AttributedNode)n);
+                }
+            }
+
+            //ConvertNodes(typeDeclaration.Members, type.Members);
             types.Pop();
 
             //Add auxiliar variables for emptyproperties
@@ -741,7 +795,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
                 HeaderFieldDeclaration hf = new HeaderFieldDeclaration();
                 Resolver.GetHeaderNode(fdecl, hf);
-                Cache.AddHeaderNode(hf);
+                type.HeaderNodes.Add(hf);
             }
 
             //Add constructor if there is no added yet and it is necessary to initialize some variables
@@ -772,7 +826,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
                     HeaderConstructorDeclaration hc = new HeaderConstructorDeclaration();
                     Resolver.GetHeaderNode(result, hc);
-                    Cache.AddHeaderNode(hc);
+                    type.HeaderNodes.Add(hc);
                 }
             }
 
@@ -816,6 +870,15 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     spec.ModifierTokens.Add((CppModifierToken)mod.Clone());
                     specGen.ModifierTokens.Add((CppModifierToken)mod.Clone());
                     genEntry.ModifierTokens.Add((CppModifierToken)mod.Clone());
+                }
+
+                foreach (var head in type.HeaderNodes)
+                {
+                    btempl.HeaderNodes.Add((AstNode)head.Clone());
+                    ttempl.HeaderNodes.Add((AstNode)head.Clone());
+                    spec.HeaderNodes.Add((AstNode)head.Clone());
+                    specGen.HeaderNodes.Add((AstNode)head.Clone());
+                    genEntry.HeaderNodes.Add((AstNode)head.Clone());
                 }
 
                 /***************** TYPE PARAMETERS *****************/
@@ -1378,7 +1441,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 throw new NotImplementedException();
 
             //End method declaration
-
+            
             //CONVERT TO CPP METHOD        
             var cppMethod = method.AcceptVisitor(this, data);
             return EndNode(accessor, cppMethod);
@@ -1401,11 +1464,6 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             //TODO: C++ WILL NOT COMPILE C# INITIALIZERS
             if (!constructorDeclaration.Initializer.IsNull)
                 result.Initializer = (ConstructorInitializer)constructorDeclaration.Initializer.AcceptVisitor(this, data);
-
-            HeaderConstructorDeclaration hc = new HeaderConstructorDeclaration();
-            Resolver.GetHeaderNode(result, hc);
-            Cache.AddHeaderNode(hc);
-
             return EndNode(constructorDeclaration, result);
         }
 
@@ -1429,11 +1487,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
             ConvertNodes(destructorDeclaration.Attributes, result.Attributes);
             ConvertNodes(destructorDeclaration.ModifierTokens, result.ModifierTokens);
-            result.Body = (BlockStatement)destructorDeclaration.Body.AcceptVisitor(this, data);
-
-            var hd = new HeaderDestructorDeclaration();
-            Resolver.GetHeaderNode(result, hd);
-            Cache.AddHeaderNode(hd);
+            result.Body = (BlockStatement)destructorDeclaration.Body.AcceptVisitor(this, data);            
+            
             return EndNode(destructorDeclaration, result);
         }
 
@@ -1490,9 +1545,6 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             }
 
             Cache.AddField(currentType.Name, decl);
-            var hf = new HeaderFieldDeclaration();
-            Resolver.GetHeaderNode(decl, hf);
-            Cache.AddHeaderNode(hf);
             return EndNode(fieldDeclaration, decl);
         }
 
@@ -1533,7 +1585,6 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 }
 
                 //END
-                Cache.AddHeaderNode(res);
                 return EndNode(methodDeclaration, res);
 
             }
@@ -1558,17 +1609,13 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 result.PrivateImplementationType = (AstType)(result.PrivateImplementationType as PtrType).Target.Clone();
 
             if (result.PrivateImplementationType != AstType.Null)
-                Cache.AddPrivateImplementation(result.PrivateImplementationType, result);
-
-            var hm = new HeaderMethodDeclaration();
-            Resolver.GetHeaderNode(result, hm);
+                Cache.AddPrivateImplementation(result.PrivateImplementationType, result);          
 
             if (methodDeclaration.Name == "Main")
             {
                 CSharp.NamespaceDeclaration nms = methodDeclaration.Parent.Parent as CSharp.NamespaceDeclaration;
-                hm.Namespace = nms == null ? String.Empty : nms.Name;
+               Resolver.entryPointNamespace = nms == null ? String.Empty : nms.Name;
             }
-            Cache.AddHeaderNode(hm);
 
             return EndNode(methodDeclaration, result);
         }

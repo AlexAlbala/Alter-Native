@@ -67,8 +67,8 @@ namespace ICSharpCode.NRefactory.Cpp
 		S VisitUnaryOperatorExpression(UnaryOperatorExpression unaryOperatorExpression, T data);
 		S VisitUncheckedExpression(UncheckedExpression uncheckedExpression, T data);
 		S VisitEmptyExpression (EmptyExpression emptyExpression, T data);
-        S VisitBoxExpression(BoxExpression boxExpression, T data);
-        S VisitUnBoxExpression(UnBoxExpression unBoxExpression, T data);
+        S VisitBoxExpression(BoxExpression boxExpression, T data);//******************
+        S VisitUnBoxExpression(UnBoxExpression unBoxExpression, T data);//******************
 		
 		S VisitQueryExpression(QueryExpression queryExpression, T data);
 		S VisitQueryContinuationClause(QueryContinuationClause queryContinuationClause, T data);
@@ -86,6 +86,7 @@ namespace ICSharpCode.NRefactory.Cpp
 		S VisitDelegateDeclaration(DelegateDeclaration delegateDeclaration, T data);
 		S VisitNamespaceDeclaration(NamespaceDeclaration namespaceDeclaration, T data);
 		S VisitTypeDeclaration(TypeDeclaration typeDeclaration, T data);
+        S VisitNestedTypeDeclaration(NestedTypeDeclaration nestedTypeDeclaration, T data);//****************
         S VisitExplicitInterfaceTypeDeclaration(ExplicitInterfaceTypeDeclaration explicitInterfaceTypeDeclaration, T data); //******************
         S VisitInterfaceTypeDeclaration(InterfaceTypeDeclaration interfaceTypeDeclaration, T data); //******************
         S VisitGenericTemplateTypeDeclaration(GenericTemplateTypeDeclaration genericTemplateTypeDeclaration, T data); //******************
@@ -120,7 +121,7 @@ namespace ICSharpCode.NRefactory.Cpp
 		S VisitCaseLabel(CaseLabel caseLabel, T data);
 		S VisitThrowStatement(ThrowStatement throwStatement, T data);
 		S VisitTryCatchStatement(TryCatchStatement tryCatchStatement, T data);
-        S VisitEndScopeStatement(ExitScopeStatement endScopeStatement, T data);
+        S VisitEndScopeStatement(ExitScopeStatement endScopeStatement, T data);//***********************
 		S VisitCatchClause(CatchClause catchClause, T data);
 		S VisitUncheckedStatement(UncheckedStatement uncheckedStatement, T data);
 		S VisitUnsafeStatement(UnsafeStatement unsafeStatement, T data);

@@ -48,6 +48,7 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
 		public readonly static Role<CppTokenNode> ColonRole = Roles.Colon;
 		public readonly static Role<AstType> BaseTypeRole = new Role<AstType>("BaseType", AstType.Null);        
 		public readonly static Role<AttributedNode> MemberRole = new Role<AttributedNode>("Member");
+        public readonly static Role<AstNode> HeaderNodeRole = new Role<AstNode>("HeaderNode");
 
         sealed class NullTypeDeclaration : TypeDeclaration
         {
@@ -106,7 +107,11 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
 		public AstNodeCollection<AstType> BaseTypes {
 			get { return GetChildrenByRole (BaseTypeRole); }
 		}
-		
+
+        public AstNodeCollection<AstNode> HeaderNodes
+        {
+            get { return GetChildrenByRole(HeaderNodeRole); }
+        }
         //public AstNodeCollection<Constraint> Constraints {
         //    get { return GetChildrenByRole (Roles.Constraint); }
         //}

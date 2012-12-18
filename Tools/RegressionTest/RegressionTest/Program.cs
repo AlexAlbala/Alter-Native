@@ -140,7 +140,7 @@ namespace RegressionTest
 
                 //Diff files
                 Utils.diff(di, res);
-                if (res.diffCode == 0 && Config.fast)
+                if (Config.fast)
                 {
                     res.output = res.msbuildCode = res.cmakeCode = -10;
                     continue;
