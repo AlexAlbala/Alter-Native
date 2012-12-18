@@ -80,9 +80,9 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
             if (string.IsNullOrEmpty(fullName))
                 throw new ArgumentNullException("fullName");
             fullName = fullName.Trim();
-            if (!fullName.Contains("."))
+            if (!fullName.Contains("::"))
                 return new SimpleType(fullName);
-            string[] parts = fullName.Split('.');
+            string[] parts = fullName.Split(':');
 
             AstType type = new SimpleType(parts.First());
 

@@ -10,7 +10,7 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
     /// class Name&lt;TypeParameters&gt; : BaseTypes where Constraints;
     /// </summary>
     public class BaseTemplateTypeDeclaration : TypeDeclaration
-    {                
+    {
         public override S AcceptVisitor<T, S>(IAstVisitor<T, S> visitor, T data = default(T))
         {
             return visitor.VisitBaseTemplateTypeDeclaration(this, data);

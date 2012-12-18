@@ -36,15 +36,24 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
 
         public NestedTypeDeclaration(TypeDeclaration type)
         {
+            this.Name = type.Name;
+
             foreach (var member in type.Members)
                 this.Members.Add((AttributedNode)member.Clone());
 
-            this.Name = type.Name;
-            this.Modifiers = type.Modifiers;
-            this.ClassType = type.ClassType;
+            foreach (var header in type.HeaderNodes)
+                this.HeaderNodes.Add(header.Clone());
 
-            foreach (var n in type.BaseTypes)
-                this.BaseTypes.Add((AstType)n.Clone());
+            foreach (var baseType in type.BaseTypes)
+                this.BaseTypes.Add((AstType)baseType.Clone());
+
+            foreach (var mod in type.ModifierTokens)
+                this.ModifierTokens.Add((CppModifierToken)mod.Clone());
+
+            foreach (var typePar in type.TypeParameters)
+            {
+                this.TypeParameters.Add((TypeParameterDeclaration)typePar.Clone());
+            }
         }
 
         public override S AcceptVisitor<T, S>(IAstVisitor<T, S> visitor, T data = default(T))

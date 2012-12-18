@@ -732,7 +732,6 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 AstNode n = member.AcceptVisitor(this, data);
                 if (n is TypeDeclaration)
                 {
-                    //Cache.AddHeaderNode(new NestedTypeDeclaration((TypeDeclaration)n.Clone()));
                     type.HeaderNodes.Add(new NestedTypeDeclaration((TypeDeclaration)n.Clone()));
                 }
                 else
@@ -767,12 +766,12 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     else if (n is ConstructorDeclaration)
                         tmp = new HeaderConstructorDeclaration();
                     else if (n is DestructorDeclaration)
-                        tmp = new HeaderDestructorDeclaration();                  
-                   
+                        tmp = new HeaderDestructorDeclaration();
+
 
                     Resolver.GetHeaderNode(n, tmp);
 
-                    if(tmp != null)
+                    if (tmp != null)
                         type.HeaderNodes.Add(tmp);
 
                     type.Members.Add((AttributedNode)n);
@@ -1441,7 +1440,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 throw new NotImplementedException();
 
             //End method declaration
-            
+
             //CONVERT TO CPP METHOD        
             var cppMethod = method.AcceptVisitor(this, data);
             return EndNode(accessor, cppMethod);
@@ -1487,8 +1486,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
             ConvertNodes(destructorDeclaration.Attributes, result.Attributes);
             ConvertNodes(destructorDeclaration.ModifierTokens, result.ModifierTokens);
-            result.Body = (BlockStatement)destructorDeclaration.Body.AcceptVisitor(this, data);            
-            
+            result.Body = (BlockStatement)destructorDeclaration.Body.AcceptVisitor(this, data);
+
             return EndNode(destructorDeclaration, result);
         }
 
@@ -1609,12 +1608,12 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 result.PrivateImplementationType = (AstType)(result.PrivateImplementationType as PtrType).Target.Clone();
 
             if (result.PrivateImplementationType != AstType.Null)
-                Cache.AddPrivateImplementation(result.PrivateImplementationType, result);          
+                Cache.AddPrivateImplementation(result.PrivateImplementationType, result);
 
             if (methodDeclaration.Name == "Main")
             {
                 CSharp.NamespaceDeclaration nms = methodDeclaration.Parent.Parent as CSharp.NamespaceDeclaration;
-               Resolver.entryPointNamespace = nms == null ? String.Empty : nms.Name;
+                Resolver.entryPointNamespace = nms == null ? String.Empty : nms.Name;
             }
 
             return EndNode(methodDeclaration, result);
@@ -1777,16 +1776,22 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitMemberType(CSharp.MemberType memberType, object data)
         {
             AstType target = null;
-
+            
             //if (memberType.Target is CSharp.SimpleType && ((CSharp.SimpleType)(memberType.Target)).Identifier.Equals("global", StringComparison.Ordinal))
             //    target = new PrimitiveType("Global");
             //else
             //    target = (AstType)memberType.Target.AcceptVisitor(this, data);
 
             target = (AstType)memberType.Target.AcceptVisitor(this, data);
+            bool isPtr = target is PtrType;
+            if (isPtr)
+                target = (AstType)(target as PtrType).Target.Clone();
 
+            
             var type = new QualifiedType(target, new Identifier(memberType.MemberName, TextLocation.Empty));
             ConvertNodes(memberType.TypeArguments, type.TypeArguments);
+            if (isPtr)
+                return EndNode(memberType, new PtrType(type));
 
             return EndNode(memberType, type);
         }

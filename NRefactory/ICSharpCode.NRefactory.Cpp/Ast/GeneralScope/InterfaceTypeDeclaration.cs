@@ -53,8 +53,7 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
             {
                 this.TypeParameters.Add((TypeParameterDeclaration)typePar.Clone());
             }
-            
-        }      
+        }
 
         public override S AcceptVisitor<T, S>(IAstVisitor<T, S> visitor, T data = default(T))
         {

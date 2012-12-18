@@ -1784,6 +1784,7 @@ namespace ICSharpCode.NRefactory.Cpp
             StartNode(nestedTypeDeclaration);
 
             WriteAttributes(typeDeclaration.Attributes);
+            WriteAccesorModifier(nestedTypeDeclaration.ModifierTokens);
 
             BraceStyle braceStyle2 = WriteClassType(typeDeclaration.ClassType);
             WriteIdentifier(typeDeclaration.Name);
@@ -1820,13 +1821,18 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             else
             {
-                foreach (AstNode n in typeDeclaration.Members)
+                foreach (AstNode n in typeDeclaration.HeaderNodes.ToList().FindAll(x => x is NestedTypeDeclaration))
                     n.AcceptVisitor(this, data);
+
+                foreach (var member in typeDeclaration.Members)
+                {
+                    WriteAccesorModifier(member.ModifierTokens);
+                    member.AcceptVisitor(this, data);
+                }
             }
             CloseBrace(braceStyle2);//END OF TYPE
             Semicolon();
 
-            //Cache.ClearHeaderNodes();
             return EndNode(nestedTypeDeclaration);
         }
 
