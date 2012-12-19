@@ -22,7 +22,7 @@ namespace ICSharpCode.NRefactory.Cpp
             AddChild(expression, Roles.Expression);
         }
 
-        public AstType type
+        public AstType Type
         {
             get { return GetChildByRole(boxTypeRole); }
             set { SetChildByRole(boxTypeRole, value); }

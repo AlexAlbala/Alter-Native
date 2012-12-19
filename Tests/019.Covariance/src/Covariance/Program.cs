@@ -10,6 +10,9 @@ namespace Covariance
         {
             A<C> a = new A<C>();
             CovIEnumerator<C> b = a.Get();
+
+            A<int> a2 = new A<int>();
+            CovIEnumerator<int> b2 = a2.Get();
         }
     }
 

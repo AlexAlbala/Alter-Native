@@ -1282,7 +1282,7 @@ namespace ICSharpCode.NRefactory.Cpp
         }
 
         //TODO: ARREGLAR ESTO
-        private void WriteInlineMembers(AstNodeCollection<AttributedNode> members, string type)
+        private void WriteInlineMembers(AstNodeCollection<AttributedNode> members, string type, AstType BaseType)
         {
             foreach (var member in members)
             {
@@ -1336,8 +1336,8 @@ namespace ICSharpCode.NRefactory.Cpp
                     AstType _tmp;
                     if (Resolver.TryPatchTemplateToObjectType(methodDeclaration.ReturnType, out _tmp))//NEEDS CAST
                     {
-                        SimpleType destType = new SimpleType(type + "_Base");
-                        destType.TypeArguments.Add(new SimpleType("Object"));
+                        AstType destType = (AstType)BaseType.Clone();
+
                         string tmpName = "var_tmp";
                         VariableDeclarationStatement varDeclStmt = new VariableDeclarationStatement(new PtrType(new SimpleType("Object")), tmpName,
                             new InvocationExpression(new MemberReferenceExpression(new TypeReferenceExpression(destType), methodDeclaration.Name), parameters));
@@ -1355,8 +1355,8 @@ namespace ICSharpCode.NRefactory.Cpp
                     }
                     else
                     {
-                        SimpleType destType = new SimpleType(type + "_Base");
-                        destType.TypeArguments.Add(new SimpleType("Object"));
+                        AstType destType = (AstType)BaseType.Clone();
+                        
                         Expression e = new InvocationExpression(
                             new MemberReferenceExpression(
                                 new TypeReferenceExpression(destType), methodDeclaration.Name), parameters);
@@ -1535,7 +1535,7 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             else
             {
-                WriteInlineMembers(specializedGenericTemplateDeclaration.Members, specializedGenericTemplateDeclaration.Name);
+                WriteInlineMembers(specializedGenericTemplateDeclaration.Members, specializedGenericTemplateDeclaration.Name, specializedGenericTemplateDeclaration.BaseTypes.FirstOrDefault());
             }
             CloseBrace(braceStyle2);//END OF TYPE
             Semicolon();
@@ -1571,11 +1571,7 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteCommaSeparatedListWithModifiers(specializedBasicTemplateDeclaration.BaseTypes, specializedBasicTemplateDeclaration.ModifierTokens);
 
             OpenBrace(BraceStyle.DoNotChange);
-            foreach (var member in specializedBasicTemplateDeclaration.Members)
-            {
-                WriteAccesorModifier(member.ModifierTokens);
-                member.AcceptVisitor(this, data);
-            }
+            WriteInlineMembers(specializedBasicTemplateDeclaration.Members, specializedBasicTemplateDeclaration.Name, specializedBasicTemplateDeclaration.BaseTypes.FirstOrDefault());
             CloseBrace(BraceStyle.DoNotChange);
             Semicolon();
             return EndNode(specializedBasicTemplateDeclaration);
@@ -1617,7 +1613,7 @@ namespace ICSharpCode.NRefactory.Cpp
             baseTemplateTypeDeclaration.ModifierTokens.Add(modif);
 
             WriteCommaSeparatedListWithModifiers(baseTemplateTypeDeclaration.BaseTypes, baseTemplateTypeDeclaration.ModifierTokens);
-            //This is the base class,so, all the inherited classes will inherit also the base types, thus, we can clear the list (for avoid duplicated code)
+            //This is the base class,so, all the inherited classes will inherit also the base types, thus, we can clear the list (for avoid duplicated code)            
             baseTemplateTypeDeclaration.BaseTypes.Clear();
             baseTemplateTypeDeclaration.ModifierTokens.Remove(modif);
 
@@ -1651,7 +1647,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 {
                     //TODO: FIX THAT ÑAPA
                     if (member is ConversionConstructorDeclaration)
-                        continue;
+                        continue;                  
 
                     WriteAccesorModifier(member.ModifierTokens);
                     member.AcceptVisitor(this, data);
@@ -1659,6 +1655,8 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             CloseBrace(braceStyle);//END OF TYPE
             Semicolon();
+           
+
             //Cache.ClearHeaderNodes();
             //After defining _Base class header, we can define the class template
             //We disable the flag for converting types
@@ -3246,10 +3244,6 @@ namespace ICSharpCode.NRefactory.Cpp
             Comma(foreachStatement.CollectionExpression);
             foreachStatement.CollectionExpression.AcceptVisitor(this, data);
             RPar();
-            //foreachStatement.RangeExpression.AcceptVisitor(this, data);
-            //foreachStatement.BeginExpression.AcceptVisitor(this, data);
-            //foreachStatement.EndExpression.AcceptVisitor(this, data);
-            //foreachStatement.WhileStatement.AcceptVisitor(this, data);
             foreachStatement.ForEachStatement.AcceptVisitor(this, data);
             return EndNode(foreachStatement);
         }
@@ -3750,7 +3744,7 @@ namespace ICSharpCode.NRefactory.Cpp
             if (headerMethodDeclaration.Name == "Main")
             {
                 MainWritter.GenerateMain(headerMethodDeclaration.TypeMember.Name,
-                    Resolver.entryPointNamespace, headerMethodDeclaration.Parameters.Any());
+                    Cache.entryPointNamespace, headerMethodDeclaration.Parameters.Any());
                 //<ÑAPA>
                 //Force the Main to be public because it will be called from main.cpp and has to be accessible
                 WriteKeyword("public:");
@@ -3824,7 +3818,7 @@ namespace ICSharpCode.NRefactory.Cpp
             StartNode(boxExpression);
             WriteKeyword("BOX");
             WriteToken("<", CppTokenNode.Roles.LChevron);
-            boxExpression.type.AcceptVisitor(this, data);
+            boxExpression.Type.AcceptVisitor(this, data);
             WriteToken(">", CppTokenNode.Roles.RChevron);
 
             WriteToken("(", CppTokenNode.Roles.LPar);
@@ -3838,7 +3832,7 @@ namespace ICSharpCode.NRefactory.Cpp
             StartNode(unBoxExpression);
             WriteKeyword("UNBOX");
             WriteToken("<", CppTokenNode.Roles.LChevron);
-            unBoxExpression.type.AcceptVisitor(this, data);
+            unBoxExpression.Type.AcceptVisitor(this, data);
             WriteToken(">", CppTokenNode.Roles.RChevron);
 
             WriteToken("(", CppTokenNode.Roles.LPar);

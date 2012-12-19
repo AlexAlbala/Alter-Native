@@ -8,6 +8,8 @@ namespace ICSharpCode.NRefactory.Cpp
 {
     public class Cache
     {
+        public static String entryPointNamespace = String.Empty;
+
         //OUTPUTVISITOR
         private static List<CSharp.ArraySpecifier> arraySpecifiers = new List<CSharp.ArraySpecifier>();
         private static Dictionary<string, List<string>> properties = new Dictionary<string, List<string>>();
@@ -18,6 +20,7 @@ namespace ICSharpCode.NRefactory.Cpp
         private static Dictionary<string, List<ParameterDeclaration>> parameters = new Dictionary<string, List<ParameterDeclaration>>();
         private static List<IncludeDeclaration> includeDeclaration = new List<IncludeDeclaration>();
         private static Dictionary<Ast.AstType, List<MethodDeclaration>> privateImplementations = new Dictionary<Ast.AstType, List<MethodDeclaration>>();
+        private static Dictionary<String, List<String>> templatizedAbstractMethods = new Dictionary<string, List<String>>();
 
         //RESOLVER
         private static Dictionary<string, string> libraryMap = new Dictionary<string, string>();
@@ -123,9 +126,9 @@ namespace ICSharpCode.NRefactory.Cpp
                 symbols.Add(type, reference);
         }
 
-        public static Dictionary<string, string> GetLibraryMap()
+        public static Dictionary<string, TypeReference> GetSymbols()
         {
-            return libraryMap;
+            return symbols;
         }
 
         public static void AddInclude(string owner, string included)
@@ -156,9 +159,30 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             libraryMap = map;
         }
+
+        public static Dictionary<string, string> GetLibraryMap()
+        {
+            return libraryMap;
+        }
         #endregion
 
         #region OutputVisitor
+
+        public static void AddTemplatizedAbstractMethod(string type, string method)
+        {
+            if (!templatizedAbstractMethods.ContainsKey(type))
+                templatizedAbstractMethods.Add(type, new List<String>() { method });
+            else
+            {
+                if (!templatizedAbstractMethods[type].Contains(method))
+                    templatizedAbstractMethods[type].Add(method);
+            }
+        }
+
+        public static Dictionary<string, List<string>> GetTemplatizedAbstractMethods()
+        {
+            return templatizedAbstractMethods;
+        }
 
         public static void AddIncludeDeclaration(IncludeDeclaration node)
         {

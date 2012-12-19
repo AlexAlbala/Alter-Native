@@ -34,6 +34,7 @@ namespace ICSharpCode.NRefactory.Cpp
     {
         public readonly static Role<Identifier> VariableRole = new Role<Identifier>("VarId", Identifier.Null);
         public readonly static Role<Expression> CollectionRole = new Role<Expression>("ColEx", Expression.Null);
+
         public Statement ForEachStatement
         {
             get { return GetChildByRole(Roles.EmbeddedStatement); }

@@ -11,7 +11,6 @@ namespace ICSharpCode.NRefactory.Cpp
     {
         private static List<string> ltmp = new List<string>();
         public static bool boostLink = false;
-        public static String entryPointNamespace = String.Empty;
 
         static Resolver()
         {
@@ -54,6 +53,11 @@ namespace ICSharpCode.NRefactory.Cpp
 
 
             Cache.InitLibrary(libraryMap);
+        }
+
+        public static bool IsLibraryType(string type)
+        {
+            return Cache.GetLibraryMap().ContainsKey(type);
         }
 
         /// <summary>
@@ -319,6 +323,17 @@ namespace ICSharpCode.NRefactory.Cpp
 
             string namesp = reference.Namespace;
             AddNamespace(namesp);
+        }
+
+        public static string ResolveNamespace(string type)
+        {
+            Dictionary<string, TypeReference> symbols = Cache.GetSymbols();
+
+            if (symbols.ContainsKey(type))
+            {
+                return symbols[type].Namespace;
+            }
+            return "Default";
         }
 
         private static void AddNamespace(string nameSpace)
@@ -808,6 +823,15 @@ namespace ICSharpCode.NRefactory.Cpp
             return Cache.GetTemplateTypes().FirstOrDefault(x => x == GetTypeName(type)) != null;
 
 
+        }
+
+        public static bool IsTemplatizedAbstractMethod(string type, string method)
+        {
+            Dictionary<string, List<string>> templatized = Cache.GetTemplatizedAbstractMethods();
+
+            if (templatized.ContainsKey(type))
+                return templatized[type].Contains(method);
+            return false;
         }
 
         /// <summary>

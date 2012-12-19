@@ -867,7 +867,10 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                                     foreach (var arg in (p.Target as SimpleType).TypeArguments)
                                     {
                                         if (Resolver.IsTemplateType(arg))
+                                        {
                                             abstMethod.ReturnType = new PtrType(new SimpleType("Object"));
+                                            Cache.AddTemplatizedAbstractMethod(type.Name, abstMethod.Name);
+                                        }
                                     }
                                 }
                             }
@@ -919,27 +922,27 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 ttempl.TypeParameters.AddRange(tmp);
 
 
-                /***************** BASE TYPES *****************/
-                foreach (AstType baseType in type.BaseTypes)
-                {
-                    //If the base class is a template type, we have to dereference the type if it is a basic type
-                    //The template DeRefType<typename T> provides that conversion
-                    //NOT NEEDED ANYMORE !
-                    //if (baseType is SimpleType)
-                    //{
-                    //    for (int i = 0; i < (baseType as SimpleType).TypeArguments.Count; i++)
-                    //    {
-                    //        AstType arg = (AstType)(baseType as SimpleType).TypeArguments.ElementAt(i);
-                    //        if (Resolver.IsTemplateType(arg))
-                    //        {
-                    //            InvocationExpression ic = new InvocationExpression(new IdentifierExpression("TypeArg"), new IdentifierExpression(Resolver.GetTypeName(arg)));
-                    //            ExpressionType exprT = new ExpressionType(ic);
-                    //            (baseType as SimpleType).TypeArguments.InsertAfter(arg, exprT);
-                    //            (baseType as SimpleType).TypeArguments.Remove(arg);
-                    //        }
-                    //    }
-                    //}
-                }
+                ///***************** BASE TYPES *****************/
+                //foreach (AstType baseType in type.BaseTypes)
+                //{
+                //    //If the base class is a template type, we have to dereference the type if it is a basic type
+                //    //The template DeRefType<typename T> provides that conversion
+                //    //NOT NEEDED ANYMORE !
+                //    //if (baseType is SimpleType)
+                //    //{
+                //    //    for (int i = 0; i < (baseType as SimpleType).TypeArguments.Count; i++)
+                //    //    {
+                //    //        AstType arg = (AstType)(baseType as SimpleType).TypeArguments.ElementAt(i);
+                //    //        if (Resolver.IsTemplateType(arg))
+                //    //        {
+                //    //            InvocationExpression ic = new InvocationExpression(new IdentifierExpression("TypeArg"), new IdentifierExpression(Resolver.GetTypeName(arg)));
+                //    //            ExpressionType exprT = new ExpressionType(ic);
+                //    //            (baseType as SimpleType).TypeArguments.InsertAfter(arg, exprT);
+                //    //            (baseType as SimpleType).TypeArguments.Remove(arg);
+                //    //        }
+                //    //    }
+                //    //}
+                //}
 
                 foreach (var btype in type.BaseTypes)
                     btempl.BaseTypes.Add((AstType)btype.Clone());
@@ -980,6 +983,22 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 {
                     //Add the member to the base template before modify anything
                     btempl.Members.Add((AttributedNode)member.Clone());
+                    foreach (var child in Resolver.GetChildrenOf(btempl, typeof(SimpleType)))
+                    {
+                        //Specify the namespace of the types for avoiding name collision in __Internal namespace
+                        SimpleType s = child as SimpleType;
+                        if (s.Identifier.Contains("_T") && Resolver.IsChildOf(s, typeof(BlockStatement))) //Only modify the code block, not the return type
+                        {
+                            string typeNamespace = Resolver.ResolveNamespace(s.Identifier.TrimEnd(("_T").ToCharArray()));
+                            QualifiedType qt = new QualifiedType(new SimpleType(typeNamespace, TextLocation.Empty), new Identifier(s.Identifier, TextLocation.Empty));
+                            foreach (var typeArg in s.TypeArguments)
+                                qt.TypeArguments.Add((AstType)typeArg.Clone());
+
+                            child.Parent.AddChild((AstType)qt, (Role<AstType>)child.Role);
+                            child.Remove();
+                        }
+                    }
+
                     if (member is ConstructorDeclaration)
                     {
                         String naturalName = genEntry.Name.TrimEnd("_Base".ToCharArray()).TrimEnd("_T".ToCharArray());
@@ -1032,8 +1051,32 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
                         spec.Members.Add((AttributedNode)spec_B_constr.Clone());
                     }
+                    else if (member is MethodDeclaration)
+                    {//change the return type to System::Object* of the method for covariance (if needed)
+                        string methodName = (member as MethodDeclaration).Name;
+                        bool needsChange = false;
+                        foreach (var baseType in btempl.BaseTypes)
+                        {
+                            if (Resolver.IsTemplatizedAbstractMethod(Resolver.GetTypeName(baseType), methodName))
+                                needsChange = true;
+                        }
+
+                        if (needsChange)
+                        {
+                            foreach (var btmember in btempl.Members)
+                            {
+                                if (btmember is MethodDeclaration)
+                                    if ((btmember as MethodDeclaration).Name == methodName)
+                                    {
+                                        (btmember as MethodDeclaration).ReturnType = new PtrType(new SimpleType("Object"));
+                                    }
+                            }
+                            spec.Members.Add((AttributedNode)member.Clone());
+                        }
+                        specGen.Members.Add((AttributedNode)member.Clone());
+                    }
                     else
-                    {//ADD ALL MEMBERS BUT NOT THE CONSTRUCTORS
+                    {//ADD ALL MEMBERS BUT NOT THE CONSTRUCTORS                   
                         specGen.Members.Add((AttributedNode)member.Clone());
                     }
                     ttempl.Members.Add((AttributedNode)member.Clone());
@@ -1058,8 +1101,6 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
                 return EndNode(typeDeclaration, gtempl);
             }
-
-
             return EndNode(typeDeclaration, type);
         }
 
@@ -1640,7 +1681,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             if (methodDeclaration.Name == "Main")
             {
                 CSharp.NamespaceDeclaration nms = methodDeclaration.Parent.Parent as CSharp.NamespaceDeclaration;
-                Resolver.entryPointNamespace = nms == null ? String.Empty : nms.Name;
+                Cache.entryPointNamespace = nms == null ? String.Empty : nms.Name;
             }
 
             return EndNode(methodDeclaration, result);
@@ -1794,8 +1835,6 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             }
             else
             {
-                //if (simpleType.Role == CSharp.SimpleType.Roles.TypeArgument || simpleType.Role == CSharp.SimpleType.Roles.TypeParameter)
-                //Cache.AddExcludedType(type.Identifier);
                 return EndNode(simpleType, type);
             }
         }
@@ -1803,7 +1842,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitMemberType(CSharp.MemberType memberType, object data)
         {
             AstType target = null;
-            
+
             //if (memberType.Target is CSharp.SimpleType && ((CSharp.SimpleType)(memberType.Target)).Identifier.Equals("global", StringComparison.Ordinal))
             //    target = new PrimitiveType("Global");
             //else
@@ -1814,7 +1853,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             if (isPtr)
                 target = (AstType)(target as PtrType).Target.Clone();
 
-            
+
             var type = new QualifiedType(target, new Identifier(memberType.MemberName, TextLocation.Empty));
             ConvertNodes(memberType.TypeArguments, type.TypeArguments);
             if (isPtr)
@@ -2054,14 +2093,14 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         public AstNode VisitBoxExpression(CSharp.BoxExpression boxExpression, object data)
         {
             var box = new BoxExpression((Expression)boxExpression.Expression.AcceptVisitor(this, data));
-            box.type = (AstType)boxExpression.type.AcceptVisitor(this, data);
+            box.Type = (AstType)boxExpression.type.AcceptVisitor(this, data);
             return EndNode(boxExpression, box);
         }
 
         public AstNode VisitUnBoxExpression(CSharp.UnBoxExpression unBoxExpression, object data)
         {
             var unbox = new UnBoxExpression((Expression)unBoxExpression.Expression.AcceptVisitor(this, data));
-            unbox.type = (AstType)unBoxExpression.type.AcceptVisitor(this, data);
+            unbox.Type = (AstType)unBoxExpression.type.AcceptVisitor(this, data);
             return EndNode(unBoxExpression, unbox);
         }
     }
