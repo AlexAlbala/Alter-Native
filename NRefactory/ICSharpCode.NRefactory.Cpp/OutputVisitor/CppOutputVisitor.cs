@@ -3629,7 +3629,7 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitPtrType(PtrType ptrType, object data)
         {
             StartNode(ptrType);
-            if (avoidPointers && Resolver.IsTemplateType(ptrType))
+            if (avoidPointers && Resolver.IsTypeArgument(ptrType))
             {
                 //TODO: Move it to C#2CPP OUTPUT VISITOR
                 //TODO: MMM REVISE

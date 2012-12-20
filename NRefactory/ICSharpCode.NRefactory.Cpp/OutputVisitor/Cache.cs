@@ -98,8 +98,14 @@ namespace ICSharpCode.NRefactory.Cpp
             return templateTypes;
         }
 
+        /// <summary>
+        /// Adds a namespace of the current type
+        /// </summary>
+        /// <param name="nameSpace"></param>          
         public static void AddNamespace(string nameSpace)
         {
+            nameSpace = nameSpace.Replace(".", "::");
+
             if (!namespaces.Contains(nameSpace))
                 namespaces.Add(nameSpace);
         }
@@ -109,10 +115,17 @@ namespace ICSharpCode.NRefactory.Cpp
             return namespaces;
         }
 
-        public static void AddVisitedType(Ast.AstType type, string name)
+        /// <summary>
+        /// Adds a type as a Visited type in order to track all the types that a class may include
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="name"></param>
+        public static void AddVistedType(Ast.AstType type, string name)
         {
             if (!visitedTypes.ContainsValue(name) && !visitedTypes.ContainsKey(type))
                 visitedTypes.Add(type, name);
+
+            AddInclude(name);
         }
 
         public static Dictionary<Ast.AstType, string> GetVisitedTypes()
@@ -120,10 +133,18 @@ namespace ICSharpCode.NRefactory.Cpp
             return visitedTypes;
         }
 
+        /// <summary>
+        /// Adds the symbol of a type in order to extract all the neessary information when needed
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="reference"></param>
         public static void AddSymbol(string type, TypeReference reference)
         {
             if (!symbols.ContainsKey(type))
-                symbols.Add(type, reference);
+                symbols.Add(type, reference); ;
+
+            string namesp = reference.Namespace;
+            AddNamespace(namesp);
         }
 
         public static Dictionary<string, TypeReference> GetSymbols()
@@ -131,8 +152,14 @@ namespace ICSharpCode.NRefactory.Cpp
             return symbols;
         }
 
-        public static void AddInclude(string owner, string included)
+        /// <summary>
+        /// Adds a new include definition
+        /// </summary>        
+        /// <param name="included">The type included</param>
+        public static void AddInclude(string included)
         {
+            string owner = "N/P";
+
             if (includes.ContainsKey(owner))
             {
                 if (!includes[owner].Contains(included))

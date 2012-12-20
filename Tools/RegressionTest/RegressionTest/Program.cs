@@ -62,6 +62,8 @@ namespace RegressionTest
                         Config.overwriteTarget = true;
                     if (s.ToLowerInvariant().Contains("r"))
                         Config.compileMode = CompileMode.Release;
+                    if (s.ToLowerInvariant().Contains("p"))
+                        Config.performanceTests = true;
                 }
             }
 
@@ -125,11 +127,24 @@ namespace RegressionTest
             Console.WriteLine();
             foreach (string s in tests)
             {
+                
+
                 KeyValuePair<DirectoryInfo, TestResult> kvp = Tests.First(x => x.Key.Name == s);
 
+               
                 //KeyValuePair<DirectoryInfo, TestResult> kvp = SearchFirstWithName(s);
                 DirectoryInfo di = kvp.Key;
                 TestResult res = kvp.Value;
+
+                if (s.StartsWith("PT") && !Config.performanceTests)
+                {
+                    res.cmakeCode = -10;
+                    res.alternative = -10;
+                    res.diffCode = -10;
+                    res.msbuildCode = -10;
+                    res.output = -10;
+                    continue;
+                }
 
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Running test " + di.Name);
@@ -189,8 +204,8 @@ namespace RegressionTest
                 KeyValuePair<DirectoryInfo, TestResult> kvp = Tests.First(x => x.Key.Name == s);
                 //KeyValuePair<DirectoryInfo, TestResult> kvp = SearchFirstWithName(s);
                 arr[i, 0] = kvp.Value.name;
-                arr[i, 1] = kvp.Value.alternative == 0 ? "#gSUCCESS" : "#rFAIL. Code: " + kvp.Value.alternative;
-                arr[i, 2] = kvp.Value.diffCode == 0 ? "#gNo Differ" : (kvp.Value.diffCode == 1 ? "#rDiffer" : "#rError. Code: " + kvp.Value.diffCode);
+                arr[i, 1] = kvp.Value.alternative == 0 ? "#gSUCCESS" : (kvp.Value.alternative == -10 ? "#ySKIPPED": "#rFAIL. Code: " + kvp.Value.alternative);
+                arr[i, 2] = kvp.Value.diffCode == 0 ? "#gNo Differ" : (kvp.Value.diffCode == 1 ? "#rDiffer" : (kvp.Value.diffCode == -10 ? "#ySKIPPED" : "#rError. Code: " + kvp.Value.diffCode));
                 arr[i, 3] = kvp.Value.cmakeCode == 0 ? "#gSUCCESS" : (kvp.Value.cmakeCode == -10 ? "#ySKIPPED" : "#rFAIL. Code: " + kvp.Value.cmakeCode);
                 arr[i, 4] = kvp.Value.msbuildCode == 0 ? "#gBUILD SUCCEEDED" : (kvp.Value.msbuildCode == -10 ? "#ySKIPPED" : "#rFAIL. Code: " + kvp.Value.msbuildCode);
                 arr[i, 5] = kvp.Value.output == 0 ? "#gOK" : (kvp.Value.output == -10 ? "#ySKIPPED" : "#rFAIL");

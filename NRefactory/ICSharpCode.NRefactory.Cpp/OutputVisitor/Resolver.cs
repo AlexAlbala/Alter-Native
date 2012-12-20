@@ -55,19 +55,14 @@ namespace ICSharpCode.NRefactory.Cpp
             Cache.InitLibrary(libraryMap);
         }
 
+        /// <summary>
+        /// Tells if a specified type is mapped with a library file
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns>If the type is a library type</returns>
         public static bool IsLibraryType(string type)
         {
             return Cache.GetLibraryMap().ContainsKey(type);
-        }
-
-        /// <summary>
-        /// Adds a new include definition
-        /// </summary>        
-        /// <param name="included">The type included</param>
-        public static void AddInclude(string included)
-        {
-            string owner = "N/P";
-            Cache.AddInclude(owner, included);
         }
 
         /// <summary>
@@ -198,6 +193,14 @@ namespace ICSharpCode.NRefactory.Cpp
             return false;
         }
 
+        /// <summary>
+        /// Tries to combine all of the provided parameters to extract the AstType class of an object with the identifier specified (Extracts the type of Field or variable, or parameters)
+        /// </summary>
+        /// <param name="currentField_Variable"></param>
+        /// <param name="currentType"></param>
+        /// <param name="currentMethod"></param>
+        /// <param name="currentParameter"></param>
+        /// <returns>The type</returns>
         public static AstType GetType(string currentField_Variable, string currentType, string currentMethod, string currentParameter)
         {
             if (currentField_Variable != null && currentType != null)
@@ -258,6 +261,13 @@ namespace ICSharpCode.NRefactory.Cpp
             return AstType.Null;
         }
 
+        /// <summary>
+        /// Tells if one type includes other type (recursively)
+        /// </summary>
+        /// <param name="type1"></param>
+        /// <param name="type2"></param>
+        /// <param name="includes"></param>
+        /// <returns></returns>
         private static bool Reaches(string type1, string type2, Dictionary<string, List<string>> includes)
         {
             if (includes.ContainsKey(type1))
@@ -282,6 +292,11 @@ namespace ICSharpCode.NRefactory.Cpp
             return false;
         }
 
+        /// <summary>
+        /// Tries to extract the C++ name of a C# name
+        /// </summary>
+        /// <param name="CSharpName"></param>
+        /// <returns></returns>
         public static string GetCppName(string CSharpName)
         {
             Dictionary<string, string> libraryMap = Cache.GetLibraryMap();
@@ -289,14 +304,12 @@ namespace ICSharpCode.NRefactory.Cpp
                 return libraryMap[CSharpName];
             else
                 return "\"" + CSharpName.Replace('.', '/') + ".h\"";
-        }
+        }        
 
-        public static void AddVistedType(Ast.AstType type, string name)
-        {
-            Cache.AddVisitedType(type, name);
-            AddInclude(name);
-        }
-
+        /// <summary>
+        /// Gets the types have to be included
+        /// </summary>
+        /// <returns>A string array specifying the types</returns>
         public static string[] GetTypeIncludes()
         {
             Dictionary<Ast.AstType, string> visitedTypes = Cache.GetVisitedTypes();
@@ -312,19 +325,19 @@ namespace ICSharpCode.NRefactory.Cpp
             return tmp.ToArray();
         }
 
+        /// <summary>
+        /// Restarts the resolver class variables
+        /// </summary>
         public static void Restart()
         {
             Cache.ClearResolver();
-        }
+        }        
 
-        public static void AddSymbol(string type, TypeReference reference)
-        {
-            Cache.AddSymbol(type, reference);
-
-            string namesp = reference.Namespace;
-            AddNamespace(namesp);
-        }
-
+        /// <summary>
+        /// Resolves the namespace of a given type name
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns>The namespace</returns>
         public static string ResolveNamespace(string type)
         {
             Dictionary<string, TypeReference> symbols = Cache.GetSymbols();
@@ -334,19 +347,22 @@ namespace ICSharpCode.NRefactory.Cpp
                 return symbols[type].Namespace;
             }
             return "Default";
-        }
+        }        
 
-        private static void AddNamespace(string nameSpace)
-        {
-            nameSpace = nameSpace.Replace(".", "::");
-            Cache.AddNamespace(nameSpace);
-        }
-
+        /// <summary>
+        /// Gets the needed namespaces of the current type
+        /// </summary>
+        /// <returns>A string array representing each namespace</returns>
         public static string[] GetNeededNamespaces()
         {
             return Cache.GetNamespaces().ToArray();
         }
 
+        /// <summary>
+        /// Returns the name of a given AstType
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns>The name</returns>
         public static string GetTypeName(Ast.AstType type)
         {
             if (type is SimpleType)
@@ -364,6 +380,11 @@ namespace ICSharpCode.NRefactory.Cpp
                 throw new NotImplementedException(type.ToString());
         }
 
+        /// <summary>
+        /// Returns the name of a given AstType
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns>The name</returns>
         public static string GetTypeName(CSharp.AstType type)
         {
             if (type is CSharp.SimpleType)
@@ -381,6 +402,11 @@ namespace ICSharpCode.NRefactory.Cpp
                 throw new NotImplementedException(type.ToString());
         }
 
+        /// <summary>
+        /// Removes a node from the header nodes list of a specified type
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="type"></param>
         public static void RemoveHeaderNode(AstNode node, TypeDeclaration type)
         {
             if (node is ConstructorDeclaration)
@@ -461,7 +487,11 @@ namespace ICSharpCode.NRefactory.Cpp
 
         }
 
-        public static void GetNestedTypes(TypeDeclaration currentType)
+        /// <summary>
+        /// Builds and adds the needed nested types in a current type representing explicit interfaces
+        /// </summary>
+        /// <param name="currentType"></param>
+        public static void GetExplicitInterfaceTypes(TypeDeclaration currentType)
         {
             //Trim the type name to avoid errors with generic types
             string currentTypeName = currentType.Name.TrimEnd("_Base".ToCharArray()).TrimEnd("_T".ToCharArray());
@@ -599,6 +629,11 @@ namespace ICSharpCode.NRefactory.Cpp
             }
         }
 
+        /// <summary>
+        /// Return a header node form of a specified standard node
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="headerNode"></param>
         public static void GetHeaderNode(AstNode node, AstNode headerNode)
         {
             if (node is ConstructorDeclaration)
@@ -691,6 +726,13 @@ namespace ICSharpCode.NRefactory.Cpp
                 headerNode = null;
         }
 
+        /// <summary>
+        /// Returns if a node (i.e expression, identifier...) needs a dereference
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="currentType"></param>
+        /// <param name="currentMethod"></param>
+        /// <returns></returns>
         public static bool NeedsDereference(CSharp.AstNode node, string currentType, string currentMethod)
         {
             //This method can be implemented in a more optimized way, but I prefer distinguish all the cases for control better the process
@@ -818,13 +860,79 @@ namespace ICSharpCode.NRefactory.Cpp
                 return false;
         }
 
-        public static bool IsTemplateType(AstType type)
+        /// <summary>
+        /// Returns if a specified type is a type argument
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool IsTypeArgument(AstType type)
         {
             return Cache.GetTemplateTypes().FirstOrDefault(x => x == GetTypeName(type)) != null;
 
-
         }
 
+        /// <summary>
+        /// Returns if a type has template arguments
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool IsTemplatizedType(AstType type)
+        {
+            if (type is SimpleType)
+            {
+                SimpleType t = type as SimpleType;
+                return (t.TypeArguments.Any() || t.Identifier.EndsWith("_T"));
+            }
+            else
+            {
+                if(HasChildOf(type, typeof(SimpleType)))
+                {
+                    bool aux = false;
+                    foreach (var node in GetChildrenOf(type, typeof(SimpleType)))
+                    {
+                        if (IsTemplatizedType(type))
+                            aux = true;
+                    }
+                    return aux;
+                }
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Returns if a type has template arguments
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool IsTemplatizedType(CSharp.AstType type)
+        {
+            if (type is CSharp.SimpleType)
+            {
+                CSharp.SimpleType t = type as CSharp.SimpleType;
+                return t.TypeArguments.Any();
+            }
+            else
+            {
+                if (HasChildOf(type, typeof(CSharp.SimpleType)))
+                {
+                    bool aux = false;
+                    foreach (var node in GetChildrenOf(type, typeof(CSharp.SimpleType)))
+                    {
+                        if (IsTemplatizedType(type))
+                            aux = true;
+                    }
+                    return aux;
+                }
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Returns if a method is an abstract method returning a templatized type (useful for avoiding covariance errors)
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="method"></param>
+        /// <returns></returns>
         public static bool IsTemplatizedAbstractMethod(string type, string method)
         {
             Dictionary<string, List<string>> templatized = Cache.GetTemplatizedAbstractMethods();
@@ -1000,7 +1108,12 @@ namespace ICSharpCode.NRefactory.Cpp
             return result;
         }
 
-        //TODO: move this method to C#2CPPCONVERTERVISITOR
+       /// <summary>
+       /// Converts template types to Object type (useful for inline methods and template specialization types)
+       /// </summary>
+       /// <param name="type"></param>
+       /// <param name="newType"></param>
+       /// <returns>Returns if the type is actually changed or not</returns>
         public static bool TryPatchTemplateToObjectType(AstType type, out AstType newType)
         {
             newType = (AstType)type.Clone();
@@ -1012,10 +1125,6 @@ namespace ICSharpCode.NRefactory.Cpp
                 if (Cache.GetTemplateTypes().Contains(name))
                 {
                     newType = new SimpleType("Object");
-                    //if (Resolver.IsChildOf(type, typeof(TypeParameterDeclaration)))
-                    //    newType = new SimpleType("Object");
-                    //else
-                    //    newType = new PtrType(new SimpleType("Object"));
                     return true;
                 }
                 else
@@ -1120,6 +1229,12 @@ namespace ICSharpCode.NRefactory.Cpp
 
         }
 
+        /// <summary>
+        /// Returns if a member reference expression in C# is a call over a  C# property
+        /// </summary>
+        /// <param name="memberReferenceExpression"></param>
+        /// <param name="currentTypeName"></param>
+        /// <returns></returns>
         public static bool IsPropertyCall(MemberReferenceExpression memberReferenceExpression, string currentTypeName)
         {
             Dictionary<string, List<string>> properties = Cache.GetPropertiesList();

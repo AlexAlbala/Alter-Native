@@ -29,6 +29,8 @@ namespace RegressionTest
         public static bool fast = false;
         public static bool overwriteTarget = false;
         public static CompileMode compileMode = CompileMode.Debug;
+        public static bool performanceTests = false;
+        public static bool featuresTest = true;
         /*******************CONFIGURATION****************/
     }
 }

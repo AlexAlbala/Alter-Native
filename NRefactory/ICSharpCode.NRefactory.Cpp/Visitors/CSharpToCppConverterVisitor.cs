@@ -843,7 +843,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             //type.AddChild(gcType, TypeDeclaration.BaseTypeRole);
 
             //Fill the nested types
-            Resolver.GetNestedTypes(type);
+            Resolver.GetExplicitInterfaceTypes(type);
 
             Cache.AddNamespace("System");
 
@@ -866,7 +866,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                                 {
                                     foreach (var arg in (p.Target as SimpleType).TypeArguments)
                                     {
-                                        if (Resolver.IsTemplateType(arg))
+                                        if (Resolver.IsTypeArgument(arg))
                                         {
                                             abstMethod.ReturnType = new PtrType(new SimpleType("Object"));
                                             Cache.AddTemplatizedAbstractMethod(type.Name, abstMethod.Name);
@@ -987,7 +987,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     {
                         //Specify the namespace of the types for avoiding name collision in __Internal namespace
                         SimpleType s = child as SimpleType;
-                        if (s.Identifier.Contains("_T") && Resolver.IsChildOf(s, typeof(BlockStatement))) //Only modify the code block, not the return type
+                        if (Resolver.IsTemplatizedType(s) && Resolver.IsChildOf(s, typeof(BlockStatement))) //Only modify the code block, not the return type
                         {
                             string typeNamespace = Resolver.ResolveNamespace(s.Identifier.TrimEnd(("_T").ToCharArray()));
                             QualifiedType qt = new QualifiedType(new SimpleType(typeNamespace, TextLocation.Empty), new Identifier(s.Identifier, TextLocation.Empty));
@@ -1645,7 +1645,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 if (res.PrivateImplementationType != AstType.Null)
                     Cache.AddPrivateImplementation(res.PrivateImplementationType, res);
 
-                if (Resolver.IsTemplateType(res.ReturnType))
+                if (Resolver.IsTypeArgument(res.ReturnType))
                 {
                     InvocationExpression ic = new InvocationExpression(new IdentifierExpression("TypeDecl"), new IdentifierExpression(Resolver.GetTypeName(res.ReturnType)));
                     res.ReturnType = new ExpressionType(ic);
@@ -1793,7 +1793,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 && !Resolver.IsChildOf(simpleType, typeof(CSharp.TypeParameterDeclaration)))
             {
                 id = Resolver.GetCppName(simpleType.Identifier);
-                Resolver.AddInclude(simpleType.Identifier);
+                Cache.AddInclude(simpleType.Identifier);
                 isPtr = false;
             }
 
@@ -1802,7 +1802,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             if (simpleType.TypeArguments.Any())
             {
                 type.Identifier += "_T";
-                Resolver.AddVistedType(type, type.Identifier);
+                Cache.AddVistedType(type, type.Identifier);
             }
 
             if (!Resolver.IsChildOf(simpleType, typeof(CSharp.UsingDeclaration)))
@@ -1812,10 +1812,10 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 //If its parent is null, is better to ignore :)
                 //Ignore the type if is the current type declaration
                 if (simpleType.Parent != null && (currentType == null ? "N/A" : currentType.Name) != simpleType.Identifier)
-                    Resolver.AddVistedType(type, type.Identifier);
+                    Cache.AddVistedType(type, type.Identifier);
 
                 if (simpleType.Annotations.Count() > 0)
-                    Resolver.AddSymbol(id, simpleType.Annotations.ElementAt(0) as TypeReference);
+                    Cache.AddSymbol(id, simpleType.Annotations.ElementAt(0) as TypeReference);
 
 
                 //If the type is in the Visual Tree, the parent is null. 
