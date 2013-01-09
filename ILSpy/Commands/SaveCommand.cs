@@ -21,7 +21,7 @@ using System.Windows.Input;
 
 namespace ICSharpCode.ILSpy
 {
-	[ExportMainMenuCommand(Menu = "_File", Header = "_Save Code...", MenuIcon = "ILSpy;component/Images/SaveFile.png", MenuCategory = "Save", MenuOrder = 0)]
+    [ExportMainMenuCommand(Menu = "_File", Header = "_Save Code...", MenuIcon = "ILSpy;component/Images/SaveFile.png", MenuCategory = "Save", MenuOrder = 0)]
 	sealed class SaveCommand : CommandWrapper
 	{
 		public SaveCommand()

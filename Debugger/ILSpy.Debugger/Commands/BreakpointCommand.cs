@@ -13,7 +13,7 @@ using Mono.Cecil;
 
 namespace ICSharpCode.ILSpy.Debugger.Commands
 {
-	[ExportBookmarkActionEntry(Icon = "images/Breakpoint.png", Category="Debugger")]
+    [ExportBookmarkActionEntry(Icon = "pack://application:,,,/ILSpy;component/images/Breakpoint.png", Category = "Debugger")]
 	public class BreakpointCommand : IBookmarkActionEntry
 	{
 		public bool IsEnabled()

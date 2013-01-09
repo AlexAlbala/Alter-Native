@@ -671,6 +671,12 @@ namespace ICSharpCode.NRefactory.VB.Visitors
 					((InvocationExpression)expr).Target = new IdentifierExpression() { Identifier = "__Dereference" };
 					((InvocationExpression)expr).Arguments.Add((Expression)unaryOperatorExpression.Expression.AcceptVisitor(this, data));
 					break;
+				case ICSharpCode.NRefactory.CSharp.UnaryOperatorType.Await:
+					expr = new UnaryOperatorExpression() {
+						Expression = (Expression)unaryOperatorExpression.Expression.AcceptVisitor(this, data),
+						Operator = UnaryOperatorType.Await
+					};
+					break;
 				default:
 					throw new Exception("Invalid value for UnaryOperatorType");
 			}
@@ -1894,7 +1900,7 @@ namespace ICSharpCode.NRefactory.VB.Visitors
 			
 			// look for type in parent
 			decl.Type = (AstType)variableInitializer.Parent
-				.GetChildByRole(CSharp.VariableInitializer.Roles.Type)
+				.GetChildByRole(ICSharpCode.NRefactory.CSharp.Roles.Type)
 				.AcceptVisitor(this, data);
 			decl.Identifiers.Add(new VariableIdentifier() { Name = variableInitializer.Name });
 			decl.Initializer = (Expression)variableInitializer.Initializer.AcceptVisitor(this, data);
@@ -2062,7 +2068,7 @@ namespace ICSharpCode.NRefactory.VB.Visitors
 			};
 			
 			var constraint = typeParameterDeclaration.Parent
-				.GetChildrenByRole(CSharp.AstNode.Roles.Constraint)
+				.GetChildrenByRole(ICSharpCode.NRefactory.CSharp.Roles.Constraint)
 				.SingleOrDefault(c => c.TypeParameter.Identifier == typeParameterDeclaration.Name);
 			
 			if (constraint != null)
@@ -2134,6 +2140,8 @@ namespace ICSharpCode.NRefactory.VB.Visitors
 				mod |= Modifiers.Override;
 			if ((modifier & CSharp.Modifiers.Virtual) == CSharp.Modifiers.Virtual)
 				mod |= Modifiers.Overridable;
+			if ((modifier & CSharp.Modifiers.Async) == CSharp.Modifiers.Async)
+				mod |= Modifiers.Async;
 			
 			return mod;
 		}
@@ -2215,7 +2223,26 @@ namespace ICSharpCode.NRefactory.VB.Visitors
 			foundAttribute = null;
 			return false;
 		}
-
+		
+		public AstNode VisitDocumentationReference(CSharp.DocumentationReference documentationReference, object data)
+		{
+			throw new NotImplementedException();
+		}
+		
+		public AstNode VisitNewLine(CSharp.NewLineNode newLineNode, object data)
+		{
+			return null;
+		}
+		
+		public AstNode VisitWhitespace(CSharp.WhitespaceNode whitespaceNode, object data)
+		{
+			return null;
+		}
+		
+		public AstNode VisitText(CSharp.TextNode textNode, object data)
+		{
+			return null;
+		}
 
         public AstNode VisitBoxExpression(CSharp.BoxExpression boxExpression, object data)
         {
@@ -2226,5 +2253,5 @@ namespace ICSharpCode.NRefactory.VB.Visitors
         {
             return unBoxExpression.Expression.AcceptVisitor(this, data);
         }
-    }
+	}
 }

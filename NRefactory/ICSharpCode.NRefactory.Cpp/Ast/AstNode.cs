@@ -15,6 +15,7 @@ namespace ICSharpCode.NRefactory.Cpp
 {
     public abstract class AstNode : AbstractAnnotatable, PatternMatching.INode
     {
+        internal static readonly Role<AstNode> RootRole = new Role<AstNode>("Root");
         #region Null
         public static readonly AstNode Null = new NullAstNode();
 
@@ -78,6 +79,44 @@ namespace ICSharpCode.NRefactory.Cpp
         AstNode firstChild;
         AstNode lastChild;
         Role role = RootRole;
+
+        // Flags, from least significant to most significant bits:
+        // - Role.RoleIndexBits: role index
+        // - 1 bit: IsFrozen
+        protected uint flags = RootRole.Index;
+        // Derived classes may also use a few bits,
+        // for example Identifier uses 1 bit for IsVerbatim
+
+        const uint roleIndexMask = (1u << Role.RoleIndexBits) - 1;
+        const uint frozenBit = 1u << Role.RoleIndexBits;
+        protected const int AstNodeFlagsUsedBits = Role.RoleIndexBits + 1;
+
+        protected AstNode()
+        {
+            if (IsNull)
+                Freeze();
+        }
+
+        public bool IsFrozen
+        {
+            get { return (flags & frozenBit) != 0; }
+        }
+
+        public void Freeze()
+        {
+            if (!IsFrozen)
+            {
+                for (AstNode child = firstChild; child != null; child = child.nextSibling)
+                    child.Freeze();
+                flags |= frozenBit;
+            }
+        }
+
+        protected void ThrowIfFrozen()
+        {
+            if (IsFrozen)
+                throw new InvalidOperationException("Cannot mutate frozen " + GetType().Name);
+        }
 
         public virtual bool IsNull
         {
@@ -463,22 +502,20 @@ namespace ICSharpCode.NRefactory.Cpp
             AstNode copy = (AstNode)MemberwiseClone();
             // First, reset the shallow pointer copies
             copy.parent = null;
-            copy.role = Roles.Root;
             copy.firstChild = null;
             copy.lastChild = null;
             copy.prevSibling = null;
             copy.nextSibling = null;
+            copy.flags &= ~frozenBit; // unfreeze the copy
 
             // Then perform a deep copy:
             for (AstNode cur = firstChild; cur != null; cur = cur.nextSibling)
             {
-                copy.AddChildUnsafe(cur.Clone(), cur.role);
+                copy.AddChildUnsafe(cur.Clone(), cur.Role);
             }
 
             // Finally, clone the annotation, if necessary
-            ICloneable annotations = copy.annotations as ICloneable; // read from copy (for thread-safety)
-            if (annotations != null)
-                copy.annotations = annotations.Clone();
+            copy.CloneAnnotations();
 
             return copy;
         }
@@ -574,7 +611,7 @@ namespace ICSharpCode.NRefactory.Cpp
         }
 
         // the Root role must be available when creating the null nodes, so we can't put it in the Roles class
-        static readonly Role<AstNode> RootRole = new Role<AstNode>("Root");
+        //static readonly Role<AstNode> RootRole = new Role<AstNode>("Root");
 
         public static class Roles
         {

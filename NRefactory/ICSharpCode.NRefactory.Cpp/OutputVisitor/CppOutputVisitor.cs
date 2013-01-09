@@ -3840,5 +3840,32 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteToken(")", CppTokenNode.Roles.RPar);
             return EndNode(unBoxExpression);
         }
+
+
+        public object VisitDocumentationReference(DocumentationReference documentationReference, object data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object VisitNewLine(NewLineNode newLineNode, object data)
+        {
+            StartNode(newLineNode);
+            formatter.NewLine();
+            return EndNode(newLineNode);
+        }
+
+        public object VisitWhitespace(WhitespaceNode whiteSpaceNode, object data)
+        {
+            StartNode(whiteSpaceNode);
+            formatter.Space();
+            return EndNode(whiteSpaceNode);
+        }
+
+        public object VisitText(TextNode textNode, object data)
+        {
+            StartNode(textNode);
+            formatter.WriteToken(textNode.Text);
+            return EndNode(textNode);
+        }
     }
 }

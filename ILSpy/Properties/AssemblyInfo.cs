@@ -23,7 +23,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 [assembly: AssemblyVersion(RevisionClass.Major + "." + RevisionClass.Minor + "." + RevisionClass.Build + "." + RevisionClass.Revision)]
-[assembly: AssemblyInformationalVersion(RevisionClass.FullVersion + "-00000000")]
+[assembly: AssemblyInformationalVersion(RevisionClass.FullVersion + "-1170e2f8")]
 [assembly: NeutralResourcesLanguage("en-US")]
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2243:AttributeStringLiteralsShouldParseCorrectly",
@@ -32,10 +32,10 @@ using System.Runtime.InteropServices;
 internal static class RevisionClass
 {
 	public const string Major = "2";
-	public const string Minor = "0";
+	public const string Minor = "1";
 	public const string Build = "0";
-	public const string Revision = "0";
+	public const string Revision = "1603";
 	public const string VersionName = null;
 	
-	public const string FullVersion = Major + "." + Minor + "." + Build + ".0";
+	public const string FullVersion = Major + "." + Minor + "." + Build + ".1603";
 }

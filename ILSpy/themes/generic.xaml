@@ -3,8 +3,8 @@
 	xmlns:controls="clr-namespace:ICSharpCode.ILSpy.Controls"
 >
 	<ResourceDictionary.MergedDictionaries>
-		<ResourceDictionary Source="pack://application:,,,/ILSpy;component/Controls/SearchBoxStyle.xaml" />
-	</ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/ILSpy;component/Controls/SearchBoxStyle.xaml" />
+    </ResourceDictionary.MergedDictionaries>
 	
 	<!-- SortableGridViewColumn.
 		Displays an up arrow or down arrow in the column header when the grid is sorted using that column.

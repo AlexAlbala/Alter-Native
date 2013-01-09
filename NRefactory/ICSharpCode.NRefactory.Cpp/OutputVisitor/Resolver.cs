@@ -651,7 +651,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     headerNode.AddChild((ParameterDeclaration)param.Clone(), HeaderConstructorDeclaration.Roles.Parameter);
 
                 _header.Name = _node.Name;
-                _header.IdentifierToken = (Identifier)_node.IdentifierToken.Clone();
+                _header.IdentifierToken = new Identifier(_node.Name, TextLocation.Empty);
 
             }
             if (node is DestructorDeclaration)

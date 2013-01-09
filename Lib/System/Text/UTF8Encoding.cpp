@@ -18,20 +18,20 @@ namespace System{
 			return v;
 		}
 
-		String* UTF8Encoding::GetString(char* bytes)
+		String* UTF8Encoding::GetString(byte* bytes)
 		{
-			return GetString(new Array<char>(bytes, strlen(bytes)));
-		}
-
-		String* UTF8Encoding::GetString(Array<char>* bytes)
-		{	
 			loc::generator* gen = new loc::generator();
 			std::locale blah = gen->generate("en_US.utf-8");			
-			std::string converted = loc::conv::from_utf(bytes->GetData(),blah);
+			std::string converted = loc::conv::from_utf(bytes,blah);
 
 			delete gen;
 
-			return new String(converted.data());
+			return new String(converted.data());			
+		}
+
+		String* UTF8Encoding::GetString(Array<byte>* bytes)
+		{	
+			return GetString(bytes->GetData());
 		}
 	}
 }

@@ -21,7 +21,7 @@ using System.Windows.Input;
 
 namespace ICSharpCode.ILSpy
 {
-    [ExportToolbarCommand(ToolTip = "Forward", ToolbarIcon = "ILSpy;component/Images/Forward.png", ToolbarCategory = "Navigation", ToolbarOrder = 1)]
+	[ExportToolbarCommand(ToolTip = "Forward", ToolbarIcon = "ILSpy;component/Images/Forward.png", ToolbarCategory = "Navigation", ToolbarOrder = 1)]
 	sealed class BrowseForwardCommand : CommandWrapper
 	{
 		public BrowseForwardCommand()

@@ -35,6 +35,7 @@ namespace ICSharpCode.Decompiler.ILAst
 		InlineVariables,
 		CopyPropagation,
 		YieldReturn,
+		AsyncAwait,
 		PropertyAccessInstructions,//REMOVED
 		SplitToMovableBlocks,
 		TypeInference,
@@ -48,7 +49,7 @@ namespace ICSharpCode.Decompiler.ILAst
 		SimplifyLdObjAndStObj,
 		SimplifyCustomShortCircuit,
 		SimplifyLiftedOperators,
-		TransformArrayInitializers,//REMOVED
+        TransformArrayInitializers,//REMOVED
         TransformMultidimensionalArrayInitializers,//REMOVED
         TransformObjectInitializers,//REMOVED
 		MakeAssignmentExpression,
@@ -107,6 +108,10 @@ namespace ICSharpCode.Decompiler.ILAst
 			
 			if (abortBeforeStep == ILAstOptimizationStep.YieldReturn) return;
 			YieldReturnDecompiler.Run(context, method);
+			AsyncDecompiler.RunStep1(context, method);
+			
+			if (abortBeforeStep == ILAstOptimizationStep.AsyncAwait) return;
+			AsyncDecompiler.RunStep2(context, method);
 			
             //if (abortBeforeStep == ILAstOptimizationStep.PropertyAccessInstructions) return;
             //IntroducePropertyAccessInstructions(method);
@@ -154,7 +159,7 @@ namespace ICSharpCode.Decompiler.ILAst
 
 					if (abortBeforeStep == ILAstOptimizationStep.SimplifyLiftedOperators) return;
 					modified |= block.RunOptimization(SimplifyLiftedOperators);
-
+					
                     //if (abortBeforeStep == ILAstOptimizationStep.TransformArrayInitializers) return;
                     //modified |= block.RunOptimization(TransformArrayInitializers);
 
@@ -256,7 +261,7 @@ namespace ICSharpCode.Decompiler.ILAst
 		/// Ignore arguments of 'leave'
 		/// </summary>
 		/// <param name="method"></param>
-		void RemoveRedundantCode(ILBlock method)
+		internal static void RemoveRedundantCode(ILBlock method)
 		{
 			Dictionary<ILLabel, int> labelRefCount = new Dictionary<ILLabel, int>();
 			foreach (ILLabel target in method.GetSelfAndChildrenRecursive<ILExpression>(e => e.IsBranch()).SelectMany(e => e.GetBranchTargets())) {
@@ -286,7 +291,13 @@ namespace ICSharpCode.Decompiler.ILAst
 							prevExpr.ILRanges.AddRange(((ILExpression)body[i]).ILRanges);
 						// Ignore pop
 					} else {
-						newBody.Add(body[i]);
+						ILLabel label = body[i] as ILLabel;
+						if (label != null) {
+							if (labelRefCount.GetOrDefault(label) > 0)
+								newBody.Add(label);
+						} else {
+							newBody.Add(body[i]);
+						}
 					}
 				}
 				block.Body = newBody;

@@ -1,0 +1,17 @@
+This is some textThis is some more text,
+and this is on a new line
+
+The following is a subset of characters:
+d
+efghijklmn
+opqrstuvwx
+yz{|}~
+
+
+ 
+¡¢£¤¥¦§¨©ª
+«¬­®¯°±²³´
+µ¶·¸¹º»¼½¾
+¿ÀÁÂÃÄÅÆÇÈ
+ÉÊËÌÍÎÏÐÑÒ
+ÓÔÕÖ×ØÙÚÛ

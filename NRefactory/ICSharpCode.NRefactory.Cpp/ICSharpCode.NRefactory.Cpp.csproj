@@ -74,6 +74,7 @@
     <Compile Include="Ast\Expressions\MemberAccessExpression.cs" />
     <Compile Include="Ast\Expressions\UnBoxExpression.cs" />
     <Compile Include="Ast\GeneralScope\BaseTemplateTypeDeclaration.cs" />
+    <Compile Include="Ast\GeneralScope\DocumentationReference.cs" />
     <Compile Include="Ast\GeneralScope\GenericEntryPointDeclaration.cs" />
     <Compile Include="Ast\GeneralScope\GenericTemplateTypeDeclaration.cs" />
     <Compile Include="Ast\GeneralScope\InterfaceTypeDeclaration.cs" />
@@ -83,9 +84,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Ast\GeneralScope\NestedTypeDeclaration.cs" />
+    <Compile Include="Ast\GeneralScope\NewLineNode.cs" />
     <Compile Include="Ast\GeneralScope\SpecializedBasicTemplateDeclaration.cs" />
     <Compile Include="Ast\GeneralScope\SpecializedGenericTemplateDeclaration.cs" />
     <Compile Include="Ast\GeneralScope\TemplateTypeDeclaration.cs" />
+    <Compile Include="Ast\GeneralScope\TextNode.cs" />
+    <Compile Include="Ast\GeneralScope\WhitespaceNode.cs" />
     <Compile Include="Ast\Header\IncludeDeclaration.cs" />
     <Compile Include="Ast\GeneralScope\InterfaceMemberSpecifier.cs" />
     <Compile Include="Ast\Statements\EndScopeStatement.cs" />

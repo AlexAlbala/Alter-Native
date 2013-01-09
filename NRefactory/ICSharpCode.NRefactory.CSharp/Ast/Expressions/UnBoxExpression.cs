@@ -27,6 +27,16 @@
             set { SetChildByRole(unBoxTypeRole, value); }
         }
 
+        public override void AcceptVisitor(IAstVisitor visitor)
+        {
+            visitor.VisitUnBoxExpression(this);
+        }
+
+        public override T AcceptVisitor<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.VisitUnBoxExpression(this);
+        }
+
         public override S AcceptVisitor<T, S>(IAstVisitor<T, S> visitor, T data = default(T))
         {
             return visitor.VisitUnBoxExpression(this, data);

@@ -818,8 +818,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                         blck.AddChild((Statement)st.Clone(), BlockStatement.StatementRole);
                     result.Body = blck;
                     Cache.ClearConstructorStatements();
-                    result.Name = type.Name;
-                    result.IdentifierToken = new Identifier(type.Name, TextLocation.Empty);
+                    result.Name = type.Name;                    
 
                     type.AddChild(result, TypeDeclaration.MemberRole);
 
@@ -1489,7 +1488,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             {
                 method.ReturnType = new CSharp.PrimitiveType("void");
                 CSharp.ParameterDeclaration pd = new CSharp.ParameterDeclaration(returnType.Clone(), "value");
-                method.AddChild(pd, CSharp.MethodDeclaration.Roles.Parameter);
+                method.AddChild(pd, CSharp.Roles.Parameter);
 
                 if (isEmptyProperty)
                 {
@@ -1524,7 +1523,6 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             ConvertNodes(constructorDeclaration.Attributes, result.Attributes);
             ConvertNodes(constructorDeclaration.ModifierTokens, result.ModifierTokens);
             ConvertNodes(constructorDeclaration.Parameters, result.Parameters);
-            result.IdentifierToken = (Identifier)constructorDeclaration.IdentifierToken.AcceptVisitor(this, data);
             result.Name = constructorDeclaration.Name;
             result.Body = (BlockStatement)constructorDeclaration.Body.AcceptVisitor(this, data);
 
@@ -1822,12 +1820,12 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 //If its parent is a TypeReferenceExpression it is like Console::ReadLine          
                 //If the Role is BaseTypeRole it means that it is a inherited class (i.e. MyClass : public MyInheritedClass)
                 if (simpleType.Parent == null || !isPtr || Resolver.IsChildOf(simpleType, typeof(CSharp.TypeReferenceExpression))
-                    || simpleType.Role == CSharp.TypeDeclaration.BaseTypeRole)
+                    || currentType.BaseTypes.Contains(simpleType))
                     return EndNode(simpleType, type);
 
                 //The type is like MyTemplate<MyType> 
                 //Maybe we should not check the TypeParameter ?
-                if (simpleType.Role == CSharp.SimpleType.Roles.TypeArgument || simpleType.Role == CSharp.SimpleType.Roles.TypeParameter)
+                if (simpleType.Role == CSharp.Roles.TypeArgument || simpleType.Role == CSharp.Roles.TypeParameter)
                     return EndNode(simpleType, type);
 
                 var ptrType = new PtrType(type);
@@ -1905,9 +1903,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 case "sbyte":
                     typeName = "short";
                     break;
-                case "byte":
-                    typeName = "char";
-                    break;
+                //case "byte":
+                    //typeName = "char";
+                    //break;
                 case "decimal":
                     typeName = "float";
                     break;
@@ -1915,11 +1913,11 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     typeName = "float";
                     break;
                 case "object":
-                    if (primitiveType.Role == CSharp.SimpleType.Roles.TypeArgument || primitiveType.Role == CSharp.SimpleType.Roles.TypeParameter)
+                    if (primitiveType.Role == CSharp.Roles.TypeArgument || primitiveType.Role == CSharp.Roles.TypeParameter)
                         return EndNode(primitiveType, new SimpleType("Object"));
                     return EndNode(primitiveType, new PtrType(new SimpleType("Object")));
                 case "string":
-                    if (primitiveType.Role == CSharp.SimpleType.Roles.TypeArgument || primitiveType.Role == CSharp.SimpleType.Roles.TypeParameter)
+                    if (primitiveType.Role == CSharp.Roles.TypeArgument || primitiveType.Role == CSharp.Roles.TypeParameter)
                         return EndNode(primitiveType, new SimpleType("String"));
                     return EndNode(primitiveType, new PtrType(new SimpleType("String")));
                 default:
@@ -2102,6 +2100,27 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             var unbox = new UnBoxExpression((Expression)unBoxExpression.Expression.AcceptVisitor(this, data));
             unbox.Type = (AstType)unBoxExpression.type.AcceptVisitor(this, data);
             return EndNode(unBoxExpression, unbox);
+        }
+
+
+        public AstNode VisitNewLine(CSharp.NewLineNode newLineNode, object data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public AstNode VisitWhitespace(CSharp.WhitespaceNode whitespaceNode, object data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public AstNode VisitText(CSharp.TextNode textNode, object data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public AstNode VisitDocumentationReference(CSharp.DocumentationReference documentationReference, object data)
+        {
+            throw new NotImplementedException();
         }
     }
 }

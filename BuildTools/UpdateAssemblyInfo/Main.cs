@@ -58,16 +58,14 @@ namespace UpdateAssemblyInfo
 						}
 						return 0;
 					}
-                    if (!File.Exists("AlterNative.sln"))
-                    {
+					if (!File.Exists("AlterNative.sln")) {
 						string mainDir = Path.GetFullPath(Path.Combine(exeDir, "../../../.."));
-                        if (File.Exists(Path.Combine(mainDir, "AlterNative.sln")))
-                        {
+						if (File.Exists(Path.Combine(mainDir, "AlterNative.sln"))) {
 							Directory.SetCurrentDirectory(mainDir);
 						}
 					}
 					if (!File.Exists("AlterNative.sln")) {
-						Console.WriteLine("Working directory must be the AlterNative repo root!");
+						Console.WriteLine("Working directory must be the ILSpy repo root!");
 						return 2;
 					}
 					RetrieveRevisionNumber();

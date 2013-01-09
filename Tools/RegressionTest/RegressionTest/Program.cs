@@ -121,6 +121,7 @@ namespace RegressionTest
             Utils.DebugMessage("OUTPUT UNLIMITED: " + Config.Unlimited.ToString());
             Utils.DebugMessage("FAST MODE: " + Config.fast.ToString());
             Utils.DebugMessage("OVERWRITE TARGET CODE: " + Config.overwriteTarget.ToString());
+            Utils.DebugMessage("PERFORMANCE TESTS: " + Config.performanceTests.ToString());
             Utils.DebugMessage("COMPILATION MODE: " + Config.compileMode.ToString());
             Utils.DebugMessage("*******************************************");
             Console.WriteLine();
