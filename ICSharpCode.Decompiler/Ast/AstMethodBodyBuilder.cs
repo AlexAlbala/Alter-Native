@@ -545,11 +545,15 @@ namespace ICSharpCode.Decompiler.Ast
 						return arg1;
 					}
 				case ILCode.Unbox_Any:
+                    var unboxa = new UnBoxExpression();
+                    unboxa.Expression = arg1;
+                    unboxa.type = operandAsTypeRef.Clone();
 					// unboxing does not require a cast if the argument was an isinst instruction
-					if (arg1 is AsExpression && byteCode.Arguments[0].Code == ILCode.Isinst && TypeAnalysis.IsSameType(operand as TypeReference, byteCode.Arguments[0].Operand as TypeReference))
-						return arg1;
-					else
-						goto case ILCode.Castclass;
+                    if (arg1 is AsExpression && byteCode.Arguments[0].Code == ILCode.Isinst && TypeAnalysis.IsSameType(operand as TypeReference, byteCode.Arguments[0].Operand as TypeReference))
+                        return unboxa;
+                    else
+                        return unboxa.CastTo(operandAsTypeRef);
+						//goto case ILCode.Castclass;
 				case ILCode.Castclass:
 					if ((byteCode.Arguments[0].InferredType != null && byteCode.Arguments[0].InferredType.IsGenericParameter) || ((Cecil.TypeReference)operand).IsGenericParameter)
 						return arg1.CastTo(new PrimitiveType("object")).CastTo(operandAsTypeRef);
@@ -558,9 +562,17 @@ namespace ICSharpCode.Decompiler.Ast
 				case ILCode.Isinst:
 					return arg1.CastAs(operandAsTypeRef);
 				case ILCode.Box:
-					return arg1;
+                    var box = new BoxExpression(); 		
+                    box.Expression = arg1; 		
+                    box.type = operandAsTypeRef.Clone(); 	
+                    return box;
+                    //return arg1;
 				case ILCode.Unbox:
-					return MakeRef(arg1.CastTo(operandAsTypeRef));
+                    var unbox = new UnBoxExpression();	
+                    unbox.Expression = arg1;
+                    unbox.type = operandAsTypeRef.Clone();
+                    return MakeRef(unbox.CastTo(operandAsTypeRef));
+					//return MakeRef(arg1.CastTo(operandAsTypeRef));
 					#endregion
 					#region Indirect
 				case ILCode.Ldind_Ref:

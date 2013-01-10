@@ -1843,14 +1843,14 @@ namespace ICSharpCode.NRefactory.CSharp
 		}
 
 
-        public S VisitBoxExpression(BoxExpression boxExpression, T data)
+        public virtual S VisitBoxExpression(BoxExpression boxExpression, T data)
         {
-            return boxExpression.Expression.AcceptVisitor(this, data);
+            return VisitChildren (boxExpression, data);
         }
 
-        public S VisitUnBoxExpression(UnBoxExpression unBoxExpression, T data)
+        public virtual S VisitUnBoxExpression(UnBoxExpression unBoxExpression, T data)
         {
-            return unBoxExpression.Expression.AcceptVisitor(this, data);
+            return VisitChildren (unBoxExpression, data);
         }
     }
 }
