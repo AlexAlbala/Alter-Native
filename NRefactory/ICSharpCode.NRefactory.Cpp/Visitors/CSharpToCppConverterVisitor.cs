@@ -818,7 +818,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                         blck.AddChild((Statement)st.Clone(), BlockStatement.StatementRole);
                     result.Body = blck;
                     Cache.ClearConstructorStatements();
-                    result.Name = type.Name;                    
+                    result.Name = type.Name;
 
                     type.AddChild(result, TypeDeclaration.MemberRole);
 
@@ -1244,7 +1244,6 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitReturnStatement(CSharp.ReturnStatement returnStatement, object data)
         {
             var expr = (Expression)returnStatement.Expression.AcceptVisitor(this, data);
-
 
             if (expr is MemberReferenceExpression)
             {
@@ -1815,6 +1814,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 if (simpleType.Annotations.Count() > 0)
                     Cache.AddSymbol(id, simpleType.Annotations.ElementAt(0) as TypeReference);
 
+                //For protection
+                if (currentType == null)
+                    return EndNode(simpleType, type);
 
                 //If the type is in the Visual Tree, the parent is null. 
                 //If its parent is a TypeReferenceExpression it is like Console::ReadLine          
@@ -1904,8 +1906,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     typeName = "short";
                     break;
                 //case "byte":
-                    //typeName = "char";
-                    //break;
+                //typeName = "char";
+                //break;
                 case "decimal":
                     typeName = "float";
                     break;
@@ -2105,22 +2107,52 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         public AstNode VisitNewLine(CSharp.NewLineNode newLineNode, object data)
         {
-            throw new NotImplementedException();
+            if (newLineNode is CSharp.UnixNewLine)
+            {
+                var n = new UnixNewLine(newLineNode.StartLocation);
+                return EndNode(newLineNode, n);
+            }
+            else if (newLineNode is CSharp.WindowsNewLine)
+            {
+                var n = new WindowsNewLine(newLineNode.StartLocation);
+                return EndNode(newLineNode, n);
+            }
+            else if (newLineNode is CSharp.MacNewLine)
+            {
+                var n = new MacNewLine(newLineNode.StartLocation);
+                return EndNode(newLineNode, n);
+            }
+            else
+                throw new NotSupportedException();
+
         }
 
         public AstNode VisitWhitespace(CSharp.WhitespaceNode whitespaceNode, object data)
         {
-            throw new NotImplementedException();
+            var white = new WhitespaceNode(whitespaceNode.WhiteSpaceText);
+            return EndNode(whitespaceNode, white);
         }
 
         public AstNode VisitText(CSharp.TextNode textNode, object data)
         {
-            throw new NotImplementedException();
+            var text = new TextNode(textNode.Text, textNode.StartLocation, textNode.EndLocation);
+            return EndNode(textNode, text);
         }
 
         public AstNode VisitDocumentationReference(CSharp.DocumentationReference documentationReference, object data)
         {
-            throw new NotImplementedException();
+            var doc = new DocumentationReference();
+            doc.ConversionOperatorReturnType = (AstType)documentationReference.ConversionOperatorReturnType.AcceptVisitor(this, data);
+            doc.DeclaringType = (AstType)documentationReference.DeclaringType.AcceptVisitor(this, data);
+            doc.EntityType = documentationReference.EntityType;
+            doc.HasParameterList = documentationReference.HasParameterList;
+
+            doc.OperatorType = (Cpp.OperatorType)documentationReference.OperatorType;
+
+            ConvertNodes(documentationReference.Parameters, doc.Parameters);
+            ConvertNodes(documentationReference.TypeArguments, doc.TypeArguments);
+
+            return EndNode(documentationReference, doc);
         }
     }
 }

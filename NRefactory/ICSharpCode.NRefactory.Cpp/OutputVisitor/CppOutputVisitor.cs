@@ -1356,7 +1356,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     else
                     {
                         AstType destType = (AstType)BaseType.Clone();
-                        
+
                         Expression e = new InvocationExpression(
                             new MemberReferenceExpression(
                                 new TypeReferenceExpression(destType), methodDeclaration.Name), parameters);
@@ -1647,7 +1647,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 {
                     //TODO: FIX THAT ÑAPA
                     if (member is ConversionConstructorDeclaration)
-                        continue;                  
+                        continue;
 
                     WriteAccesorModifier(member.ModifierTokens);
                     member.AcceptVisitor(this, data);
@@ -1655,7 +1655,7 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             CloseBrace(braceStyle);//END OF TYPE
             Semicolon();
-           
+
 
             //Cache.ClearHeaderNodes();
             //After defining _Base class header, we can define the class template
