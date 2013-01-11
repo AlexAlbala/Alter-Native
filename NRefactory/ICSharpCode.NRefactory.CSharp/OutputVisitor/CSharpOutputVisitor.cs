@@ -2616,12 +2616,16 @@ namespace ICSharpCode.NRefactory.CSharp
 
         public void VisitBoxExpression(BoxExpression boxExpression)
         {
+            StartNode(boxExpression);
             boxExpression.Expression.AcceptVisitor(this);
+            EndNode(boxExpression);
         }
 
         public void VisitUnBoxExpression(UnBoxExpression unBoxExpression)
         {
+            StartNode(unBoxExpression);
             unBoxExpression.Expression.AcceptVisitor(this);
+            EndNode(unBoxExpression);
         }
     }
 }
