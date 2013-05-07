@@ -35,6 +35,25 @@ BOOLEAN: returns if it is a basic type or not
 
 
 /*********************************************************************************************************/
+/************************************************ LOCK  **************************************************/
+/*********************************************************************************************************/
+//#define init_lock(x) #if _WIN32 __win_init_lock(x) #elif LINUX __unix_init_lock(x) #endif
+//#define lock(x) { #if _WIN32 __win_lock(x) #elif LINUX __unix_lock(x) #endif
+//#define end_lock(x) #if _WIN32 __win_end_lock(x) #elif LINUX __unix_end_lock(x) #endif
+//#define destroy_lock(x) #if _WIN32 __win_destroy_lock(x) #elif LINUX __unix_destroy_lock(x) #endif
+
+#define __win_init_lock(x) 0
+#define __win_lock(x) 0
+#define __win_end_lock(x) 0
+#define __win_destroy_lock(x) 0
+
+#define __unix_init_lock(x) pthread_mutex_init(x, null);
+#define __unix_lock(x) pthread_mutex_lock(x);
+#define __unix_end_lock(x) pthread_mutex_unlock(x);
+#define __unix_destroy_lock(x) pthread_mutex_destroy(x);
+
+
+/*********************************************************************************************************/
 /***************************************** INCLUDE TEMPLATES  ********************************************/
 /*********************************************************************************************************/
 #include "templates/asis.h"

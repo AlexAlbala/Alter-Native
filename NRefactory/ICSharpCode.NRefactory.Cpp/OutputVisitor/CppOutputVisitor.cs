@@ -2594,7 +2594,8 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitPreProcessorDirective(PreProcessorDirective preProcessorDirective, object data)
         {
             formatter.StartNode(preProcessorDirective);
-            formatter.WritePreProcessorDirective(preProcessorDirective.Type, preProcessorDirective.Argument);
+            if(preProcessorDirective.Type != PreProcessorDirectiveType.Invalid)
+                formatter.WritePreProcessorDirective(preProcessorDirective.Type, preProcessorDirective.Argument);
             formatter.EndNode(preProcessorDirective);
             lastWritten = LastWritten.Whitespace;
             return null;
@@ -3468,7 +3469,7 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitEndScopeStatement(ExitScopeStatement endScopeStatement, object data)
         {
             StartNode(endScopeStatement);
-            WriteKeyword("BOOST_SCOPE_EXIT", ExitScopeStatement.BoostExitScopeKeywordRole);
+            WriteKeyword("finally", ExitScopeStatement.BoostExitScopeKeywordRole);
             LPar();
             if (endScopeStatement.Variables.Any())
                 WriteCommaSeparatedList(endScopeStatement.Variables);
@@ -3476,7 +3477,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 WriteKeyword("void", ExitScopeStatement.Roles.Keyword);
             RPar();
             endScopeStatement.Block.AcceptVisitor(this, data);
-            WriteKeyword("BOOST_SCOPE_EXIT_END", ExitScopeStatement.BoostExitScopeKeywordRole);
+            WriteKeyword("finally_end", ExitScopeStatement.BoostExitScopeKeywordRole);
             NewLine();
             return EndNode(endScopeStatement);
         }
@@ -3866,6 +3867,29 @@ namespace ICSharpCode.NRefactory.Cpp
             StartNode(textNode);
             formatter.WriteToken(textNode.Text);
             return EndNode(textNode);
+        }
+
+
+        public object VisitLockStatement(LockStatement lockStatement, object data)
+        {
+            StartNode(lockStatement);
+            WriteKeyword("lock");
+            Space(policy.SpaceBeforeLockParentheses);
+            LPar();
+            Space(policy.SpacesWithinLockParentheses);
+            lockStatement.Expression.AcceptVisitor(this, data);
+            Space(policy.SpacesWithinLockParentheses);
+            RPar();
+            WriteEmbeddedStatement(lockStatement.EmbeddedStatement);
+
+            WriteKeyword("end_lock");
+            Space(policy.SpaceBeforeLockParentheses);
+            LPar();
+            Space(policy.SpacesWithinLockParentheses);
+            lockStatement.Expression.AcceptVisitor(this, data);
+            Space(policy.SpacesWithinLockParentheses);
+            RPar();
+            return EndNode(lockStatement);
         }
     }
 }

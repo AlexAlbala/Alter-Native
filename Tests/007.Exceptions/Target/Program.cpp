@@ -29,7 +29,7 @@ namespace ExceptionExample {
 			//NEW SCOPE CREATED FOR FINALLY BLOCK!
 			{
 				//Change finally block for BOOST_SCOPE_EXIT
-				BOOST_SCOPE_EXIT(&i, &j){
+				finally(&i, &j){
 					Console::WriteLine(new String("FINALLY"));
 					if (i == 2){
 						j = 22;
@@ -40,7 +40,7 @@ namespace ExceptionExample {
 						throw new Exception(new String("five"));
 					}
 				}
-				BOOST_SCOPE_EXIT_END
+				finally_end
 				try {
 					if (i == 2) {
 						j = 2;

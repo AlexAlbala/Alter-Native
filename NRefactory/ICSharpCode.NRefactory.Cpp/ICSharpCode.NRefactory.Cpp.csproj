@@ -95,6 +95,7 @@
     <Compile Include="Ast\GeneralScope\InterfaceMemberSpecifier.cs" />
     <Compile Include="Ast\Statements\EndScopeStatement.cs" />
     <Compile Include="Ast\Statements\ForeachStatement.cs" />
+    <Compile Include="Ast\Statements\LockStatement.cs" />
     <Compile Include="Ast\TypeMembers\ConversionConstructorDeclaration.cs" />
     <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderAbstractMethodDeclaration.cs" />
     <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderConstructorDeclaration.cs" />

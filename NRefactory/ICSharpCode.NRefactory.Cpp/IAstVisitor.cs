@@ -114,7 +114,7 @@ namespace ICSharpCode.NRefactory.Cpp
         S VisitGotoStatement(GotoStatement gotoStatement, T data);
         S VisitIfElseStatement(IfElseStatement ifElseStatement, T data);
         S VisitLabelStatement(LabelStatement labelStatement, T data);
-        //S VisitLockStatement(LockStatement lockStatement, T data);
+        S VisitLockStatement(LockStatement lockStatement, T data);
         S VisitReturnStatement(ReturnStatement returnStatement, T data);
         S VisitSwitchStatement(SwitchStatement switchStatement, T data);
         S VisitSwitchSection(SwitchSection switchSection, T data);

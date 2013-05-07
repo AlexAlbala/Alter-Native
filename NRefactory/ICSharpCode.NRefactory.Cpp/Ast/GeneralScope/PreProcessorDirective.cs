@@ -30,7 +30,7 @@ namespace ICSharpCode.NRefactory.Cpp
 	public enum PreProcessorDirectiveType : byte
 	{
 		Invalid = 0,
-		Region = 1,
+		//Region = 1,
 		Endregion = 2,
 		
 		If = 3,

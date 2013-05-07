@@ -1238,7 +1238,10 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitLockStatement(CSharp.LockStatement lockStatement, object data)
         {
-            throw new NotImplementedException();
+            var _lock = new LockStatement();
+            _lock.EmbeddedStatement = (BlockStatement)lockStatement.EmbeddedStatement.AcceptVisitor(this, data);
+            _lock.Expression = (Expression)lockStatement.Expression.AcceptVisitor(this, data);            
+            return EndNode(lockStatement, _lock);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitReturnStatement(CSharp.ReturnStatement returnStatement, object data)
@@ -1955,7 +1958,15 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitPreProcessorDirective(CSharp.PreProcessorDirective preProcessorDirective, object data)
         {
-            throw new NotImplementedException();
+            Cpp.PreProcessorDirectiveType directiveType = (Cpp.PreProcessorDirectiveType)preProcessorDirective.Type;
+
+            //These two directives do not exist in C++ language
+            if (preProcessorDirective.Type == CSharp.PreProcessorDirectiveType.Endregion || preProcessorDirective.Type == CSharp.PreProcessorDirectiveType.Region)
+                directiveType = Cpp.PreProcessorDirectiveType.Invalid;
+
+            var preProc = new PreProcessorDirective(directiveType, preProcessorDirective.StartLocation, preProcessorDirective.EndLocation);
+            preProc.Argument = preProcessorDirective.Argument;
+            return EndNode(preProcessorDirective, preProc);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitTypeParameterDeclaration(CSharp.TypeParameterDeclaration typeParameterDeclaration, object data)
