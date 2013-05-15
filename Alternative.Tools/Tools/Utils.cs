@@ -5,9 +5,9 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System.IO;
 
-namespace AlterNative.BuildTools
+namespace AlterNative.Tools
 {
-    class Utils
+    public class Utils
     {
         public static void WriteToConsole(string message)
         {

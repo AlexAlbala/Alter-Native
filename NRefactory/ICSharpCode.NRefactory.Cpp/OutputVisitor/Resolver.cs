@@ -1175,6 +1175,7 @@ namespace ICSharpCode.NRefactory.Cpp
         /// <returns>The member string</returns>
         public static string GetInlineConversionConstructorDeclarationCall(ConversionConstructorDeclaration conv)
         {
+            //TODO:
             //ESTA FUNCION NO ME GUSTA NADA !
             //HAY QUE CREAR NODOS INLINE    
             string ret = "operator ";

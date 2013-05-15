@@ -221,6 +221,10 @@
     <Compile Include="Visitors\CSharpToCppConverterVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Alternative.Tools\AlterNative.Tools.csproj">
+      <Project>{38c5f3cb-339f-4dd3-9197-98989ca94f9d}</Project>
+      <Name>AlterNative.Tools</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ICSharpCode.Decompiler\ICSharpCode.Decompiler.csproj">
       <Project>{984CC812-9470-4A13-AFF9-CC44068D666C}</Project>
       <Name>ICSharpCode.Decompiler</Name>

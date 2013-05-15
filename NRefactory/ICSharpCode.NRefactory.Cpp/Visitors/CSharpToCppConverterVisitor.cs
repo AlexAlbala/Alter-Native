@@ -6,6 +6,7 @@ using ICSharpCode.NRefactory.TypeSystem;
 using ICSharpCode.NRefactory.Cpp.Ast;
 using System.Reflection;
 using Mono.Cecil;
+using AlterNative.Tools;
 
 namespace ICSharpCode.NRefactory.Cpp.Visitors
 {
@@ -781,6 +782,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             //ConvertNodes(typeDeclaration.Members, type.Members);
             types.Pop();
 
+            foreach (var node in typeDeclaration.Constraints)
+                node.AcceptVisitor(this, data);
+
             //Add auxiliar variables for emptyproperties
             foreach (KeyValuePair<string, AstType> kvp in Cache.GetAuxVariables())
             {
@@ -988,7 +992,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                         SimpleType s = child as SimpleType;
                         if (Resolver.IsTemplatizedType(s) && Resolver.IsChildOf(s, typeof(BlockStatement))) //Only modify the code block, not the return type
                         {
-                            string typeNamespace = Resolver.ResolveNamespace(s.Identifier.TrimEnd(("_T").ToCharArray()));
+                            string typeNamespace = Resolver.ResolveNamespace(s.Identifier.TrimEnd("_T"));
                             QualifiedType qt = new QualifiedType(new SimpleType(typeNamespace, TextLocation.Empty), new Identifier(s.Identifier, TextLocation.Empty));
                             foreach (var typeArg in s.TypeArguments)
                                 qt.TypeArguments.Add((AstType)typeArg.Clone());
@@ -1000,7 +1004,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
                     if (member is ConstructorDeclaration)
                     {
-                        String naturalName = genEntry.Name.TrimEnd("_Base".ToCharArray()).TrimEnd("_T".ToCharArray());
+                        String naturalName = genEntry.Name.TrimEnd("_Base").TrimEnd("_T");
                         hasDefaultConstructor = true;
                         //********************ENTRY POINT
                         var constr = member as ConstructorDeclaration;
@@ -1085,7 +1089,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 if (!hasDefaultConstructor)
                 {
                     var def_const = new ConstructorDeclaration();
-                    def_const.Name = btempl.Name.TrimEnd("_Base".ToArray()).TrimEnd("_T".ToCharArray());//REMEMBER IN THE MEMBERS IS BETTER TO STORE THE ORIGINAL TYPE NAME
+                    def_const.Name = btempl.Name.TrimEnd("_Base").TrimEnd("_T");//REMEMBER IN THE MEMBERS IS BETTER TO STORE THE ORIGINAL TYPE NAME
                     def_const.ModifierTokens.Add(new CppModifierToken(TextLocation.Empty, Modifiers.Public));
                     def_const.Body = new BlockStatement();
                     btempl.Members.Add(def_const);
@@ -1240,7 +1244,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         {
             var _lock = new LockStatement();
             _lock.EmbeddedStatement = (BlockStatement)lockStatement.EmbeddedStatement.AcceptVisitor(this, data);
-            _lock.Expression = (Expression)lockStatement.Expression.AcceptVisitor(this, data);            
+            _lock.Expression = (Expression)lockStatement.Expression.AcceptVisitor(this, data);
             return EndNode(lockStatement, _lock);
         }
 
@@ -1981,7 +1985,34 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitConstraint(CSharp.Constraint constraint, object data)
         {
-            throw new NotImplementedException();
+            //Add a method Where_T_is(T,BaseType) in the class constructor         
+
+            foreach (var type in constraint.BaseTypes)
+            {
+                InvocationExpression ie = new InvocationExpression();
+
+                if (type is CSharp.PrimitiveType)
+                {
+                    if ((type as CSharp.PrimitiveType).Keyword == "new")
+                    {
+                        ie.Target = new IdentifierExpression("Where_T_is_New");
+                        ie.Arguments.Add(new IdentifierExpression(constraint.TypeParameter.Identifier));
+                    }
+                    else
+                        throw new NotImplementedException("Constraint type not handled");
+                }
+                else
+                {
+                    ie.Target = new IdentifierExpression("Where_T_is");
+                    ie.Arguments.Add(new IdentifierExpression(constraint.TypeParameter.Identifier));
+                    ie.Arguments.Add(new IdentifierExpression(Resolver.GetTypeName(type)));
+                }
+
+                ExpressionStatement est = new ExpressionStatement(ie);
+                Cache.AddConstructorStatement(est);
+            }
+           
+            return EndNode(constraint, new EmptyStatement());
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitCSharpTokenNode(CSharp.CSharpTokenNode cSharpTokenNode, object data)

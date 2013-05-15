@@ -31,7 +31,7 @@ namespace ICSharpCode.NRefactory.Cpp
 	{
 		Invalid = 0,
 		//Region = 1,
-		Endregion = 2,
+		//Endregion = 2,
 		
 		If = 3,
 		Endif = 4,

@@ -7,6 +7,7 @@ using ICSharpCode.NRefactory.Cpp.Formatters;
 using ICSharpCode.ILSpy;
 #endif
 using AlterNative.BuildTools;
+using AlterNative.Tools;
 
 namespace AlterNative
 {

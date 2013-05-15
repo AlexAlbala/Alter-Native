@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Windows;
+using AlterNative.Tools;
 
 namespace AlterNative.BuildTools
 {
-    class CMakeGenerator
+    public class CMakeGenerator
     {
         public static void GenerateCMakeLists(string projectName, string execName, string workingDir, string[] sourceFiles, bool release = false)
         {

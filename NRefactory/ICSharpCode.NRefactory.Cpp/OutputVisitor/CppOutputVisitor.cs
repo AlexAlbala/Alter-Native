@@ -11,6 +11,7 @@ using System.Globalization;
 using ICSharpCode.NRefactory.Cpp.Ast;
 using Attribute = ICSharpCode.NRefactory.Cpp.Ast.Attribute;
 using ICSharpCode.NRefactory.Cpp.Formatters;
+using AlterNative.Tools;
 
 namespace ICSharpCode.NRefactory.Cpp
 {
@@ -2146,10 +2147,11 @@ namespace ICSharpCode.NRefactory.Cpp
                 WriteToken("::", MethodDeclaration.Roles.Dot);
             }
 
+            constructorDeclaration.Name = constructorDeclaration.Name.TrimEnd("_T");
             bool needsT = Resolver.IsChildOf(constructorDeclaration, typeof(GenericTemplateTypeDeclaration));
             bool needsBase = Resolver.IsChildOf(constructorDeclaration, typeof(BaseTemplateTypeDeclaration));
-            string trim = "" + (needsT ? "_T" : "") + (needsBase ? "_Base" : "");
-
+            string trim = (needsT ? "_T" : "") + (needsBase ? "_Base" : "");
+            
             WriteIdentifier(constructorDeclaration.Name + trim);
             Space(policy.SpaceBeforeConstructorDeclarationParentheses);
             WriteCommaSeparatedListInParenthesis(constructorDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);

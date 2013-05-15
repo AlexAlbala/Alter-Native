@@ -59,6 +59,7 @@ namespace ExplicitGenericInterfaces {
 			public:
 			C_T_Base()
 			{
+				Where_T_is_New(T);
 			}
 		};
 
@@ -69,6 +70,10 @@ namespace ExplicitGenericInterfaces {
 		//Basic types template type
 		template<typename T>
 		class C_T<T, true> : public C_T_Base<T>{
+			public:
+			inline C_T() : C_T_Base<T>()
+			{
+			}
 		};
 
 		//Generic template type
@@ -78,6 +83,10 @@ namespace ExplicitGenericInterfaces {
 			inline T* f(){
 				Object* var_tmp = C_T_Base<Object>::f();
 				return dynamic_cast<T*>(var_tmp);
+			}
+			public:
+			inline C_T() : C_T_Base<Object>()
+			 {
 			}
 			inline operator IA*() {
 				return (IA*)(C_T_Base<Object>::operator IA*());
@@ -91,5 +100,8 @@ namespace ExplicitGenericInterfaces {
 	//Type definition
 	template<typename T>
 	class C_T : public _Internal::C_T<T, IsBasic(T)>{
+		public:
+		C_T() : _Internal::C_T<T, IsBasic(T)>(){
+		}
 	};
 }
