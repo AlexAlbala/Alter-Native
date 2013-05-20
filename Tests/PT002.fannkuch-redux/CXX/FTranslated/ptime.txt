@@ -1,0 +1,55 @@
+ptime version 1.0 for Win32. FREEWARE
+Copyright(C) 2002, Jem Berkes <jberkes@pc-tools.net>
+
+Release Date: 2002-09-21
+Download updates from http://www.pc-tools.net/
+
+DISCLAIMER:
+This software is provided "as is" and without any warranties as to
+performance, merchantability, fitness for a particular purpose, or
+any other warranties whether expressed or implied. The entire risk
+as to the results and performance of the software is assumed by you.
+The author shall not have any liability to you or any other person
+or entity for any damages whatsoever, including, but not limited to,
+loss of revenue or profit, lost or damaged data or other. The author
+is also not responsible for claims by a third party.
+
+LICENSE AND CONDITIONS:
+You may distribute this free software in its original, unmodified form
+only. You are specifically prohibited from charging, or requesting
+donations, for any such copies, however made; and from distributing
+the software and/or documentation with other products (commercial
+or otherwise) without prior written permission from the author.
+
+==================
+USING THE SOFTWARE
+==================
+
+Syntax: ptime command [arguments ...]
+
+Note: ptime itself does not accept any command line switches or options.
+Everything after 'ptime' on the command line is literally executed.
+
+ptime will run the specified command and measure the execution time
+(run time) in seconds, accurate to 5 millisecond or better. It is an
+automatic process timer, or program timer.
+
+For example, to time the command "DIR C:\ /S" use:
+ptime dir c:\ /s
+
+The specified command will be executed. Once it terminates, a final
+line such as the following will be displayed:
+
+Execution time: 5.675 s
+
+The timer precision depends on the specific operating system. Under
+Windows NT, the precision is 5 milliseconds or better.
+
+As a general rule, don't take the 3rd decimal point too seriously.
+
+=======
+CREDITS
+=======
+
+I was inspired by the UNIX ptime command. Searching the net, I couldn't
+find a native win32 version of the program, so I wrote one.

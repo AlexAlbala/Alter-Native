@@ -4,7 +4,7 @@ namespace Arrays {
 		Program* p = new Program();
 		Array<int>* arr = new Array<int>(15);
 		for (int i = 0; i < arr->Length; i += 1){
-			(*arr)[i] = i;
+			arr->SetData(i, i);
 		}
 		p->Test1(arr);
 	}
@@ -14,7 +14,7 @@ namespace Arrays {
 		int pos = 0;
 		for (int j = 0; j < myArray->Length; j += 1) {
 			int i = (*myArray)[j];
-			(*arr)[pos++] = (long)(i + 50);
+			arr->SetData(pos++, (long)(i + 50));
 		}
 		this->Test2(myArray, arr);
 	}

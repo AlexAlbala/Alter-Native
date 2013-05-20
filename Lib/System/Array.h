@@ -34,6 +34,11 @@ namespace System{
 				this->Length = Length;
 			}
 
+			void SetData(int index, TypeDecl(T) element)
+			{
+				data[index] = element;
+			}
+
 			T* GetData()
 			{
 				return data;
@@ -44,7 +49,7 @@ namespace System{
 				return data;
 			}
 
-			T& operator[](int index)
+			TypeDecl(T) operator[](int index)
 			{
 				//if(index < 0 || index >= Length)
 					//throw exception();//Message
@@ -115,8 +120,12 @@ namespace System{
 				return dynamic_cast<T*>(Array_T_Base<Object*>::GetData());//CAST !
 			}
 
-			inline T& operator[](int index){
-				return reinterpret_cast<T&>(Array_T_Base<Object*>::operator[](index));//CUIDADO EL CAST
+			inline void SetData(int index, T* element){
+				Array_T_Base<Object*>::SetData(index, (Object*)element);
+			}
+
+			inline T* operator[](int index){
+				return reinterpret_cast<T*>(Array_T_Base<Object*>::operator[](index));//CUIDADO EL CAST
 			}
 		};
 	}

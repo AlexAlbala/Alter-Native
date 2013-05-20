@@ -89,83 +89,106 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitAssignmentExpression(CSharp.AssignmentExpression assignmentExpression, object data)
         {
-            var left = (Expression)assignmentExpression.Left.AcceptVisitor(this, data);
-            var op = AssignmentOperatorType.Any;
             var right = (Expression)assignmentExpression.Right.AcceptVisitor(this, data);
 
-            if (left is MemberReferenceExpression)
+            if (assignmentExpression.Left is CSharp.IndexerExpression)
             {
-                MemberReferenceExpression l = left as MemberReferenceExpression;
-                if (Resolver.IsPropertyCall(l, currentType.Name))
+                CSharp.IndexerExpression cie = assignmentExpression.Left as CSharp.IndexerExpression;
+                IndexerExpression ie = new IndexerExpression();
+                ie.Target = (Expression)cie.Target.AcceptVisitor(this, data);
+                ConvertNodes(cie.Arguments, ie.Arguments);
+
+
+                List<Expression> arguments = new List<Expression>();
+
+                foreach (Expression e in ie.Arguments)
+                    arguments.Add(e.Clone());
+
+                arguments.Add(right.Clone());
+                InvocationExpression inve = new InvocationExpression(new MemberReferenceExpression((Expression)ie.Target.Clone(), "SetData"), arguments);
+                return EndNode(assignmentExpression, inve);
+            }
+            else
+            {
+                var left = (Expression)assignmentExpression.Left.AcceptVisitor(this, data);
+                var op = AssignmentOperatorType.Any;                
+
+                if (left is MemberReferenceExpression)
                 {
-                    //SET
-                    InvocationExpression m = new InvocationExpression(
-                        new MemberReferenceExpression(l.Target.Clone(), "set" + l.MemberName), new Expression[1] { right.Clone() });
-                    left = m;
+                    MemberReferenceExpression l = left as MemberReferenceExpression;
+                    if (Resolver.IsPropertyCall(l, currentType.Name))
+                    {
+                        //SET
+                        InvocationExpression m = new InvocationExpression(
+                            new MemberReferenceExpression(l.Target.Clone(), "set" + l.MemberName), new Expression[1] { right.Clone() });
+                        left = m;
 
-                    return EndNode(assignmentExpression, m);
+                        return EndNode(assignmentExpression, m);
+                    }
                 }
-            }
 
-            if (right is MemberReferenceExpression)
-            {
-                MemberReferenceExpression r = right as MemberReferenceExpression;
-                if (Resolver.IsPropertyCall(r, currentType.Name))
+                if (right is MemberReferenceExpression)
                 {
-                    //GET
-                    InvocationExpression m = new InvocationExpression(
-                        new MemberReferenceExpression(r.Target.Clone(), "get" + r.MemberName), new Expression[1] { new EmptyExpression() });
-                    right = m;
+                    MemberReferenceExpression r = right as MemberReferenceExpression;
+                    if (Resolver.IsPropertyCall(r, currentType.Name))
+                    {
+                        //GET
+                        InvocationExpression m = new InvocationExpression(
+                            new MemberReferenceExpression(r.Target.Clone(), "get" + r.MemberName), new Expression[1] { new EmptyExpression() });
+                        right = m;
 
-                    return EndNode(assignmentExpression, m);
+                        return EndNode(assignmentExpression, m);
+                    }
                 }
-            }
 
-            switch (assignmentExpression.Operator)
-            {
-                case ICSharpCode.NRefactory.CSharp.AssignmentOperatorType.Assign:
-                    op = AssignmentOperatorType.Assign;
-                    break;
-                case ICSharpCode.NRefactory.CSharp.AssignmentOperatorType.Add:
-                    op = AssignmentOperatorType.Add;
-                    break;
-                case ICSharpCode.NRefactory.CSharp.AssignmentOperatorType.Subtract:
-                    op = AssignmentOperatorType.Subtract;
-                    break;
-                case ICSharpCode.NRefactory.CSharp.AssignmentOperatorType.Multiply:
-                    op = AssignmentOperatorType.Multiply;
-                    break;
-                case ICSharpCode.NRefactory.CSharp.AssignmentOperatorType.Divide:
-                    op = AssignmentOperatorType.Divide;
-                    break;
-                case ICSharpCode.NRefactory.CSharp.AssignmentOperatorType.Modulus:
-                    op = AssignmentOperatorType.Assign;
-                    right = new BinaryOperatorExpression((Expression)left.Clone(), BinaryOperatorType.Modulus, right);
-                    break;
-                case ICSharpCode.NRefactory.CSharp.AssignmentOperatorType.ShiftLeft:
-                    op = AssignmentOperatorType.ShiftLeft;
-                    break;
-                case ICSharpCode.NRefactory.CSharp.AssignmentOperatorType.ShiftRight:
-                    op = AssignmentOperatorType.ShiftRight;
-                    break;
-                case ICSharpCode.NRefactory.CSharp.AssignmentOperatorType.BitwiseAnd:
-                    op = AssignmentOperatorType.Assign;
-                    right = new BinaryOperatorExpression((Expression)left.Clone(), BinaryOperatorType.BitwiseAnd, right);
-                    break;
-                case ICSharpCode.NRefactory.CSharp.AssignmentOperatorType.BitwiseOr:
-                    op = AssignmentOperatorType.Assign;
-                    right = new BinaryOperatorExpression((Expression)left.Clone(), BinaryOperatorType.BitwiseOr, right);
-                    break;
-                case ICSharpCode.NRefactory.CSharp.AssignmentOperatorType.ExclusiveOr:
-                    op = AssignmentOperatorType.Assign;
-                    right = new BinaryOperatorExpression((Expression)left.Clone(), BinaryOperatorType.ExclusiveOr, right);
-                    break;
-                default:
-                    throw new Exception("Invalid value for AssignmentOperatorType: " + assignmentExpression.Operator);
-            }
 
-            var expr = new AssignmentExpression(left, op, right);
-            return EndNode(assignmentExpression, expr);
+
+                switch (assignmentExpression.Operator)
+                {
+                    case ICSharpCode.NRefactory.CSharp.AssignmentOperatorType.Assign:
+                        op = AssignmentOperatorType.Assign;
+                        break;
+                    case ICSharpCode.NRefactory.CSharp.AssignmentOperatorType.Add:
+                        op = AssignmentOperatorType.Add;
+                        break;
+                    case ICSharpCode.NRefactory.CSharp.AssignmentOperatorType.Subtract:
+                        op = AssignmentOperatorType.Subtract;
+                        break;
+                    case ICSharpCode.NRefactory.CSharp.AssignmentOperatorType.Multiply:
+                        op = AssignmentOperatorType.Multiply;
+                        break;
+                    case ICSharpCode.NRefactory.CSharp.AssignmentOperatorType.Divide:
+                        op = AssignmentOperatorType.Divide;
+                        break;
+                    case ICSharpCode.NRefactory.CSharp.AssignmentOperatorType.Modulus:
+                        op = AssignmentOperatorType.Assign;
+                        right = new BinaryOperatorExpression((Expression)left.Clone(), BinaryOperatorType.Modulus, right);
+                        break;
+                    case ICSharpCode.NRefactory.CSharp.AssignmentOperatorType.ShiftLeft:
+                        op = AssignmentOperatorType.ShiftLeft;
+                        break;
+                    case ICSharpCode.NRefactory.CSharp.AssignmentOperatorType.ShiftRight:
+                        op = AssignmentOperatorType.ShiftRight;
+                        break;
+                    case ICSharpCode.NRefactory.CSharp.AssignmentOperatorType.BitwiseAnd:
+                        op = AssignmentOperatorType.Assign;
+                        right = new BinaryOperatorExpression((Expression)left.Clone(), BinaryOperatorType.BitwiseAnd, right);
+                        break;
+                    case ICSharpCode.NRefactory.CSharp.AssignmentOperatorType.BitwiseOr:
+                        op = AssignmentOperatorType.Assign;
+                        right = new BinaryOperatorExpression((Expression)left.Clone(), BinaryOperatorType.BitwiseOr, right);
+                        break;
+                    case ICSharpCode.NRefactory.CSharp.AssignmentOperatorType.ExclusiveOr:
+                        op = AssignmentOperatorType.Assign;
+                        right = new BinaryOperatorExpression((Expression)left.Clone(), BinaryOperatorType.ExclusiveOr, right);
+                        break;
+                    default:
+                        throw new Exception("Invalid value for AssignmentOperatorType: " + assignmentExpression.Operator);
+                }
+
+                var expr = new AssignmentExpression(left, op, right);
+                return EndNode(assignmentExpression, expr);
+            }
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitBaseReferenceExpression(CSharp.BaseReferenceExpression baseReferenceExpression, object data)
@@ -2011,7 +2034,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 ExpressionStatement est = new ExpressionStatement(ie);
                 Cache.AddConstructorStatement(est);
             }
-           
+
             return EndNode(constraint, new EmptyStatement());
         }
 
