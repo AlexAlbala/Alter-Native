@@ -1941,9 +1941,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 case "decimal":
                     typeName = "float";
                     break;
-                case "double":
-                    typeName = "float";
-                    break;
+                //case "double":
+                   // typeName = "float";
+                    //break;
                 case "object":
                     if (primitiveType.Role == CSharp.Roles.TypeArgument || primitiveType.Role == CSharp.Roles.TypeParameter)
                         return EndNode(primitiveType, new SimpleType("Object"));

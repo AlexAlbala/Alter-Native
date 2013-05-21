@@ -477,15 +477,26 @@ Results
 
 \begin_layout Standard
 For the evaluation of the system a CPU stress performance test will be executed.
- The test selected is the fannkuch-redux benchmark 
+ The tests selected are the fannkuch-redux benchmark 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "key-3"
 
 \end_inset
 
+ and the n-bodies benchmark 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-6"
+
+\end_inset
+
 .
  The C# code used is listed below.
+\end_layout
+
+\begin_layout Subsection
+Fannkuch-redux benchmark
 \end_layout
 
 \begin_layout Standard
@@ -560,13 +571,13 @@ Time in function of the target platform
 
 \end_layout
 
-\begin_layout Plain Layout
-
-\end_layout
-
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsection
+N-Bodies benchmark
 \end_layout
 
 \begin_layout Section
@@ -613,7 +624,17 @@ key "key-3"
 
 \end_inset
 
-(http://shootout.alioth.debian.org/u32/performance.php?test=fannkuchredux)
+http://shootout.alioth.debian.org/u32/performance.php?test=fannkuchredux
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-6"
+
+\end_inset
+
+http://benchmarksgame.alioth.debian.org/u32q/program.php?test=nbody
 \end_layout
 
 \end_body

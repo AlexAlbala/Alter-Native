@@ -33,6 +33,10 @@ namespace System {
 		std::cout << f << std::endl;
 	}
 
+	void Console::WriteLine(double d) {
+		std::cout << d << std::endl;
+	}
+
 	void Console::WriteLine(Object* o) {
 		WriteLine(o->ToString());
 	}
