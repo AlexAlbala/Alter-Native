@@ -7,3 +7,9 @@
 [submodule "Tools/Android/Boost-for-Android"]
 	path = Tools/Android/Boost-for-Android
 	url = ../../MysticTreeGames/Boost-for-Android.git
+[submodule "Lib"]
+	path = Lib
+	url = https://github.com/AlexAlbala/AlterNative-CXX-Lib
+[submodule "Tests"]
+	path = Tests
+	url = https://github.com/AlexAlbala/AlterNative-Tests
