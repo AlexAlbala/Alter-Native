@@ -24,7 +24,6 @@
 \output_sync 0
 \bibtex_command default
 \index_command default
-\float_placement H
 \paperfontsize default
 \spacing single
 \use_hyperref false
@@ -52,6 +51,7 @@
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
+\listings_params "basicstyle={\tiny},language={[GNU]C++}"
 \tracking_changes false
 \output_changes false
 \html_math_output 0
@@ -64,6 +64,10 @@
 \begin_layout Title
 AlterNative: An executable to executable Cross-platform system for translating
  high-level to native applications
+\end_layout
+
+\begin_layout Abstract
+OLA K ASE Esto es el abstract
 \end_layout
 
 \begin_layout Section
@@ -94,6 +98,16 @@ Nowadays all the service sectors like industrial, energy, healthcare, security
 
 \begin_layout Section
 State Of The Art
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+AMPLIAR
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -123,7 +137,6 @@ The translator is a tool for converting the code compiled for one system
  developed in a high-level language to a low-level language programmed applicati
 on, benefitting of the speed and performance of these languages.
  In this section the more relevant considered translators are explained.
- 
 \end_layout
 
 \begin_layout Subsection
@@ -141,6 +154,145 @@ For this work it is important to study different tools for extract code
  
 \end_layout
 
+\begin_layout Standard
+ILSpy 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-1"
+
+\end_inset
+
+ is a .NET assembly browser and decompiler.
+ It is open-source and its development started after the announcement that
+ the free version of NET Reflector would cease to exist by end of February
+ 2011.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/ILSpy.PNG
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+ILSpy decompiler
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+ILSpy loads the assembly with the Mono.CECIL library (explained after in
+ this chapter).
+ This library inspects programs and libraries in CIL format.
+ With the CECIL library the ILSPy extracts all the types definitions, methods,
+ fields etc.
+ Through an AST Builder, the program generates an Abstract Syntax Tree represent
+ing the source code in an abstract way.
+ 
+\end_layout
+
+\begin_layout Standard
+An abstract syntax tree (AST) is a tree representation of the abstract syntactic
+ structure of source code written in a programming language 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-12,key-5"
+
+\end_inset
+
+.
+ Each node of the tree denotes a construct occurring in the source code.
+ The syntax is 'abstract' in not representing every detail appearing in
+ the real syntax.
+ The final stage is to convert this Abstract Syntax Tree in text (source
+ code).
+ This program defines different templates, each one for each language.
+ The supported output languages are: 
+\end_layout
+
+\begin_layout Itemize
+IL 
+\end_layout
+
+\begin_layout Itemize
+C# 
+\end_layout
+
+\begin_layout Itemize
+VB 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/ILSpyp.PNG
+	width 70col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+ILSPy process
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+There are several decompilers in the community that aim to the same objective
+ as ILSpy does, the difference between them are the languages that they
+ accept or the languages that they provide at the output.
+\end_layout
+
+\begin_layout Standard
+In this work the ILSpy decompiler is used as the basis for the decompilation
+ process of the assembly.
+ ILSpy is in charge of get the assembly, extract the AST tree and get the
+ source code from this tree.
+ This process will allow this work to get an abstract representation of
+ the source code.
+\end_layout
+
 \begin_layout Subsection
 Research projects
 \end_layout
@@ -153,7 +305,7 @@ Particle code
 The Particle Platform 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "key-1"
+key "key-13"
 
 \end_inset
 
@@ -180,7 +332,7 @@ CAMBIAR
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -323,10 +475,13 @@ The philosophy of AlterNative is to provide the user with a system for taking
 Process
 \end_layout
 
+\begin_layout Subsection
+Overall progress
+\end_layout
+
 \begin_layout Standard
 The process of the AlterNative software is divided in three parts: Decompilation
-, translation and compilation.
- 
+, translation and recompilation.
 \end_layout
 
 \begin_layout Standard
@@ -390,18 +545,520 @@ First of all the assembly received is passed through a decompiler in order
  in order to be fully compatible with high-level languages.
 \end_layout
 
+\begin_layout Subsection
+Example
+\end_layout
+
+\begin_layout Standard
+In this section is explained an example of how a feature of a high level
+ language is ported to a low level language.
+ The language feature used is the 
+\shape italic
+foreach
+\shape default
+ keyword.
+ The source code languages are C# for the input and C++ for the output.
+\end_layout
+
+\begin_layout Standard
+The algorithm 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "alg:ForEach-example-input"
+
+\end_inset
+
+ shows the input source code.
+ Actually the input is a compiled executable file containing the described
+ code.
+ The example used is a ver easy program that creates a float list and initialize
+s some values to a random number.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float algorithm
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset listings
+lstparams "tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+using System;
+\end_layout
+
+\begin_layout Plain Layout
+
+using System.Collections.Generic;
+\end_layout
+
+\begin_layout Plain Layout
+
+using System.Linq;
+\end_layout
+
+\begin_layout Plain Layout
+
+using System.Text;
+\end_layout
+
+\begin_layout Plain Layout
+
+using System.Collections.Generic;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+namespace ForEach {
+\end_layout
+
+\begin_layout Plain Layout
+
+    class Program
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+        static void Main(string[] args)
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+            List<float> myList = new List<float>();
+\end_layout
+
+\begin_layout Plain Layout
+
+            myList.Add(5.6f);
+\end_layout
+
+\begin_layout Plain Layout
+
+            myList.Add(5.7f);
+\end_layout
+
+\begin_layout Plain Layout
+
+            myList.Add(5.2f);
+\end_layout
+
+\begin_layout Plain Layout
+
+            myList.Add(5.9f);
+\end_layout
+
+\begin_layout Plain Layout
+
+            myList.Add(3.6f);
+\end_layout
+
+\begin_layout Plain Layout
+
+            myList.Add(52.6f);
+\end_layout
+
+\begin_layout Plain Layout
+
+            myList.Add(523.6f);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+            foreach (float f in myList)
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+                Console.WriteLine(f);
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+} 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+ForEach example input C#
+\begin_inset CommandInset label
+LatexCommand label
+name "alg:ForEach-example-input"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The resulting C++ code is listed in the algorithms 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "alg:ForEach-example-C++"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "alg:ForEach-example-C++-1"
+
+\end_inset
+
+ (Header file and Code file respectively).
+ Notice that the low level output code is completelly legible from the developer
+ point of view instead of the traditional low level conventions and namings.
+ AlterNative always tries to maintain a high level syntaxis in order to
+ facilitate the developers work.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float algorithm
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset listings
+lstparams "language={C++}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+#pragma once #include "System/System.h"
+\end_layout
+
+\begin_layout Plain Layout
+
+#include "System/Collections/Generic/List.h"
+\end_layout
+
+\begin_layout Plain Layout
+
+#include "System/Console.h"
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+using namespace System::Collections::Generic;
+\end_layout
+
+\begin_layout Plain Layout
+
+using namespace System; 
+\end_layout
+
+\begin_layout Plain Layout
+
+namespace ForEach {
+\end_layout
+
+\begin_layout Plain Layout
+
+	class Program : public virtual Object 	{
+\end_layout
+
+\begin_layout Plain Layout
+
+		public:
+\end_layout
+
+\begin_layout Plain Layout
+
+			static void Main(String* args[]);
+\end_layout
+
+\begin_layout Plain Layout
+
+	};
+\end_layout
+
+\begin_layout Plain Layout
+
+} 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+ForEach example C++ header output
+\begin_inset CommandInset label
+LatexCommand label
+name "alg:ForEach-example-C++"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float algorithm
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset listings
+lstparams "language={C++}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+#include "Program.h"
+\end_layout
+
+\begin_layout Plain Layout
+
+namespace ForEach {
+\end_layout
+
+\begin_layout Plain Layout
+
+	void Program::Main(String* args[]){
+\end_layout
+
+\begin_layout Plain Layout
+
+		List_T<float>* myList = new List_T<float>();
+\end_layout
+
+\begin_layout Plain Layout
+
+		myList->Add(5.6f);
+\end_layout
+
+\begin_layout Plain Layout
+
+		myList->Add(5.7f);
+\end_layout
+
+\begin_layout Plain Layout
+
+		myList->Add(5.2f);
+\end_layout
+
+\begin_layout Plain Layout
+
+		myList->Add(5.9f);
+\end_layout
+
+\begin_layout Plain Layout
+
+		myList->Add(3.6f);
+\end_layout
+
+\begin_layout Plain Layout
+
+		myList->Add(52.6f);
+\end_layout
+
+\begin_layout Plain Layout
+
+		myList->Add(523.6f);
+\end_layout
+
+\begin_layout Plain Layout
+
+		FOREACH(_F, myList){
+\end_layout
+
+\begin_layout Plain Layout
+
+			float f = *_F;
+\end_layout
+
+\begin_layout Plain Layout
+
+			Console::WriteLine(f);
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+} 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+ForEach example C++ code implementation output
+\begin_inset CommandInset label
+LatexCommand label
+name "alg:ForEach-example-C++-1"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For the success of this example it is necessary the following external work:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+External C++ library List_T<T>:
+\series default
+ A List library with the same syntaxis and class hierarchy of System.Collections.G
+eneric.List<T> of .NET.
+ In this case the List<T> .NET implementation extends from IEnumerable (an
+ extended class of a classic iterator).
+ In the C++ library this implementation has to follow the same hierarchy
+ in order to take benefit of the IEnumerable and iterators methods, like
+ the foreach feature.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+External C++ library Console::WriteLine: 
+\series default
+A Console library with the same syntaxis and class hierarchy of System.Console.Wri
+teLine(float f).
+ This library is in charge of mapping this method to the C++ standard output
+ (std::cout).
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+External macro for FOREACH: 
+\series default
+Supposing that the List_T<T> class declared is well templated and inherits
+ from IEnumerable (also implemented in the library), the macro FOREACH call
+ the methods that provide the iterators for managing the collection.
+\end_layout
+
 \begin_layout Section
-Use case
+Use cases
+\end_layout
+
+\begin_layout Standard
+AlterNative can target to several use cases.
+ In this section will be explained two of the more significative use cases:
+ The performance improvement, and the cross-platform code generation tool.
+\end_layout
+
+\begin_layout Subsection
+Performance
 \end_layout
 
 \begin_layout Standard
 In general the major advantage of this platform can be obtained when an
  application or library is very complex in a computational way.
  The more complex is the target, the more the benefit can be obtained.
-\end_layout
-
-\begin_layout Standard
-Suppose the following scenario:
+ Suppose the following scenario:
 \end_layout
 
 \begin_layout Standard
@@ -454,7 +1111,8 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Java vs C++ performance
+Java vs C++ performance.
+ Device: Samsumg Galaxy S III Running Android 4.0
 \end_layout
 
 \end_inset
@@ -469,6 +1127,50 @@ Java vs C++ performance
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsection
+Cross-Platform embedded systems
+\end_layout
+
+\begin_layout Standard
+Other advantage of the standard low level languajes (like C++) is that a
+ high percentaje of device porcessors can execute this code.
+ We will explain this concept with an example.
+\end_layout
+
+\begin_layout Standard
+Suppose we have a .NET MicroFramework board like NetDuino Mini familiy boards
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+REF
+\end_layout
+
+\end_inset
+
+.
+ We use SPI and GPIO ports of this board for control some sensors and actuators.
+ We want to port the application in a more powerful board like a Raspberry
+ pi (wich is arm-linux architecture).
+ A way to execute C# .NET code in linux environment is to use the Mono framework
+ 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+REF
+\end_layout
+
+\end_inset
+
+, but the actual mono implementation does not support MicroFramework application
+s.
+ AlterNative allows us to translate the original C# MicroFramework code
+ to C++ code, therefore, the output code can be compiled to an arm-linux
+ target in order to execute the original code (with no further development)
+ in other platform.
 \end_layout
 
 \begin_layout Section
@@ -492,7 +1194,7 @@ key "key-6"
 \end_inset
 
 .
- The C# code used is listed below.
+ The source codes used are listed below.
 \end_layout
 
 \begin_layout Subsection
@@ -503,13 +1205,283 @@ Fannkuch-redux benchmark
 \begin_inset Float algorithm
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
-\begin_inset Graphics
-	filename Figures/fannkuch-redux.png
-	width 80col%
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+using System;
+\end_layout
+
+\begin_layout Plain Layout
+
+class FannkuchRedux 
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+   public static int[] fannkuch(int n) {
+\end_layout
+
+\begin_layout Plain Layout
+
+      int[] p = new int[n], q = new int[n], s = new int[n];
+\end_layout
+
+\begin_layout Plain Layout
+
+       int sign = 1, maxflips = 0, sum = 0, m = n-1;
+\end_layout
+
+\begin_layout Plain Layout
+
+      for(int i=0; i<n; i++){ p[i] = i; q[i] = i; s[i] = i; }
+\end_layout
+
+\begin_layout Plain Layout
+
+            do {
+\end_layout
+
+\begin_layout Plain Layout
+
+         // Copy and flip.
+\end_layout
+
+\begin_layout Plain Layout
+
+         var q0 = p[0];// Cache 0th element.
+\end_layout
+
+\begin_layout Plain Layout
+
+         if (q0 != 0){
+\end_layout
+
+\begin_layout Plain Layout
+
+            for(int i=1; i<n; i++) q[i] = p[i];// Work on a copy.
+\end_layout
+
+\begin_layout Plain Layout
+
+            var flips = 1;
+\end_layout
+
+\begin_layout Plain Layout
+
+            do {
+\end_layout
+
+\begin_layout Plain Layout
+
+                var qq = q[q0]; 
+\end_layout
+
+\begin_layout Plain Layout
+
+               if (qq == 0){// ...
+ until 0th element is 0.
+\end_layout
+
+\begin_layout Plain Layout
+
+                  sum += sign*flips;
+\end_layout
+
+\begin_layout Plain Layout
+
+	          if (flips > maxflips) maxflips = flips;// New maximum?
+\end_layout
+
+\begin_layout Plain Layout
+
+                  break;
+\end_layout
+
+\begin_layout Plain Layout
+
+                }
+\end_layout
+
+\begin_layout Plain Layout
+
+  	       q[q0] = q0;
+\end_layout
+
+\begin_layout Plain Layout
+
+ 	       if (q0 >= 3){
+\end_layout
+
+\begin_layout Plain Layout
+
+	          int i = 1, j = q0 - 1, t;
+\end_layout
+
+\begin_layout Plain Layout
+
+                  do { t = q[i]; q[i] = q[j]; q[j] = t; i++; j--; } while
+ (i < j);
+\end_layout
+
+\begin_layout Plain Layout
+
+                }
+\end_layout
+
+\begin_layout Plain Layout
+
+	       q0 = qq; flips++;
+\end_layout
+
+\begin_layout Plain Layout
+
+            } while (true);
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+         // Permute.
+\end_layout
+
+\begin_layout Plain Layout
+
+         if (sign == 1){
+\end_layout
+
+\begin_layout Plain Layout
+
+			// Rotate 0<-1.
+\end_layout
+
+\begin_layout Plain Layout
+
+            var t = p[1]; p[1] = p[0]; p[0] = t; sign = -1;
+\end_layout
+
+\begin_layout Plain Layout
+
+         } else {
+\end_layout
+
+\begin_layout Plain Layout
+
+			// Rotate 0<-1 and 0<-1<-2.
+\end_layout
+
+\begin_layout Plain Layout
+
+            var t = p[1]; p[1] = p[2]; p[2] = t; sign = 1;  
+\end_layout
+
+\begin_layout Plain Layout
+
+            for(int i=2; i<n; i++){
+\end_layout
+
+\begin_layout Plain Layout
+
+ 	       var sx = s[i];
+\end_layout
+
+\begin_layout Plain Layout
+
+	       if (sx != 0){ s[i] = sx-1; break; }
+\end_layout
+
+\begin_layout Plain Layout
+
+	       if (i == m) return new int[]{sum,maxflips};  // Out of permutations.
+\end_layout
+
+\begin_layout Plain Layout
+
+	       s[i] = i;
+\end_layout
+
+\begin_layout Plain Layout
+
+	       // Rotate 0<-...<-i+1.
+\end_layout
+
+\begin_layout Plain Layout
+
+	       t = p[0]; for(int j=0; j<=i; j++){ p[j] = p[j+1]; } p[i+1] = t;
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+         }
+\end_layout
+
+\begin_layout Plain Layout
+
+      } while (true);
+\end_layout
+
+\begin_layout Plain Layout
+
+   }
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+   static void Main(string[] args){
+\end_layout
+
+\begin_layout Plain Layout
+
+      int n = (args.Length > 0) ? Int32.Parse(args[0]) : 7;
+\end_layout
+
+\begin_layout Plain Layout
+
+      var pf = fannkuch(n);
+\end_layout
+
+\begin_layout Plain Layout
+
+      Console.Write("{0}
+\backslash
+nPfannkuchen({1}) = {2}
+\backslash
+n", pf[0], n, pf[1]);
+\end_layout
+
+\begin_layout Plain Layout
+
+   }
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
 
 \end_inset
 
@@ -520,7 +1492,7 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Fannkuch-redux test
+Fannkuch-redux test C# code
 \end_layout
 
 \end_inset
@@ -537,8 +1509,20 @@ Fannkuch-redux test
 We have compared three languages with three compilation targets.
  The languages are C# (original), C++ original (manually translated) and
  C++ alternative (obtained automatically).
- The three compilation targets are Windows 32 bits, Linux and Android) all
- of them with Release optimizations
+ The three compilation targets are Windows 32 bits, Linux and Android, all
+ of them with Release optimizations.
+ The figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Time-in-function-1"
+
+\end_inset
+
+ shows the comparison of the languages in Linux and Android targets.
+ In the Windows platform, C# .NET performs several optimizations that allows
+ the executable to run with a reasonable performance.
+ Even sometimes these optimizations makes the executable overcome to the
+ C++ exectuable version.
 \end_layout
 
 \begin_layout Standard
@@ -550,9 +1534,9 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename Figures/CompVsLang.emf
+	filename Figures/pegado2.emf
 	lyxscale 30
-	width 80col%
+	width 100col%
 
 \end_inset
 
@@ -563,8 +1547,10 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Time in function of the target platform
-\end_layout
+Time in function of the target platform for the Fannkuch-redux test
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Time-in-function-1"
 
 \end_inset
 
@@ -574,10 +1560,692 @@ Time in function of the target platform
 \end_inset
 
 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The C++ original code obtains the better benchmark as expected.
+ The AlterNative C++ generated code is near the original code.
+ This behaviour is also expected because AlterNative does not implement
+ stack or heap optimizations in the variables, now all the variables are
+ allocated dynamically.
+ The access to these variables are computationally expensive than in stack
+ variables.
 \end_layout
 
 \begin_layout Subsection
 N-Bodies benchmark
+\end_layout
+
+\begin_layout Standard
+The platforms and languages tested in this benchmark are the same that the
+ tested in the Fannkuch-redux benchmark.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float algorithm
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset listings
+lstparams "basicstyle={\tiny},language={[GNU]C++}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+using System;
+\end_layout
+
+\begin_layout Plain Layout
+
+class NBody {
+\end_layout
+
+\begin_layout Plain Layout
+
+	public static void Main(String[] args) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		int n = 50000000;
+\end_layout
+
+\begin_layout Plain Layout
+
+		NBodySystem bodies = new NBodySystem();
+\end_layout
+
+\begin_layout Plain Layout
+
+		Console.WriteLine("{0:f9}",bodies.Energy());
+\end_layout
+
+\begin_layout Plain Layout
+
+		for (int i=0; i<n; i++)
+\end_layout
+
+\begin_layout Plain Layout
+
+			bodies.Advance(0.01);
+\end_layout
+
+\begin_layout Plain Layout
+
+		Console.WriteLine("{0:f9}",bodies.Energy());
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+class NBodySystem {
+\end_layout
+
+\begin_layout Plain Layout
+
+	private Body[] bodies;
+\end_layout
+
+\begin_layout Plain Layout
+
+	public NBodySystem() {
+\end_layout
+
+\begin_layout Plain Layout
+
+		bodies = new Body[]{
+\end_layout
+
+\begin_layout Plain Layout
+
+			Body.Sun(),
+\end_layout
+
+\begin_layout Plain Layout
+
+			Body.Jupiter(),
+\end_layout
+
+\begin_layout Plain Layout
+
+			Body.Saturn(),
+\end_layout
+
+\begin_layout Plain Layout
+
+			Body.Uranus(),
+\end_layout
+
+\begin_layout Plain Layout
+
+			Body.Neptune()
+\end_layout
+
+\begin_layout Plain Layout
+
+		};
+\end_layout
+
+\begin_layout Plain Layout
+
+		double px = 0.0;
+\end_layout
+
+\begin_layout Plain Layout
+
+		double py = 0.0;
+\end_layout
+
+\begin_layout Plain Layout
+
+		double pz = 0.0;		
+\end_layout
+
+\begin_layout Plain Layout
+
+		foreach (Body body in bodies) {
+\end_layout
+
+\begin_layout Plain Layout
+
+			px += body.vx * body.mass;
+\end_layout
+
+\begin_layout Plain Layout
+
+			py += body.vy * body.mass;
+\end_layout
+
+\begin_layout Plain Layout
+
+			pz += body.vz * body.mass;
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
+\end_layout
+
+\begin_layout Plain Layout
+
+		bodies[0].OffsetMomentum(px,py,pz);
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	public void Advance(double dt) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		double dx, dy, dz, distance, mag;	 
+\end_layout
+
+\begin_layout Plain Layout
+
+		for (int i=0; i < bodies.Length; i++) {
+\end_layout
+
+\begin_layout Plain Layout
+
+			for (int j=i+1; j < bodies.Length; j++) {
+\end_layout
+
+\begin_layout Plain Layout
+
+				dx = bodies[i].x - bodies[j].x;
+\end_layout
+
+\begin_layout Plain Layout
+
+				dy = bodies[i].y - bodies[j].y;
+\end_layout
+
+\begin_layout Plain Layout
+
+				dz = bodies[i].z - bodies[j].z;				
+\end_layout
+
+\begin_layout Plain Layout
+
+				distance = Math.Sqrt(dx*dx + dy*dy + dz*dz);
+\end_layout
+
+\begin_layout Plain Layout
+
+				mag = dt / (distance * distance * distance); 			
+\end_layout
+
+\begin_layout Plain Layout
+
+				bodies[i].vx -= dx * bodies[j].mass * mag;
+\end_layout
+
+\begin_layout Plain Layout
+
+				bodies[i].vy -= dy * bodies[j].mass * mag;
+\end_layout
+
+\begin_layout Plain Layout
+
+				bodies[i].vz -= dz * bodies[j].mass * mag;				
+\end_layout
+
+\begin_layout Plain Layout
+
+				bodies[j].vx += dx * bodies[i].mass * mag;
+\end_layout
+
+\begin_layout Plain Layout
+
+				bodies[j].vy += dy * bodies[i].mass * mag;
+\end_layout
+
+\begin_layout Plain Layout
+
+				bodies[j].vz += dz * bodies[i].mass * mag;
+\end_layout
+
+\begin_layout Plain Layout
+
+			}
+\end_layout
+
+\begin_layout Plain Layout
+
+		}	
+\end_layout
+
+\begin_layout Plain Layout
+
+		foreach (Body body in bodies) {
+\end_layout
+
+\begin_layout Plain Layout
+
+			body.x += dt * body.vx;
+\end_layout
+
+\begin_layout Plain Layout
+
+			body.y += dt * body.vy;
+\end_layout
+
+\begin_layout Plain Layout
+
+			body.z += dt * body.vz;
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
+\end_layout
+
+\begin_layout Plain Layout
+
+	}	
+\end_layout
+
+\begin_layout Plain Layout
+
+	public double Energy() {
+\end_layout
+
+\begin_layout Plain Layout
+
+		double dx, dy, dz, distance;
+\end_layout
+
+\begin_layout Plain Layout
+
+		double e = 0.0;		
+\end_layout
+
+\begin_layout Plain Layout
+
+		for (int i=0; i < bodies.Length; i++) {
+\end_layout
+
+\begin_layout Plain Layout
+
+			e += 0.5 * bodies[i].mass *( bodies[i].vx * bodies[i].vx
+\end_layout
+
+\begin_layout Plain Layout
+
+			+ bodies[i].vy * bodies[i].vy
+\end_layout
+
+\begin_layout Plain Layout
+
+			+ bodies[i].vz * bodies[i].vz );			
+\end_layout
+
+\begin_layout Plain Layout
+
+			for (int j=i+1; j < bodies.Length; j++) {
+\end_layout
+
+\begin_layout Plain Layout
+
+				dx = bodies[i].x - bodies[j].x;
+\end_layout
+
+\begin_layout Plain Layout
+
+				dy = bodies[i].y - bodies[j].y;
+\end_layout
+
+\begin_layout Plain Layout
+
+				dz = bodies[i].z - bodies[j].z;				
+\end_layout
+
+\begin_layout Plain Layout
+
+				distance = Math.Sqrt(dx*dx + dy*dy + dz*dz);
+\end_layout
+
+\begin_layout Plain Layout
+
+				e -= (bodies[i].mass * bodies[j].mass) / distance;
+\end_layout
+
+\begin_layout Plain Layout
+
+			}
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
+\end_layout
+
+\begin_layout Plain Layout
+
+		return e;
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+class Body {
+\end_layout
+
+\begin_layout Plain Layout
+
+	const double PI = 3.141592653589793;
+\end_layout
+
+\begin_layout Plain Layout
+
+	const double SOLAR_MASS = 4 * PI * PI;
+\end_layout
+
+\begin_layout Plain Layout
+
+	const double DAYS_PER_YEAR = 365.24;	
+\end_layout
+
+\begin_layout Plain Layout
+
+	public double x, y, z, vx, vy, vz, mass;	
+\end_layout
+
+\begin_layout Plain Layout
+
+	public Body(){}
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	internal static Body Jupiter() {
+\end_layout
+
+\begin_layout Plain Layout
+
+		Body p = new Body();
+\end_layout
+
+\begin_layout Plain Layout
+
+		p.x = 4.84143144246472090e+00;	p.y = -1.16032004402742839e+00;
+\end_layout
+
+\begin_layout Plain Layout
+
+		p.z = -1.03622044471123109e-01;
+\end_layout
+
+\begin_layout Plain Layout
+
+		p.vx = 1.66007664274403694e-03 * DAYS_PER_YEAR;
+\end_layout
+
+\begin_layout Plain Layout
+
+		p.vy = 7.69901118419740425e-03 * DAYS_PER_YEAR;
+\end_layout
+
+\begin_layout Plain Layout
+
+		p.vz = -6.90460016972063023e-05 * DAYS_PER_YEAR;
+\end_layout
+
+\begin_layout Plain Layout
+
+		p.mass = 9.54791938424326609e-04 * SOLAR_MASS;
+\end_layout
+
+\begin_layout Plain Layout
+
+		return p;
+\end_layout
+
+\begin_layout Plain Layout
+
+	}	
+\end_layout
+
+\begin_layout Plain Layout
+
+	internal static Body Saturn() {
+\end_layout
+
+\begin_layout Plain Layout
+
+		//INITIALIZATION CODE ...
+\end_layout
+
+\begin_layout Plain Layout
+
+		return p;    
+\end_layout
+
+\begin_layout Plain Layout
+
+	}	 
+\end_layout
+
+\begin_layout Plain Layout
+
+	internal static Body Uranus() {
+\end_layout
+
+\begin_layout Plain Layout
+
+		//INITIALIZATION CODE ...
+\end_layout
+
+\begin_layout Plain Layout
+
+		return p;
+\end_layout
+
+\begin_layout Plain Layout
+
+	}	
+\end_layout
+
+\begin_layout Plain Layout
+
+	internal static Body Neptune() {
+\end_layout
+
+\begin_layout Plain Layout
+
+		//INITIALIZATION CODE ...
+\end_layout
+
+\begin_layout Plain Layout
+
+		return p;    
+\end_layout
+
+\begin_layout Plain Layout
+
+	}	
+\end_layout
+
+\begin_layout Plain Layout
+
+	internal static Body Sun() {
+\end_layout
+
+\begin_layout Plain Layout
+
+		//INITIALIZATION CODE ...
+\end_layout
+
+\begin_layout Plain Layout
+
+		return p;
+\end_layout
+
+\begin_layout Plain Layout
+
+	}	
+\end_layout
+
+\begin_layout Plain Layout
+
+	internal Body OffsetMomentum(double px, double py, double pz) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		vx = -px / SOLAR_MASS;	vy = -py / SOLAR_MASS;
+\end_layout
+
+\begin_layout Plain Layout
+
+		vz = -pz / SOLAR_MASS;
+\end_layout
+
+\begin_layout Plain Layout
+
+		return this;
+\end_layout
+
+\begin_layout Plain Layout
+
+	}			
+\end_layout
+
+\begin_layout Plain Layout
+
+} 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+N-Bodies algorithm
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The results of the execution of this test are illustrated in the figure
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Time-in-function-1"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/pegado4.emf
+	lyxscale 30
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Time in function of the target platform for the N-Body test
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Time-in-function"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The behaviour of this test is similar to the Fannkuch-redux benchmark test.
+ The difference between the original C++ code and the AlterNative C++ code
+ in this case is more accused than in the previous case.
+ This result is due to this example access the memory a huge number of times.
+ In stacked objects this is much faster than in dynamically allocated objects.
 \end_layout
 
 \begin_layout Section
@@ -597,6 +2265,110 @@ on.
  without taking into account the final application performance.
 \end_layout
 
+\begin_layout Standard
+AlterNative platform also allows cross-platform development adapted to computers
+, mobiles and also embedded systems.
+ This work is a novel tool that allows the developers to save time and develop
+ powerful and cross-platform applications able to run in the major part
+ of the devices 
+\end_layout
+
+\begin_layout Section
+Future Work
+\end_layout
+
+\begin_layout Standard
+The results obtained in this work are good in a cpu performance point of
+ view.
+ However, other important point in the high-level languages is the memory
+ management.
+ The memory management of high-level languages often depends in an external
+ service called garbage collector.
+ AlterNative implements a garbage collector in C++ using the popular Boehm
+ gc library 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+REF
+\end_layout
+
+\end_inset
+
+.
+ This implementation consists on track all the new objects and all the 
+\begin_inset Quotes eld
+\end_inset
+
+destroyed
+\begin_inset Quotes erd
+\end_inset
+
+ objects in order to manage all the memory allocations of the program.
+ One future research line for this work is to automatize the garbage collection
+ process in order to deallocate unused memory in the program.
+ In the actual implementation, the system is prepared but never deallocates
+ unused memory.
+ A Binary Tree test has been made in order to check that the memory management
+ is not working properly.
+ The figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Memory-allocation-in"
+
+\end_inset
+
+ shows the results.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/pegado3.emf
+	lyxscale 30
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Memory allocation in Binary-tree test
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Memory-allocation-in"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Other future line in the project is to complete and expand the actual support
+ library in order to cover all the basic C# language features.
+\end_layout
+
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
@@ -604,7 +2376,87 @@ key "key-1"
 
 \end_inset
 
+ILSPY REF
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+TODO
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-12"
+
+\end_inset
+
+A.
+ V.
+ Aho, R.
+ Sethi, J.
+ D.
+ Ullman, 
+\begin_inset Quotes eld
+\end_inset
+
+Compilers.
+ Principles, Techniques, and Tools
+\begin_inset Quotes erd
+\end_inset
+
+, Bell Telephone Laboratories, United States of America, 1986.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-5"
+
+\end_inset
+
+D.
+ Grune, H.
+ E.
+ Bal, C.
+ J.H.
+ Jacobs, K.
+ G.
+ Langendoen 
+\begin_inset Quotes eld
+\end_inset
+
+Modern Compiler Design
+\begin_inset Quotes erd
+\end_inset
+
+, Vrije Universiteit, Amsterdam and Delf University, John Wiley & Sons,
+ Ltd, England, 2000.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-13"
+
+\end_inset
+
 http://www.particlecode.com/
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+BUSCAR PAPER
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Bibliography
@@ -615,6 +2467,16 @@ key "key-2"
 \end_inset
 
 http://www.motorola.com/Business/US-EN/RhoMobile+Suite/Rhodes
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+BUSCAR PAPER
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Bibliography
@@ -625,6 +2487,16 @@ key "key-3"
 \end_inset
 
 http://shootout.alioth.debian.org/u32/performance.php?test=fannkuchredux
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+BUSCAR PAPER
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Bibliography
@@ -635,6 +2507,16 @@ key "key-6"
 \end_inset
 
 http://benchmarksgame.alioth.debian.org/u32q/program.php?test=nbody
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+BUSCAR PAPER
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_body
