@@ -1,0 +1,1 @@
+c:\users\gerard\documents\visual studio 2012\Projects\AlterNative.Core\AlterNative.Core\bin\Debug\AlterNative.Core.exe.config

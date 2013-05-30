@@ -1,0 +1,102 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlterNative.Core", "AlterNative.Core\AlterNative.Core.csproj", "{F7E31C2B-26A3-4AB1-AF11-4C86F27E28E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlterNative.Tools", "Alternative.Tools\AlterNative.Tools.csproj", "{38C5F3CB-339F-4DD3-9197-98989CA94F9D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mono.Cecil", "Mono.Cecil\Mono.Cecil.csproj", "{D68133BD-1E63-496E-9EDE-4FBDBF77B486}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		net_2_0_Debug|Any CPU = net_2_0_Debug|Any CPU
+		net_2_0_Release|Any CPU = net_2_0_Release|Any CPU
+		net_3_5_Debug|Any CPU = net_3_5_Debug|Any CPU
+		net_3_5_Release|Any CPU = net_3_5_Release|Any CPU
+		net_4_0_Debug|Any CPU = net_4_0_Debug|Any CPU
+		net_4_0_Release|Any CPU = net_4_0_Release|Any CPU
+		Release|Any CPU = Release|Any CPU
+		silverlight_Debug|Any CPU = silverlight_Debug|Any CPU
+		silverlight_Release|Any CPU = silverlight_Release|Any CPU
+		winphone_Debug|Any CPU = winphone_Debug|Any CPU
+		winphone_Release|Any CPU = winphone_Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F7E31C2B-26A3-4AB1-AF11-4C86F27E28E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7E31C2B-26A3-4AB1-AF11-4C86F27E28E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7E31C2B-26A3-4AB1-AF11-4C86F27E28E4}.net_2_0_Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7E31C2B-26A3-4AB1-AF11-4C86F27E28E4}.net_2_0_Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7E31C2B-26A3-4AB1-AF11-4C86F27E28E4}.net_2_0_Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7E31C2B-26A3-4AB1-AF11-4C86F27E28E4}.net_2_0_Release|Any CPU.Build.0 = Release|Any CPU
+		{F7E31C2B-26A3-4AB1-AF11-4C86F27E28E4}.net_3_5_Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7E31C2B-26A3-4AB1-AF11-4C86F27E28E4}.net_3_5_Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7E31C2B-26A3-4AB1-AF11-4C86F27E28E4}.net_3_5_Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7E31C2B-26A3-4AB1-AF11-4C86F27E28E4}.net_3_5_Release|Any CPU.Build.0 = Release|Any CPU
+		{F7E31C2B-26A3-4AB1-AF11-4C86F27E28E4}.net_4_0_Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7E31C2B-26A3-4AB1-AF11-4C86F27E28E4}.net_4_0_Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7E31C2B-26A3-4AB1-AF11-4C86F27E28E4}.net_4_0_Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7E31C2B-26A3-4AB1-AF11-4C86F27E28E4}.net_4_0_Release|Any CPU.Build.0 = Release|Any CPU
+		{F7E31C2B-26A3-4AB1-AF11-4C86F27E28E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7E31C2B-26A3-4AB1-AF11-4C86F27E28E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7E31C2B-26A3-4AB1-AF11-4C86F27E28E4}.silverlight_Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7E31C2B-26A3-4AB1-AF11-4C86F27E28E4}.silverlight_Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7E31C2B-26A3-4AB1-AF11-4C86F27E28E4}.silverlight_Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7E31C2B-26A3-4AB1-AF11-4C86F27E28E4}.silverlight_Release|Any CPU.Build.0 = Release|Any CPU
+		{F7E31C2B-26A3-4AB1-AF11-4C86F27E28E4}.winphone_Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7E31C2B-26A3-4AB1-AF11-4C86F27E28E4}.winphone_Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7E31C2B-26A3-4AB1-AF11-4C86F27E28E4}.winphone_Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7E31C2B-26A3-4AB1-AF11-4C86F27E28E4}.winphone_Release|Any CPU.Build.0 = Release|Any CPU
+		{38C5F3CB-339F-4DD3-9197-98989CA94F9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38C5F3CB-339F-4DD3-9197-98989CA94F9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38C5F3CB-339F-4DD3-9197-98989CA94F9D}.net_2_0_Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38C5F3CB-339F-4DD3-9197-98989CA94F9D}.net_2_0_Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38C5F3CB-339F-4DD3-9197-98989CA94F9D}.net_2_0_Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38C5F3CB-339F-4DD3-9197-98989CA94F9D}.net_2_0_Release|Any CPU.Build.0 = Release|Any CPU
+		{38C5F3CB-339F-4DD3-9197-98989CA94F9D}.net_3_5_Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38C5F3CB-339F-4DD3-9197-98989CA94F9D}.net_3_5_Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38C5F3CB-339F-4DD3-9197-98989CA94F9D}.net_3_5_Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38C5F3CB-339F-4DD3-9197-98989CA94F9D}.net_3_5_Release|Any CPU.Build.0 = Release|Any CPU
+		{38C5F3CB-339F-4DD3-9197-98989CA94F9D}.net_4_0_Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38C5F3CB-339F-4DD3-9197-98989CA94F9D}.net_4_0_Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38C5F3CB-339F-4DD3-9197-98989CA94F9D}.net_4_0_Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38C5F3CB-339F-4DD3-9197-98989CA94F9D}.net_4_0_Release|Any CPU.Build.0 = Release|Any CPU
+		{38C5F3CB-339F-4DD3-9197-98989CA94F9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38C5F3CB-339F-4DD3-9197-98989CA94F9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38C5F3CB-339F-4DD3-9197-98989CA94F9D}.silverlight_Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38C5F3CB-339F-4DD3-9197-98989CA94F9D}.silverlight_Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38C5F3CB-339F-4DD3-9197-98989CA94F9D}.silverlight_Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38C5F3CB-339F-4DD3-9197-98989CA94F9D}.silverlight_Release|Any CPU.Build.0 = Release|Any CPU
+		{38C5F3CB-339F-4DD3-9197-98989CA94F9D}.winphone_Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38C5F3CB-339F-4DD3-9197-98989CA94F9D}.winphone_Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38C5F3CB-339F-4DD3-9197-98989CA94F9D}.winphone_Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38C5F3CB-339F-4DD3-9197-98989CA94F9D}.winphone_Release|Any CPU.Build.0 = Release|Any CPU
+		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.Debug|Any CPU.ActiveCfg = winphone_Debug|Any CPU
+		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.Debug|Any CPU.Build.0 = winphone_Debug|Any CPU
+		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.net_2_0_Debug|Any CPU.ActiveCfg = net_2_0_Debug|Any CPU
+		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.net_2_0_Debug|Any CPU.Build.0 = net_2_0_Debug|Any CPU
+		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.net_2_0_Release|Any CPU.ActiveCfg = net_2_0_Release|Any CPU
+		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.net_2_0_Release|Any CPU.Build.0 = net_2_0_Release|Any CPU
+		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.net_3_5_Debug|Any CPU.ActiveCfg = net_3_5_Debug|Any CPU
+		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.net_3_5_Debug|Any CPU.Build.0 = net_3_5_Debug|Any CPU
+		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.net_3_5_Release|Any CPU.ActiveCfg = net_3_5_Release|Any CPU
+		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.net_3_5_Release|Any CPU.Build.0 = net_3_5_Release|Any CPU
+		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.net_4_0_Debug|Any CPU.ActiveCfg = net_4_0_Debug|Any CPU
+		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.net_4_0_Debug|Any CPU.Build.0 = net_4_0_Debug|Any CPU
+		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.net_4_0_Release|Any CPU.ActiveCfg = net_4_0_Release|Any CPU
+		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.net_4_0_Release|Any CPU.Build.0 = net_4_0_Release|Any CPU
+		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.Release|Any CPU.ActiveCfg = winphone_Release|Any CPU
+		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.Release|Any CPU.Build.0 = winphone_Release|Any CPU
+		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.silverlight_Debug|Any CPU.ActiveCfg = silverlight_Debug|Any CPU
+		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.silverlight_Debug|Any CPU.Build.0 = silverlight_Debug|Any CPU
+		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.silverlight_Release|Any CPU.ActiveCfg = silverlight_Release|Any CPU
+		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.silverlight_Release|Any CPU.Build.0 = silverlight_Release|Any CPU
+		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.winphone_Debug|Any CPU.ActiveCfg = winphone_Debug|Any CPU
+		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.winphone_Debug|Any CPU.Build.0 = winphone_Debug|Any CPU
+		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.winphone_Release|Any CPU.ActiveCfg = winphone_Release|Any CPU
+		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.winphone_Release|Any CPU.Build.0 = winphone_Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
