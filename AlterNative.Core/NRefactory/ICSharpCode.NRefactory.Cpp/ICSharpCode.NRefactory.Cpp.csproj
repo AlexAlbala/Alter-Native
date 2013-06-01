@@ -1,0 +1,251 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <ProjectGuid>{37669DE0-87E0-4CD0-AB53-170C38270857}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Library</OutputType>
+    <RootNamespace>ICSharpCode.NRefactory.Cpp</RootNamespace>
+    <AssemblyName>ICSharpCode.NRefactory.Cpp</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <NoStdLib>False</NoStdLib>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\ICSharpCode.NRefactory.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>False</DelaySign>
+    <AssemblyOriginatorKeyMode>File</AssemblyOriginatorKeyMode>
+    <DocumentationFile>..\ICSharpCode.NRefactory\bin\$(Configuration)\ICSharpCode.NRefactory.CSharp.xml</DocumentationFile>
+    <NoWarn>1591,1587,1570</NoWarn>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <BaseAddress>4194304</BaseAddress>
+    <FileAlignment>4096</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>..\ICSharpCode.NRefactory\bin\Debug\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <Optimize>False</Optimize>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <DefineConstants>DEBUG;TRACE;FULL_AST</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>..\ICSharpCode.NRefactory\bin\Release\</OutputPath>
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>PdbOnly</DebugType>
+    <Optimize>True</Optimize>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <DefineConstants>TRACE;FULL_AST</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DocumentationFile>..\ICSharpCode.NRefactory\bin\Debug\ICSharpCode.NRefactory.Cpp.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <DocumentationFile>..\ICSharpCode.NRefactory\bin\Release\ICSharpCode.NRefactory.Cpp.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Mono.Cecil, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Mono.Cecil\bin\net_4_0_Debug\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Ast\AstNode.cs" />
+    <Compile Include="Ast\AstNodeCollection.cs" />
+    <Compile Include="Ast\Expressions\AddressOfExpression.cs" />
+    <Compile Include="Ast\Expressions\BoxExpression.cs" />
+    <Compile Include="Ast\Expressions\DynamicCastExpression.cs" />
+    <Compile Include="Ast\Expressions\MemberAccessExpression.cs" />
+    <Compile Include="Ast\Expressions\UnBoxExpression.cs" />
+    <Compile Include="Ast\GeneralScope\BaseTemplateTypeDeclaration.cs" />
+    <Compile Include="Ast\GeneralScope\DocumentationReference.cs" />
+    <Compile Include="Ast\GeneralScope\GenericEntryPointDeclaration.cs" />
+    <Compile Include="Ast\GeneralScope\GenericTemplateTypeDeclaration.cs" />
+    <Compile Include="Ast\GeneralScope\InterfaceTypeDeclaration.cs" />
+    <Compile Include="Ast\GeneralScope\ExplicitInterfaceTypeDeclaration.cs" />
+    <Compile Include="Ast\Expressions\PointerExpression.cs" />
+    <Compile Include="Ast\GeneralScope\CompilationUnit.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Ast\GeneralScope\NestedTypeDeclaration.cs" />
+    <Compile Include="Ast\GeneralScope\NewLineNode.cs" />
+    <Compile Include="Ast\GeneralScope\SpecializedBasicTemplateDeclaration.cs" />
+    <Compile Include="Ast\GeneralScope\SpecializedGenericTemplateDeclaration.cs" />
+    <Compile Include="Ast\GeneralScope\TemplateTypeDeclaration.cs" />
+    <Compile Include="Ast\GeneralScope\TextNode.cs" />
+    <Compile Include="Ast\GeneralScope\WhitespaceNode.cs" />
+    <Compile Include="Ast\Header\IncludeDeclaration.cs" />
+    <Compile Include="Ast\GeneralScope\InterfaceMemberSpecifier.cs" />
+    <Compile Include="Ast\Statements\EndScopeStatement.cs" />
+    <Compile Include="Ast\Statements\ForeachStatement.cs" />
+    <Compile Include="Ast\Statements\LockStatement.cs" />
+    <Compile Include="Ast\TypeMembers\ConversionConstructorDeclaration.cs" />
+    <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderAbstractMethodDeclaration.cs" />
+    <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderConstructorDeclaration.cs" />
+    <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderConversionConstructorDeclaration.cs" />
+    <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderDestructorDeclaration.cs" />
+    <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderFieldDeclaration.cs" />
+    <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderMethodDeclaration.cs" />
+    <Compile Include="Ast\TypeName\AstType.cs" />
+    <Compile Include="Ast\ID.cs" />
+    <Compile Include="Ast\IdentifierExpressionBackreference.cs" />
+    <Compile Include="Ast\TypeName\ComposedType.cs" />
+    <Compile Include="Ast\CppModifierToken.cs" />
+    <Compile Include="Ast\CppTokenNode.cs" />
+    <Compile Include="Ast\CppUtil.cs" />
+    <Compile Include="Ast\ErrorNode.cs" />
+    <Compile Include="Ast\Expressions\AnonymousMethodExpression.cs" />
+    <Compile Include="Ast\Expressions\AnonymousTypeCreateExpression.cs" />
+    <Compile Include="Ast\Expressions\ArrayCreateExpression.cs" />
+    <Compile Include="Ast\Expressions\ArrayInitializerExpression.cs" />
+    <Compile Include="Ast\Expressions\AssignmentExpression.cs" />
+    <Compile Include="Ast\Expressions\BaseReferenceExpression.cs" />
+    <Compile Include="Ast\Expressions\BinaryOperatorExpression.cs" />
+    <Compile Include="Ast\Expressions\CastExpression.cs" />
+    <Compile Include="Ast\Expressions\CheckedExpression.cs" />
+    <Compile Include="Ast\Expressions\ConditionalExpression.cs" />
+    <Compile Include="Ast\Expressions\DefaultValueExpression.cs" />
+    <Compile Include="Ast\Expressions\DirectionExpression.cs" />
+    <Compile Include="Ast\Expressions\EmptyExpression.cs" />
+    <Compile Include="Ast\Expressions\Expression.cs" />
+    <Compile Include="Ast\Expressions\IdentifierExpression.cs" />
+    <Compile Include="Ast\Expressions\IndexerExpression.cs" />
+    <Compile Include="Ast\Expressions\InvocationExpression.cs" />
+    <Compile Include="Ast\Expressions\LambdaExpression.cs" />
+    <Compile Include="Ast\Expressions\MemberReferenceExpression.cs" />
+    <Compile Include="Ast\Expressions\NamedArgumentExpression.cs" />
+    <Compile Include="Ast\Expressions\NamedExpression.cs" />
+    <Compile Include="Ast\Expressions\NullReferenceExpression.cs" />
+    <Compile Include="Ast\Expressions\ObjectCreateExpression.cs" />
+    <Compile Include="Ast\Expressions\ParenthesizedExpression.cs" />
+    <Compile Include="Ast\Expressions\PointerReferenceExpression.cs" />
+    <Compile Include="Ast\Expressions\PrimitiveExpression.cs" />
+    <Compile Include="Ast\Expressions\QueryExpression.cs" />
+    <Compile Include="Ast\Expressions\SizeOfExpression.cs" />
+    <Compile Include="Ast\Expressions\StackAllocExpression.cs" />
+    <Compile Include="Ast\Expressions\ThisReferenceExpression.cs" />
+    <Compile Include="Ast\Expressions\TypeOfExpression.cs" />
+    <Compile Include="Ast\Expressions\TypeReferenceExpression.cs" />
+    <Compile Include="Ast\Expressions\UnaryOperatorExpression.cs" />
+    <Compile Include="Ast\Expressions\UncheckedExpression.cs" />
+    <Compile Include="Ast\Expressions\UndocumentedExpression.cs" />
+    <Compile Include="Ast\GeneralScope\Attribute.cs" />
+    <Compile Include="Ast\GeneralScope\AttributeSection.cs" />
+    <Compile Include="Ast\GeneralScope\Comment.cs" />
+    <Compile Include="Ast\GeneralScope\DelegateDeclaration.cs" />
+    <Compile Include="Ast\GeneralScope\ExternAliasDeclaration.cs" />
+    <Compile Include="Ast\Header\NamespaceDeclaration.cs" />
+    <Compile Include="Ast\GeneralScope\TypeDeclaration.cs" />
+    <Compile Include="Ast\GeneralScope\TypeParameterDeclaration.cs" />
+    <Compile Include="Ast\TypeName\ExpressionType.cs" />
+    <Compile Include="Ast\TypeName\PtrType.cs" />
+    <Compile Include="Ast\TypeName\QualifiedType.cs" />
+    <Compile Include="Ast\ComposedIdentifier.cs" />
+    <Compile Include="Ast\TypeName\TypeNameType.cs" />
+    <Compile Include="Formatters\FileWritterManager.cs" />
+    <Compile Include="Formatters\MainWritter.cs" />
+    <Compile Include="IAstVisitor.cs" />
+    <Compile Include="Ast\Identifier.cs" />
+    <Compile Include="Ast\IRelocatable.cs" />
+    <Compile Include="Ast\Modifiers.cs" />
+    <Compile Include="Ast\NodeType.cs" />
+    <Compile Include="Ast\TypeName\PrimitiveType.cs" />
+    <Compile Include="Ast\TypeName\SimpleType.cs" />
+    <Compile Include="Ast\Statements\BlockStatement.cs" />
+    <Compile Include="Ast\Statements\BreakStatement.cs" />
+    <Compile Include="Ast\Statements\CheckedStatement.cs" />
+    <Compile Include="Ast\Statements\ContinueStatement.cs" />
+    <Compile Include="Ast\Statements\DoWhileStatement.cs" />
+    <Compile Include="Ast\Statements\EmptyStatement.cs" />
+    <Compile Include="Ast\Statements\ExpressionStatement.cs" />
+    <Compile Include="Ast\Statements\FixedStatement.cs" />
+    <Compile Include="Ast\Statements\ForStatement.cs" />
+    <Compile Include="Ast\Statements\GotoStatement.cs" />
+    <Compile Include="Ast\Statements\IfElseStatement.cs" />
+    <Compile Include="Ast\Statements\LabelStatement.cs" />
+    <Compile Include="Ast\Statements\ReturnStatement.cs" />
+    <Compile Include="Ast\Statements\Statement.cs" />
+    <Compile Include="Ast\Statements\SwitchStatement.cs" />
+    <Compile Include="Ast\Statements\ThrowStatement.cs" />
+    <Compile Include="Ast\Statements\TryCatchStatement.cs" />
+    <Compile Include="Ast\Statements\UncheckedStatement.cs" />
+    <Compile Include="Ast\Statements\UnsafeStatement.cs" />
+    <Compile Include="Ast\Statements\UsingNamespaceStatement.cs" />
+    <Compile Include="Ast\Statements\VariableDeclarationStatement.cs" />
+    <Compile Include="Ast\Statements\WhileStatement.cs" />
+    <Compile Include="Ast\Statements\YieldBreakStatement.cs" />
+    <Compile Include="Ast\Statements\YieldReturnStatement.cs" />
+    <Compile Include="Ast\TypeMembers\Accessor.cs" />
+    <Compile Include="Ast\TypeMembers\AttributedNode.cs" />
+    <Compile Include="Ast\TypeMembers\ConstructorDeclaration.cs" />
+    <Compile Include="Ast\TypeMembers\DestructorDeclaration.cs" />
+    <Compile Include="Ast\TypeMembers\EnumMemberDeclaration.cs" />
+    <Compile Include="Ast\TypeMembers\EventDeclaration.cs" />
+    <Compile Include="Ast\TypeMembers\FieldDeclaration.cs" />
+    <Compile Include="Ast\TypeMembers\FixedFieldDeclaration.cs" />
+    <Compile Include="Ast\TypeMembers\FixedVariableInitializer.cs" />
+    <Compile Include="Ast\TypeMembers\IndexerDeclaration.cs" />
+    <Compile Include="Ast\TypeMembers\MemberDeclaration.cs" />
+    <Compile Include="Ast\TypeMembers\MethodDeclaration.cs" />
+    <Compile Include="Ast\TypeMembers\OperatorDeclaration.cs" />
+    <Compile Include="Ast\TypeMembers\ParameterDeclaration.cs" />
+    <Compile Include="Ast\TypeMembers\PropertyDeclaration.cs" />
+    <Compile Include="Ast\TypeMembers\VariableInitializer.cs" />
+    <Compile Include="Formatters\CppFormattingOptions.cs" />
+    <Compile Include="Formatters\FileWritterOutputFormatter.cs" />
+    <Compile Include="Formatters\IOutputFormatter.cs" />
+    <Compile Include="OutputVisitor\Cache.cs" />
+    <Compile Include="OutputVisitor\CppOutputVisitor.cs" />
+    <Compile Include="OutputVisitor\Resolver.cs" />
+    <Compile Include="Formatters\TextWriterOutputFormatter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Ast\GeneralScope\PreProcessorDirective.cs" />
+    <Compile Include="Ast\Expressions\ErrorExpression.cs" />
+    <Compile Include="Visitors\CSharpToCppConverterVisitor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Alternative.Tools\AlterNative.Tools.csproj">
+      <Project>{38c5f3cb-339f-4dd3-9197-98989ca94f9d}</Project>
+      <Name>AlterNative.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ICSharpCode.Decompiler\ICSharpCode.Decompiler.csproj">
+      <Project>{984CC812-9470-4A13-AFF9-CC44068D666C}</Project>
+      <Name>ICSharpCode.Decompiler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ICSharpCode.NRefactory.CSharp\ICSharpCode.NRefactory.CSharp.csproj">
+      <Project>{53DCA265-3C3C-42F9-B647-F72BA678122B}</Project>
+      <Name>ICSharpCode.NRefactory.CSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ICSharpCode.NRefactory\ICSharpCode.NRefactory.csproj">
+      <Project>{3B2A5653-EC97-4001-BB9B-D90F1AF2C371}</Project>
+      <Name>ICSharpCode.NRefactory</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <Policies>
+          <TextStylePolicy TabWidth="4" EolMarker="Unix" inheritsSet="Mono" inheritsScope="text/plain" scope="text/plain" />
+        </Policies>
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
+</Project>

@@ -1,1 +1,3 @@
 c:\users\gerard\documents\visual studio 2012\Projects\AlterNative.Core\AlterNative.Core\bin\Debug\AlterNative.Core.exe.config
+D:\Gerard\Dropbox\TFC\codi\GitHub\Alter-Native\Alter-Native\AlterNative.Core\AlterNative.Core\bin\Debug\AlterNative.Core.exe.config
+D:\Gerard\Dropbox\TFC\codi\GitHub\Alter-Native\Alter-Native\AlterNative.Core\AlterNative.Core\obj\Debug\AlterNative.Core.csprojResolveAssemblyReference.cache
