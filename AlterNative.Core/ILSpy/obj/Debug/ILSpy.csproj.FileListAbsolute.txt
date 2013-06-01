@@ -1,0 +1,5 @@
+D:\Gerard\Dropbox\TFC\codi\GitHub\Alter-Native\Alter-Native\AlterNative.Core\ILSpy\bin\Debug\ILSpy.dll
+D:\Gerard\Dropbox\TFC\codi\GitHub\Alter-Native\Alter-Native\AlterNative.Core\ILSpy\bin\Debug\ILSpy.pdb
+D:\Gerard\Dropbox\TFC\codi\GitHub\Alter-Native\Alter-Native\AlterNative.Core\ILSpy\obj\Debug\ILSpy.csprojResolveAssemblyReference.cache
+D:\Gerard\Dropbox\TFC\codi\GitHub\Alter-Native\Alter-Native\AlterNative.Core\ILSpy\obj\Debug\ILSpy.dll
+D:\Gerard\Dropbox\TFC\codi\GitHub\Alter-Native\Alter-Native\AlterNative.Core\ILSpy\obj\Debug\ILSpy.pdb

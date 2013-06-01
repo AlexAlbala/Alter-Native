@@ -52,6 +52,14 @@
       <Project>{38c5f3cb-339f-4dd3-9197-98989ca94f9d}</Project>
       <Name>AlterNative.Tools</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ICSharpCode.Decompiler\ICSharpCode.Decompiler.csproj">
+      <Project>{984cc812-9470-4a13-aff9-cc44068d666c}</Project>
+      <Name>ICSharpCode.Decompiler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ILSpy\ILSpy.csproj">
+      <Project>{a7f4a36c-a108-434a-bdf8-fd819c362e8d}</Project>
+      <Name>ILSpy</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Mono.Cecil\Mono.Cecil.csproj">
       <Project>{d68133bd-1e63-496e-9ede-4fbdbf77b486}</Project>
       <Name>Mono.Cecil</Name>
@@ -64,6 +72,9 @@
       <Project>{37669de0-87e0-4cd0-ab53-170c38270857}</Project>
       <Name>ICSharpCode.NRefactory.Cpp</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
