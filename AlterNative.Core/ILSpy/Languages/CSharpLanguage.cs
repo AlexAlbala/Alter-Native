@@ -624,13 +624,13 @@ namespace ICSharpCode.ILSpy
 			return showAllMembers || !AstBuilder.MemberIsHidden(member, new DecompilationOptions().DecompilerSettings);
 		}
 
-		public override MemberReference GetOriginalCodeLocation(MemberReference member)
-		{
-			if (showAllMembers || !DecompilerSettingsPanel.CurrentDecompilerSettings.AnonymousMethods)
-				return member;
-			else
-				return TreeNodes.Analyzer.Helpers.GetOriginalCodeLocation(member);
-		}
+        //public override MemberReference GetOriginalCodeLocation(MemberReference member)
+        //{
+        //    if (showAllMembers || !DecompilerSettingsPanel.CurrentDecompilerSettings.AnonymousMethods)
+        //        return member;
+        //    else
+        //        return TreeNodes.Analyzer.Helpers.GetOriginalCodeLocation(member);
+        //}
 
 		public override string GetTooltip(MemberReference member)
 		{
