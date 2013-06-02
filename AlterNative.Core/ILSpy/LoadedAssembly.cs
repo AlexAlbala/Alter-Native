@@ -153,7 +153,7 @@ namespace ICSharpCode.ILSpy
                     disposed = true;
                     assemblyLoadDisableCount--;
                     // clear the lookup cache since we might have stored the lookups failed due to DisableAssemblyLoad()
-                    MainWindow.Instance.CurrentAssemblyList.ClearCache();
+                    //MainWindow.Instance.CurrentAssemblyList.ClearCache();
                 }
             }
         }
@@ -226,11 +226,11 @@ namespace ICSharpCode.ILSpy
             if (assemblyLoadDisableCount > 0)
                 return null;
 
-            if (!App.Current.Dispatcher.CheckAccess())
-            {
-                // Call this method on the GUI thread.
-                return (LoadedAssembly)App.Current.Dispatcher.Invoke(DispatcherPriority.Normal, new Func<string, LoadedAssembly>(LookupReferencedAssembly), fullName);
-            }
+            //if (!App.Current.Dispatcher.CheckAccess())
+            //{
+            //    // Call this method on the GUI thread.
+            //    return (LoadedAssembly)App.Current.Dispatcher.Invoke(DispatcherPriority.Normal, new Func<string, LoadedAssembly>(LookupReferencedAssembly), fullName);
+            //}
 
             var name = AssemblyNameReference.Parse(fullName);
             string file = GacInterop.FindAssemblyInNetGac(name);
@@ -261,11 +261,11 @@ namespace ICSharpCode.ILSpy
             }
             if (assemblyLoadDisableCount > 0)
                 return null;
-            if (!App.Current.Dispatcher.CheckAccess())
-            {
-                // Call this method on the GUI thread.
-                return (LoadedAssembly)App.Current.Dispatcher.Invoke(DispatcherPriority.Normal, new Func<string, LoadedAssembly>(LookupWinRTMetadata), name);
-            }
+            //if (!App.Current.Dispatcher.CheckAccess())
+            //{
+            //    // Call this method on the GUI thread.
+            //    return (LoadedAssembly)App.Current.Dispatcher.Invoke(DispatcherPriority.Normal, new Func<string, LoadedAssembly>(LookupWinRTMetadata), name);
+            //}
 
             string file = Path.Combine(Environment.SystemDirectory, "WinMetadata", name + ".winmd");
             if (File.Exists(file))

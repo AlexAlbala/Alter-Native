@@ -45,6 +45,9 @@
     <Compile Include="Cpp\CppTextOutputFormatter.cs" />
     <Compile Include="Cpp\ILSpyEnvironmentProvider.cs" />
     <Compile Include="DecompilationOptions.cs" />
+    <Compile Include="FileTextOutput.cs" />
+    <Compile Include="Fusion.cs" />
+    <Compile Include="GacInterop.cs" />
     <Compile Include="ILSpySettings.cs" />
     <Compile Include="Languages\CSharpLanguage.cs" />
     <Compile Include="Languages\ILAstLanguage.cs" />
@@ -52,7 +55,7 @@
     <Compile Include="Languages\Language.cs" />
     <Compile Include="LoadedAssembly.cs" />
     <Compile Include="Options\DecompilerSettingsPanel.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TextView\DecompilerTextView.cs" />
     <Compile Include="XmlDoc\AddXmlDocTransform.cs" />
     <Compile Include="XmlDoc\XmlDocKeyProvider.cs" />
     <Compile Include="XmlDoc\XmlDocLoader.cs" />
@@ -82,6 +85,9 @@
       <Project>{3b2a5653-ec97-4001-bb9b-d90f1af2c371}</Project>
       <Name>ICSharpCode.NRefactory</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

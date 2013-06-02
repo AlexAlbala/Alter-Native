@@ -138,12 +138,12 @@ namespace ICSharpCode.ILSpy.Cpp
         }
 
         static readonly string[] projectImports = new[] {
-			"System.Diagnostics",
-			"Microsoft.VisualBasic",
-			"System",
-			"System.Collections",
-			"System.Collections.Generic"
-		};
+            "System.Diagnostics",
+            "Microsoft.VisualBasic",
+            "System",
+            "System.Collections",
+            "System.Collections.Generic"
+        };
 
         #region WriteProjectFile
         void WriteProjectFile(TextWriter writer, IEnumerable<Tuple<string, string>> files, ModuleDefinition module)

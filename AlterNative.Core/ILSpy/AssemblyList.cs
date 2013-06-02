@@ -109,16 +109,16 @@ namespace ICSharpCode.ILSpy
             if (!dirty)
             {
                 dirty = true;
-                App.Current.Dispatcher.BeginInvoke(
-                    DispatcherPriority.Background,
-                    new Action(
-                        delegate
-                        {
-                            dirty = false;
-                            AssemblyListManager.SaveList(this);
-                            ClearCache();
-                        })
-                );
+                //App.Current.Dispatcher.BeginInvoke(
+                //    DispatcherPriority.Background,
+                //    new Action(
+                //        delegate
+                //        {
+                //            dirty = false;
+                //            AssemblyListManager.SaveList(this);
+                //            ClearCache();
+                //        })
+                //);
             }
         }
 
@@ -134,7 +134,7 @@ namespace ICSharpCode.ILSpy
         /// </summary>
         public LoadedAssembly OpenAssembly(string file)
         {
-            App.Current.Dispatcher.VerifyAccess();
+            //App.Current.Dispatcher.VerifyAccess();
 
             file = Path.GetFullPath(file);
 
@@ -154,7 +154,7 @@ namespace ICSharpCode.ILSpy
 
         public void Unload(LoadedAssembly assembly)
         {
-            App.Current.Dispatcher.VerifyAccess();
+            //App.Current.Dispatcher.VerifyAccess();
             lock (assemblies)
             {
                 assemblies.Remove(assembly);
@@ -168,12 +168,12 @@ namespace ICSharpCode.ILSpy
         {
             if (gcRequested) return;
             gcRequested = true;
-            App.Current.Dispatcher.BeginInvoke(DispatcherPriority.ContextIdle, new Action(
-                delegate
-                {
-                    gcRequested = false;
-                    GC.Collect();
-                }));
+            //App.Current.Dispatcher.BeginInvoke(DispatcherPriority.ContextIdle, new Action(
+            //    delegate
+            //    {
+            //        gcRequested = false;
+            //        GC.Collect();
+            //    }));
         }
 
         public void Sort(IComparer<LoadedAssembly> comparer)
@@ -183,7 +183,7 @@ namespace ICSharpCode.ILSpy
 
         public void Sort(int index, int count, IComparer<LoadedAssembly> comparer)
         {
-            App.Current.Dispatcher.VerifyAccess();
+            //App.Current.Dispatcher.VerifyAccess();
             lock (assemblies)
             {
                 List<LoadedAssembly> list = new List<LoadedAssembly>(assemblies);
