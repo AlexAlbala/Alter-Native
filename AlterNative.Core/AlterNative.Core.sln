@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICSharpCode.NRefactory.CSha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ILSpy", "ILSpy\ILSpy.csproj", "{A7F4A36C-A108-434A-BDF8-FD819C362E8D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICSharpCode.NRefactory.VB", "NRefactory\ICSharpCode.NRefactory.VB\ICSharpCode.NRefactory.VB.csproj", "{7B82B671-419F-45F4-B778-D9286F996EFA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -373,6 +375,42 @@ Global
 		{A7F4A36C-A108-434A-BDF8-FD819C362E8D}.winphone_Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7F4A36C-A108-434A-BDF8-FD819C362E8D}.winphone_Release|Any CPU.Build.0 = Release|Any CPU
 		{A7F4A36C-A108-434A-BDF8-FD819C362E8D}.winphone_Release|x86.ActiveCfg = Release|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_2_0_Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_2_0_Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_2_0_Debug|x86.ActiveCfg = Debug|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_2_0_Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_2_0_Release|Any CPU.Build.0 = Release|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_2_0_Release|x86.ActiveCfg = Release|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_3_5_Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_3_5_Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_3_5_Debug|x86.ActiveCfg = Debug|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_3_5_Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_3_5_Release|Any CPU.Build.0 = Release|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_3_5_Release|x86.ActiveCfg = Release|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_4_0_Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_4_0_Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_4_0_Debug|x86.ActiveCfg = Debug|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_4_0_Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_4_0_Release|Any CPU.Build.0 = Release|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_4_0_Release|x86.ActiveCfg = Release|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.Release|x86.ActiveCfg = Release|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.silverlight_Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.silverlight_Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.silverlight_Debug|x86.ActiveCfg = Debug|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.silverlight_Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.silverlight_Release|Any CPU.Build.0 = Release|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.silverlight_Release|x86.ActiveCfg = Release|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.winphone_Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.winphone_Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.winphone_Debug|x86.ActiveCfg = Debug|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.winphone_Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.winphone_Release|Any CPU.Build.0 = Release|Any CPU
+		{7B82B671-419F-45F4-B778-D9286F996EFA}.winphone_Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -383,5 +421,6 @@ Global
 		{3B2A5653-EC97-4001-BB9B-D90F1AF2C371} = {FA6D62B1-9F34-422E-A925-76BA470432FD}
 		{53DCA265-3C3C-42F9-B647-F72BA678122B} = {FA6D62B1-9F34-422E-A925-76BA470432FD}
 		{A7F4A36C-A108-434A-BDF8-FD819C362E8D} = {FA6D62B1-9F34-422E-A925-76BA470432FD}
+		{7B82B671-419F-45F4-B778-D9286F996EFA} = {FA6D62B1-9F34-422E-A925-76BA470432FD}
 	EndGlobalSection
 EndGlobal

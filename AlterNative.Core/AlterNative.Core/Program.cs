@@ -70,9 +70,9 @@ namespace AlterNative
                 case "C#":
                     lang = new ICSharpCode.ILSpy.CSharpLanguage();
                     break;
-                case "VB":
-                    lang = new ICSharpCode.ILSpy.VB.VBLanguage();
-                    break;
+                //case "VB":
+                //    lang = new ICSharpCode.ILSpy.VB.VBLanguage();
+                //    break;
                 case "IL":
                     lang = new ICSharpCode.ILSpy.ILLanguage(true);
                     break;
