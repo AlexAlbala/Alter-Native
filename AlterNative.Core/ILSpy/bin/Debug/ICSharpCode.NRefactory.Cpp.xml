@@ -1,0 +1,1356 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ICSharpCode.NRefactory.Cpp</name>
+    </assembly>
+    <members>
+        <member name="M:ICSharpCode.NRefactory.Cpp.AstNode.GetChildByRole``1(ICSharpCode.NRefactory.Role{``0})">
+            <summary>
+            Gets the first child with the specified role.
+            Returns the role's null object if the child is not found.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.AstNode.AddChildUnsafe(ICSharpCode.NRefactory.Cpp.AstNode,ICSharpCode.NRefactory.Role)">
+            <summary>
+            Adds a child without performing any safety checks.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.AstNode.Remove">
+            <summary>
+            Removes this node from its parent.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.AstNode.ReplaceWith(ICSharpCode.NRefactory.Cpp.AstNode)">
+            <summary>
+            Replaces this node with the new node.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.AstNode.Clone">
+            <summary>
+            Clones the whole subtree starting at this AST node.
+            </summary>
+            <remarks>Annotations are copied over to the new nodes; and any annotations implementating ICloneable will be cloned.</remarks>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.Cpp.AstNode.Ancestors">
+            <summary>
+            Gets the ancestors of this node (excluding this node itself)
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.Cpp.AstNode.Descendants">
+            <summary>
+            Gets all descendants of this node (excluding this node itself).
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.Cpp.AstNode.DescendantsAndSelf">
+            <summary>
+            Gets all descendants of this node (including this node itself).
+            </summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.AstNode.Roles.Root">
+            <summary>
+            Root of an abstract syntax tree.
+            </summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.AstNode.Roles.XmlOpenTag">
+            <summary>
+            Text: &lt;
+            </summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.AstNode.Roles.XmlCloseTag">
+            <summary>
+            Text: &gt;
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.AstNodeCollection`1">
+            <summary>
+            Represents the children of an AstNode that have a specific role.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.AstNodeCollection`1.FirstOrNullObject(System.Func{`0,System.Boolean})">
+            <summary>
+            Returns the first element for which the predicate returns true,
+            or the null node (AstNode with IsNull=true) if no such object is found.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.AstNodeCollection`1.LastOrNullObject(System.Func{`0,System.Boolean})">
+            <summary>
+            Returns the last element for which the predicate returns true,
+            or the null node (AstNode with IsNull=true) if no such object is found.
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.Ast.Expression">
+            <summary>
+            Base class for expressions.
+            </summary>
+            <remarks>
+            This class is useful even though it doesn't provide any additional functionality:
+            It can be used to communicate more information in APIs, e.g. "this subnode will always be an expression"
+            </remarks>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Ast.Expression.Member(System.String)">
+            <summary>
+            Builds an member reference expression using this expression as target.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Ast.Expression.Indexer(System.Collections.Generic.IEnumerable{ICSharpCode.NRefactory.Cpp.Ast.Expression})">
+            <summary>
+            Builds an indexer expression using this expression as target.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Ast.Expression.Indexer(ICSharpCode.NRefactory.Cpp.Ast.Expression[])">
+            <summary>
+            Builds an indexer expression using this expression as target.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Ast.Expression.Invoke(System.String,System.Collections.Generic.IEnumerable{ICSharpCode.NRefactory.Cpp.Ast.Expression})">
+            <summary>
+            Builds an invocation expression using this expression as target.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Ast.Expression.Invoke(System.String,ICSharpCode.NRefactory.Cpp.Ast.Expression[])">
+            <summary>
+            Builds an invocation expression using this expression as target.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Ast.Expression.Invoke(System.String,System.Collections.Generic.IEnumerable{ICSharpCode.NRefactory.Cpp.Ast.AstType},System.Collections.Generic.IEnumerable{ICSharpCode.NRefactory.Cpp.Ast.Expression})">
+            <summary>
+            Builds an invocation expression using this expression as target.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Ast.Expression.Invoke(System.Collections.Generic.IEnumerable{ICSharpCode.NRefactory.Cpp.Ast.Expression})">
+            <summary>
+            Builds an invocation expression using this expression as target.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Ast.Expression.Invoke(ICSharpCode.NRefactory.Cpp.Ast.Expression[])">
+            <summary>
+            Builds an invocation expression using this expression as target.
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.BoxExpression">
+            <summary>
+            (Box)Expression
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.DynamicCastExpression">
+            <summary>
+            (CastTo)Expression
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.UnBoxExpression">
+            <summary>
+            (UnBox)Expression
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.Ast.BaseTemplateTypeDeclaration">
+            <summary>
+            class Name&lt;TypeParameters&gt; : BaseTypes where Constraints;
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.Ast.TypeDeclaration">
+            <summary>
+            class Name&lt;TypeParameters&gt; : BaseTypes where Constraints;
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.DocumentationReference">
+            <summary>
+            Represents a 'cref' reference in XML documentation.
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.Cpp.DocumentationReference.EntityType">
+            <summary>
+            Gets/Sets the entity type.
+            Possible values are:
+              <c>EntityType.Operator</c> for operators,
+              <c>EntityType.Indexer</c> for indexers,
+              <c>EntityType.TypeDefinition</c> for references to primitive types,
+              and <c>EntityType.None</c> for everything else.
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.Cpp.DocumentationReference.OperatorType">
+            <summary>
+            Gets/Sets the operator type.
+            This property is only used when EntityType==Operator.
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.Cpp.DocumentationReference.HasParameterList">
+            <summary>
+            Gets/Sets whether a parameter list was provided.
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.Cpp.DocumentationReference.DeclaringType">
+            <summary>
+            Gets/Sets the declaring type.
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.Cpp.DocumentationReference.MemberName">
+            <summary>
+            Gets/sets the member name.
+            This property is only used when EntityType==None.
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.Cpp.DocumentationReference.ConversionOperatorReturnType">
+            <summary>
+            Gets/Sets the return type of conversion operators.
+            This property is only used when EntityType==Operator and OperatorType is explicit or implicit.
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.Ast.GenericEntryPointDeclaration">
+            <summary>
+            class Name&lt;TypeParameters&gt; : BaseTypes where Constraints;
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.Ast.GenericTemplateTypeDeclaration">
+            <summary>
+            Type&lt;[EMPTY]&gt;
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.Ast.InterfaceTypeDeclaration">
+            <summary>
+            Type&lt;[EMPTY]&gt;
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.Ast.ExplicitInterfaceTypeDeclaration">
+            <summary>
+            Type&lt;[EMPTY]&gt;
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.Cpp.Ast.ExplicitInterfaceTypeDeclaration.OutMembers">
+            <summary>
+            Members used for accessing the nested type. These members are declared in the parent type
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.Ast.NestedTypeDeclaration">
+            <summary>
+            Type&lt;[EMPTY]&gt;
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.NewLineNode">
+            <summary>
+            A New line node represents a line break in the text.
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.Ast.SpecializedBasicTemplateDeclaration">
+            <summary>
+            class Name&lt;TypeParameters&gt; : BaseTypes where Constraints;
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.Ast.SpecializedGenericTemplateDeclaration">
+            <summary>
+            class Name&lt;TypeParameters&gt; : BaseTypes where Constraints;
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.Ast.TemplateTypeDeclaration">
+            <summary>
+            class Name&lt;TypeParameters&gt; : BaseTypes where Constraints;
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.TextNode">
+            <summary>
+            A text node contains text without syntactic or semantic information.
+            (non parseable part of a text)
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.WhitespaceNode">
+            <summary>
+            A Whitespace node contains only whitespaces.
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.IncludeDeclaration">
+            <summary>
+            using Import;
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.Ast.Statement">
+            <summary>
+            Base class for statements.
+            </summary>
+            <remarks>
+            This class is useful even though it doesn't provide any additional functionality:
+            It can be used to communicate more information in APIs, e.g. "this subnode will always be a statement"
+            </remarks>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.ForeachStatement">
+            <summary>
+            foreach (Type VariableName in InExpression) EmbeddedStatement
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.LockStatement">
+            <summary>
+            lock (Expression) EmbeddedStatement;
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.ConversionConstructorDeclaration.GetName(ICSharpCode.NRefactory.Cpp.OperatorType)">
+            <summary>
+            Gets the method name for the operator type. ("op_Addition", "op_Implicit", etc.)
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.ConversionConstructorDeclaration.GetToken(ICSharpCode.NRefactory.Cpp.OperatorType)">
+            <summary>
+            Gets the token for the operator type ("+", "implicit", etc.)
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.Cpp.MemberDeclaration.PrivateImplementationType">
+            <summary>
+            Only supported on members that can be declared in an interface.
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.Cpp.HeaderConstructorDeclaration.Name">
+            <summary>
+            Gets/Sets the name of the class containing the constructor.
+            This property can be used to inform the output visitor about the class name when writing a constructor declaration
+            without writing the complete type declaration. It is ignored when the constructor has a type declaration as parent.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.HeaderConversionConstructorDeclaration.GetName(ICSharpCode.NRefactory.Cpp.OperatorType)">
+            <summary>
+            Gets the method name for the operator type. ("op_Addition", "op_Implicit", etc.)
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.HeaderConversionConstructorDeclaration.GetToken(ICSharpCode.NRefactory.Cpp.OperatorType)">
+            <summary>
+            Gets the token for the operator type ("+", "implicit", etc.)
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.Cpp.HeaderDestructorDeclaration.Name">
+            <summary>
+            Gets/Sets the name of the class containing the destructor.
+            This property can be used to inform the output visitor about the class name when writing a destructor declaration
+            without writing the complete type declaration. It is ignored when the destructor has a type declaration as parent.
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.Ast.AstType">
+            <summary>
+            A type reference in the Cpp AST.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Ast.AstType.Member(System.String)">
+            <summary>
+            Builds an expression that can be used to access a static member on this type.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Ast.AstType.Invoke(System.String,System.Collections.Generic.IEnumerable{ICSharpCode.NRefactory.Cpp.Ast.Expression})">
+            <summary>
+            Builds an invocation expression using this type as target.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Ast.AstType.Invoke(System.String,ICSharpCode.NRefactory.Cpp.Ast.Expression[])">
+            <summary>
+            Builds an invocation expression using this type as target.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Ast.AstType.Invoke(System.String,System.Collections.Generic.IEnumerable{ICSharpCode.NRefactory.Cpp.Ast.AstType},System.Collections.Generic.IEnumerable{ICSharpCode.NRefactory.Cpp.Ast.Expression})">
+            <summary>
+            Builds an invocation expression using this type as target.
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.IdentifierExpressionBackreference">
+            <summary>
+            Matches identifier expressions that have the same identifier as the referenced variable/type definition/method definition.
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.Ast.ArraySpecifier">
+            <summary>
+            [,,,]
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.ErrorNode">
+            <summary>
+            Represents a parsing error in the ast. At the moment it only represents missing closing bracket.
+            This closing bracket is replaced by a node at the highest possible position.
+            (To make GetAstNodeAt (line, col) working).
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.AnonymousMethodExpression">
+            <summary>
+            [async] delegate(Parameters) {Body}
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.AnonymousTypeCreateExpression">
+            <summary>
+            new { [ExpressionList] }
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.ArrayCreateExpression">
+            <summary>
+            new Type[Dimensions]
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.Cpp.ArrayCreateExpression.AdditionalArraySpecifiers">
+            <summary>
+            Gets additional array ranks (those without size info).
+            Empty for "new int[5,1]"; will contain a single element for "new int[5][]".
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.ArrayInitializerExpression">
+            <summary>
+            { Elements }
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.AssignmentExpression">
+            <summary>
+            Left Operator= Right
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.AssignmentExpression.GetCorrespondingBinaryOperator(ICSharpCode.NRefactory.Cpp.AssignmentOperatorType)">
+            <summary>
+            Gets the binary operator for the specified compound assignment operator.
+            Returns null if 'op' is not a compound assignment.
+            </summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.AssignmentOperatorType.Assign">
+            <summary>left = right</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.AssignmentOperatorType.Add">
+            <summary>left += right</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.AssignmentOperatorType.Subtract">
+            <summary>left -= right</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.AssignmentOperatorType.Multiply">
+            <summary>left *= right</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.AssignmentOperatorType.Divide">
+            <summary>left /= right</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.AssignmentOperatorType.Modulus">
+            <summary>left %= right</summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "F:ICSharpCode.NRefactory.Cpp.AssignmentOperatorType.ShiftLeft" -->
+        <member name="F:ICSharpCode.NRefactory.Cpp.AssignmentOperatorType.ShiftRight">
+            <summary>left >>= right</summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "F:ICSharpCode.NRefactory.Cpp.AssignmentOperatorType.BitwiseAnd" -->
+        <member name="F:ICSharpCode.NRefactory.Cpp.AssignmentOperatorType.BitwiseOr">
+            <summary>left |= right</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.AssignmentOperatorType.ExclusiveOr">
+            <summary>left ^= right</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.AssignmentOperatorType.Any">
+            <summary>Any operator (for pattern matching)</summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.BaseReferenceExpression">
+            <summary>
+            base
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.BinaryOperatorExpression">
+            <summary>
+            Left Operator Right
+            </summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.BinaryOperatorType.Any">
+            <summary>
+            Any binary operator (used in pattern matching)
+            </summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.BinaryOperatorType.BitwiseAnd">
+            <summary>left &amp; right</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.BinaryOperatorType.BitwiseOr">
+            <summary>left | right</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.BinaryOperatorType.ConditionalAnd">
+            <summary>left &amp;&amp; right</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.BinaryOperatorType.ConditionalOr">
+            <summary>left || right</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.BinaryOperatorType.ExclusiveOr">
+            <summary>left ^ right</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.BinaryOperatorType.GreaterThan">
+            <summary>left &gt; right</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.BinaryOperatorType.GreaterThanOrEqual">
+            <summary>left &gt;= right</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.BinaryOperatorType.Equality">
+            <summary>left == right</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.BinaryOperatorType.InEquality">
+            <summary>left != right</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.BinaryOperatorType.LessThan">
+            <summary>left &lt; right</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.BinaryOperatorType.LessThanOrEqual">
+            <summary>left &lt;= right</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.BinaryOperatorType.Add">
+            <summary>left + right</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.BinaryOperatorType.Subtract">
+            <summary>left - right</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.BinaryOperatorType.Multiply">
+            <summary>left * right</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.BinaryOperatorType.Divide">
+            <summary>left / right</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.BinaryOperatorType.Modulus">
+            <summary>left % right</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.BinaryOperatorType.ShiftLeft">
+            <summary>left &lt;&lt; right</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.BinaryOperatorType.ShiftRight">
+            <summary>left &gt;&gt; right</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.BinaryOperatorType.NullCoalescing">
+            <summary>left ?? right</summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.CastExpression">
+            <summary>
+            (CastTo)Expression
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.CheckedExpression">
+            <summary>
+            checked(Expression)
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.ConditionalExpression">
+            <summary>
+            Condition ? TrueExpression : FalseExpression
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.DefaultValueExpression">
+            <summary>
+            default(Type)
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.DirectionExpression">
+            <summary>
+            ref Expression
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.EmptyExpression">
+            <summary>
+            Type&lt;[EMPTY]&gt;
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.IndexerExpression">
+            <summary>
+            Target[Arguments]
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.InvocationExpression">
+            <summary>
+            Target(Arguments)
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.LambdaExpression">
+            <summary>
+            [async] Parameters => Body
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.MemberReferenceExpression">
+            <summary>
+            Target.MemberName
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.NamedArgumentExpression">
+            <summary>
+            Represents a named argument passed to a method or attribute.
+            name: expression
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.NamedExpression">
+            <summary>
+            name = expression
+            This isn't the same as 'assign' even though it has the same syntax.
+            This expression is used in object initializers and for named attribute arguments [Attr(FieldName = value)].
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.NullReferenceExpression">
+            <summary>
+            null
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.ObjectCreateExpression">
+            <summary>
+            new Type(Arguments) { Initializer }
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.ParenthesizedExpression">
+            <summary>
+            ( Expression )
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.ParenthesizedExpression.ActsAsParenthesizedExpression(ICSharpCode.NRefactory.Cpp.AstNode)">
+            <summary>
+            Gets whether the expression acts like a parenthesized expression,
+            i.e. whether information about the expected type (for lambda type inference) flows
+            into the inner expression.
+            </summary>
+            <returns>Returns true for ParenthesizedExpression, CheckedExpression or UncheckedExpression; false otherwise.</returns>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.ParenthesizedExpression.UnpackParenthesizedExpression(ICSharpCode.NRefactory.Cpp.Ast.Expression)">
+            <summary>
+            Unpacks the given expression if it is a ParenthesizedExpression, CheckedExpression or UncheckedExpression.
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.PointerReferenceExpression">
+            <summary>
+            Target->MemberName
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.PrimitiveExpression">
+            <summary>
+            Represents a literal value.
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.QueryContinuationClause">
+            <summary>
+            Represents a query continuation.
+            "(from .. select ..) into Identifier" or "(from .. group .. by ..) into Identifier"
+            Note that "join .. into .." is not a query continuation!
+            
+            This is always the first(!!) clause in a query expression.
+            The tree for "from a in b select c into d select e" looks like this:
+            new QueryExpression {
+            	new QueryContinuationClause {
+            		PrecedingQuery = new QueryExpression {
+            			new QueryFromClause(a in b),
+            			new QuerySelectClause(c)
+            		},
+            		Identifier = d
+            	},
+            	new QuerySelectClause(e)
+            }
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.QueryJoinClause">
+            <summary>
+            Represents a join or group join clause.
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.SizeOfExpression">
+            <summary>
+            sizeof(Type)
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.StackAllocExpression">
+            <summary>
+            stackalloc Type[Count]
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.ThisReferenceExpression">
+            <summary>
+            this
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.TypeOfExpression">
+            <summary>
+            typeof(Type)
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.TypeReferenceExpression">
+            <summary>
+            Represents an AstType as an expression.
+            This is used when calling a method on a primitive type: "int.Parse()"
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.UnaryOperatorExpression">
+            <summary>
+            Operator Expression
+            </summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.UnaryOperatorType.Any">
+            <summary>
+            Any unary operator (used in pattern matching)
+            </summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.UnaryOperatorType.Not">
+            <summary>Logical not (!a)</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.UnaryOperatorType.BitNot">
+            <summary>Bitwise not (~a)</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.UnaryOperatorType.Minus">
+            <summary>Unary minus (-a)</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.UnaryOperatorType.Plus">
+            <summary>Unary plus (+a)</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.UnaryOperatorType.Increment">
+            <summary>Pre increment (++a)</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.UnaryOperatorType.Decrement">
+            <summary>Pre decrement (--a)</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.UnaryOperatorType.PostIncrement">
+            <summary>Post increment (a++)</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.UnaryOperatorType.PostDecrement">
+            <summary>Post decrement (a--)</summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.UnaryOperatorType.Dereference">
+            <summary>Dereferencing (*a)</summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "F:ICSharpCode.NRefactory.Cpp.UnaryOperatorType.AddressOf" -->
+        <member name="F:ICSharpCode.NRefactory.Cpp.UnaryOperatorType.Await">
+            <summary>C# 5.0 await</summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.UncheckedExpression">
+            <summary>
+            unchecked(Expression)
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.UndocumentedExpression">
+            <summary>
+            Represents undocumented expressions.
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.Ast.Attribute">
+            <summary>
+            Attribute(Arguments)
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.AttributeSection">
+            <summary>
+            [AttributeTarget: Attributes]
+            </summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.CommentType.SingleLine">
+            <summary>
+            "//" comment
+            </summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.CommentType.MultiLine">
+            <summary>
+            "/* */" comment
+            </summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.CommentType.Documentation">
+            <summary>
+            "///" comment
+            </summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.CommentType.InactiveCode">
+            <summary>
+            Inactive code (code in non-taken "#if")
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.DelegateDeclaration">
+            <summary>
+            delegate ReturnType Name&lt;TypeParameters&gt;(Parameters) where Constraints;
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:ICSharpCode.NRefactory.Cpp.ExternAliasDeclaration" -->
+        <member name="T:ICSharpCode.NRefactory.Cpp.NamespaceDeclaration">
+            <summary>
+            namespace Name { Members }
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.Cpp.NamespaceDeclaration.FullName">
+            <summary>
+            Gets the full namespace name (including any parent namespaces)
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.TypeParameterDeclaration">
+            <summary>
+            [in|out] Name
+            
+            Represents a type parameter.
+            Note: mirroring the C# syntax, constraints are not part of the type parameter declaration, but belong
+            to the parent type or method.
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.Ast.PtrType">
+            <summary>
+            Description of QualifiedType.
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.Ast.QualifiedType">
+            <summary>
+            Description of QualifiedType.
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.Ast.TypeNameType">
+            <summary>
+            Description of TypeNameType.
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.IAstVisitor`2">
+            <summary>
+            AST visitor.
+            </summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.Modifiers.Any">
+            <summary>
+            Special value used to match any modifiers during pattern matching.
+            </summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.NodeType.TypeReference">
+            <summary>
+            AstType
+            </summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.NodeType.TypeDeclaration">
+            <summary>
+            Type or delegate declaration
+            </summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.NodeType.Whitespace">
+            <summary>
+            Comment or whitespace or pre-processor directive 
+            </summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.NodeType.Pattern">
+            <summary>
+            Placeholder for a pattern
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.Ast.BlockStatement">
+            <summary>
+            { Statements }
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.BreakStatement">
+            <summary>
+            break;
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.CheckedStatement">
+            <summary>
+            checked BodyBlock
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.ContinueStatement">
+            <summary>
+            continue;
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.DoWhileStatement">
+            <summary>
+            "do EmbeddedStatement while(Condition);"
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.EmptyStatement">
+            <summary>
+            ;
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.ExpressionStatement">
+            <summary>
+            Expression;
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.FixedStatement">
+            <summary>
+            fixed (Type Variables) EmbeddedStatement
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.ForStatement">
+            <summary>
+            for (Initializers; Condition; Iterators) EmbeddedStatement
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.Cpp.ForStatement.Initializers">
+            <summary>
+            Gets the list of initializer statements.
+            Note: this contains multiple statements for "for (a = 2, b = 1; a > b; a--)", but contains
+            only a single statement for "for (int a = 2, b = 1; a > b; a--)" (a single VariableDeclarationStatement with two variables)
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.GotoStatement">
+            <summary>
+            "goto Label;"
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.GotoCaseStatement">
+            <summary>
+            or "goto case LabelExpression;"
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.Cpp.GotoCaseStatement.LabelExpression">
+            <summary>
+            Used for "goto case LabelExpression;"
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.GotoDefaultStatement">
+            <summary>
+            or "goto default;"
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.IfElseStatement">
+            <summary>
+            if (Condition) TrueStatement else FalseStatement
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.LabelStatement">
+            <summary>
+            Label:
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.ReturnStatement">
+            <summary>
+            return Expression;
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.SwitchStatement">
+            <summary>
+            switch (Expression) { SwitchSections }
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.Cpp.CaseLabel.Expression">
+            <summary>
+            Gets or sets the expression. The expression can be null - if the expression is null, it's the default switch section.
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.ThrowStatement">
+            <summary>
+            throw Expression;
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.TryCatchStatement">
+            <summary>
+            try TryBlock CatchClauses finally FinallyBlock
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.CatchClause">
+            <summary>
+            catch (Type VariableName) { Body }
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.UncheckedStatement">
+            <summary>
+            unchecked BodyBlock
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.UnsafeStatement">
+            <summary>
+            unsafe { Body }
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.UsingNamespaceStatement">
+            <summary>
+            using (ResourceAcquisition) EmbeddedStatement
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.Cpp.UsingNamespaceStatement.ResourceAcquisition">
+            <summary>
+            Either a VariableDeclarationStatement, or an Expression.
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.WhileStatement">
+            <summary>
+            "while (Condition) EmbeddedStatement"
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.YieldBreakStatement">
+            <summary>
+            yield break;
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.YieldReturnStatement">
+            <summary>
+            yield return Expression;
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.Accessor">
+            <summary>
+            get/set/add/remove
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.Cpp.ConstructorDeclaration.Name">
+            <summary>
+            Gets/Sets the name of the class containing the constructor.
+            This property can be used to inform the output visitor about the class name when writing a constructor declaration
+            without writing the complete type declaration. It is ignored when the constructor has a type declaration as parent.
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.Cpp.DestructorDeclaration.Name">
+            <summary>
+            Gets/Sets the name of the class containing the destructor.
+            This property can be used to inform the output visitor about the class name when writing a destructor declaration
+            without writing the complete type declaration. It is ignored when the destructor has a type declaration as parent.
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.FixedVariableInitializer">
+            <summary>
+            Name [ CountExpression ]
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.OperatorDeclaration.GetOperatorType(System.String)">
+            <summary>
+            Gets the operator type from the method name, or null, if the method does not represent one of the known operator types.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.OperatorDeclaration.GetName(ICSharpCode.NRefactory.Cpp.OperatorType)">
+            <summary>
+            Gets the method name for the operator type. ("op_Addition", "op_Implicit", etc.)
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.OperatorDeclaration.GetToken(ICSharpCode.NRefactory.Cpp.OperatorType)">
+            <summary>
+            Gets the token for the operator type ("+", "implicit", etc.)
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.IOutputFormatter">
+            <summary>
+            Output formatter for the Output visitor.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.IOutputFormatter.WriteIdentifier(System.String)">
+            <summary>
+            Writes an identifier.
+            If the identifier conflicts with a keyword, the output visitor will
+            call <c>WriteToken("@")</c> before calling WriteIdentifier().
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.IOutputFormatter.WriteKeyword(System.String)">
+            <summary>
+            Writes a keyword to the output.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.IOutputFormatter.WriteToken(System.String)">
+            <summary>
+            Writes a token to the output.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Cache.AddNamespace(System.String)">
+            <summary>
+            Adds a namespace of the current type
+            </summary>
+            <param name="nameSpace"></param>          
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Cache.AddVistedType(ICSharpCode.NRefactory.Cpp.Ast.AstType,System.String)">
+            <summary>
+            Adds a type as a Visited type in order to track all the types that a class may include
+            </summary>
+            <param name="type"></param>
+            <param name="name"></param>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Cache.AddSymbol(System.String,Mono.Cecil.TypeReference)">
+            <summary>
+            Adds the symbol of a type in order to extract all the neessary information when needed
+            </summary>
+            <param name="type"></param>
+            <param name="reference"></param>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Cache.AddInclude(System.String)">
+            <summary>
+            Adds a new include definition
+            </summary>        
+            <param name="included">The type included</param>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.Cpp.CppOutputVisitor.lastWritten">
+            <summary>
+            Used to insert the minimal amount of spaces so that the lexer recognizes the tokens that were written.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.CppOutputVisitor.WriteKeyword(System.String,ICSharpCode.NRefactory.Role{ICSharpCode.NRefactory.Cpp.CppTokenNode})">
+            <summary>
+            Writes a keyword, and all specials up to
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.CppOutputVisitor.Semicolon">
+            <summary>
+            Marks the end of a statement
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.CppOutputVisitor.Space(System.Boolean)">
+            <summary>
+            Writes a space depending on policy.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.CppOutputVisitor.WriteSpecials(ICSharpCode.NRefactory.Cpp.AstNode,ICSharpCode.NRefactory.Cpp.AstNode)">
+            <summary>
+            Writes all specials from start to end (exclusive). Does not touch the positionStack.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.CppOutputVisitor.WriteSpecialsUpToRole(ICSharpCode.NRefactory.Role)">
+            <summary>
+            Writes all specials between the current position (in the positionStack) and the next
+            node with the specified role. Advances the current position.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.CppOutputVisitor.WriteSpecialsUpToNode(ICSharpCode.NRefactory.Cpp.AstNode)">
+            <summary>
+            Writes all specials between the current position (in the positionStack) and the specified node.
+            Advances the current position.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.CppOutputVisitor.ConvertChar(System.Char)">
+            <summary>
+            Gets the escape sequence for the specified character.
+            </summary>
+            <remarks>This method does not convert ' or ".</remarks>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.CppOutputVisitor.ConvertString(System.String)">
+            <summary>
+            Converts special characters to escape sequences within the given string.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.CppOutputVisitor.IsKeyword(System.String,ICSharpCode.NRefactory.Cpp.AstNode)">
+            <summary>
+            Determines whether the specified identifier is a keyword in the given context.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.CppOutputVisitor.Comma(ICSharpCode.NRefactory.Cpp.AstNode,System.Boolean)">
+            <summary>
+            Writes a comma.
+            </summary>
+            <param name="nextNode">The next node after the comma.</param>
+            <param name="noSpaceAfterComma">When set prevents printing a space after comma.</param>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.CppOutputVisitor.WriteCommaSeparatedList(System.Collections.Generic.IEnumerable{ICSharpCode.NRefactory.Cpp.AstNode})">
+            <summary>
+            Writes an optional semicolon, e.g. at the end of a type or namespace declaration.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.IsLibraryType(System.String)">
+            <summary>
+            Tells if a specified type is mapped with a library file
+            </summary>
+            <param name="type"></param>
+            <returns>If the type is a library type</returns>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.ProcessIncludes(System.String)">
+            <summary>
+            Makes the preprocessing of the includes list
+            </summary>
+            <param name="typeDeclarationName"></param>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.NeedsForwardDeclaration(System.String,System.String@)">
+            <summary>
+            Returns if a forward declaration is needed between two types
+            </summary>
+            <param name="fw_dcl_type1">The type to test</param>
+            <param name="fw_dcl_type2">If the method is true, the second type is placed here</param>
+            <returns></returns>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.IsPointer(System.String,System.String,System.String,System.String)">
+            <summary>
+            Returns if an identifier is a pointer expression. This method checks if the identifier (declared in a method parameter, method variable, or class field) is a pointer.
+            The method will search the identifier depending of the filled parameters or the null parameters
+            CurrentType + currentFieldVarialbe
+            CurrentMethod + CurrentParameter
+            CurrentMethod + CurrentField_Variable
+            </summary>
+            <param name="currentType">The current type name</param>
+            <param name="currentField_Variable">The variable or field that is being checked</param>
+            <param name="currentMethod">The current method</param>
+            <param name="currentParameter">The parameter that is being checked</param>currentType
+            <returns></returns>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.GetType(System.String,System.String,System.String,System.String)">
+            <summary>
+            Tries to combine all of the provided parameters to extract the AstType class of an object with the identifier specified (Extracts the type of Field or variable, or parameters)
+            </summary>
+            <param name="currentField_Variable"></param>
+            <param name="currentType"></param>
+            <param name="currentMethod"></param>
+            <param name="currentParameter"></param>
+            <returns>The type</returns>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.Reaches(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}})">
+            <summary>
+            Tells if one type includes other type (recursively)
+            </summary>
+            <param name="type1"></param>
+            <param name="type2"></param>
+            <param name="includes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.GetCppName(System.String)">
+            <summary>
+            Tries to extract the C++ name of a C# name
+            </summary>
+            <param name="CSharpName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.GetTypeIncludes">
+            <summary>
+            Gets the types have to be included
+            </summary>
+            <returns>A string array specifying the types</returns>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.Restart">
+            <summary>
+            Restarts the resolver class variables
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.ResolveNamespace(System.String)">
+            <summary>
+            Resolves the namespace of a given type name
+            </summary>
+            <param name="type"></param>
+            <returns>The namespace</returns>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.GetNeededNamespaces">
+            <summary>
+            Gets the needed namespaces of the current type
+            </summary>
+            <returns>A string array representing each namespace</returns>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.GetTypeName(ICSharpCode.NRefactory.Cpp.Ast.AstType)">
+            <summary>
+            Returns the name of a given AstType
+            </summary>
+            <param name="type"></param>
+            <returns>The name</returns>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.GetTypeName(ICSharpCode.NRefactory.CSharp.AstType)">
+            <summary>
+            Returns the name of a given AstType
+            </summary>
+            <param name="type"></param>
+            <returns>The name</returns>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.RemoveHeaderNode(ICSharpCode.NRefactory.Cpp.AstNode,ICSharpCode.NRefactory.Cpp.Ast.TypeDeclaration)">
+            <summary>
+            Removes a node from the header nodes list of a specified type
+            </summary>
+            <param name="node"></param>
+            <param name="type"></param>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.GetExplicitInterfaceTypes(ICSharpCode.NRefactory.Cpp.Ast.TypeDeclaration)">
+            <summary>
+            Builds and adds the needed nested types in a current type representing explicit interfaces
+            </summary>
+            <param name="currentType"></param>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.GetHeaderNode(ICSharpCode.NRefactory.Cpp.AstNode,ICSharpCode.NRefactory.Cpp.AstNode)">
+            <summary>
+            Return a header node form of a specified standard node
+            </summary>
+            <param name="node"></param>
+            <param name="headerNode"></param>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.NeedsDereference(ICSharpCode.NRefactory.CSharp.AstNode,System.String,System.String)">
+            <summary>
+            Returns if a node (i.e expression, identifier...) needs a dereference
+            </summary>
+            <param name="node"></param>
+            <param name="currentType"></param>
+            <param name="currentMethod"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.IsTypeArgument(ICSharpCode.NRefactory.Cpp.Ast.AstType)">
+            <summary>
+            Returns if a specified type is a type argument
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.IsTemplatizedType(ICSharpCode.NRefactory.Cpp.Ast.AstType)">
+            <summary>
+            Returns if a type has template arguments
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.IsTemplatizedType(ICSharpCode.NRefactory.CSharp.AstType)">
+            <summary>
+            Returns if a type has template arguments
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.IsTemplatizedAbstractMethod(System.String,System.String)">
+            <summary>
+            Returns if a method is an abstract method returning a templatized type (useful for avoiding covariance errors)
+            </summary>
+            <param name="type"></param>
+            <param name="method"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.IsChildOf(ICSharpCode.NRefactory.Cpp.AstNode,System.Type)">
+            <summary>
+            Checks if the node is child of other node of the specified type
+            </summary>
+            <param name="member">Node</param>
+            <param name="type">Type of the parent node</param>
+            <returns>Bool indicating if is child or not</returns>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.IsChildOf(ICSharpCode.NRefactory.CSharp.AstNode,System.Type)">
+            <summary>
+            Checks if the node is child of other node of the specified type
+            </summary>
+            <param name="member">Node</param>
+            <param name="type">Type of the parent node</param>
+            <returns>Bool indicating if is child or not</returns>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.GetParentOf(ICSharpCode.NRefactory.Cpp.AstNode,System.Type)">
+            <summary>
+            Returns the first parent node of type specified by variable type
+            </summary>
+            <param name="member">Original node</param>
+            <param name="type">Target type of</param>
+            <returns>The resulting node</returns>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.GetParentOf(ICSharpCode.NRefactory.CSharp.AstNode,System.Type)">
+            <summary>
+            Returns the first parent node of type specified by variable type
+            </summary>
+            <param name="member">Original node</param>
+            <param name="type">Target type of</param>
+            <returns>The resulting node</returns>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.HasChildOf(ICSharpCode.NRefactory.Cpp.AstNode,System.Type)">
+            <summary>
+            Returns if the node has a child of a specified type
+            </summary>
+            <param name="member">Original node</param>
+            <param name="type">Target type of</param>
+            <returns>The resulting node</returns>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.HasChildOf(ICSharpCode.NRefactory.CSharp.AstNode,System.Type)">
+            <summary>
+            Returns if the node has a child of a specified type
+            </summary>
+            <param name="member">Original node</param>
+            <param name="type">Target type of</param>
+            <returns>The resulting node</returns>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.GetChildrenOf(ICSharpCode.NRefactory.Cpp.AstNode,System.Type)">
+            <summary>
+            Returns the childs nodes of type specified by variable type
+            </summary>
+            <param name="member">Original node</param>
+            <param name="type">Target type of</param>
+            <returns>The resulting node</returns>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.GetChildrenOf(ICSharpCode.NRefactory.CSharp.AstNode,System.Type)">
+            <summary>
+            Returns the childs nodes of type specified by variable type
+            </summary>
+            <param name="member">Original node</param>
+            <param name="type">Target type of</param>
+            <returns>The resulting node</returns>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.TryPatchTemplateToObjectType(ICSharpCode.NRefactory.Cpp.Ast.AstType,ICSharpCode.NRefactory.Cpp.Ast.AstType@)">
+            <summary>
+            Converts template types to Object type (useful for inline methods and template specialization types)
+            </summary>
+            <param name="type"></param>
+            <param name="newType"></param>
+            <returns>Returns if the type is actually changed or not</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:ICSharpCode.NRefactory.Cpp.Resolver.GetInlineConversionConstructorDeclarationCall(ICSharpCode.NRefactory.Cpp.ConversionConstructorDeclaration)" -->
+        <member name="M:ICSharpCode.NRefactory.Cpp.Resolver.IsPropertyCall(ICSharpCode.NRefactory.Cpp.MemberReferenceExpression,System.String)">
+            <summary>
+            Returns if a member reference expression in C# is a call over a  C# property
+            </summary>
+            <param name="memberReferenceExpression"></param>
+            <param name="currentTypeName"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Cpp.TextWriterOutputFormatter">
+            <summary>
+            Writes Cpp code into a TextWriter.
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.Cpp.PreProcessorDirective.Take">
+            <summary>
+            For an '#if' directive, specifies whether the condition evaluated to true.
+            </summary>
+        </member>
+    </members>
+</doc>
