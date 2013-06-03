@@ -63,7 +63,8 @@ namespace ICSharpCode.ILSpy
 
 		public DecompilationOptions()
 		{
-			this.DecompilerSettings = DecompilerSettingsPanel.CurrentDecompilerSettings;
+            //this.DecompilerSettings = new DecompilerSettings();
+            this.DecompilerSettings = DecompilerSettingsPanel.CurrentDecompilerSettings;
 		}
 	}
 }
