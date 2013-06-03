@@ -66,8 +66,21 @@ AlterNative: An executable to executable Cross-platform system for translating
  high-level to native applications
 \end_layout
 
+\begin_layout Author
+A.
+ Albalá, J.
+ López.
+ 
+\end_layout
+
 \begin_layout Abstract
-OLA K ASE Esto es el abstract
+Cross-platform applications are increasing their market due to the growing
+ number of heterogeneous devices in the market.
+ Developers are required to design and implement the software application
+ in all the different targets that the product will be available.
+ In this paper it is presented AlterNative, a cross-platform that tries
+ to solve the problem of the fast development in multi-platform (cross-platform)
+ applications.
 \end_layout
 
 \begin_layout Section
@@ -98,16 +111,6 @@ Nowadays all the service sectors like industrial, energy, healthcare, security
 
 \begin_layout Section
 State Of The Art
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-AMPLIAR
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -294,18 +297,181 @@ In this work the ILSpy decompiler is used as the basis for the decompilation
 \end_layout
 
 \begin_layout Subsection
-Research projects
+Multi-platform and cross-platform mobile tools
+\end_layout
+
+\begin_layout Standard
+There are different multi-platform tools that aim to make easy the development
+ of mobile applications targeting the different operating systems of the
+ market.
+ Fore more information of the most popular cross-platform tools see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-13"
+
+\end_inset
+
+.
+ A brief summary of the framework is provided.
 \end_layout
 
 \begin_layout Subsubsection
-Particle code
+PhoneGap 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-19"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+PhoneGap 2.7.0 is an open-source mobile development tool developed by Adobe
+ System Inc.
+ under Apache 2.0 license.
+ PhoneGap allows developers and companies to build free, commercial and
+ open-source applications, and give them also the possibility to use any
+ licenses combination.
+ The development environment is cross-platform and permits the creation
+ of applications for Android, Bada, BlackBerry, iOS, Symbian, webOS and
+ Windows Phone OS’s.
+\end_layout
+
+\begin_layout Standard
+This framework is composed by a java library file and html files for the
+ application views.
+ PhoneGap provides an API for control the core of the mobile (sensors, camera,
+ media ...) and uses standard JavaScript, HTML5 and CSS3 for bringing the views
+ to the user.
+ The use of all these standards allow PhoneGap to provide to the developers
+ with a framework compatible with most of the operating systems in the mobile
+ market.
+ PhoneGap is compatible with: iOS, Android, Blacberry OS, WebOS, Windows
+ Phone, Symbian and Bada.
+\end_layout
+
+\begin_layout Subsubsection
+Rhodes 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-24"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Rhodes 3.3.3 is a cross-platform mobile application tool developed by Motorola
+ Solutions Inc.
+ under Massachusetts Institute of Technology (MIT).
+ It is developed to rapidly build native applications for all major mobile
+ OS’s (iOS, Android, BlackBerry, Windows Mobile/Phone and Symbian).
+ The main goal of Rhodes is to provide a high level of productivity and
+ portability in programming.
+ It is an open source Ruby-based mobile development environment.
+ Thanks to this environment, developers can create and maintain enterprise
+ applications and data based on single source code across different mobile
+ OS’s.
+ RhoMobile suite provides an IDE called RhoStudio which is an innovative
+ solution dedicated to users that want to develop applications through a
+ hosted IDE.
+ This solution can be used across Linux, Mac, and Microsoft Windows OS’s.
+ Alternatively, RhoMobile offers the possibility to write applications with
+ any other editor or IDE which supports HTML, HTML5, CSS, JavaScript and
+ Ruby.
+ Rhodes aims to bring agility 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-20"
+
+\end_inset
+
+ to the mobile development world.
+\end_layout
+
+\begin_layout Subsubsection
+DragonRad 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-21"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+DragonRad 5.0 is a cross-platform mobile application development platform
+ by Seregon Solutions Inc.
+ and distributed Fig.
+ 3.
+ Complete schema of PhoneGap architecture and interfacing among components
+ [5].
+ under a commercial license.
+ It allows developers to design, manage and deploy mobile applications once
+ and use it across iOS, Android, BlackBerry and Windows Mobile [3].
+ The tool focuses on database driven mobile enterprise applications with
+ easy and wide range of databases support.
+ It provides the D&D environment which help developers to save programming
+ time and to create logics.
+ DragonRad provides their own built IDE, that can be configured for different
+ simulators like iOS, Android, BlackBerry, Windows Mobile etc.
+\end_layout
+
+\begin_layout Subsubsection
+MoSync 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-22"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+MoSync 4.0 is an open source solution developed by a Swedish company targeted
+ to mobile market.
+ MoSync has fully fledged SDK which helps developers to build and package
+ all type of mobile applications, such as simple, advanced and complex applicati
+on that share the same code base.
+ MoSync SDK is proving to be very powerful tool with many components tightly
+ coupled together like Libraries, Runtimes, Device Profile Database and
+ Compilers, and so on.
+ It provides the full fledge Eclipse-based IDE and the use of standard C/C++.
+ It also added the support with web-based language like HTML, HTML5, CSS
+ and JavaScript.
+ It provides well documented API’s both in C/C++ and web-based.
+ The idea involved to support multiple mobile OS’s is different from other
+ tools and also in very isolated way from other mobile operating code.
+ Applications in MoSync are built to target a device profile by using GNU
+ Compiler Collection (GCC) and pipetool.
+ After writing the application, pipe-tool is used to compile the resources
+ present in the application.
+ Then GCC backend is called and path to target device profile passed to
+ it.
+ GCC uses it to produce MoSync intermediate language, which then fed in
+ to pipe-tool.
+ Then, pipe-tool behaves as the bridge between MoSync applications to target
+ device profile.
+ The profile database helps the application in ensuring that it has adapted
+ correctly to the device.
+ Runtimes are libraries which are bound to provide support related to all
+ like regarding graphics, audio, communications, input, uniform interface
+ to low level system API’s and other device features.
+\end_layout
+
+\begin_layout Subsection
+Particle code: end to end solution
 \end_layout
 
 \begin_layout Standard
 The Particle Platform 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "key-13"
+key "key-14"
 
 \end_inset
 
@@ -363,47 +529,42 @@ Particle Code engine
 
 \end_layout
 
-\begin_layout Subsubsection
-Rhodes
+\begin_layout Subsection
+AlterNative contributions
 \end_layout
 
 \begin_layout Standard
-Rhodes 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "key-2"
-
-\end_inset
-
- is an open source Ruby-based framework to rapidly build native apps for
- all major smartphone operating systems (iPhone, Android, RIM, Windows Mobile
- and Windows Phone 7).
- These are true native device applications (NOT mobile web apps) which work
- with synchronized local data and take advantage of device capabilities
- such as GPS, PIM contacts and calendar, camera, native mapping, push, barcode,
- signature capture, Bluetooth and Near Field Communications (NFC).
+In this chapter have been studied all the existing solutions targeting the
+ same concept of AlterNative aims to.
+ The most advanced research line is the Decompilers line, but these decompilers
+ always target high-level languages and often do not output a legible code
+ with a high-performance.
+ AlterNative will take benefit of all the work done in this line and will
+ use ILSpy decompiler for obtain the source code of an assemblied file in
+ order to translate it to a low level language.
 \end_layout
 
 \begin_layout Standard
-Rhodes is the ONLY framework with: support for Model View Controller (other
- frameworks force you to put all business logic into the view as JavaScript),
- synchronized data (the price of entry for enterprise apps), support for
- ALL devices (Android and iPhone is not "crossplatform"), a hosted build
- service (RhoHub – which changes the game for mobile app development entirely)
- and true industrial device capabilities such as NFC.
- Rhodes has many other major advantages over every other framework and underlyin
-g SDK, which can be summarized as modern development goodness for mobile
- apps.
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-MODIFICAR
+Nowadays, as the mobile and embedded market is increasing, the multiplatform
+ tools for these markets are growing.
+ However, these tools are focused on unify the application graphical user
+ interface by means of standard web languages (i.e.
+ HTML and CSS).
+ The frameworks that aim to unify also the logical part are based on non-native
+ code libraries.
+ The performance is good enough but the can not target to other devices
+ rather than modern mobile devices.
 \end_layout
 
-\end_inset
-
-
+\begin_layout Standard
+Concluding the AlterNative objective, this project aims to unify the best
+ of all the multi-platform worlds for create and innovative tool able to
+ translate specific high-level apps to multi-platform native applications
+ reducing the development time and increasing the portability and performance
+ of the application.
+ A key point that makes AlterNative become a novel project is the possibility
+ of not only run in graphics powered operating systems but also terminal
+ applications with compatibility even in low power embedded systems.
 \end_layout
 
 \begin_layout Section
@@ -1141,12 +1302,10 @@ Other advantage of the standard low level languajes (like C++) is that a
 
 \begin_layout Standard
 Suppose we have a .NET MicroFramework board like NetDuino Mini familiy boards
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-REF
-\end_layout
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-26"
 
 \end_inset
 
@@ -1156,12 +1315,9 @@ REF
  pi (wich is arm-linux architecture).
  A way to execute C# .NET code in linux environment is to use the Mono framework
  
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-REF
-\end_layout
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-27"
 
 \end_inset
 
@@ -1174,7 +1330,36 @@ s.
 \end_layout
 
 \begin_layout Section
-Results
+Tests results
+\end_layout
+
+\begin_layout Subsection
+Tests suite
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Hablar del regression test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+AlterNative project is provided by a testing suite following the model of
+ regression test.
+ Every test is in charge of check if a specific language feature is translated
+ and compiled in the correct way.
+ The test outputs information about the AlterNative process, the cross-compilati
+on process, the compilation in the target platform process, the time performance
+ difference between the original code and the translated code, the line
+ differences between the original and the translated code and the comparison
+ of the original and final program outputs.
 \end_layout
 
 \begin_layout Standard
@@ -1583,7 +1768,14 @@ N-Bodies benchmark
 
 \begin_layout Standard
 The platforms and languages tested in this benchmark are the same that the
- tested in the Fannkuch-redux benchmark.
+ tested in the Fannkuch-redux benchmark 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-6"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -2286,12 +2478,9 @@ The results obtained in this work are good in a cpu performance point of
  service called garbage collector.
  AlterNative implements a garbage collector in C++ using the popular Boehm
  gc library 
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-REF
-\end_layout
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-32"
 
 \end_inset
 
@@ -2309,8 +2498,15 @@ destroyed
  process in order to deallocate unused memory in the program.
  In the actual implementation, the system is prepared but never deallocates
  unused memory.
- A Binary Tree test has been made in order to check that the memory management
- is not working properly.
+ A Binary Tree test 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-29"
+
+\end_inset
+
+ has been made in order to check that the memory management is not working
+ properly.
  The figure 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -2369,6 +2565,19 @@ Other future line in the project is to complete and expand the actual support
  library in order to cover all the basic C# language features.
 \end_layout
 
+\begin_layout Standard
+Regarding the testing suite, there are several techniques for optimizing
+ and reducing the cost of the regression test.
+ An example of these optimizations can be found in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-33,key-34,key-35"
+
+\end_inset
+
+.
+\end_layout
+
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
@@ -2376,17 +2585,7 @@ key "key-1"
 
 \end_inset
 
-ILSPY REF
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
-
-\end_inset
-
-
+ILSpy homepage, http://ilspy.net/, May 2013
 \end_layout
 
 \begin_layout Bibliography
@@ -2410,7 +2609,7 @@ Compilers.
 \begin_inset Quotes erd
 \end_inset
 
-, Bell Telephone Laboratories, United States of America, 1986.
+, Bell Telephone Laboratories, United States of America, 1986
 \end_layout
 
 \begin_layout Bibliography
@@ -2436,7 +2635,7 @@ Modern Compiler Design
 \end_inset
 
 , Vrije Universiteit, Amsterdam and Delf University, John Wiley & Sons,
- Ltd, England, 2000.
+ Ltd, England, 2000
 \end_layout
 
 \begin_layout Bibliography
@@ -2446,37 +2645,128 @@ key "key-13"
 
 \end_inset
 
-http://www.particlecode.com/
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-BUSCAR PAPER
-\end_layout
-
+M.
+ Palmieri, I.
+ Singh, A.
+ Cicchetti, 
+\begin_inset Quotes eld
 \end_inset
 
+Comparison of Cross-Platform Mobile Development Tools
+\begin_inset Quotes erd
+\end_inset
 
+, Innovation, Design and Engineering Mälardalen University, Sweden, 2012
 \end_layout
 
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
-key "key-2"
+key "key-19"
 
 \end_inset
 
-http://www.motorola.com/Business/US-EN/RhoMobile+Suite/Rhodes
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-BUSCAR PAPER
+B.
+ Curtis.
+ PhoneGap and the Enterprice.
+ http://www.slideshare.net/drbac/phonegap-day-ibm-phonegap-andthe- enterprise,
+ July 2011
 \end_layout
 
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-24"
+
 \end_inset
 
+Motorola Solutions.
+ http://www.motorola.com/Business/USEN/ Business+Product+and+Services/Software+and
++Applications/RhoMobile+Suite, 2012
+\end_layout
 
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-20"
+
+\end_inset
+
+Leckylao.
+ Rhodes framework: Agile mobile web development.
+ http://leckylao.com/2010/06/12/rhodes-framework-agile-mobileweb- development,
+ June 2010
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-21"
+
+\end_inset
+
+DragonRad.
+ http://dragonrad.com, 2012
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-22"
+
+\end_inset
+
+M.
+ Kindborg.
+ The wormhole javascript library.
+ http://www.mosync.com/content/html5-javascript-wormhole, February 2012
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-14"
+
+\end_inset
+
+Particlecode, 
+\begin_inset Quotes eld
+\end_inset
+
+Overview | Particle Code
+\begin_inset Quotes erd
+\end_inset
+
+, http://www.particlecode.com/features/overview/, May 2013
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-26"
+
+\end_inset
+
+Netduino mini specificatinos, http://www.netduino.com/netduinomini/specs.htm,
+ May 2013
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-27"
+
+\end_inset
+
+Xamarin, 
+\begin_inset Quotes eld
+\end_inset
+
+Mono, a technical whitepaper
+\begin_inset Quotes erd
+\end_inset
+
+ http://www.mono-project.com/Mono,_a_technical_whitepaper May 2013
 \end_layout
 
 \begin_layout Bibliography
@@ -2486,17 +2776,19 @@ key "key-3"
 
 \end_inset
 
-http://shootout.alioth.debian.org/u32/performance.php?test=fannkuchredux
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-BUSCAR PAPER
-\end_layout
-
+Benchmarks game, 
+\begin_inset Quotes eld
 \end_inset
 
+fannkuch-redux
+\begin_inset Quotes erd
+\end_inset
 
+, http://shootout.alioth.debian.org/u32/
+\begin_inset Newline linebreak
+\end_inset
+
+performance.php?test=fannkuchredux, May 2013
 \end_layout
 
 \begin_layout Bibliography
@@ -2506,17 +2798,125 @@ key "key-6"
 
 \end_inset
 
-http://benchmarksgame.alioth.debian.org/u32q/program.php?test=nbody
-\begin_inset Note Note
-status open
+Benchmarks game, 
+\begin_inset Quotes eld
+\end_inset
 
-\begin_layout Plain Layout
-BUSCAR PAPER
+nbody
+\begin_inset Quotes erd
+\end_inset
+
+, http://benchmarksgame.alioth.debian.org/u32q/
+\begin_inset Newline linebreak
+\end_inset
+
+program.php?test=nbody, May 2013
 \end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-32"
 
 \end_inset
 
+HPLabs, 
+\begin_inset Quotes eld
+\end_inset
 
+A garbage collector for C and C++
+\begin_inset Quotes erd
+\end_inset
+
+, http://www.hpl.hp.com/personal/Hans_Boehm/gc/, May 2013
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-29"
+
+\end_inset
+
+Benchmarks game, 
+\begin_inset Quotes eld
+\end_inset
+
+Binary trees
+\begin_inset Quotes erd
+\end_inset
+
+, http://benchmarksgame.alioth.debian.org/u32/
+\begin_inset Newline linebreak
+\end_inset
+
+benchmark.php?test=binarytrees, May 2013
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-33"
+
+\end_inset
+
+P.
+ Nagahawatte and H.
+ Do, 
+\begin_inset Quotes eld
+\end_inset
+
+The Effectiveness of Tegression Testing Techniques in Reducing the Occurrence
+ of Residual Defects
+\begin_inset Quotes erd
+\end_inset
+
+, Department of Computer Science, North Dakota State University, Fargo,
+ 2010
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-34"
+
+\end_inset
+
+Q.
+ Gu, B.Tang, D.
+ Chen, 
+\begin_inset Quotes eld
+\end_inset
+
+Optimal Regression Testing based on Selective Coverage of Test Requirements
+\begin_inset Quotes erd
+\end_inset
+
+, Nanjing University, University of Aizu, 2010
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-35"
+
+\end_inset
+
+A.
+ Kumar, S.
+ Tiwari, K.
+ K.
+ Mishra and A.K.
+ Misra, 
+\begin_inset Quotes eld
+\end_inset
+
+Generation of Efficient Test Data using Path Selection Strategy with Elitist
+ GA in Regression Testing
+\begin_inset Quotes erd
+\end_inset
+
+, Computer Science & Engineering Department, MNNIT, allahabad INDIA, 2010
 \end_layout
 
 \end_body
