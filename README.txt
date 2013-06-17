@@ -8,5 +8,6 @@ Included open-source libraries:
  ICSharpCode.Decompiler: MIT License (developed as part of ILSpy)
 
 Alter-Native Contributors:
-	Alex Albalá (alejandro.albala@upc.edu)
-	Juan López  (Juan.Lopez-Rubio@upc.edu)
+	Alex Albalï¿½ (alejandro.albala at upc.edu)
+	Juan Lï¿½pez  (Juan.Lopez-Rubio at upc.edu)
+        Gerard SolÃ¨ (gerard.sole.castellvi at gmail.com)
