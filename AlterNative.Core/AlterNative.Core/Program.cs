@@ -20,6 +20,9 @@ namespace AlterNative
         public static int Main(string[] args)
         {
             int exitcode;
+			if (args.Length < 4) {
+				Console.WriteLine ("Usage: alternative <assembly> <output_path> <language: CXX> <cpp_library_path>");
+			}
             if (args.Length > 1 && !args[0].Equals("/separate"))
             {
                 try

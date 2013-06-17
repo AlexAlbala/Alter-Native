@@ -10,11 +10,17 @@ namespace AlterNative.BuildTools
 {
     public class CMakeGenerator
     {
+        public static String CleanPath(String path) {
+            return path.Replace('\\', Path.DirectorySeparatorChar);
+	}
+
         public static void GenerateCMakeLists(string projectName, string execName, string workingDir, string[] sourceFiles, bool release = false)
         {
             Utils.WriteToConsole("Generating CMakeLists.txt for project " + projectName + " and executable " + execName);
 
-            DirectoryInfo di = new DirectoryInfo(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\..\..\..\Tools\External Libraries");
+	    String tmp = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\..\..\..\Tools\External Libraries";
+	    tmp = CleanPath(tmp);
+            DirectoryInfo di = new DirectoryInfo(tmp);
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("CMAKE_MINIMUM_REQUIRED(VERSION 2.8)");
@@ -48,7 +54,9 @@ namespace AlterNative.BuildTools
 
             //if (ICSharpCode.NRefactory.Cpp.Resolver.boostLink)
             //{
-                FileInfo boostCmake = new FileInfo(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\..\..\..\Tools\Code\CMAKE-BOOST");
+	        tmp = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\..\..\..\Tools\Code\CMAKE-BOOST"; 
+	        tmp = CleanPath(tmp);
+                FileInfo boostCmake = new FileInfo(tmp);
                 StreamReader sr = new StreamReader(boostCmake.FullName);
                 sb.AppendLine("SET(PROJ_NAME " + execName + ")");
                 sb.Append(sr.ReadToEnd());

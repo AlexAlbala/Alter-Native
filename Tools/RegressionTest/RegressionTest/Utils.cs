@@ -17,7 +17,7 @@ namespace RegressionTest
         {
              ignoreFolders = new List<string>() { "gc", "boost", "System", "build" };
              string alt_var_tmp = Environment.GetEnvironmentVariable("ALTERNATIVE_BIN_PATH");
-             string lib_var_tmp = Environment.GetEnvironmentVariable("CPP_LIBRARY_PATH");
+             string lib_var_tmp = Environment.GetEnvironmentVariable("ALTERNATIVE_CPP_LIBRARY_PATH");
              
             if (alt_var_tmp != null)
                  alternativePath = alt_var_tmp;
@@ -27,7 +27,7 @@ namespace RegressionTest
             if (lib_var_tmp != null)
                 cxxLibraryPath = lib_var_tmp;
             else
-                WarningMessage("Variable <CPP_LIBRARY_PATH> should be setted. Default is: " + cxxLibraryPath);
+                WarningMessage("Variable <ALTERNATIVE_CPP_LIBRARY_PATH> should be setted. Default is: " + cxxLibraryPath);
                 
         }
 
@@ -36,12 +36,15 @@ namespace RegressionTest
             switch (platform)
             {
                 case Platform.Windows32:
+                case Platform.Windows64:
                     return new Win32Test();
-                case Platform.Windows64: break;
-                case Platform.MacOS: break;
-                case Platform.Linux: break;
-                case Platform.Android: break;
-                default: break;
+		        case Platform.MacOS: 
+                case Platform.Linux: 
+                    return new PosixTest();
+                case Platform.Android: 
+                    return new AndroidTest();
+                default: 
+					break;
             }
             return null;
         }
@@ -80,7 +83,7 @@ namespace RegressionTest
             return cmode;
         }
 
-        public static string GetWin32OutputFolderName(CompileMode comp)
+        public static string GetOutputFolderName(CompileMode comp)
         {
             string cmode = "";
 
@@ -241,6 +244,7 @@ namespace RegressionTest
 
             return lines;
         }
+
         public static long CountLinesInFile(FileInfo fi)
         {
             long count = 0;

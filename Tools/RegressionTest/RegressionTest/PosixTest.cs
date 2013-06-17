@@ -6,7 +6,7 @@ using System.Text;
 
 namespace RegressionTest
 {
-    class Win32Test : ITest
+    class PosixTest : ITest
     {
         public void Alternative(DirectoryInfo di, TestResult res)
         {
