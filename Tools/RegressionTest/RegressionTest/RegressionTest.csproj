@@ -56,6 +56,7 @@
     <Compile Include="TestResult.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Win32Test.cs" />
+    <Compile Include="PosixTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
