@@ -26,8 +26,10 @@ Compiling
 
 On Windows
 ==========
-Use the supplied solution on Visual Studio 2012
-* TODO What libraries (i.e boost, cmake) are needed?
+
+* Install Cmake from http://www.cmake.org/
+* Install Boost libraries from http://www.boost.org
+* Use the supplied solution on Visual Studio 2012
 
 On MacOS X
 ==========
@@ -37,7 +39,7 @@ On MacOS X
 * Install cmake and boost 
 
 	sudo port install cmake boost
-
+	
 * Open the AlterNative.Core.sln with Xamarin Studio and compile
 
 On Linux
