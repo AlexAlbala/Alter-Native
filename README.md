@@ -28,7 +28,20 @@ On Windows
 ==========
 
 * Install Cmake from http://www.cmake.org/
+	+ Be sure to add cmake to the PATH
 * Install Boost libraries from http://www.boost.org
+	+ Unzip to C:\Boost_x_y_z
+	+ Compile it
+
+			cd C:\Boost_x_y_z
+			bootstrap.bat
+			b2
+	+ Have a coffee or two :)
+	+ Set Enviroment variables
+			
+			USR_BOOST_INCLUDE=C:\Boost_x_y_z
+			USR_BOOST_LIBRARY=C:\Boost_x_y_z\stage\lib
+		
 * Use the supplied solution on Visual Studio 2012
 
 On MacOS X
@@ -38,7 +51,7 @@ On MacOS X
 * Install MacPorts (http://www.macports.org/)
 * Install cmake and boost 
 
-	sudo port install cmake boost
+		sudo port install cmake boost
 	
 * Open the AlterNative.Core.sln with Xamarin Studio and compile
 
