@@ -111,8 +111,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             else
             {
                 var left = (Expression)assignmentExpression.Left.AcceptVisitor(this, data);
-                var op = AssignmentOperatorType.Any;                
+                var op = AssignmentOperatorType.Any;
 
+                //Should not call to Resolver.RefactorProperty() because this is a very special case
                 if (left is MemberReferenceExpression)
                 {
                     MemberReferenceExpression l = left as MemberReferenceExpression;
@@ -280,6 +281,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             else
             {
                 CastExpression cexp = new CastExpression((AstType)castExpression.Type.AcceptVisitor(this, data), (Expression)castExpression.Expression.AcceptVisitor(this, data));
+                //cexp.Expression = Resolver.RefactorPropety(cexp.Expression, currentType.Name, "get");
                 return EndNode(castExpression, cexp);
             }
         }
@@ -370,21 +372,31 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             for (int i = 0; i < expr.Arguments.Count; i++)
             {
                 Expression ex = expr.Arguments.ElementAt(i);
-                if (ex is MemberReferenceExpression)
+
+                //ex = Resolver.RefactorPropety(ex, currentType.Name, "get");
+                ex = ex.Clone();
+                //The refactoring process has changed form MemberReference to InvocationExpression
+                if (ex is InvocationExpression)
                 {
-                    MemberReferenceExpression mre = ex as MemberReferenceExpression;
-
-                    if (Resolver.IsPropertyCall(mre, currentType.Name))
-                    {
-                        //GET
-                        InvocationExpression m = new InvocationExpression(
-                            new MemberReferenceExpression(mre.Target.Clone(), "get" + mre.MemberName), new Expression[1] { new EmptyExpression() });
-
-                        expr.Arguments.InsertAfter(expr.Arguments.ElementAt(i), m);
-                        expr.Arguments.Remove(expr.Arguments.ElementAt(i));
-                    }
+                    expr.Arguments.InsertAfter(expr.Arguments.ElementAt(i), ex);
+                    expr.Arguments.Remove(expr.Arguments.ElementAt(i));
                 }
+                //if (ex is MemberReferenceExpression)
+                //{
+                //    MemberReferenceExpression mre = ex as MemberReferenceExpression;
+
+                //    if (Resolver.IsPropertyCall(mre, currentType.Name))
+                //    {
+                //        //GET
+                //        InvocationExpression m = new InvocationExpression(
+                //            new MemberReferenceExpression(mre.Target.Clone(), "get" + mre.MemberName), new Expression[1] { new EmptyExpression() });
+
+                        
+                //    }
+                //}
             }
+
+            
 
             return EndNode(invocationExpression, expr);
         }
@@ -413,6 +425,11 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             mref.MemberName = memberReferenceExpression.MemberName;
             ConvertNodes(memberReferenceExpression.TypeArguments, mref.TypeArguments);
 
+            if (currentType != null && !Resolver.IsDirectChildOf(memberReferenceExpression, typeof(CSharp.AssignmentExpression))) //IGNORE THIS CASE BECAUSE IS SPECIAL CASE
+            {
+                var res_mref = Resolver.RefactorPropety(mref, currentType.Name, "get");
+                return EndNode(memberReferenceExpression, res_mref);
+            }
             return EndNode(memberReferenceExpression, mref);
         }
 
@@ -1275,20 +1292,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         {
             var expr = (Expression)returnStatement.Expression.AcceptVisitor(this, data);
 
-            if (expr is MemberReferenceExpression)
-            {
-                MemberReferenceExpression r = expr as MemberReferenceExpression;
-                if (Resolver.IsPropertyCall(r, currentType.Name))
-                {
-                    //GET
-                    expr = new InvocationExpression(
-                        new MemberReferenceExpression(r.Target.Clone(), "get" + r.MemberName), new Expression[1] { new EmptyExpression() });
-                }
-            }
-            else if (expr is ThisReferenceExpression)
-            {
-            }
-
+            //Expression res = Resolver.RefactorPropety(expr, currentType.Name, "get");
             var stmt = new ReturnStatement(expr);
             return EndNode(returnStatement, stmt);
         }
@@ -1776,17 +1780,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
             vi.Initializer = (Expression)variableInitializer.Initializer.AcceptVisitor(this, data);
 
-            if (vi.Initializer is MemberReferenceExpression)
-            {
-                MemberReferenceExpression mre = vi.Initializer as MemberReferenceExpression;
-                if (Resolver.IsPropertyCall(mre, currentType.Name))
-                {
-                    //GET
-                    InvocationExpression m = new InvocationExpression(
-                        new MemberReferenceExpression(mre.Target.Clone(), "get" + mre.MemberName), new Expression[1] { new EmptyExpression() });
-                    vi.Initializer = m;
-                }
-            }
+            //vi.Initializer = Resolver.RefactorPropety(vi.Initializer, currentType.Name, "get");           
 
             vi.Name = variableInitializer.Name;
             vi.NameToken = (Identifier)variableInitializer.NameToken.AcceptVisitor(this, data);

@@ -163,6 +163,7 @@ namespace AlterNative
             {
                 DirectoryInfo nextTargetSubDir =
                     target.CreateSubdirectory(diSourceSubDir.Name);
+
                 CopyAll(diSourceSubDir, nextTargetSubDir);
             }
         }

@@ -986,6 +986,30 @@ namespace ICSharpCode.NRefactory.Cpp
         }
 
         /// <summary>
+        /// Checks if the node is child of other node of the specified type
+        /// </summary>
+        /// <param name="member">Node</param>
+        /// <param name="type">Type of the parent node</param>
+        /// <returns>Bool indicating if is child or not</returns>
+        public static bool IsDirectChildOf(AstNode member, Type type)
+        {
+            AstNode m = member as AstNode;            
+            return m.Parent.GetType() == type;
+        }
+
+        /// <summary>
+        /// Checks if the node is child of other node of the specified type
+        /// </summary>
+        /// <param name="member">Node</param>
+        /// <param name="type">Type of the parent node</param>
+        /// <returns>Bool indicating if is child or not</returns>
+        public static bool IsDirectChildOf(CSharp.AstNode member, Type type)
+        {
+            CSharp.AstNode m = member as CSharp.AstNode;
+            return m.Parent.GetType() == type;
+        }
+
+        /// <summary>
         /// Returns the first parent node of type specified by variable type
         /// </summary>
         /// <param name="member">Original node</param>
@@ -1263,5 +1287,24 @@ namespace ICSharpCode.NRefactory.Cpp
 
             return false;
         }
+
+        public static Expression RefactorPropety(Expression input, String currentTypeName, String accessor)
+        {            
+            if (input is MemberReferenceExpression)
+            {
+                MemberReferenceExpression r = input as MemberReferenceExpression;
+                if (Resolver.IsPropertyCall(r, currentTypeName))
+                {
+                    //GET
+                    input = new InvocationExpression(
+                        new MemberReferenceExpression(r.Target.Clone(), accessor + r.MemberName), new Expression[1] { new EmptyExpression() });
+                }
+
+                return input;
+            }
+
+            return input;
+        }
+
     }
 }
