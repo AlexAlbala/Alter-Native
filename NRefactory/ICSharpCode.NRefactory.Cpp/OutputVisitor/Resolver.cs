@@ -18,6 +18,7 @@ namespace ICSharpCode.NRefactory.Cpp
             //********************** SYSTEM:
             libraryMap.Add("System", "\"System/System.h\"");
             libraryMap.Add("Console", "\"System/Console.h\"");
+            libraryMap.Add("Array", "\"System/Array.h\"");
             libraryMap.Add("Random", "\"System/Random.h\"");
             libraryMap.Add("Math", "\"System/Math.h\"");
             libraryMap.Add("GC", "\"System/GC.h\"");
@@ -27,6 +28,8 @@ namespace ICSharpCode.NRefactory.Cpp
             libraryMap.Add("Exception", "\"System/Exception.h\"");
             //                          SystemExceptions
             libraryMap.Add("NotImplementedException", "\"System/exceptions/systemException/NotImplementedException.h\"");
+            libraryMap.Add("ArgumentException", "\"System/exceptions/systemException/ArgumentException.h\"");
+            libraryMap.Add("InvalidOperationException", "\"System/exceptions/systemException/InvalidOperationException.h\"");
             //*************************************************************//
 
             //********************** SYSTEM COLLECTIONS:

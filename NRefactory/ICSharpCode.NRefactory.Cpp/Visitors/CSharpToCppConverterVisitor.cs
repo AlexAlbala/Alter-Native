@@ -1285,6 +1285,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                         new MemberReferenceExpression(r.Target.Clone(), "get" + r.MemberName), new Expression[1] { new EmptyExpression() });
                 }
             }
+            else if (expr is ThisReferenceExpression)
+            {
+            }
 
             var stmt = new ReturnStatement(expr);
             return EndNode(returnStatement, stmt);
@@ -1496,7 +1499,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             method.NameToken = CSharp.Identifier.Create(acc + propName);
             CSharp.AstType returnType = (CSharp.AstType)(accessor.Parent as CSharp.PropertyDeclaration).ReturnType;
             method.Body = (CSharp.BlockStatement)accessor.Body.Clone();
-            isEmptyProperty = !method.Body.Statements.Any();
+            isEmptyProperty = !method.Body.Statements.Any();            
 
             if (acc == "get")
             {
