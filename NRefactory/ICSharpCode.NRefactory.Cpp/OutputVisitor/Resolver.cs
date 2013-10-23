@@ -45,6 +45,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
             //********************** SYSTEM TEXT:
             libraryMap.Add("UTF8Encoding", "\"System/Text/UTF8Encoding.h\"");
+            libraryMap.Add("Encoding", "\"System/Text/Encoding.h\"");
             //*************************************************************//
 
             //********************** SYSTEM IO:
@@ -986,7 +987,7 @@ namespace ICSharpCode.NRefactory.Cpp
         }
 
         /// <summary>
-        /// Checks if the node is child of other node of the specified type
+        /// Checks if the node is direct child of other node of the specified type
         /// </summary>
         /// <param name="member">Node</param>
         /// <param name="type">Type of the parent node</param>
@@ -998,7 +999,7 @@ namespace ICSharpCode.NRefactory.Cpp
         }
 
         /// <summary>
-        /// Checks if the node is child of other node of the specified type
+        /// Checks if the node is direct child of other node of the specified type
         /// </summary>
         /// <param name="member">Node</param>
         /// <param name="type">Type of the parent node</param>

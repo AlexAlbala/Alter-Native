@@ -45,15 +45,11 @@ namespace AlterNative.BuildTools
 
             if (release)
                 sb.AppendLine("SET(CMAKE_BUILD_TYPE Release)");
-
-            //if (ICSharpCode.NRefactory.Cpp.Resolver.boostLink)
-            //{
-                FileInfo boostCmake = new FileInfo(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\..\..\..\Tools\Code\CMAKE-BOOST");
-                StreamReader sr = new StreamReader(boostCmake.FullName);
-                sb.AppendLine("SET(PROJ_NAME " + execName + ")");
-                sb.Append(sr.ReadToEnd());
-
-            //}
+            
+            FileInfo boostCmake = new FileInfo(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\..\..\..\Tools\Code\CMAKE-BOOST");
+            StreamReader sr = new StreamReader(boostCmake.FullName);
+            sb.AppendLine("SET(PROJ_NAME " + execName + ")");
+            sb.Append(sr.ReadToEnd());
 
             StreamWriter sw = new StreamWriter(workingDir + "CMakeLists.txt");
             sw.Write(sb.ToString());

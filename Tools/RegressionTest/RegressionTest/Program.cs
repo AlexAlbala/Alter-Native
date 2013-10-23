@@ -151,39 +151,94 @@ namespace RegressionTest
                 Console.WriteLine("Running test " + di.Name);
                 Console.ResetColor();
 
-                //Run alternative
-                test.Alternative(di, res);
+                try
+                {
+                    //Run alternative
+                    test.Alternative(di, res);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("ERROR IN ALTERNATIVE" + e.Message);
+                    res.alternative = 1;
+                }
 
-                //Diff files
-                Utils.diff(di, res);
+                try
+                {
+                    //Diff files
+                    Utils.diff(di, res);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("ERROR IN DIFF" + e.Message);
+                    res.diffCode = 1;
+                }
                 if (Config.fast)
                 {
                     res.output = res.msbuildCode = res.cmakeCode = -10;
                     continue;
-                }                
+                }
 
                 if (res.alternative == 0)
-                   test.Cmake(di, res);
+                {
+                    try
+                    {
+                        test.Cmake(di, res);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("ERROR IN CMAKE" + e.Message);
+                        res.cmakeCode = 1;
+                    }
+                }
                 else
                     res.output = res.msbuildCode = res.cmakeCode = -10;
+
                 if (res.cmakeCode == 0)
                 {
                     if (Config.platform == Platform.Windows32 || Config.platform == Platform.Windows64)
-                        test.Compile(di, res);
+                    {
+                        try
+                        {
+                            test.Compile(di, res);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("ERROR COMPILING" + e.Message);
+                            res.msbuildCode = 1;
+                        }
+                    }
                 }
                 else
                     res.output = res.msbuildCode = -10;
+
                 if (kvp.Value.msbuildCode == 0)
-                    test.CompareOutputs(di, res);
+                {
+                    try
+                    {
+                        test.CompareOutputs(di, res);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("ERROR COMPARING OUTPUTS" + e.Message);
+                        res.output = 1;
+                    }
+
+                }
                 else
                     res.output = -10;
 
+                try
+                {
+                    if (res.AllSuccess() && Config.overwriteTarget)
+                        Utils.OverwriteTarget(di);
 
-                if (res.AllSuccess() && Config.overwriteTarget)
-                    Utils.OverwriteTarget(di);
-
-                if (res.alternative == 0)
-                    Utils.CountLines(di, res);
+                    if (res.alternative == 0)
+                        Utils.CountLines(di, res);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("ERROR OVERWRITING FILES OR COUNTING LINES" + e.Message);
+                }
             }
 
             Console.ForegroundColor = ConsoleColor.Yellow;
