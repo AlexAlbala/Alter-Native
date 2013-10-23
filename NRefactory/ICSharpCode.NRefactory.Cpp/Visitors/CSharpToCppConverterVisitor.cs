@@ -1946,8 +1946,11 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                         return EndNode(primitiveType, new SimpleType("Object"));
                     return EndNode(primitiveType, new PtrType(new SimpleType("Object")));
                 case "string":
-                    if (primitiveType.Role == CSharp.Roles.TypeArgument || primitiveType.Role == CSharp.Roles.TypeParameter)
+                    if (primitiveType.Role == CSharp.Roles.TypeArgument || primitiveType.Role == CSharp.Roles.TypeParameter || Resolver.IsDirectChildOf(primitiveType, typeof(CSharp.TypeReferenceExpression)))
+                    {
                         return EndNode(primitiveType, new SimpleType("String"));
+                    }
+
                     return EndNode(primitiveType, new PtrType(new SimpleType("String")));
                 default:
                     typeName = primitiveType.Keyword;
