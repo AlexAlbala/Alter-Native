@@ -1239,15 +1239,16 @@ namespace ICSharpCode.NRefactory.Cpp
         private void UsingNamespaces()
         {
             //WRITE NAMESPACES
+            string tmp = "";
+            if (currNamespaces != null)
+            {
+                //Build the copmlete namespace
+                foreach (string _s in currNamespaces)
+                    tmp += _s + "::";
+            }
+
             foreach (string s in Resolver.GetNeededNamespaces())
             {
-                string tmp = "";
-                if (currNamespaces != null)
-                {
-                    foreach (string _s in currNamespaces)
-                        tmp += _s + ":";
-                }
-
                 if (s == tmp.TrimEnd(':') || String.IsNullOrEmpty(s))
                     continue;
 
@@ -2331,6 +2332,15 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitMethodDeclaration(MethodDeclaration methodDeclaration, object data)
         {
             StartNode(methodDeclaration);
+
+            //Add security level to prevent declaration of invalid methds
+            if (methodDeclaration.Name == "")
+            {
+                formatter.Indent();
+                formatter.WriteComment(CommentType.SingleLine, "Ignored empty method declaration");
+                formatter.Unindent();
+                return EndNode(methodDeclaration);
+            }
             WriteAttributes(methodDeclaration.Attributes);
             //WriteAccesorModifier(methodDeclaration.ModifierTokens);         
             methodDeclaration.ReturnType.AcceptVisitor(this, data);
@@ -3741,6 +3751,14 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitHeaderMethodDeclaration(HeaderMethodDeclaration headerMethodDeclaration, object data)
         {
+            //Add security level to prevent declaration of invalid methds
+            if (headerMethodDeclaration.Name == "")
+            {
+                formatter.Indent();
+                formatter.WriteComment(CommentType.SingleLine, "Ignored empty method declaration");
+                formatter.Unindent();
+                return null;
+            }
             //StartNode(methodDeclaration);
             WriteAttributes(headerMethodDeclaration.Attributes);
 
@@ -3748,6 +3766,7 @@ namespace ICSharpCode.NRefactory.Cpp
             {
                 MainWritter.GenerateMain(headerMethodDeclaration.TypeMember.Name,
                     Cache.entryPointNamespace, headerMethodDeclaration.Parameters.Any());
+
                 //<ÑAPA>
                 //Force the Main to be public because it will be called from main.cpp and has to be accessible
                 WriteKeyword("public:");
