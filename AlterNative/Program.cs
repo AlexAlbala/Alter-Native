@@ -92,8 +92,17 @@ namespace AlterNative
         {
             Utils.WriteToConsole("\n");
 
-            //LOAD TARGET ASSEMBLY
-            AssemblyDefinition adef = LoadAssembly(args[0].Replace('\\', '/'));
+            AssemblyDefinition adef = null;
+            if (args[0].ToLower() == "new")
+            {
+                Utils.WriteToConsole("Creating blank template...");
+                adef = LoadAssembly(@"../../../Tools/Templates/Blank/Blank.exe");                
+            }
+            else
+            {
+                //LOAD TARGET ASSEMBLY
+                adef = LoadAssembly(args[0].Replace('\\', '/'));
+            }
 
             //CONFIGURE OUTPUT PATH           
             string outputDir = args[1].Replace('\\', '/');
@@ -132,6 +141,8 @@ namespace AlterNative
                     Utils.WriteToConsole("Decompiled: " + tdef.FullName);
                 }
             }
+
+
 
             //COPY LIB FILES IF NECESSARY
             if (args.Length >= 4 && args[3] != "")
