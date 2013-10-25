@@ -391,12 +391,12 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 //        InvocationExpression m = new InvocationExpression(
                 //            new MemberReferenceExpression(mre.Target.Clone(), "get" + mre.MemberName), new Expression[1] { new EmptyExpression() });
 
-                        
+
                 //    }
                 //}
             }
 
-            
+
 
             return EndNode(invocationExpression, expr);
         }
@@ -693,7 +693,16 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitDelegateDeclaration(CSharp.DelegateDeclaration delegateDeclaration, object data)
         {
-            throw new NotImplementedException();
+            DelegateDeclaration del = new DelegateDeclaration();
+            ConvertNodes(delegateDeclaration.ModifierTokens, del.ModifierTokens);
+            ConvertNodes(delegateDeclaration.Parameters, del.Parameters);
+            ConvertNodes(delegateDeclaration.TypeParameters, del.TypeParameters);
+
+            del.ReturnType = (AstType)delegateDeclaration.ReturnType.AcceptVisitor(this, data);
+            del.NameToken = (Identifier)delegateDeclaration.NameToken.AcceptVisitor(this, data);
+
+            return EndNode(delegateDeclaration, del);
+            
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitNamespaceDeclaration(CSharp.NamespaceDeclaration namespaceDeclaration, object data)
@@ -1503,7 +1512,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             method.NameToken = CSharp.Identifier.Create(acc + propName);
             CSharp.AstType returnType = (CSharp.AstType)(accessor.Parent as CSharp.PropertyDeclaration).ReturnType;
             method.Body = (CSharp.BlockStatement)accessor.Body.Clone();
-            isEmptyProperty = !method.Body.Statements.Any();            
+            isEmptyProperty = !method.Body.Statements.Any();
 
             if (acc == "get")
             {
@@ -1753,7 +1762,10 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             //End:
             param.DefaultExpression = (Expression)parameterDeclaration.DefaultExpression.AcceptVisitor(this, data);
 
-            Cache.AddParameterDeclaration(currentMethod, param);
+            if (currentMethod != null)
+            {
+                Cache.AddParameterDeclaration(currentMethod, param);
+            }
             return EndNode(parameterDeclaration, param);
         }
 
@@ -1939,8 +1951,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     typeName = "float";
                     break;
                 //case "double":
-                   // typeName = "float";
-                    //break;
+                // typeName = "float";
+                //break;
                 case "object":
                     if (primitiveType.Role == CSharp.Roles.TypeArgument || primitiveType.Role == CSharp.Roles.TypeParameter)
                         return EndNode(primitiveType, new SimpleType("Object"));

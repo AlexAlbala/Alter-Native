@@ -1208,20 +1208,29 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitDelegateDeclaration(DelegateDeclaration delegateDeclaration, object data)
         {
             StartNode(delegateDeclaration);
+
             WriteAttributes(delegateDeclaration.Attributes);
-            WriteModifiers(delegateDeclaration.ModifierTokens);
-            WriteKeyword("delegate");
+            WriteAccesorModifier(delegateDeclaration.ModifierTokens);
+
+            WriteIdentifier("DELEGATE");
+            LPar();
             delegateDeclaration.ReturnType.AcceptVisitor(this, data);
+            Comma(AstNode.Null);
+
+            List<IdentifierExpression> parameters = new List<IdentifierExpression>();
+
+            foreach (ParameterDeclaration p in delegateDeclaration.Parameters)
+            {
+                parameters.Add(new IdentifierExpression(Resolver.GetTypeName(p.Type)));
+            }
+
+            WriteCommaSeparatedList(parameters);
+            RPar();            
             Space();
             WriteIdentifier(delegateDeclaration.Name);
             WriteTypeParameters(delegateDeclaration.TypeParameters);
-            Space(policy.SpaceBeforeDelegateDeclarationParentheses);
-            WriteCommaSeparatedListInParenthesis(delegateDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
-            //foreach (Constraint constraint in delegateDeclaration.Constraints)
-            //{
-            //    constraint.AcceptVisitor(this, data);
-            //}
             Semicolon();
+
             return EndNode(delegateDeclaration);
         }
 

@@ -169,12 +169,17 @@ namespace AlterNative
                 fi.CopyTo(System.IO.Path.Combine(target.ToString(), fi.Name), true);
             }
 
+            
             // Copy each subdirectory using recursion.
             foreach (DirectoryInfo diSourceSubDir in source.GetDirectories())
             {
+                if (source.Name == "__buildlib")
+                    continue;
+
                 DirectoryInfo nextTargetSubDir =
                     target.CreateSubdirectory(diSourceSubDir.Name);
 
+                
                 CopyAll(diSourceSubDir, nextTargetSubDir);
             }
         }

@@ -11,7 +11,7 @@ namespace RegressionTest
         private static List<string> ignoreFolders;
         public static string testPath = Environment.CurrentDirectory;
         public static string alternativePath = Environment.CurrentDirectory + "/../AlterNative/bin/Debug/AlterNative.exe";
-        public static string cxxLibraryPath = testPath + "/../Lib";
+        public static string cxxLibraryPath = testPath + "/../Lib/src";
 
         static Utils()
         {
