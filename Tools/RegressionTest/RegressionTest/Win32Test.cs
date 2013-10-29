@@ -90,7 +90,7 @@ namespace RegressionTest
             msbuildPath += @"msbuild.exe";
 
             string targetFile = di.Name.Split('.')[1] + "Proj.sln";
-            string msbuildArgs = targetFile + Utils.GetMsBuildCompileArg(Config.compileMode);
+            string msbuildArgs = targetFile + Utils.GetMsBuildCompileArg(Config.compileMode) + " /p:PlatformToolset=v120_CTP_Nov2012";
             Utils.DebugMessage("MSBUILD COMMAND:");
             Utils.DebugMessage("msbuild " + msbuildArgs);
             //Run msbuild

@@ -12,15 +12,18 @@ namespace AlterNative.BuildTools
     {
         public static void GenerateCMakeLists(string projectName, string execName, string workingDir, string[] sourceFiles, bool release = false)
         {
-            Utils.WriteToConsole("Generating CMakeLists.txt for project " + projectName + " and executable " + execName);
-
-            DirectoryInfo di = new DirectoryInfo(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\..\..\..\Tools\External Libraries");
+            Utils.WriteToConsole("Generating CMakeLists.txt for project " + projectName + " and executable " + execName);           
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("CMAKE_MINIMUM_REQUIRED(VERSION 2.8)");
-            sb.AppendLine("PROJECT(" + projectName + " CXX)");
-            sb.AppendLine("SET_PROPERTY(GLOBAL PROPERTY EXT_LIB_PATH \"" + di.FullName.Replace('\\', '/') + "\")");
+           
 
+            /*FileInfo v120Cmake = new FileInfo(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\..\..\..\Tools\Code\CMAKE-vs120");
+            StreamReader srv120 = new StreamReader(v120Cmake.FullName);
+            sb.AppendLine(srv120.ReadToEnd());*/
+
+            sb.AppendLine("PROJECT(" + projectName + " CXX)");
+            
             sb.AppendLine("SET_PROPERTY(GLOBAL PROPERTY GL_IS_RELEASE " + (release ? "1" : "0") + ")");
 
             sb.AppendLine("ADD_SUBDIRECTORY(System)");

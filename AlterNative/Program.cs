@@ -96,7 +96,7 @@ namespace AlterNative
             if (args[0].ToLower() == "new")
             {
                 Utils.WriteToConsole("Creating blank template...");
-                adef = LoadAssembly(@"../../../Tools/Templates/Blank/Blank.exe");                
+                adef = LoadAssembly(@"../../../Tools/Templates/Blank/Blank.exe");
             }
             else
             {
@@ -142,8 +142,6 @@ namespace AlterNative
                 }
             }
 
-
-
             //COPY LIB FILES IF NECESSARY
             if (args.Length >= 4 && args[3] != "")
                 CopyAll(new DirectoryInfo(args[3].Replace('\\', '/')), new DirectoryInfo(outputDir));
@@ -169,17 +167,13 @@ namespace AlterNative
                 fi.CopyTo(System.IO.Path.Combine(target.ToString(), fi.Name), true);
             }
 
-            
             // Copy each subdirectory using recursion.
             foreach (DirectoryInfo diSourceSubDir in source.GetDirectories())
             {
-                if (source.Name == "__buildlib")
-                    continue;
-
                 DirectoryInfo nextTargetSubDir =
                     target.CreateSubdirectory(diSourceSubDir.Name);
 
-                
+
                 CopyAll(diSourceSubDir, nextTargetSubDir);
             }
         }

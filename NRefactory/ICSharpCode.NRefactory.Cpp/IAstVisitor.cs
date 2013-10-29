@@ -44,6 +44,7 @@ namespace ICSharpCode.NRefactory.Cpp
         S VisitIdentifierExpression(IdentifierExpression identifierExpression, T data);
         S VisitIndexerExpression(IndexerExpression indexerExpression, T data);
         S VisitInvocationExpression(InvocationExpression invocationExpression, T data);
+        S VisitDelegateInvokeExpression(DelegateInvokeExpression delegateInvokeExpression, T data);
         S VisitInterfaceMemberSpecifier(InterfaceMemberSpecifier interfaceMemberSpecifier, T data);
         //S VisitIsExpression(IsExpression isExpression, T data);
         S VisitLambdaExpression(LambdaExpression lambdaExpression, T data);
@@ -53,6 +54,7 @@ namespace ICSharpCode.NRefactory.Cpp
         S VisitNamedExpression(NamedExpression namedExpression, T data);
         S VisitNullReferenceExpression(NullReferenceExpression nullReferenceExpression, T data);
         S VisitObjectCreateExpression(ObjectCreateExpression objectCreateExpression, T data);
+        S VisitDelegateCreateExpression(DelegateCreateExpression delegateCreateExpression, T data);//******************
         S VisitAnonymousTypeCreateExpression(AnonymousTypeCreateExpression anonymousTypeCreateExpression, T data);
         S VisitParenthesizedExpression(ParenthesizedExpression parenthesizedExpression, T data);
         S VisitPointerExpression(PointerExpression pointerExpression, T data);//*********************
@@ -84,6 +86,7 @@ namespace ICSharpCode.NRefactory.Cpp
         S VisitAttribute(Attribute attribute, T data);
         S VisitAttributeSection(AttributeSection attributeSection, T data);
         S VisitDelegateDeclaration(DelegateDeclaration delegateDeclaration, T data);
+        S VisitHeaderDelegateDeclaration(HeaderDelegateDeclaration headerDelegateDeclaration, T data);
         S VisitNamespaceDeclaration(NamespaceDeclaration namespaceDeclaration, T data);
         S VisitTypeDeclaration(TypeDeclaration typeDeclaration, T data);
         S VisitNestedTypeDeclaration(NestedTypeDeclaration nestedTypeDeclaration, T data);//****************

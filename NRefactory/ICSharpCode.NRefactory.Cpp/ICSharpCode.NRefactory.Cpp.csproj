@@ -71,6 +71,8 @@
     <Compile Include="Ast\AstNodeCollection.cs" />
     <Compile Include="Ast\Expressions\AddressOfExpression.cs" />
     <Compile Include="Ast\Expressions\BoxExpression.cs" />
+    <Compile Include="Ast\Expressions\DelegateCreateExpression.cs" />
+    <Compile Include="Ast\Expressions\DelegateInvokeExpression.cs" />
     <Compile Include="Ast\Expressions\DynamicCastExpression.cs" />
     <Compile Include="Ast\Expressions\MemberAccessExpression.cs" />
     <Compile Include="Ast\Expressions\UnBoxExpression.cs" />
@@ -97,6 +99,7 @@
     <Compile Include="Ast\Statements\ForeachStatement.cs" />
     <Compile Include="Ast\Statements\LockStatement.cs" />
     <Compile Include="Ast\TypeMembers\ConversionConstructorDeclaration.cs" />
+    <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderDelegateDeclaration.cs" />
     <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderAbstractMethodDeclaration.cs" />
     <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderConstructorDeclaration.cs" />
     <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderConversionConstructorDeclaration.cs" />

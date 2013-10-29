@@ -368,6 +368,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             var expr = new InvocationExpression(
                 (Expression)invocationExpression.Target.AcceptVisitor(this, data));
 
+
             ConvertNodes(invocationExpression.Arguments, expr.Arguments);
             for (int i = 0; i < expr.Arguments.Count; i++)
             {
@@ -396,7 +397,24 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 //}
             }
 
+            if (expr.Target is IdentifierExpression)
+            {
+                String type = "";
+                if (Resolver.IdentifierIsDelegate((expr.Target as IdentifierExpression).Identifier, out type))
+                {
+                    DelegateInvokeExpression newExpr = new DelegateInvokeExpression();
+                    newExpr.Target = expr.Target.Clone();
+                    newExpr.Arguments.Add(expr.Target.Clone());
 
+                    foreach (Expression n in expr.Arguments)
+                    {
+                        newExpr.Arguments.Add(n.Clone());
+                    }
+                   
+
+                    return EndNode(invocationExpression, newExpr);
+                }
+            }
 
             return EndNode(invocationExpression, expr);
         }
@@ -459,6 +477,66 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 PtrType ptr = type as PtrType;
                 type = (AstType)ptr.Target.Clone();
                 isGcPtr = true;
+            }
+
+            String typeName = Resolver.GetTypeName(type);
+            if (Resolver.IsDelegateType(typeName))
+            {
+                DelegateCreateExpression dce = new DelegateCreateExpression(type);
+                ConvertNodes(objectCreateExpression.Arguments, dce.Arguments);
+                dce.isGCPtr = isGcPtr;
+                if (!objectCreateExpression.Initializer.IsNull)
+                {
+                    dce.Initializer = (ArrayInitializerExpression)objectCreateExpression.Initializer.AcceptVisitor(this, data);
+                }
+
+                //We have to obtain the name of the variable the delegate will assigned to
+                //Two options:
+                //
+                //Variable initializer : DelVoidVoid a = new Delegate....
+                //AssigmentExpression a = new Delegate....
+                //
+                if (Resolver.IsChildOf(objectCreateExpression, typeof(CSharp.VariableInitializer)))
+                {
+                    CSharp.VariableInitializer b = (CSharp.VariableInitializer)Resolver.GetParentOf(objectCreateExpression, typeof(CSharp.VariableInitializer));
+
+                    Cache.AddDelegateIdentifiers(b.Name, typeName);
+                }
+                else if (Resolver.IsChildOf(objectCreateExpression, typeof(CSharp.AssignmentExpression)))
+                {
+                    CSharp.AssignmentExpression b = (CSharp.AssignmentExpression)Resolver.GetParentOf(objectCreateExpression, typeof(CSharp.AssignmentExpression));
+
+                    if (b.Left is CSharp.IdentifierExpression)
+                    {
+                        Cache.AddDelegateIdentifiers((b.Left as CSharp.IdentifierExpression).Identifier, typeName);
+                    }
+                }
+
+                dce.NumArgs = Resolver.GetDelegateArgsNum(typeName);
+
+                for (int i = 0; i < dce.Arguments.Count; i++)
+                {
+                    Expression e = dce.Arguments.ElementAt(i);
+                    if (e is MemberReferenceExpression)
+                    {
+                        MemberReferenceExpression mre = e as MemberReferenceExpression;
+                        if (mre.Target is ThisReferenceExpression)
+                        {
+                            //new Delegate(DELEGATE(this.Member) --> new Delegate(DELEGATE(MyClass::Member));
+                            MemberReferenceExpression new_e = new MemberReferenceExpression(new TypeReferenceExpression(new SimpleType(currentType.Name)), mre.MemberName);
+                            dce.Arguments.InsertBefore(e, new_e);
+                            dce.Arguments.Remove(e);
+                        }
+                    }
+                }
+
+                for (int i = 0; i < dce.NumArgs; i++)
+                {
+                    //FUNCTION BINDING IN C++
+                    dce.Arguments.Add(new IdentifierExpression("_" + (i + 1).ToString()));
+                }
+
+                return EndNode(objectCreateExpression, dce);
             }
 
             var expr = new ObjectCreateExpression(type);
@@ -701,8 +779,10 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             del.ReturnType = (AstType)delegateDeclaration.ReturnType.AcceptVisitor(this, data);
             del.NameToken = (Identifier)delegateDeclaration.NameToken.AcceptVisitor(this, data);
 
+            Cache.AddDelegateType(del.Name, delegateDeclaration.Parameters.Count);
+
             return EndNode(delegateDeclaration, del);
-            
+
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitNamespaceDeclaration(CSharp.NamespaceDeclaration namespaceDeclaration, object data)
@@ -817,6 +897,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                         tmp = new HeaderConstructorDeclaration();
                     else if (n is DestructorDeclaration)
                         tmp = new HeaderDestructorDeclaration();
+                    else if (n is DelegateDeclaration)
+                        tmp = new HeaderDelegateDeclaration();
 
 
                     Resolver.GetHeaderNode(n, tmp);

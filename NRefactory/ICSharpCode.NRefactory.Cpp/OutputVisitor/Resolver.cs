@@ -24,6 +24,7 @@ namespace ICSharpCode.NRefactory.Cpp
             libraryMap.Add("GC", "\"System/GC.h\"");
             libraryMap.Add("IDisposable", "\"System/IDisposable.h\"");
             libraryMap.Add("Convert", "\"System/Convert.h\"");
+            libraryMap.Add("Delegate", "\"System/Delegate.h\"");
             //exceptions:
             libraryMap.Add("Exception", "\"System/Exception.h\"");
             //                          SystemExceptions
@@ -376,6 +377,11 @@ namespace ICSharpCode.NRefactory.Cpp
                 PtrType p = type as PtrType;
                 return GetTypeName(p.Target);
             }
+            else if (type is QualifiedType)
+            {
+                QualifiedType qt = type as QualifiedType;
+                return qt.Name;
+            }
             else if (type == AstType.Null)
                 return String.Empty;
             else if (type is PrimitiveType)
@@ -726,6 +732,27 @@ namespace ICSharpCode.NRefactory.Cpp
 
                 _header.ReturnType = (AstType)_node.ReturnType.Clone();
             }
+            if (node is DelegateDeclaration)
+            {
+                var _node = node as DelegateDeclaration;
+                var _header = headerNode as HeaderDelegateDeclaration;
+
+                foreach (var token in _node.ModifierTokens)
+                    headerNode.AddChild((CppModifierToken)token.Clone(), HeaderConstructorDeclaration.ModifierRole);
+
+                foreach (var att in _node.Attributes)
+                    headerNode.AddChild((AttributeSection)att.Clone(), HeaderConstructorDeclaration.AttributeRole);
+
+                 foreach (var param in _node.Parameters)
+                    headerNode.AddChild((ParameterDeclaration)param.Clone(), HeaderConstructorDeclaration.Roles.Parameter);
+
+                foreach (var tparam in _node.TypeParameters)
+                    _header.TypeParameters.Add((TypeParameterDeclaration)tparam.Clone());
+
+                _header.NameToken = (Identifier)_node.NameToken.Clone();
+                _header.ReturnType = (AstType)_node.ReturnType.Clone();
+            }
+
             else
                 headerNode = null;
         }
@@ -1307,5 +1334,40 @@ namespace ICSharpCode.NRefactory.Cpp
             return input;
         }
 
-    }
+        public static bool IsDelegateType(String type)
+        {
+            Dictionary<string, int> delegates = Cache.GetDelegateTypes();
+            return delegates.ContainsKey(type);
+        }
+
+        public static int GetDelegateArgsNum(String type)
+        {
+            Dictionary<string, int> delegates = Cache.GetDelegateTypes();
+            if (delegates.ContainsKey(type))
+            {
+                return delegates[type];
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
+        public static bool IdentifierIsDelegate(String identifier, out String type)
+        {
+            Dictionary<string, string> identifiers = Cache.GetDelegateIdentifiers();
+
+            if (identifiers.ContainsKey(identifier))
+            {
+                type = identifiers[identifier];
+                return true;
+            }
+            else
+            {
+                type = "";
+                return false;
+            }
+        }
+
+    }    
 }

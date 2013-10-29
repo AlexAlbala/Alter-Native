@@ -29,6 +29,8 @@ namespace ICSharpCode.NRefactory.Cpp
         private static Dictionary<string, TypeReference> symbols = new Dictionary<string, TypeReference>();
         private static Dictionary<string, List<string>> includes = new Dictionary<string, List<string>>();
         private static List<string> templateTypes = new List<string>();
+        private static Dictionary<string, int> delegates = new Dictionary<string, int>();
+        private static Dictionary<string, string> delegatesIdentifiers = new Dictionary<string, string>();
 
         #region RESOLVER
 
@@ -69,6 +71,32 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             if (!auxVariables.ContainsKey(identifier))
                 auxVariables.Add(identifier, type);
+        }
+
+        public static void AddDelegateType(String type, int arguments)
+        {
+            if (!delegates.ContainsKey(type))
+            {
+                delegates.Add(type, arguments);
+            }
+        }
+
+        public static Dictionary<string, int> GetDelegateTypes()
+        {
+            return delegates;
+        }
+
+        public static void AddDelegateIdentifiers(String identifier, String ofType)
+        {
+            if (!delegatesIdentifiers.ContainsKey(identifier))
+            {
+                delegatesIdentifiers.Add(identifier, ofType);
+            }
+        }
+
+        public static Dictionary<string, string> GetDelegateIdentifiers()
+        {
+            return delegatesIdentifiers;
         }
 
         public static Dictionary<string, Ast.AstType> GetAuxVariables()

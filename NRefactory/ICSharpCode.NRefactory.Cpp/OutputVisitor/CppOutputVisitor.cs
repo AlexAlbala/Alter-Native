@@ -1209,27 +1209,7 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             StartNode(delegateDeclaration);
 
-            WriteAttributes(delegateDeclaration.Attributes);
-            WriteAccesorModifier(delegateDeclaration.ModifierTokens);
-
-            WriteIdentifier("DELEGATE");
-            LPar();
-            delegateDeclaration.ReturnType.AcceptVisitor(this, data);
-            Comma(AstNode.Null);
-
-            List<IdentifierExpression> parameters = new List<IdentifierExpression>();
-
-            foreach (ParameterDeclaration p in delegateDeclaration.Parameters)
-            {
-                parameters.Add(new IdentifierExpression(Resolver.GetTypeName(p.Type)));
-            }
-
-            WriteCommaSeparatedList(parameters);
-            RPar();            
-            Space();
-            WriteIdentifier(delegateDeclaration.Name);
-            WriteTypeParameters(delegateDeclaration.TypeParameters);
-            Semicolon();
+            formatter.WriteComment(CommentType.SingleLine, "Delegate declaration moved to header file");
 
             return EndNode(delegateDeclaration);
         }
@@ -2161,7 +2141,7 @@ namespace ICSharpCode.NRefactory.Cpp
             bool needsT = Resolver.IsChildOf(constructorDeclaration, typeof(GenericTemplateTypeDeclaration));
             bool needsBase = Resolver.IsChildOf(constructorDeclaration, typeof(BaseTemplateTypeDeclaration));
             string trim = (needsT ? "_T" : "") + (needsBase ? "_Base" : "");
-            
+
             WriteIdentifier(constructorDeclaration.Name + trim);
             Space(policy.SpaceBeforeConstructorDeclarationParentheses);
             WriteCommaSeparatedListInParenthesis(constructorDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
@@ -2615,7 +2595,7 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitPreProcessorDirective(PreProcessorDirective preProcessorDirective, object data)
         {
             formatter.StartNode(preProcessorDirective);
-            if(preProcessorDirective.Type != PreProcessorDirectiveType.Invalid)
+            if (preProcessorDirective.Type != PreProcessorDirectiveType.Invalid)
                 formatter.WritePreProcessorDirective(preProcessorDirective.Type, preProcessorDirective.Argument);
             formatter.EndNode(preProcessorDirective);
             lastWritten = LastWritten.Whitespace;
@@ -3920,6 +3900,70 @@ namespace ICSharpCode.NRefactory.Cpp
             Space(policy.SpacesWithinLockParentheses);
             RPar();
             return EndNode(lockStatement);
+        }
+
+
+        public object VisitDelegateCreateExpression(DelegateCreateExpression delegateCreateExpression, object data)
+        {
+            StartNode(delegateCreateExpression);
+            WriteKeyword("new");
+            delegateCreateExpression.Type.AcceptVisitor(this, data);
+            // also use parenthesis if there is an '(' token
+            LPar();
+            WriteKeyword("DELEGATE_FUNC");            
+            WriteCommaSeparatedListInParenthesis(delegateCreateExpression.Arguments, policy.SpaceWithinMethodCallParentheses);
+            delegateCreateExpression.Initializer.AcceptVisitor(this, data);
+            RPar();
+            return EndNode(delegateCreateExpression);
+        }
+
+
+        public object VisitDelegateInvokeExpression(DelegateInvokeExpression delegateInvokeExpression, object data)
+        {
+            StartNode(delegateInvokeExpression);
+            WriteKeyword("DELEGATE_INVOKE");
+            Space(policy.SpaceBeforeMethodCallParentheses);
+            WriteCommaSeparatedListInParenthesis(delegateInvokeExpression.Arguments, policy.SpaceWithinMethodCallParentheses);
+            return EndNode(delegateInvokeExpression);
+        }
+
+
+        public object VisitHeaderDelegateDeclaration(HeaderDelegateDeclaration headerDelegateDeclaration, object data)
+        {
+            StartNode(headerDelegateDeclaration);
+
+            WriteAttributes(headerDelegateDeclaration.Attributes);
+            WriteAccesorModifier(headerDelegateDeclaration.ModifierTokens);
+
+            WriteIdentifier("DELEGATE");
+            LPar();
+            headerDelegateDeclaration.ReturnType.AcceptVisitor(this, data);
+
+            int count = headerDelegateDeclaration.Parameters.Count;
+            int i = 0;
+
+            if (count > 0)
+                Comma(AstNode.Null);
+
+            foreach (ParameterDeclaration p in headerDelegateDeclaration.Parameters)
+            {
+                formatter.WriteToken(Resolver.GetTypeName(p.Type));
+
+
+                if (i < count - 1)
+                {
+                    Comma(AstNode.Null);
+                }
+                i++;
+            }
+
+            RPar();
+            Space();
+            WriteIdentifier(headerDelegateDeclaration.Name);
+            WriteTypeParameters(headerDelegateDeclaration.TypeParameters);
+            Semicolon();
+
+            return EndNode(headerDelegateDeclaration);
         }
     }
 }
