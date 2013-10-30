@@ -23,7 +23,9 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
+#if !CORE
 using System.Windows.Threading;
+#endif
 using System.Xml.Linq;
 
 namespace ICSharpCode.ILSpy
@@ -106,6 +108,7 @@ namespace ICSharpCode.ILSpy
 			// and enqueue a task that saves it once the UI has finished modifying the assembly list.
 			if (!dirty) {
 				dirty = true;
+#if !CORE
 				App.Current.Dispatcher.BeginInvoke(
 					DispatcherPriority.Background,
 					new Action(
@@ -115,6 +118,7 @@ namespace ICSharpCode.ILSpy
 							ClearCache();
 						})
 				);
+#endif
 			}
 		}
 		
@@ -130,7 +134,9 @@ namespace ICSharpCode.ILSpy
 		/// </summary>
 		public LoadedAssembly OpenAssembly(string file)
 		{
+#if !CORE
 			App.Current.Dispatcher.VerifyAccess();
+#endif
 			
 			file = Path.GetFullPath(file);
 			
@@ -148,7 +154,9 @@ namespace ICSharpCode.ILSpy
 		
 		public void Unload(LoadedAssembly assembly)
 		{
+#if !CORE
 			App.Current.Dispatcher.VerifyAccess();
+#endif
 			lock (assemblies) {
 				assemblies.Remove(assembly);
 			}
@@ -161,11 +169,13 @@ namespace ICSharpCode.ILSpy
 		{
 			if (gcRequested) return;
 			gcRequested = true;
+#if !CORE
 			App.Current.Dispatcher.BeginInvoke(DispatcherPriority.ContextIdle, new Action(
 				delegate {
 					gcRequested = false;
 					GC.Collect();
 				}));
+#endif
 		}
 		
 		public void Sort(IComparer<LoadedAssembly> comparer)
@@ -175,7 +185,9 @@ namespace ICSharpCode.ILSpy
 		
 		public void Sort(int index, int count, IComparer<LoadedAssembly> comparer)
 		{
+#if !CORE
 			App.Current.Dispatcher.VerifyAccess();
+#endif
 			lock (assemblies) {
 				List<LoadedAssembly> list = new List<LoadedAssembly>(assemblies);
 				list.Sort(index, Math.Min(count, list.Count - index), comparer);

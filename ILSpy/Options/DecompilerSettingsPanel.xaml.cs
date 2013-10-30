@@ -17,7 +17,9 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
+#if !CORE
 using System.Windows.Controls;
+#endif
 using System.Xml.Linq;
 using ICSharpCode.Decompiler;
 
@@ -26,9 +28,16 @@ namespace ICSharpCode.ILSpy.Options
 	/// <summary>
 	/// Interaction logic for DecompilerSettingsPanel.xaml
 	/// </summary>
+#if !CORE
 	[ExportOptionPage(Title = "Decompiler", Order = 0)]
-	partial class DecompilerSettingsPanel : UserControl, IOptionPage
+    partial class DecompilerSettingsPanel : UserControl, IOptionPage
 	{
+#else
+    partial class DecompilerSettingsPanel
+    {
+#endif
+	
+#if !CORE
 		public DecompilerSettingsPanel()
 		{
 			InitializeComponent();
@@ -37,27 +46,6 @@ namespace ICSharpCode.ILSpy.Options
 		public void Load(ILSpySettings settings)
 		{
 			this.DataContext = LoadDecompilerSettings(settings);
-		}
-		
-		static DecompilerSettings currentDecompilerSettings;
-		
-		public static DecompilerSettings CurrentDecompilerSettings {
-			get {
-				return currentDecompilerSettings ?? (currentDecompilerSettings = LoadDecompilerSettings(ILSpySettings.Load()));
-			}
-		}
-		
-		public static DecompilerSettings LoadDecompilerSettings(ILSpySettings settings)
-		{
-			XElement e = settings["DecompilerSettings"];
-			DecompilerSettings s = new DecompilerSettings();
-			s.AnonymousMethods = (bool?)e.Attribute("anonymousMethods") ?? s.AnonymousMethods;
-			s.YieldReturn = (bool?)e.Attribute("yieldReturn") ?? s.YieldReturn;
-			s.AsyncAwait = (bool?)e.Attribute("asyncAwait") ?? s.AsyncAwait;
-			s.QueryExpressions = (bool?)e.Attribute("queryExpressions") ?? s.QueryExpressions;
-			s.UseDebugSymbols = (bool?)e.Attribute("useDebugSymbols") ?? s.UseDebugSymbols;
-			s.ShowXmlDocumentation = (bool?)e.Attribute("xmlDoc") ?? s.ShowXmlDocumentation;
-			return s;
 		}
 		
 		public void Save(XElement root)
@@ -79,5 +67,28 @@ namespace ICSharpCode.ILSpy.Options
 			
 			currentDecompilerSettings = null; // invalidate cached settings
 		}
+#endif
+		static DecompilerSettings currentDecompilerSettings;
+		
+		public static DecompilerSettings CurrentDecompilerSettings {
+			get {
+				return currentDecompilerSettings ?? (currentDecompilerSettings = LoadDecompilerSettings(ILSpySettings.Load()));
+			}
+		}
+		
+		public static DecompilerSettings LoadDecompilerSettings(ILSpySettings settings)
+		{
+			XElement e = settings["DecompilerSettings"];
+			DecompilerSettings s = new DecompilerSettings();
+			s.AnonymousMethods = (bool?)e.Attribute("anonymousMethods") ?? s.AnonymousMethods;
+			s.YieldReturn = (bool?)e.Attribute("yieldReturn") ?? s.YieldReturn;
+			s.AsyncAwait = (bool?)e.Attribute("asyncAwait") ?? s.AsyncAwait;
+			s.QueryExpressions = (bool?)e.Attribute("queryExpressions") ?? s.QueryExpressions;
+			s.UseDebugSymbols = (bool?)e.Attribute("useDebugSymbols") ?? s.UseDebugSymbols;
+			s.ShowXmlDocumentation = (bool?)e.Attribute("xmlDoc") ?? s.ShowXmlDocumentation;
+			return s;
+		}
+		
+		
 	}
 }

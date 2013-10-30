@@ -19,7 +19,9 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+#if !CORE
 using System.Windows.Threading;
+#endif
 using ICSharpCode.ILSpy.Options;
 using Mono.Cecil;
 
@@ -132,8 +134,10 @@ namespace ICSharpCode.ILSpy
 				if (!disposed) {
 					disposed = true;
 					assemblyLoadDisableCount--;
+#if !CORE
 					// clear the lookup cache since we might have stored the lookups failed due to DisableAssemblyLoad()
 					MainWindow.Instance.CurrentAssemblyList.ClearCache();
+#endif
 				}
 			}
 		}
@@ -202,10 +206,12 @@ namespace ICSharpCode.ILSpy
 			if (assemblyLoadDisableCount > 0)
 				return null;
 			
+#if !CORE
 			if (!App.Current.Dispatcher.CheckAccess()) {
 				// Call this method on the GUI thread.
 				return (LoadedAssembly)App.Current.Dispatcher.Invoke(DispatcherPriority.Normal, new Func<string, LoadedAssembly>(LookupReferencedAssembly), fullName);
 			}
+#endif
 			
 			var name = AssemblyNameReference.Parse(fullName);
 			string file = GacInterop.FindAssemblyInNetGac(name);
@@ -231,10 +237,13 @@ namespace ICSharpCode.ILSpy
 			}
 			if (assemblyLoadDisableCount > 0)
 				return null;
+
+#if !CORE
 			if (!App.Current.Dispatcher.CheckAccess()) {
 				// Call this method on the GUI thread.
 				return (LoadedAssembly)App.Current.Dispatcher.Invoke(DispatcherPriority.Normal, new Func<string, LoadedAssembly>(LookupWinRTMetadata), name);
 			}
+#endif
 			
 			string file = Path.Combine(Environment.SystemDirectory, "WinMetadata", name + ".winmd");
 			if (File.Exists(file)) {

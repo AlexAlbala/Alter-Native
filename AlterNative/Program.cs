@@ -36,7 +36,7 @@ namespace AlterNative
             }
             else
             {
-#if !CONSOLE
+#if !CORE
                 ICSharpCode.ILSpy.App app = new ICSharpCode.ILSpy.App();
                 app.InitializeComponent();
                 app.Run();
@@ -70,9 +70,12 @@ namespace AlterNative
                 case "C#":
                     lang = new ICSharpCode.ILSpy.CSharpLanguage();
                     break;
+                    //Why we can't add VB ??
+#if !CORE
                 case "VB":
                     lang = new ICSharpCode.ILSpy.VB.VBLanguage();
                     break;
+#endif
                 case "IL":
                     lang = new ICSharpCode.ILSpy.ILLanguage(true);
                     break;

@@ -624,6 +624,7 @@ namespace ICSharpCode.ILSpy
 			return showAllMembers || !AstBuilder.MemberIsHidden(member, new DecompilationOptions().DecompilerSettings);
 		}
 
+#if !CORE
 		public override MemberReference GetOriginalCodeLocation(MemberReference member)
 		{
 			if (showAllMembers || !DecompilerSettingsPanel.CurrentDecompilerSettings.AnonymousMethods)
@@ -631,6 +632,7 @@ namespace ICSharpCode.ILSpy
 			else
 				return TreeNodes.Analyzer.Helpers.GetOriginalCodeLocation(member);
 		}
+#endif
 
 		public override string GetTooltip(MemberReference member)
 		{

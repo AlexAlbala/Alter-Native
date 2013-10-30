@@ -53,6 +53,7 @@ namespace ICSharpCode.ILSpy
 		/// </summary>
 		public DecompilerSettings DecompilerSettings { get; set; }
 
+#if !CORE
 		/// <summary>
 		/// Gets/sets an optional state of a decompiler text view.
 		/// </summary>
@@ -60,10 +61,10 @@ namespace ICSharpCode.ILSpy
 		/// This state is used to restore test view's state when decompilation is started by Go Back/Forward action.
 		/// </remarks>
 		public TextView.DecompilerTextViewState TextViewState { get; set; }
+#endif
 
 		public DecompilationOptions()
 		{
-            //this.DecompilerSettings = new DecompilerSettings();
             this.DecompilerSettings = DecompilerSettingsPanel.CurrentDecompilerSettings;
 		}
 	}

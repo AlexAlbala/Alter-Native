@@ -16,6 +16,7 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
+#if !CORE
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -54,15 +55,32 @@ using ICSharpCode.NRefactory.Documentation;
 using Microsoft.Win32;
 using Mono.Cecil;
 
+#else
+using System;
+using System.IO;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+#endif
+
 namespace ICSharpCode.ILSpy.TextView
 {
 	/// <summary>
 	/// Manages the TextEditor showing the decompiled code.
 	/// Contains all the threading logic that makes the decompiler work in the background.
 	/// </summary>
+    /// 
+#if !CORE
 	[Export, PartCreationPolicy(CreationPolicy.Shared)]
 	public sealed partial class DecompilerTextView : UserControl, IDisposable
 	{
+#else
+     class DecompilerTextView
+     {
+#endif
+
+#if !CORE
 		readonly ReferenceElementGenerator referenceElementGenerator;
 		readonly UIElementGenerator uiElementGenerator;
 		List<VisualLineElementGenerator> activeCustomElementGenerators = new List<VisualLineElementGenerator>();
@@ -743,22 +761,7 @@ namespace ICSharpCode.ILSpy.TextView
 			return tcs.Task;
 		}
 		
-		/// <summary>
-		/// Cleans up a node name for use as a file name.
-		/// </summary>
-		internal static string CleanUpName(string text)
-		{
-			int pos = text.IndexOf(':');
-			if (pos > 0)
-				text = text.Substring(0, pos);
-			pos = text.IndexOf('`');
-			if (pos > 0)
-				text = text.Substring(0, pos);
-			text = text.Trim();
-			foreach (char c in Path.GetInvalidFileNameChars())
-				text = text.Replace(c, '-');
-			return text;
-		}
+
 		#endregion
 
 		internal ReferenceSegment GetReferenceSegmentAtMousePosition()
@@ -810,8 +813,27 @@ namespace ICSharpCode.ILSpy.TextView
 			textEditor.ScrollTo(lineNumber, 0);
 		}
 		#endregion
+
+#endif
+		/// <summary>
+		/// Cleans up a node name for use as a file name.
+		/// </summary>
+		internal static string CleanUpName(string text)
+		{
+			int pos = text.IndexOf(':');
+			if (pos > 0)
+				text = text.Substring(0, pos);
+			pos = text.IndexOf('`');
+			if (pos > 0)
+				text = text.Substring(0, pos);
+			text = text.Trim();
+			foreach (char c in Path.GetInvalidFileNameChars())
+				text = text.Replace(c, '-');
+			return text;
+		}
 	}
 
+#if !CORE
 	public class DecompilerTextViewState
 	{
 		private List<Tuple<int, int>> ExpandedFoldings;
@@ -834,4 +856,6 @@ namespace ICSharpCode.ILSpy.TextView
 					folding.DefaultClosed = !ExpandedFoldings.Any(f => f.Item1 == folding.StartOffset && f.Item2 == folding.EndOffset);
 		}
 	}
+#endif
+
 }

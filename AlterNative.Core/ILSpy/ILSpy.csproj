@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;CORE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -26,7 +26,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;CORE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -44,50 +44,50 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyList.cs" />
-    <Compile Include="Cpp\CppLanguage.cs" />
-    <Compile Include="Cpp\CppTextOutputFormatter.cs" />
-    <Compile Include="Cpp\ILSpyEnvironmentProvider.cs" />
-    <Compile Include="DecompilationOptions.cs" />
-    <Compile Include="ExtensionMethods.cs" />
-    <Compile Include="FileTextOutput.cs" />
-    <Compile Include="Fusion.cs" />
-    <Compile Include="GacInterop.cs" />
-    <Compile Include="ILSpySettings.cs" />
-    <Compile Include="Languages\CSharpLanguage.cs" />
-    <Compile Include="Languages\ILAstLanguage.cs" />
-    <Compile Include="Languages\ILLanguage.cs" />
-    <Compile Include="Languages\Language.cs" />
-    <Compile Include="LoadedAssembly.cs" />
-    <Compile Include="Options\DecompilerSettingsPanel.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TextView\DecompilerTextView.cs" />
-    <Compile Include="XmlDoc\AddXmlDocTransform.cs" />
-    <Compile Include="XmlDoc\XmlDocKeyProvider.cs" />
-    <Compile Include="XmlDoc\XmlDocLoader.cs" />
+    <Compile Include="..\..\ILSpy\AssemblyList.cs" />
+    <Compile Include="..\..\ILSpy\Cpp\CppLanguage.cs" />
+    <Compile Include="..\..\ILSpy\Cpp\CppTextOutputFormatter.cs" />
+    <Compile Include="..\..\ILSpy\Cpp\ILSpyEnvironmentProvider.cs" />
+    <Compile Include="..\..\ILSpy\DecompilationOptions.cs" />
+    <Compile Include="..\..\ILSpy\ExtensionMethods.cs" />
+    <Compile Include="..\..\ILSpy\FileTextOutput.cs" />
+    <Compile Include="..\..\ILSpy\Fusion.cs" />
+    <Compile Include="..\..\ILSpy\GacInterop.cs" />
+    <Compile Include="..\..\ILSpy\ILSpySettings.cs" />
+    <Compile Include="..\..\ILSpy\Languages\CSharpLanguage.cs" />
+    <Compile Include="..\..\ILSpy\Languages\ILAstLanguage.cs" />
+    <Compile Include="..\..\ILSpy\Languages\ILLanguage.cs" />
+    <Compile Include="..\..\ILSpy\Languages\Language.cs" />
+    <Compile Include="..\..\ILSpy\LoadedAssembly.cs" />
+    <Compile Include="..\..\ILSpy\Options\DecompilerSettingsPanel.xaml.cs" />
+    <Compile Include="..\..\ILSpy\Properties\AssemblyInfo.cs" />
+    <Compile Include="..\..\ILSpy\TextView\DecompilerTextView.cs" />
+    <Compile Include="..\..\ILSpy\XmlDoc\AddXmlDocTransform.cs" />
+    <Compile Include="..\..\ILSpy\XmlDoc\XmlDocKeyProvider.cs" />
+    <Compile Include="..\..\ILSpy\XmlDoc\XmlDocLoader.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ICSharpCode.Decompiler\ICSharpCode.Decompiler.csproj">
       <Project>{984cc812-9470-4a13-aff9-cc44068d666c}</Project>
       <Name>ICSharpCode.Decompiler</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Mono.Cecil\Mono.Cecil.csproj">
+    <ProjectReference Include="..\..\Mono.Cecil\Mono.Cecil.csproj">
       <Project>{d68133bd-1e63-496e-9ede-4fbdbf77b486}</Project>
       <Name>Mono.Cecil</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Mono.Cecil\symbols\pdb\Mono.Cecil.Pdb.csproj">
+    <ProjectReference Include="..\..\Mono.Cecil\symbols\pdb\Mono.Cecil.Pdb.csproj">
       <Project>{63e6915c-7ea4-4d76-ab28-0d7191eea626}</Project>
       <Name>Mono.Cecil.Pdb</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NRefactory\ICSharpCode.NRefactory.Cpp\ICSharpCode.NRefactory.Cpp.csproj">
+    <ProjectReference Include="..\..\NRefactory\ICSharpCode.NRefactory.Cpp\ICSharpCode.NRefactory.Cpp.csproj">
       <Project>{37669de0-87e0-4cd0-ab53-170c38270857}</Project>
       <Name>ICSharpCode.NRefactory.Cpp</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NRefactory\ICSharpCode.NRefactory.CSharp\ICSharpCode.NRefactory.CSharp.csproj">
+    <ProjectReference Include="..\..\NRefactory\ICSharpCode.NRefactory.CSharp\ICSharpCode.NRefactory.CSharp.csproj">
       <Project>{53dca265-3c3c-42f9-b647-f72ba678122b}</Project>
       <Name>ICSharpCode.NRefactory.CSharp</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NRefactory\ICSharpCode.NRefactory\ICSharpCode.NRefactory.csproj">
+    <ProjectReference Include="..\..\NRefactory\ICSharpCode.NRefactory\ICSharpCode.NRefactory.csproj">
       <Project>{3b2a5653-ec97-4001-bb9b-d90f1af2c371}</Project>
       <Name>ICSharpCode.NRefactory</Name>
     </ProjectReference>

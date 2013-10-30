@@ -44,6 +44,7 @@ namespace ICSharpCode.ILSpy
 			get { return null; }
 		}
 
+#if !CORE
 		/// <summary>
 		/// Gets the syntax highlighting used for this language.
 		/// </summary>
@@ -54,6 +55,7 @@ namespace ICSharpCode.ILSpy
 				return ICSharpCode.AvalonEdit.Highlighting.HighlightingManager.Instance.GetDefinitionByExtension(this.FileExtension);
 			}
 		}
+#endif
 
 		public virtual void DecompileMethod(MethodDefinition method, ITextOutput output, DecompilationOptions options)
 		{
