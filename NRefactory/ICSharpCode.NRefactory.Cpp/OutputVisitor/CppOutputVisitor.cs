@@ -3910,6 +3910,8 @@ namespace ICSharpCode.NRefactory.Cpp
             delegateCreateExpression.Type.AcceptVisitor(this, data);
             // also use parenthesis if there is an '(' token
             LPar();
+
+            //Check if the target is a function or a method (now always is supposed to be a function)
             WriteKeyword("DELEGATE_FUNC");            
             WriteCommaSeparatedListInParenthesis(delegateCreateExpression.Arguments, policy.SpaceWithinMethodCallParentheses);
             delegateCreateExpression.Initializer.AcceptVisitor(this, data);
@@ -3935,6 +3937,7 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteAttributes(headerDelegateDeclaration.Attributes);
             WriteAccesorModifier(headerDelegateDeclaration.ModifierTokens);
 
+            formatter.Indent();
             WriteIdentifier("DELEGATE");
             LPar();
             headerDelegateDeclaration.ReturnType.AcceptVisitor(this, data);
@@ -3962,6 +3965,8 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteIdentifier(headerDelegateDeclaration.Name);
             WriteTypeParameters(headerDelegateDeclaration.TypeParameters);
             Semicolon();
+
+            formatter.Unindent();
 
             return EndNode(headerDelegateDeclaration);
         }
