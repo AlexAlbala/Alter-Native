@@ -555,7 +555,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitParenthesizedExpression(CSharp.ParenthesizedExpression parenthesizedExpression, object data)
         {
-            throw new NotImplementedException();
+            ParenthesizedExpression pe = new ParenthesizedExpression((Expression)parenthesizedExpression.Expression.AcceptVisitor(this, data));
+            return EndNode(parenthesizedExpression, pe);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitPointerReferenceExpression(CSharp.PointerReferenceExpression pointerReferenceExpression, object data)
@@ -1253,7 +1254,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitExternAliasDeclaration(CSharp.ExternAliasDeclaration externAliasDeclaration, object data)
         {
-            throw new NotImplementedException();
+            ExternAliasDeclaration ead = new ExternAliasDeclaration();
+            ead.NameToken = (Identifier)externAliasDeclaration.AcceptVisitor(this, data);
+            return EndNode(externAliasDeclaration, ead);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitBlockStatement(CSharp.BlockStatement blockStatement, object data)
