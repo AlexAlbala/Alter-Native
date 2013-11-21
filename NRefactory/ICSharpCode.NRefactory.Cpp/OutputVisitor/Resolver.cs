@@ -1336,6 +1336,13 @@ namespace ICSharpCode.NRefactory.Cpp
             return false;
         }
 
+        /// <summary>
+        /// Refactors the C# property accessors to methods (i.e getProperty() setProperty(value)
+        /// </summary>
+        /// <param name="input">Property expression</param>
+        /// <param name="currentTypeName">Current type deompliated</param>
+        /// <param name="accessor">Get or Set accessor</param>
+        /// <returns></returns>
         public static Expression RefactorPropety(Expression input, String currentTypeName, String accessor)
         {            
             if (input is MemberReferenceExpression)
@@ -1354,12 +1361,22 @@ namespace ICSharpCode.NRefactory.Cpp
             return input;
         }
 
+        /// <summary>
+        /// Returns if the specified type name is a delegate type
+        /// </summary>
+        /// <param name="type">Identifier</param>
+        /// <returns>True/False</returns>
         public static bool IsDelegateType(String type)
         {
             Dictionary<string, ParameterDeclaration[]> delegates = Cache.GetDelegateTypes();
             return delegates.ContainsKey(type);
         }
 
+        /// <summary>
+        /// Returns the number of input arguments of a delegate type
+        /// </summary>
+        /// <param name="type">The delegate type</param>
+        /// <returns>Number of arguments</returns>
         public static int GetDelegateArgsNum(String type)
         {
             Dictionary<string, ParameterDeclaration[]> delegates = Cache.GetDelegateTypes();
@@ -1373,6 +1390,11 @@ namespace ICSharpCode.NRefactory.Cpp
             }
         }
 
+        /// <summary>
+        /// Returns the return type name of a delegate type
+        /// </summary>
+        /// <param name="identifier">Delegate type</param>
+        /// <returns>The return type name of the delegate</returns>
         public static string GetDelegateReturnType(String identifier)
         {
             Dictionary<string, string> delegates = Cache.GetDelegateReturnType();
@@ -1386,6 +1408,11 @@ namespace ICSharpCode.NRefactory.Cpp
             }
         }
 
+        /// <summary>
+        /// Returns the arguments of a delegate type
+        /// </summary>
+        /// <param name="type">The delegate type</param>
+        /// <returns>Array of parameterDeclaration objects containing the arguments of the delegate</returns>
         public static ParameterDeclaration[] GetDelegateArgs(String type)
         {
             Dictionary<string, ParameterDeclaration[]> delegates = Cache.GetDelegateTypes();
@@ -1399,6 +1426,12 @@ namespace ICSharpCode.NRefactory.Cpp
             }
         }
 
+        /// <summary>
+        /// Returns if an identifier belongs to a delegate type
+        /// </summary>
+        /// <param name="identifier">The identifier</param>
+        /// <param name="type">Out variable: the type delegate if found</param>
+        /// <returns>Operation successful</returns>
         public static bool IdentifierIsDelegate(String identifier, out String type)
         {
             Dictionary<string, string> identifiers = Cache.GetDelegateIdentifiers();
@@ -1415,7 +1448,12 @@ namespace ICSharpCode.NRefactory.Cpp
             }
         }
 
-
+        /// <summary>
+        /// Returns if an identifier belongs to an event type
+        /// </summary>
+        /// <param name="identifier">The identifier</param>
+        /// <param name="type">Out variable: the type event if found</param>
+        /// <returns>Operation successful</returns>
         internal static bool IdentifierIsEvent(string identifier, out string type)
         {
             Dictionary<string, string> identifiers = Cache.GetEventIdentifiers();
