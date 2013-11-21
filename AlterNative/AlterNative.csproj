@@ -82,7 +82,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Alternative.Tools\AlterNative.Tools.csproj">
+    <ProjectReference Include="..\AlterNative.Tools\AlterNative.Tools.csproj">
       <Project>{38c5f3cb-339f-4dd3-9197-98989ca94f9d}</Project>
       <Name>AlterNative.Tools</Name>
     </ProjectReference>

@@ -7,8 +7,8 @@
     <ProjectGuid>{38C5F3CB-339F-4DD3-9197-98989CA94F9D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Alternative.Tools</RootNamespace>
-    <AssemblyName>Alternative.Tools</AssemblyName>
+    <RootNamespace>AlterNative.Tools</RootNamespace>
+    <AssemblyName>AlterNative.Tools</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
