@@ -29,8 +29,18 @@ namespace ICSharpCode.NRefactory.Cpp
         private static Dictionary<string, TypeReference> symbols = new Dictionary<string, TypeReference>();
         private static Dictionary<string, List<string>> includes = new Dictionary<string, List<string>>();
         private static List<string> templateTypes = new List<string>();
-        private static Dictionary<string, int> delegates = new Dictionary<string, int>();
+
+        //Name->Args
+        private static Dictionary<string, ParameterDeclaration[]> delegatesArgs = new Dictionary<string, ParameterDeclaration[]>();
+
+        //Name->ReturnType
+        private static Dictionary<string, string> delegateReturnType = new Dictionary<string, string>();
+
+        //Name->Type
         private static Dictionary<string, string> delegatesIdentifiers = new Dictionary<string, string>();
+
+        //Name->Type
+        private static Dictionary<string, string> eventIdentifiers = new Dictionary<string, string>();
 
         #region RESOLVER
 
@@ -73,17 +83,30 @@ namespace ICSharpCode.NRefactory.Cpp
                 auxVariables.Add(identifier, type);
         }
 
-        public static void AddDelegateType(String type, int arguments)
+        public static void AddDelegateType(String type, ParameterDeclaration[] arguments)
         {
-            if (!delegates.ContainsKey(type))
+            if (!delegatesArgs.ContainsKey(type))
             {
-                delegates.Add(type, arguments);
+                delegatesArgs.Add(type, arguments);
             }
         }
 
-        public static Dictionary<string, int> GetDelegateTypes()
+        public static Dictionary<string, ParameterDeclaration[]> GetDelegateTypes()
         {
-            return delegates;
+            return delegatesArgs;
+        }
+
+        public static void AddDelegateReturnType(String type, string arguments)
+        {
+            if (!delegateReturnType.ContainsKey(type))
+            {
+                delegateReturnType.Add(type, arguments);
+            }
+        }
+
+        public static Dictionary<string, string> GetDelegateReturnType()
+        {
+            return delegateReturnType;
         }
 
         public static void AddDelegateIdentifiers(String identifier, String ofType)
@@ -92,6 +115,19 @@ namespace ICSharpCode.NRefactory.Cpp
             {
                 delegatesIdentifiers.Add(identifier, ofType);
             }
+        }
+
+        public static void AddEventIdentifiers(String identifier, String ofType)
+        {
+            if (!eventIdentifiers.ContainsKey(identifier))
+            {
+                eventIdentifiers.Add(identifier, ofType);
+            }
+        }
+
+        public static Dictionary<string, string> GetEventIdentifiers()
+        {
+            return eventIdentifiers;
         }
 
         public static Dictionary<string, string> GetDelegateIdentifiers()

@@ -25,6 +25,7 @@ namespace ICSharpCode.NRefactory.Cpp
             libraryMap.Add("IDisposable", "\"System/IDisposable.h\"");
             libraryMap.Add("Convert", "\"System/Convert.h\"");
             libraryMap.Add("Delegate", "\"System/Delegate.h\"");
+            libraryMap.Add("Event", "\"System/events.h\"");
             //exceptions:
             libraryMap.Add("Exception", "\"System/Exception.h\"");
             //                          SystemExceptions
@@ -45,7 +46,7 @@ namespace ICSharpCode.NRefactory.Cpp
             //*************************************************************//
 
             //********************** SYSTEM TEXT:
-            libraryMap.Add("UTF8Encoding", "\"System/Text/UTF8Encoding.h\"");
+            libraryMap.Add("UTF8Encoding", "\"System/Text/Encoding.h\"");
             libraryMap.Add("Encoding", "\"System/Text/Encoding.h\"");
             //*************************************************************//
 
@@ -409,7 +410,9 @@ namespace ICSharpCode.NRefactory.Cpp
                 return GetTypeName(ct.BaseType);
             }
             else
-                throw new NotImplementedException(type.ToString());
+            {
+                return type.ToString();
+            }
         }
 
         /// <summary>
@@ -750,6 +753,23 @@ namespace ICSharpCode.NRefactory.Cpp
                     _header.TypeParameters.Add((TypeParameterDeclaration)tparam.Clone());
 
                 _header.NameToken = (Identifier)_node.NameToken.Clone();
+                _header.ReturnType = (AstType)_node.ReturnType.Clone();
+            }
+
+            if (node is EventDeclaration)
+            {
+                var _node = node as EventDeclaration;
+                var _header = headerNode as HeaderEventDeclaration;
+
+                foreach (var token in _node.ModifierTokens)
+                    headerNode.AddChild((CppModifierToken)token.Clone(), HeaderEventDeclaration.ModifierRole);
+
+                foreach (var att in _node.Attributes)
+                    headerNode.AddChild((AttributeSection)att.Clone(), HeaderEventDeclaration.AttributeRole);
+
+                foreach (var variable in _node.Variables)
+                    headerNode.AddChild((VariableInitializer)variable.Clone(), HeaderEventDeclaration.Roles.Variable);                
+
                 _header.ReturnType = (AstType)_node.ReturnType.Clone();
             }
 
@@ -1336,20 +1356,46 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public static bool IsDelegateType(String type)
         {
-            Dictionary<string, int> delegates = Cache.GetDelegateTypes();
+            Dictionary<string, ParameterDeclaration[]> delegates = Cache.GetDelegateTypes();
             return delegates.ContainsKey(type);
         }
 
         public static int GetDelegateArgsNum(String type)
         {
-            Dictionary<string, int> delegates = Cache.GetDelegateTypes();
+            Dictionary<string, ParameterDeclaration[]> delegates = Cache.GetDelegateTypes();
+            if (delegates.ContainsKey(type))
+            {
+                return delegates[type].Length;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
+        public static string GetDelegateReturnType(String identifier)
+        {
+            Dictionary<string, string> delegates = Cache.GetDelegateReturnType();
+            if (delegates.ContainsKey(identifier))
+            {
+                return delegates[identifier];
+            }
+            else
+            {
+                return "ERROR";
+            }
+        }
+
+        public static ParameterDeclaration[] GetDelegateArgs(String type)
+        {
+            Dictionary<string, ParameterDeclaration[]> delegates = Cache.GetDelegateTypes();
             if (delegates.ContainsKey(type))
             {
                 return delegates[type];
             }
             else
             {
-                return -1;
+                return null;
             }
         }
 
@@ -1369,5 +1415,21 @@ namespace ICSharpCode.NRefactory.Cpp
             }
         }
 
+
+        internal static bool IdentifierIsEvent(string identifier, out string type)
+        {
+            Dictionary<string, string> identifiers = Cache.GetEventIdentifiers();
+
+            if (identifiers.ContainsKey(identifier))
+            {
+                type = identifiers[identifier];
+                return true;
+            }
+            else
+            {
+                type = "";
+                return false;
+            }
+        }
     }    
 }

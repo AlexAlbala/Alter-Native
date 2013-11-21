@@ -74,6 +74,7 @@
     <Compile Include="Ast\Expressions\DelegateCreateExpression.cs" />
     <Compile Include="Ast\Expressions\DelegateInvokeExpression.cs" />
     <Compile Include="Ast\Expressions\DynamicCastExpression.cs" />
+    <Compile Include="Ast\Expressions\EventFireExpression.cs" />
     <Compile Include="Ast\Expressions\MemberAccessExpression.cs" />
     <Compile Include="Ast\Expressions\UnBoxExpression.cs" />
     <Compile Include="Ast\GeneralScope\BaseTemplateTypeDeclaration.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderConstructorDeclaration.cs" />
     <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderConversionConstructorDeclaration.cs" />
     <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderDestructorDeclaration.cs" />
+    <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderEventDeclaration.cs" />
     <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderFieldDeclaration.cs" />
     <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderMethodDeclaration.cs" />
     <Compile Include="Ast\TypeName\AstType.cs" />

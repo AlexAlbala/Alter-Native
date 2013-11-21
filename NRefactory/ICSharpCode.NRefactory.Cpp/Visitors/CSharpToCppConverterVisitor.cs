@@ -397,8 +397,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 //}
             }
 
+            //DELEGATES AND EVENTS INVOCATIONS
             if (expr.Target is IdentifierExpression)
-            {
+            {                
                 String type = "";
                 if (Resolver.IdentifierIsDelegate((expr.Target as IdentifierExpression).Identifier, out type))
                 {
@@ -411,6 +412,56 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                         newExpr.Arguments.Add(n.Clone());
                     }
                    
+
+                    return EndNode(invocationExpression, newExpr);
+                }
+
+                else if (Resolver.IdentifierIsEvent((expr.Target as IdentifierExpression).Identifier, out type))
+                {
+                    EventFireExpression newExpr = new EventFireExpression();
+                    newExpr.Target = expr.Target.Clone();
+                    newExpr.Arguments.Add(expr.Target.Clone());
+
+                    foreach (Expression n in expr.Arguments)
+                    {
+                        newExpr.Arguments.Add(n.Clone());
+                    }
+
+
+                    return EndNode(invocationExpression, newExpr);
+                }
+            }
+
+            else if (expr.Target is MemberReferenceExpression)
+            {
+                String type = "";
+                MemberReferenceExpression mTarget = expr.Target as MemberReferenceExpression;
+                if (Resolver.IdentifierIsDelegate(mTarget.MemberName, out type))
+                {
+                    DelegateInvokeExpression newExpr = new DelegateInvokeExpression();
+                    newExpr.Target = new IdentifierExpression(mTarget.MemberName);
+                    newExpr.Arguments.Add(expr.Target.Clone());
+
+                    foreach (Expression n in expr.Arguments)
+                    {
+                        newExpr.Arguments.Add(n.Clone());
+                    }
+
+
+                    return EndNode(invocationExpression, newExpr);
+                }
+
+                else if (Resolver.IdentifierIsEvent(mTarget.MemberName, out type))
+                {
+                    EventFireExpression newExpr = new EventFireExpression();
+                    newExpr.Target = new IdentifierExpression(mTarget.MemberName);
+                    newExpr.Arguments.Add(expr.Target.Clone());
+
+                    foreach (Expression n in expr.Arguments)
+                    {
+                        newExpr.Arguments.Add(n.Clone());
+                    }
+
 
                     return EndNode(invocationExpression, newExpr);
                 }
@@ -779,8 +830,10 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
             del.ReturnType = (AstType)delegateDeclaration.ReturnType.AcceptVisitor(this, data);
             del.NameToken = (Identifier)delegateDeclaration.NameToken.AcceptVisitor(this, data);
+            
 
-            Cache.AddDelegateType(del.Name, delegateDeclaration.Parameters.Count);
+            Cache.AddDelegateType(del.Name, del.Parameters.ToArray());
+            Cache.AddDelegateReturnType(del.Name, Resolver.GetTypeName(del.ReturnType));
 
             return EndNode(delegateDeclaration, del);
 
@@ -900,6 +953,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                         tmp = new HeaderDestructorDeclaration();
                     else if (n is DelegateDeclaration)
                         tmp = new HeaderDelegateDeclaration();
+                    else if (n is EventDeclaration)
+                        tmp = new HeaderEventDeclaration();
 
 
                     Resolver.GetHeaderNode(n, tmp);
@@ -1698,12 +1753,47 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitEventDeclaration(CSharp.EventDeclaration eventDeclaration, object data)
         {
-            throw new NotImplementedException();
+            //However the type visited is not Event, we will need the library Event
+            Cache.AddVistedType(new SimpleType("Event"), "Event");
+            EventDeclaration evDecl = new EventDeclaration();
+            ConvertNodes(eventDeclaration.ModifierTokens, evDecl.ModifierTokens);
+            ConvertNodes(eventDeclaration.Attributes, evDecl.Attributes);            
+            ConvertNodes(eventDeclaration.Variables, evDecl.Variables);
+            evDecl.ReturnType = (AstType)eventDeclaration.ReturnType.AcceptVisitor(this, data);
+
+            foreach (VariableInitializer vi in evDecl.Variables)
+            {
+                String eventName = vi.Name;
+                InvocationExpression ie = new InvocationExpression();
+                ie.Target = new IdentifierExpression("EVENT_INIT");
+                ie.Arguments.Add(new IdentifierExpression(Resolver.GetTypeName(eventDeclaration.ReturnType).Replace(".","::")));
+                ie.Arguments.Add(new IdentifierExpression(eventName));
+                Cache.AddConstructorStatement(new ExpressionStatement(ie));
+                Cache.AddEventIdentifiers(eventName, Resolver.GetTypeName(eventDeclaration.ReturnType).Replace(".","::"));
+            }
+
+            return EndNode(eventDeclaration, evDecl);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitCustomEventDeclaration(CSharp.CustomEventDeclaration customEventDeclaration, object data)
         {
-            throw new NotImplementedException();
+            CustomEventDeclaration cevDecl = new CustomEventDeclaration();
+            ConvertNodes(customEventDeclaration.ModifierTokens, cevDecl.ModifierTokens);
+            ConvertNodes(customEventDeclaration.Attributes, cevDecl.Attributes);
+
+            foreach (CSharp.AstNode node in customEventDeclaration.Children)
+            {
+                if (node.Role == CSharp.CustomEventDeclaration.AddAccessorRole || node.Role == CSharp.CustomEventDeclaration.RemoveAccessorRole)
+                {
+                    //TODO: Change the accessor with method addEvent() removeEvent()
+                    cevDecl.AddChild<Accessor>((Accessor)node.AcceptVisitor(this, data), (node.Role == CSharp.CustomEventDeclaration.AddAccessorRole) ?
+                        CustomEventDeclaration.AddAccessorRole : CustomEventDeclaration.RemoveAccessorRole);
+                }
+            }
+
+            cevDecl.ReturnType = (AstType)customEventDeclaration.ReturnType.AcceptVisitor(this, data);
+
+            return EndNode(customEventDeclaration, cevDecl);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitFieldDeclaration(CSharp.FieldDeclaration fieldDeclaration, object data)

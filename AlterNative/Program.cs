@@ -99,10 +99,11 @@ namespace AlterNative
             if (args[0].ToLower() == "new")
             {
                 Utils.WriteToConsole("Creating blank template...");
-#if Core
-                adef = LoadAssembly(@"../../../Tools/Templates/Blank/Blank.exe");
+#if CORE
+                adef = LoadAssembly(@"../../../../Tools/Templates/Blank/Blank.exe");                
 #else
-                adef = LoadAssembly(@"../../../../Tools/Templates/Blank/Blank.exe");
+                adef = LoadAssembly(@"../../../Tools/Templates/Blank/Blank.exe");
+               
 #endif
             }
             else

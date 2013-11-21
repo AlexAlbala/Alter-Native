@@ -2208,14 +2208,59 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitEventDeclaration(EventDeclaration eventDeclaration, object data)
         {
             StartNode(eventDeclaration);
-            WriteAttributes(eventDeclaration.Attributes);
-            WriteModifiers(eventDeclaration.ModifierTokens);
-            WriteKeyword("__event");
-            eventDeclaration.ReturnType.AcceptVisitor(this, data);
-            Space();
-            WriteCommaSeparatedList(eventDeclaration.Variables);
-            Semicolon();
+
+            formatter.WriteComment(CommentType.SingleLine, "Event declaration moved to header file");
+
             return EndNode(eventDeclaration);
+        }
+
+        public object VisitHeaderEventDeclaration(HeaderEventDeclaration headerEventDeclaration, object data)
+        {
+            StartNode(headerEventDeclaration);
+            WriteAttributes(headerEventDeclaration.Attributes);
+            WriteAccesorModifier(headerEventDeclaration.ModifierTokens);
+            formatter.Indent();
+
+            foreach (VariableInitializer vi in headerEventDeclaration.Variables)
+            {
+                WriteKeyword("EVENT");
+                LPar();
+                //eventDeclaration.ReturnType.AcceptVisitor(this, data);//NOP                
+                //vi.AcceptVisitor(this, data);
+
+                String eventName = vi.Name;
+                WriteIdentifier(eventName);
+
+                string delType = Resolver.GetTypeName(headerEventDeclaration.ReturnType);
+                ParameterDeclaration[] parameters = Resolver.GetDelegateArgs(delType);                
+                int count =parameters.Length;
+                int i = 0;
+
+                Comma(AstNode.Null);
+                formatter.WriteToken(Resolver.GetDelegateReturnType(delType));
+
+                if (count > 0)
+                    Comma(AstNode.Null);
+
+                //Not using IdentifierExpression because ILSpy will change int to @int
+                foreach (ParameterDeclaration pDecl in parameters)
+                {
+                    formatter.WriteToken(Resolver.GetTypeName(pDecl.Type));
+
+
+                    if (i < count - 1)
+                    {
+                        Comma(AstNode.Null);
+                    }
+                    i++;
+                }
+                RPar();
+                Semicolon();              
+            }
+
+            formatter.Unindent();
+
+            return EndNode(headerEventDeclaration);
         }
 
         public object VisitCustomEventDeclaration(CustomEventDeclaration customEventDeclaration, object data)
@@ -3969,6 +4014,16 @@ namespace ICSharpCode.NRefactory.Cpp
             formatter.Unindent();
 
             return EndNode(headerDelegateDeclaration);
+        }
+
+
+        public object VisitEventFireExpression(EventFireExpression eventFireExpression, object data)
+        {
+            StartNode(eventFireExpression);
+            WriteKeyword("EVENT_FIRE");
+            Space(policy.SpaceBeforeMethodCallParentheses);
+            WriteCommaSeparatedListInParenthesis(eventFireExpression.Arguments, policy.SpaceWithinMethodCallParentheses);
+            return EndNode(eventFireExpression);
         }
     }
 }
