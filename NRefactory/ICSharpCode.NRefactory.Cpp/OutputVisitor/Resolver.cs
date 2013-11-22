@@ -18,7 +18,7 @@ namespace ICSharpCode.NRefactory.Cpp
             //********************** SYSTEM:
             libraryMap.Add("System", "\"System/System.h\"");
             libraryMap.Add("Console", "\"System/Console.h\"");
-            libraryMap.Add("Array", "\"System/Array.h\"");
+            libraryMap.Add("Array", "\"System/Array.h\"");            
             libraryMap.Add("Random", "\"System/Random.h\"");
             libraryMap.Add("Math", "\"System/Math.h\"");
             libraryMap.Add("GC", "\"System/GC.h\"");
@@ -43,6 +43,7 @@ namespace ICSharpCode.NRefactory.Cpp
             libraryMap.Add("List_T", "\"System/Collections/Generic/List.h\"");
             libraryMap.Add("IEnumerable_T", "\"System/Collections/Generic/IEnumerable.h\"");
             libraryMap.Add("IEnumerator_T", "\"System/Collections/Generic/IEnumeratorCXX.h\"");
+            libraryMap.Add("Dictionary_T", "\"System/Collections/Generic/Dictionary.h\"");
             //*************************************************************//
 
             //********************** SYSTEM TEXT:
