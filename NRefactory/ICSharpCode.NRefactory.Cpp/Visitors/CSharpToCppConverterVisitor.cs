@@ -113,6 +113,19 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 var left = (Expression)assignmentExpression.Left.AcceptVisitor(this, data);
                 var op = AssignmentOperatorType.Any;
 
+                if (assignmentExpression.Operator == CSharp.AssignmentOperatorType.Add || assignmentExpression.Operator == CSharp.AssignmentOperatorType.Subtract)
+                {
+                    if (Resolver.IsCustomEventCall((MemberReferenceExpression)left, currentType.Name))
+                    {
+                        MemberReferenceExpression l = left as MemberReferenceExpression;
+                        InvocationExpression m = new InvocationExpression(new MemberReferenceExpression(l.Target.Clone(),
+                            (assignmentExpression.Operator == CSharp.AssignmentOperatorType.Add ? "add" : "remove") + l.MemberName)
+                            , new Expression[1] {right.Clone()});
+                        return EndNode(assignmentExpression, m);
+                    }
+                }
+
+
                 //Should not call to Resolver.RefactorProperty() because this is a very special case
                 if (left is MemberReferenceExpression)
                 {
@@ -141,8 +154,6 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                         return EndNode(assignmentExpression, m);
                     }
                 }
-
-
 
                 switch (assignmentExpression.Operator)
                 {
@@ -201,7 +212,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         {
             var left = (Expression)binaryOperatorExpression.Left.AcceptVisitor(this, data);
             var op = BinaryOperatorType.Any;
-            var right = (Expression)binaryOperatorExpression.Right.AcceptVisitor(this, data);
+            var right = (Expression)binaryOperatorExpression.Right.AcceptVisitor(this, data);            
 
             switch (binaryOperatorExpression.Operator)
             {
@@ -399,7 +410,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
             //DELEGATES AND EVENTS INVOCATIONS
             if (expr.Target is IdentifierExpression)
-            {                
+            {
                 String type = "";
                 if (Resolver.IdentifierIsDelegate((expr.Target as IdentifierExpression).Identifier, out type))
                 {
@@ -411,7 +422,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     {
                         newExpr.Arguments.Add(n.Clone());
                     }
-                   
+
 
                     return EndNode(invocationExpression, newExpr);
                 }
@@ -830,7 +841,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
             del.ReturnType = (AstType)delegateDeclaration.ReturnType.AcceptVisitor(this, data);
             del.NameToken = (Identifier)delegateDeclaration.NameToken.AcceptVisitor(this, data);
-            
+
 
             Cache.AddDelegateType(del.Name, del.Parameters.ToArray());
             Cache.AddDelegateReturnType(del.Name, Resolver.GetTypeName(del.ReturnType));
@@ -937,6 +948,22 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
                         tmp = new HeaderMethodDeclaration();
                         Resolver.GetHeaderNode(prop.Setter, tmp);
+                        if (tmp != null)
+                            type.HeaderNodes.Add(tmp);
+
+                        type.Members.Add((AttributedNode)n);
+                        continue;
+                    }
+                    else if (n is CustomEventDeclaration)
+                    {
+                        CustomEventDeclaration ced = n as CustomEventDeclaration;
+                        tmp = new HeaderMethodDeclaration();
+                        Resolver.GetHeaderNode(ced.AddAccessor, tmp);
+                        if (tmp != null)
+                            type.HeaderNodes.Add(tmp);
+
+                        tmp = new HeaderMethodDeclaration();
+                        Resolver.GetHeaderNode(ced.RemoveAccessor, tmp);
                         if (tmp != null)
                             type.HeaderNodes.Add(tmp);
 
@@ -1623,10 +1650,22 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitAccessor(CSharp.Accessor accessor, object data)
         {
             var method = new CSharp.MethodDeclaration();
-            foreach (CSharp.CSharpModifierToken mt in (accessor.Parent as CSharp.PropertyDeclaration).ModifierTokens)
-                method.AddChild((CSharp.CSharpModifierToken)mt.Clone(), CSharp.MethodDeclaration.ModifierRole);
 
-            method.PrivateImplementationType = (CSharp.AstType)(accessor.Parent as CSharp.PropertyDeclaration).PrivateImplementationType.Clone();
+            if (accessor.Parent is CSharp.PropertyDeclaration)
+            {
+                foreach (CSharp.CSharpModifierToken mt in (accessor.Parent as CSharp.PropertyDeclaration).ModifierTokens)
+                    method.AddChild((CSharp.CSharpModifierToken)mt.Clone(), CSharp.MethodDeclaration.ModifierRole);
+
+                method.PrivateImplementationType = (CSharp.AstType)(accessor.Parent as CSharp.PropertyDeclaration).PrivateImplementationType.Clone();
+            }
+
+            else if (accessor.Parent is CSharp.CustomEventDeclaration)
+            {
+                foreach (CSharp.CSharpModifierToken mt in (accessor.Parent as CSharp.CustomEventDeclaration).ModifierTokens)
+                    method.AddChild((CSharp.CSharpModifierToken)mt.Clone(), CSharp.MethodDeclaration.ModifierRole);
+
+                method.PrivateImplementationType = (CSharp.AstType)(accessor.Parent as CSharp.CustomEventDeclaration).PrivateImplementationType.Clone();
+            }
 
             string acc = "";
             if (accessor.Role == CSharp.PropertyDeclaration.GetterRole)
@@ -1639,57 +1678,76 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             }
             else if (accessor.Role == CSharp.CustomEventDeclaration.AddAccessorRole)
             {
-                throw new NotImplementedException();
+                acc = "add";
             }
             else if (accessor.Role == CSharp.CustomEventDeclaration.RemoveAccessorRole)
             {
-                throw new NotImplementedException();
+                acc = "remove";
             }
 
-            //Create method declaration node
-            bool isEmptyProperty = false;
-            string propName = (accessor.Parent as CSharp.PropertyDeclaration).Name;
-            method.NameToken = CSharp.Identifier.Create(acc + propName);
-            CSharp.AstType returnType = (CSharp.AstType)(accessor.Parent as CSharp.PropertyDeclaration).ReturnType;
-            method.Body = (CSharp.BlockStatement)accessor.Body.Clone();
-            isEmptyProperty = !method.Body.Statements.Any();
-
-            if (acc == "get")
+            if (accessor.Parent is CSharp.PropertyDeclaration)
             {
-                method.ReturnType = returnType.Clone();
-                if (isEmptyProperty)
-                {
-                    string varName = propName + "_var";
-                    CSharp.BlockStatement blck = new CSharp.BlockStatement();
-                    blck.AddChild(new CSharp.ReturnStatement(
-                            new CSharp.MemberReferenceExpression(
-                                new CSharp.ThisReferenceExpression(), varName)), CSharp.BlockStatement.StatementRole);
-                    method.Body = blck;
+                //Create method declaration node
+                bool isEmptyProperty = false;
+                string propName = (accessor.Parent as CSharp.PropertyDeclaration).Name;
+                method.NameToken = CSharp.Identifier.Create(acc + propName);
+                CSharp.AstType returnType = (CSharp.AstType)(accessor.Parent as CSharp.PropertyDeclaration).ReturnType;
+                method.Body = (CSharp.BlockStatement)accessor.Body.Clone();
+                isEmptyProperty = !method.Body.Statements.Any();
 
-                    Cache.AddAuxVariable((AstType)returnType.AcceptVisitor(this, data).Clone(), varName);
+
+                if (acc == "get")
+                {
+                    method.ReturnType = returnType.Clone();
+                    if (isEmptyProperty)
+                    {
+                        string varName = propName + "_var";
+                        CSharp.BlockStatement blck = new CSharp.BlockStatement();
+                        blck.AddChild(new CSharp.ReturnStatement(
+                                new CSharp.MemberReferenceExpression(
+                                    new CSharp.ThisReferenceExpression(), varName)), CSharp.BlockStatement.StatementRole);
+                        method.Body = blck;
+
+                        Cache.AddAuxVariable((AstType)returnType.AcceptVisitor(this, data).Clone(), varName);
+                    }
+                }
+                else if (acc == "set")
+                {
+                    method.ReturnType = new CSharp.PrimitiveType("void");
+                    CSharp.ParameterDeclaration pd = new CSharp.ParameterDeclaration(returnType.Clone(), "value");
+                    method.AddChild(pd, CSharp.Roles.Parameter);
+
+                    if (isEmptyProperty)
+                    {
+                        string varName = propName + "_var";
+                        CSharp.BlockStatement blck = new CSharp.BlockStatement();
+                        blck.AddChild(new CSharp.ExpressionStatement(
+                            new CSharp.AssignmentExpression(
+                                new CSharp.MemberReferenceExpression(
+                                    new CSharp.ThisReferenceExpression(), varName), new CSharp.IdentifierExpression("value"))), CSharp.BlockStatement.StatementRole);
+                        method.Body = blck;
+
+                        Cache.AddAuxVariable((AstType)returnType.AcceptVisitor(this, data).Clone(), varName);
+                    }
+                }
+                else
+                {
+                    throw new Exception("Something is not typed");
                 }
             }
-            else if (acc == "set")
+
+            else if (accessor.Parent is CSharp.CustomEventDeclaration)
             {
-                method.ReturnType = new CSharp.PrimitiveType("void");
-                CSharp.ParameterDeclaration pd = new CSharp.ParameterDeclaration(returnType.Clone(), "value");
+                string eventName = (accessor.Parent as CSharp.CustomEventDeclaration).Name;
+                method.NameToken = CSharp.Identifier.Create(acc + eventName);
+                method.Body = (CSharp.BlockStatement)accessor.Body.Clone();
+
+                CSharp.ParameterDeclaration pd = new CSharp.ParameterDeclaration((accessor.Parent as CSharp.CustomEventDeclaration).ReturnType.Clone(), "value");
                 method.AddChild(pd, CSharp.Roles.Parameter);
 
-                if (isEmptyProperty)
-                {
-                    string varName = propName + "_var";
-                    CSharp.BlockStatement blck = new CSharp.BlockStatement();
-                    blck.AddChild(new CSharp.ExpressionStatement(
-                        new CSharp.AssignmentExpression(
-                            new CSharp.MemberReferenceExpression(
-                                new CSharp.ThisReferenceExpression(), varName), new CSharp.IdentifierExpression("value"))), CSharp.BlockStatement.StatementRole);
-                    method.Body = blck;
+                method.ReturnType = new CSharp.PrimitiveType("void"); //I'm not sure...
 
-                    Cache.AddAuxVariable((AstType)returnType.AcceptVisitor(this, data).Clone(), varName);
-                }
             }
-            else
-                throw new NotImplementedException();
 
             //End method declaration
 
@@ -1757,7 +1815,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             Cache.AddVistedType(new SimpleType("Event"), "Event");
             EventDeclaration evDecl = new EventDeclaration();
             ConvertNodes(eventDeclaration.ModifierTokens, evDecl.ModifierTokens);
-            ConvertNodes(eventDeclaration.Attributes, evDecl.Attributes);            
+            ConvertNodes(eventDeclaration.Attributes, evDecl.Attributes);
             ConvertNodes(eventDeclaration.Variables, evDecl.Variables);
             evDecl.ReturnType = (AstType)eventDeclaration.ReturnType.AcceptVisitor(this, data);
 
@@ -1766,10 +1824,10 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 String eventName = vi.Name;
                 InvocationExpression ie = new InvocationExpression();
                 ie.Target = new IdentifierExpression("EVENT_INIT");
-                ie.Arguments.Add(new IdentifierExpression(Resolver.GetTypeName(eventDeclaration.ReturnType).Replace(".","::")));
+                ie.Arguments.Add(new IdentifierExpression(Resolver.GetTypeName(eventDeclaration.ReturnType).Replace(".", "::")));
                 ie.Arguments.Add(new IdentifierExpression(eventName));
                 Cache.AddConstructorStatement(new ExpressionStatement(ie));
-                Cache.AddEventIdentifiers(eventName, Resolver.GetTypeName(eventDeclaration.ReturnType).Replace(".","::"));
+                Cache.AddEventIdentifiers(eventName, Resolver.GetTypeName(eventDeclaration.ReturnType).Replace(".", "::"));
             }
 
             return EndNode(eventDeclaration, evDecl);
@@ -1785,14 +1843,17 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             {
                 if (node.Role == CSharp.CustomEventDeclaration.AddAccessorRole || node.Role == CSharp.CustomEventDeclaration.RemoveAccessorRole)
                 {
-                    //TODO: Change the accessor with method addEvent() removeEvent()
-                    cevDecl.AddChild<Accessor>((Accessor)node.AcceptVisitor(this, data), (node.Role == CSharp.CustomEventDeclaration.AddAccessorRole) ?
+                    cevDecl.AddChild<MethodDeclaration>((MethodDeclaration)node.AcceptVisitor(this, data), (node.Role == CSharp.CustomEventDeclaration.AddAccessorRole) ?
                         CustomEventDeclaration.AddAccessorRole : CustomEventDeclaration.RemoveAccessorRole);
                 }
             }
 
             cevDecl.ReturnType = (AstType)customEventDeclaration.ReturnType.AcceptVisitor(this, data);
+            cevDecl.NameToken = (Identifier)customEventDeclaration.NameToken.AcceptVisitor(this, data);
+            cevDecl.Name = customEventDeclaration.Name;
 
+            Cache.AddDelegateIdentifiers(cevDecl.Name, Resolver.GetTypeName(cevDecl.ReturnType).Replace(".", "::"));
+            Cache.AddCustomEvent(cevDecl.Name, currentType.Name);
             return EndNode(customEventDeclaration, cevDecl);
         }
 
@@ -1815,11 +1876,17 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                             new AssignmentExpression(
                                 new IdentifierExpression(vi.Name), vi.Initializer.Clone()));
 
-                        Cache.AddConstructorStatement(st);
+                        Cache.AddConstructorStatement(st);                       
+                    }
+
+                    //Check if the field is of a delegate type in order to append it to the delegates list
+                    if (Resolver.IsDelegateType(decl.ReturnType))
+                    {
+                        Cache.AddDelegateIdentifiers(vi.Name, Resolver.GetTypeName(decl.ReturnType));
                     }
                 }
 
-                //Reset the variable initializer befor add to header ndoes
+                //Reset the variable initializer before add to header ndoes
                 for (int i = 0; i < fieldDeclaration.Variables.Count; i++)
                 {
                     VariableInitializer vi = decl.Variables.ElementAt(i);
@@ -1830,6 +1897,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             }
 
             Cache.AddField(currentType.Name, decl);
+
+
+
             return EndNode(fieldDeclaration, decl);
         }
 

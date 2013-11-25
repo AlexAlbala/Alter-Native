@@ -813,7 +813,10 @@ namespace ICSharpCode.NRefactory.Cpp
                         WriteIdentifier("NaN");
                     return;
                 }
-                formatter.WriteToken(f.ToString("R", NumberFormatInfo.InvariantInfo) + "f");
+                LPar();
+                WriteKeyword("float");
+                RPar();
+                formatter.WriteToken(f.ToString());
                 lastWritten = LastWritten.Other;
             }
             else if (val is double)
@@ -2232,8 +2235,8 @@ namespace ICSharpCode.NRefactory.Cpp
                 WriteIdentifier(eventName);
 
                 string delType = Resolver.GetTypeName(headerEventDeclaration.ReturnType);
-                ParameterDeclaration[] parameters = Resolver.GetDelegateArgs(delType);                
-                int count =parameters.Length;
+                ParameterDeclaration[] parameters = Resolver.GetDelegateArgs(delType);
+                int count = parameters.Length;
                 int i = 0;
 
                 Comma(AstNode.Null);
@@ -2255,7 +2258,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     i++;
                 }
                 RPar();
-                Semicolon();              
+                Semicolon();
             }
 
             formatter.Unindent();
@@ -2266,14 +2269,14 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitCustomEventDeclaration(CustomEventDeclaration customEventDeclaration, object data)
         {
             StartNode(customEventDeclaration);
-            WriteAttributes(customEventDeclaration.Attributes);
-            WriteModifiers(customEventDeclaration.ModifierTokens);
-            WriteKeyword("__event");
-            customEventDeclaration.ReturnType.AcceptVisitor(this, data);
-            Space();
-            WritePrivateImplementationType(customEventDeclaration.PrivateImplementationType);
-            WriteIdentifier(customEventDeclaration.Name);
-            OpenBrace(policy.EventBraceStyle);
+            //WriteAttributes(customEventDeclaration.Attributes);
+            //WriteModifiers(customEventDeclaration.ModifierTokens);
+            //WriteKeyword("__event");
+            //customEventDeclaration.ReturnType.AcceptVisitor(this, data);
+            //Space();
+            //WritePrivateImplementationType(customEventDeclaration.PrivateImplementationType);
+            //WriteIdentifier(customEventDeclaration.Name);
+            //OpenBrace(policy.EventBraceStyle);
             // output add/remove in their original order
             foreach (AstNode node in customEventDeclaration.Children)
             {
@@ -2282,7 +2285,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     node.AcceptVisitor(this, data);
                 }
             }
-            CloseBrace(policy.EventBraceStyle);
+            //CloseBrace(policy.EventBraceStyle);
             NewLine();
             return EndNode(customEventDeclaration);
         }
@@ -3957,7 +3960,7 @@ namespace ICSharpCode.NRefactory.Cpp
             LPar();
 
             //Check if the target is a function or a method (now always is supposed to be a function)
-            WriteKeyword("DELEGATE_FUNC");            
+            WriteKeyword("DELEGATE_FUNC");
             WriteCommaSeparatedListInParenthesis(delegateCreateExpression.Arguments, policy.SpaceWithinMethodCallParentheses);
             delegateCreateExpression.Initializer.AcceptVisitor(this, data);
             RPar();

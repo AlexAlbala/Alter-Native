@@ -1338,6 +1338,37 @@ namespace ICSharpCode.NRefactory.Cpp
         }
 
         /// <summary>
+        /// Returns if a member reference expression in C# is a call over a  C# custom event
+        /// </summary>
+        /// <param name="memberReferenceExpression"></param>
+        /// <param name="currentTypeName"></param>
+        /// <returns></returns>
+        public static bool IsCustomEventCall(MemberReferenceExpression memberReferenceExpression, string currentTypeName)
+        {
+            Dictionary<string, List<string>> customEvents = Cache.GetCustomEventsList();
+
+            //The member reference is a property reference ?
+            if (customEvents.ContainsKey(memberReferenceExpression.MemberName))
+            {
+                if (memberReferenceExpression.Target is ThisReferenceExpression)
+                {
+                    return (customEvents[memberReferenceExpression.MemberName].Contains(currentTypeName));
+                }
+                else
+                {
+                    if (memberReferenceExpression.Target is IdentifierExpression)
+                    {
+                        IdentifierExpression tmp = memberReferenceExpression.Target as IdentifierExpression;
+                        ICSharpCode.Decompiler.Ast.TypeInformation ann = (ICSharpCode.Decompiler.Ast.TypeInformation)tmp.Annotation(typeof(ICSharpCode.Decompiler.Ast.TypeInformation));
+                        return (customEvents[memberReferenceExpression.MemberName].Contains(ann.InferredType.Name));
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Refactors the C# property accessors to methods (i.e getProperty() setProperty(value)
         /// </summary>
         /// <param name="input">Property expression</param>
@@ -1371,6 +1402,26 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             Dictionary<string, ParameterDeclaration[]> delegates = Cache.GetDelegateTypes();
             return delegates.ContainsKey(type);
+        }
+
+        /// <summary>
+        /// Returns if the specified type name is a delegate type
+        /// </summary>
+        /// <param name="type">Identifier</param>
+        /// <returns>True/False</returns>
+        public static bool IsDelegateType(CSharp.AstType type)
+        {
+            return IsDelegateType(Resolver.GetTypeName(type));
+        }
+
+        /// <summary>
+        /// Returns if the specified type name is a delegate type
+        /// </summary>
+        /// <param name="type">Identifier</param>
+        /// <returns>True/False</returns>
+        public static bool IsDelegateType(AstType type)
+        {
+            return IsDelegateType(Resolver.GetTypeName(type));
         }
 
         /// <summary>

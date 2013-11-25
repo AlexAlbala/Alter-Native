@@ -22,6 +22,9 @@ namespace ICSharpCode.NRefactory.Cpp
         private static Dictionary<Ast.AstType, List<MethodDeclaration>> privateImplementations = new Dictionary<Ast.AstType, List<MethodDeclaration>>();
         private static Dictionary<String, List<String>> templatizedAbstractMethods = new Dictionary<string, List<String>>();
 
+        //Type -> customEvents
+        private static Dictionary<string, List<string>> customEvents = new Dictionary<string, List<string>>();
+
         //RESOLVER
         private static Dictionary<string, string> libraryMap = new Dictionary<string, string>();
         private static Dictionary<Ast.AstType, string> visitedTypes = new Dictionary<Ast.AstType, string>();
@@ -29,6 +32,7 @@ namespace ICSharpCode.NRefactory.Cpp
         private static Dictionary<string, TypeReference> symbols = new Dictionary<string, TypeReference>();
         private static Dictionary<string, List<string>> includes = new Dictionary<string, List<string>>();
         private static List<string> templateTypes = new List<string>();
+
 
         //Name->Args
         private static Dictionary<string, ParameterDeclaration[]> delegatesArgs = new Dictionary<string, ParameterDeclaration[]>();
@@ -370,6 +374,24 @@ namespace ICSharpCode.NRefactory.Cpp
         public static Dictionary<string, List<string>> GetPropertiesList()
         {
             return properties;
+        }
+
+        public static void AddCustomEvent(string customEventName, string typeName)
+        {
+            if (customEvents.ContainsKey(customEventName))
+            {
+                List<string> tmpTypes = customEvents[customEventName];
+
+                if (!tmpTypes.Contains(typeName))
+                    tmpTypes.Add(typeName);
+            }
+            else
+                customEvents.Add(customEventName, new List<string>() { typeName });
+        }
+
+        public static Dictionary<string, List<string>> GetCustomEventsList()
+        {
+            return customEvents;
         }
 
         public static void AddRangeArraySpecifiers(IEnumerable<CSharp.ArraySpecifier> range)

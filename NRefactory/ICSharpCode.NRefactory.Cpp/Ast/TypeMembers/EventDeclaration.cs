@@ -59,19 +59,20 @@ namespace ICSharpCode.NRefactory.Cpp
 	
 	public class CustomEventDeclaration : MemberDeclaration
 	{
-		public static readonly Role<Accessor> AddAccessorRole = new Role<Accessor>("AddAccessor", Accessor.Null);
-		public static readonly Role<Accessor> RemoveAccessorRole = new Role<Accessor>("RemoveAccessor", Accessor.Null);
+        public static readonly Role<MethodDeclaration> AddAccessorRole = new Role<MethodDeclaration>("AddAccessor", MethodDeclaration.Null);
+        public static readonly Role<MethodDeclaration> RemoveAccessorRole = new Role<MethodDeclaration>("RemoveAccessor", MethodDeclaration.Null);
 		
 		public CppTokenNode LBraceToken {
 			get { return GetChildByRole (Roles.LBrace); }
 		}
 		
-		public Accessor AddAccessor {
+		public MethodDeclaration AddAccessor {
 			get { return GetChildByRole (AddAccessorRole); }
 			set { SetChildByRole (AddAccessorRole, value); }
 		}
-		
-		public Accessor RemoveAccessor {
+
+        public MethodDeclaration RemoveAccessor
+        {
 			get { return GetChildByRole (RemoveAccessorRole); }
 			set { SetChildByRole (RemoveAccessorRole, value); }
 		}
