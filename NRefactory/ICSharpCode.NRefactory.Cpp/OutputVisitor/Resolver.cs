@@ -15,6 +15,7 @@ namespace ICSharpCode.NRefactory.Cpp
         static Resolver()
         {
             Dictionary<string, string> libraryMap = new Dictionary<string, string>();
+
             //********************** SYSTEM:
             libraryMap.Add("System", "\"System/System.h\"");
             libraryMap.Add("Console", "\"System/Console.h\"");
@@ -29,9 +30,10 @@ namespace ICSharpCode.NRefactory.Cpp
             //exceptions:
             libraryMap.Add("Exception", "\"System/Exception.h\"");
             //                          SystemExceptions
-            libraryMap.Add("NotImplementedException", "\"System/exceptions/systemException/NotImplementedException.h\"");
-            libraryMap.Add("ArgumentException", "\"System/exceptions/systemException/ArgumentException.h\"");
-            libraryMap.Add("InvalidOperationException", "\"System/exceptions/systemException/InvalidOperationException.h\"");
+            libraryMap.Add("NotImplementedException", "\"System/Exception/SystemException/NotImplementedException.h\"");
+            libraryMap.Add("ArgumentException", "\"System/Exception/SystemException/ArgumentException.h\"");
+            libraryMap.Add("InvalidOperationException", "\"System/Exception/SystemException/InvalidOperationException.h\"");
+            libraryMap.Add("ObjectDisposedException", "\"System/Exception/SystemException/InvalidOperationException/ObjectDisposedException.h\"");
             //*************************************************************//
 
             //********************** SYSTEM COLLECTIONS:
@@ -1520,6 +1522,54 @@ namespace ICSharpCode.NRefactory.Cpp
                 type = "";
                 return false;
             }
+        }
+
+        public static bool IsSynchronizedMethod(MethodDeclaration method)
+        {
+            foreach (AttributeSection section in method.Attributes)
+            {
+                foreach (Ast.Attribute t in section.Attributes)
+                {
+                    if (Resolver.GetTypeName(t.Type).Equals("MethodImpl"))
+                    {
+                        foreach (Expression e in t.Arguments)
+                        {
+                            if (e is MemberReferenceExpression)
+                            {
+                                if ((e as MemberReferenceExpression).MemberName == "Synchronized")
+                                {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        public static bool IsSynchronizedMethod(CSharp.MethodDeclaration method)
+        {
+            foreach (CSharp.AttributeSection section in method.Attributes)
+            {
+                foreach (CSharp.Attribute t in section.Attributes)
+                {
+                    if (Resolver.GetTypeName(t.Type).Equals("MethodImpl"))
+                    {
+                        foreach (CSharp.Expression e in t.Arguments)
+                        {
+                            if (e is CSharp.MemberReferenceExpression)
+                            {
+                                if ((e as CSharp.MemberReferenceExpression).MemberName == "Synchronized")
+                                {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
         }
     }    
 }

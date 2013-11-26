@@ -92,7 +92,7 @@ namespace ICSharpCode.NRefactory.Cpp
 				case Modifiers.Override:
 					return "override";
 				case Modifiers.Readonly:
-					return "readonly";
+					return "const";
 				case Modifiers.Const:
 					return "const";
 				case Modifiers.New:

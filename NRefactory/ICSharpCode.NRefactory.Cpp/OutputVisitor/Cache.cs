@@ -21,6 +21,7 @@ namespace ICSharpCode.NRefactory.Cpp
         private static List<IncludeDeclaration> includeDeclaration = new List<IncludeDeclaration>();
         private static Dictionary<Ast.AstType, List<MethodDeclaration>> privateImplementations = new Dictionary<Ast.AstType, List<MethodDeclaration>>();
         private static Dictionary<String, List<String>> templatizedAbstractMethods = new Dictionary<string, List<String>>();
+        private static List<AstNode> extraHeadernodes = new List<AstNode>();
 
         //Type -> customEvents
         private static Dictionary<string, List<string>> customEvents = new Dictionary<string, List<string>>();
@@ -79,6 +80,21 @@ namespace ICSharpCode.NRefactory.Cpp
         public static void ClearConstructorStatements()
         {
             addedConstructorStatements.Clear();
+        }
+
+        public static void AddExtraHeaderNode(AstNode node)
+        {
+            extraHeadernodes.Add(node);
+        }
+
+        public static List<AstNode> GetExtraHeaderNode()
+        {
+            return extraHeadernodes;
+        }
+
+        public static void ClearExtraHeaderNode()
+        {
+            extraHeadernodes.Clear();
         }
 
         public static void AddAuxVariable(Ast.AstType type, string identifier)
@@ -153,6 +169,7 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             visitedTypes.Clear();
             namespaces.Clear();
+            extraHeadernodes.Clear();
         }
 
         public static void AddTemplateType(string type)

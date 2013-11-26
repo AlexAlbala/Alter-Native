@@ -54,6 +54,8 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
             {
                 this.TypeParameters.Add((TypeParameterDeclaration)typePar.Clone());
             }
+
+            this.ClassType = type.ClassType;
         }
 
         public override S AcceptVisitor<T, S>(IAstVisitor<T, S> visitor, T data = default(T))

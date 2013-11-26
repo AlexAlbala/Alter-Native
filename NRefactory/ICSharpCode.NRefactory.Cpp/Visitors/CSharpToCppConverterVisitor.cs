@@ -814,11 +814,11 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitAttribute(CSharp.Attribute attribute, object data)
-        {
+        {            
             var attr = new Cpp.Ast.Attribute();
             //AttributeTarget target;
             //attr.A = target;
-            attr.Type = (AstType)attribute.Type.AcceptVisitor(this, data);
+            attr.Type = (AstType)attribute.Type.AcceptVisitor(this, data);            
             ConvertNodes(attribute.Arguments, attr.Arguments);
 
             return EndNode(attribute, attr);
@@ -991,6 +991,11 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
                     type.Members.Add((AttributedNode)n);
                 }
+            }
+
+            foreach (AstNode n in Cache.GetExtraHeaderNode())
+            {
+                type.HeaderNodes.Add(n);
             }
 
             //ConvertNodes(typeDeclaration.Members, type.Members);
@@ -1946,15 +1951,36 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
             var result = new MethodDeclaration();
 
-            ConvertNodes(methodDeclaration.Attributes.Where(section => section.AttributeTarget != "return"), result.Attributes);
+            ConvertNodes(methodDeclaration.Attributes.Where(section => section.AttributeTarget != "return"), result.Attributes);            
+
             ConvertNodes(methodDeclaration.ModifierTokens, result.ModifierTokens);
             result.Name = methodDeclaration.Name;
 
             ConvertNodes(methodDeclaration.Parameters, result.Parameters);
             ConvertNodes(methodDeclaration.TypeParameters, result.TypeParameters);
 
-            result.ReturnType = (AstType)methodDeclaration.ReturnType.AcceptVisitor(this, data);
+            result.ReturnType = (AstType)methodDeclaration.ReturnType.AcceptVisitor(this, data);            
             result.Body = (BlockStatement)methodDeclaration.Body.AcceptVisitor(this, data);
+
+            //Put mutex lockers if the method is marked as Synchronized
+            if (Resolver.IsSynchronizedMethod(result))
+            {
+                Statement start_lock = new ExpressionStatement(new InvocationExpression(new IdentifierExpression("an_lock")));
+                Statement end_lock = new ExpressionStatement(new InvocationExpression(new IdentifierExpression("an_end_lock")));
+
+                Statement first = result.Body.Statements.ElementAt(0);
+
+                result.Body.Statements.InsertBefore(first, start_lock);
+                result.Body.Statements.Add(end_lock);
+                
+                //add an_init_lock(); declaration to the header file in order to set up the boost::mutex
+                HeaderMethodDeclaration hmd = new HeaderMethodDeclaration();
+                hmd.ModifierTokens.Add(new CppModifierToken(TextLocation.Empty, Modifiers.Private));
+                hmd.Name="an_init_lock";
+                Cache.AddExtraHeaderNode(hmd);
+                
+            }
+
             result.PrivateImplementationType = (AstType)methodDeclaration.PrivateImplementationType.AcceptVisitor(this, data);
 
             if (currentType != null)

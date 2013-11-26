@@ -2196,7 +2196,7 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             StartNode(enumMemberDeclaration);
             WriteAttributes(enumMemberDeclaration.Attributes);
-            WriteModifiers(enumMemberDeclaration.ModifierTokens);
+            //WriteModifiers(enumMemberDeclaration.ModifierTokens);
             WriteIdentifier(enumMemberDeclaration.Name);
             if (!enumMemberDeclaration.Initializer.IsNull)
             {
@@ -2294,14 +2294,14 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             StartNode(fieldDeclaration);
 
-            if (fieldDeclaration.HasModifier(Modifiers.Static) || Resolver.IsChildOf(fieldDeclaration, typeof(GenericTemplateTypeDeclaration)))
+            if (fieldDeclaration.HasModifier(Modifiers.Static) || Resolver.IsChildOf(fieldDeclaration, typeof(GenericTemplateTypeDeclaration)) || Resolver.IsChildOf(fieldDeclaration, typeof(NestedTypeDeclaration)))
             {
                 fieldDeclaration.ReturnType.AcceptVisitor(this, data);
                 Space();
 
                 if (!Resolver.IsChildOf(fieldDeclaration, typeof(GenericTemplateTypeDeclaration)))
                 {
-                    TypeDeclaration tdecl = fieldDeclaration.Parent as TypeDeclaration;
+                    TypeDeclaration tdecl = fieldDeclaration.Parent as TypeDeclaration;                    
                     WriteIdentifier(tdecl != null ? tdecl.Name : String.Empty, MethodDeclaration.Roles.Identifier);
                     WriteToken("::", MethodDeclaration.Roles.DoubleColon);
                 }
