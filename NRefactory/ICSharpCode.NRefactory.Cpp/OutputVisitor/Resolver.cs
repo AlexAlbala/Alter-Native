@@ -66,16 +66,23 @@ namespace ICSharpCode.NRefactory.Cpp
             //*************************************************************//
 
 
-            Cache.InitLibrary(libraryMap);
+            
 
             //Add delegate types in cache for the delegates in library
 
             Dictionary<string, ParameterDeclaration[]> delegatesInLibrary = new Dictionary<string,ParameterDeclaration[]>();
-
             delegatesInLibrary.Add("ThreadStart",new ParameterDeclaration[0]);
+
+            Dictionary<string, string> propertiesInLibrary = new Dictionary<string, string>();
+            propertiesInLibrary.Add("Now", "DateTime");
 
             foreach (KeyValuePair<string, ParameterDeclaration[]> kvp in delegatesInLibrary)
                 Cache.AddDelegateType(kvp.Key, kvp.Value);
+
+            foreach (KeyValuePair<string, string> kvp in propertiesInLibrary)
+                Cache.AddProperty(kvp.Key, kvp.Value);
+
+            Cache.InitLibrary(libraryMap);
         }
 
         /// <summary>

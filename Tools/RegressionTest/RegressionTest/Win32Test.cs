@@ -19,13 +19,11 @@ namespace RegressionTest
 
             string altArgs = di.FullName + "/NETbin/" + di.Name.Split('.')[1] + ".exe" + " "
                                                     + di.FullName + "/Output/" + " "
-                                                    + "CXX" + " "
-                                                    + Utils.cxxLibraryPath
                                                     + Utils.GetAltCompileArg(Config.compileMode);
 
             Utils.DebugMessage("ALTERNATIVE COMMAND:");
             Utils.DebugMessage(Utils.alternativePath + " " + altArgs);
-
+            
             runAlt.StartInfo = new ProcessStartInfo(Utils.alternativePath, altArgs);
             runAlt.StartInfo.CreateNoWindow = true;
             runAlt.StartInfo.UseShellExecute = false;

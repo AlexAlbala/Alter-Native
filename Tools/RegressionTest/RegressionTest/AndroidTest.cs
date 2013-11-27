@@ -30,9 +30,7 @@ namespace RegressionTest
             Process runAlt = new Process();
 
             string altArgs = di.FullName + "/NETbin/" + di.Name.Split('.')[1] + ".exe" + " "
-                                                    + di.FullName + "/Output/" + " "
-                                                    + "CXX" + " "
-                                                    + Utils.cxxLibraryPath
+                                                    + di.FullName + "/Output/" + " "                                                    
                                                     + Utils.GetAltCompileArg(Config.compileMode)
                                                     + " -android";
 

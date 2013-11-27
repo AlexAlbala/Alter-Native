@@ -113,7 +113,7 @@ namespace RegressionTest
         //}
 
         public void RunTests(string[] tests)
-        {
+        {            
             Utils.DebugMessage("************* CONFIGURATION ***************");
             Utils.DebugMessage("TEST PLATFORM: " + Config.platform.ToString());
             Utils.DebugMessage("");
@@ -128,8 +128,8 @@ namespace RegressionTest
             Console.WriteLine();
             foreach (string s in tests)
             {
-                
 
+                Environment.CurrentDirectory = Utils.testPath;
                 KeyValuePair<DirectoryInfo, TestResult> kvp = Tests.First(x => x.Key.Name == s);
 
                
@@ -153,8 +153,10 @@ namespace RegressionTest
 
                 try
                 {
+                    Environment.CurrentDirectory = Utils.alternativeDirectory;
                     //Run alternative
                     test.Alternative(di, res);
+                    Environment.CurrentDirectory = Utils.testPath;
                 }
                 catch (Exception e)
                 {

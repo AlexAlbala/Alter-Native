@@ -129,7 +129,8 @@ namespace AlterNative
             FileWritterManager.WorkingPath = outputDir;
 
             //CONFIGURE OUTPUT LANGUAGE
-            ICSharpCode.ILSpy.Language lang = OutputLanguage(args[2]);
+            ICSharpCode.ILSpy.Language lang = OutputLanguage("CXX");
+            
 
             //DECOMPILE FIRST TIME AND FILL THE TABLES
             foreach (TypeDefinition tdef in adef.MainModule.Types)
@@ -150,9 +151,13 @@ namespace AlterNative
                 }
             }
 
-            //COPY LIB FILES IF NECESSARY
-            if (args.Length >= 4 && args[3] != "")
-                CopyAll(new DirectoryInfo(args[3].Replace('\\', '/')), new DirectoryInfo(outputDir));
+#if CORE
+            string libPath = @"../../../../Lib/src";
+#else
+            string libPath = @"../../../Lib/src";
+#endif
+            //COPY LIB FILES            
+            CopyAll(new DirectoryInfo(libPath), new DirectoryInfo(outputDir));
 
             //TRIM END .EXE : BUG If The name is File.exe, trim end ".exe" returns Fil !!!!
             string name = adef.MainModule.Name.Substring(0, adef.MainModule.Name.Length - 4);
