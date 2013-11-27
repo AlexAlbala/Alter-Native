@@ -115,13 +115,16 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
                 if (assignmentExpression.Operator == CSharp.AssignmentOperatorType.Add || assignmentExpression.Operator == CSharp.AssignmentOperatorType.Subtract)
                 {
-                    if (Resolver.IsCustomEventCall((MemberReferenceExpression)left, currentType.Name))
+                    if (left is MemberReferenceExpression)
                     {
-                        MemberReferenceExpression l = left as MemberReferenceExpression;
-                        InvocationExpression m = new InvocationExpression(new MemberReferenceExpression(l.Target.Clone(),
-                            (assignmentExpression.Operator == CSharp.AssignmentOperatorType.Add ? "add" : "remove") + l.MemberName)
-                            , new Expression[1] {right.Clone()});
-                        return EndNode(assignmentExpression, m);
+                        if (Resolver.IsCustomEventCall((MemberReferenceExpression)left, currentType.Name))
+                        {
+                            MemberReferenceExpression l = left as MemberReferenceExpression;
+                            InvocationExpression m = new InvocationExpression(new MemberReferenceExpression(l.Target.Clone(),
+                                (assignmentExpression.Operator == CSharp.AssignmentOperatorType.Add ? "add" : "remove") + l.MemberName)
+                                , new Expression[1] { right.Clone() });
+                            return EndNode(assignmentExpression, m);
+                        }
                     }
                 }
 
@@ -1965,8 +1968,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             //Put mutex lockers if the method is marked as Synchronized
             if (Resolver.IsSynchronizedMethod(result))
             {
-                Statement start_lock = new ExpressionStatement(new InvocationExpression(new IdentifierExpression("an_lock")));
-                Statement end_lock = new ExpressionStatement(new InvocationExpression(new IdentifierExpression("an_end_lock")));
+                Statement start_lock = new ExpressionStatement(new InvocationExpression(new IdentifierExpression("an_sync")));
+                Statement end_lock = new ExpressionStatement(new InvocationExpression(new IdentifierExpression("an_end_sync")));
 
                 Statement first = result.Body.Statements.ElementAt(0);
 
@@ -1976,7 +1979,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 //add an_init_lock(); declaration to the header file in order to set up the boost::mutex
                 HeaderMethodDeclaration hmd = new HeaderMethodDeclaration();
                 hmd.ModifierTokens.Add(new CppModifierToken(TextLocation.Empty, Modifiers.Private));
-                hmd.Name="an_init_lock";
+                hmd.Name="an_init_sync";
                 Cache.AddExtraHeaderNode(hmd);
                 
             }

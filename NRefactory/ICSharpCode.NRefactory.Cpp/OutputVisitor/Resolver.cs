@@ -41,6 +41,11 @@ namespace ICSharpCode.NRefactory.Cpp
             libraryMap.Add("IEnumerator", "\"System/Collections/IEnumeratorCXX.h\"");
             //*************************************************************//
 
+            //********************** SYSTEM THREADING:
+            libraryMap.Add("Thread", "\"System/Threading/Thread.h\"");
+            libraryMap.Add("ThreadStart", "\"System/Threading/Thread.h\"");
+            //*************************************************************//
+
             //********************** SYSTEM COLLECTIONS GENERIC:
             libraryMap.Add("List_T", "\"System/Collections/Generic/List.h\"");
             libraryMap.Add("IEnumerable_T", "\"System/Collections/Generic/IEnumerable.h\"");
@@ -62,6 +67,15 @@ namespace ICSharpCode.NRefactory.Cpp
 
 
             Cache.InitLibrary(libraryMap);
+
+            //Add delegate types in cache for the delegates in library
+
+            Dictionary<string, ParameterDeclaration[]> delegatesInLibrary = new Dictionary<string,ParameterDeclaration[]>();
+
+            delegatesInLibrary.Add("ThreadStart",new ParameterDeclaration[0]);
+
+            foreach (KeyValuePair<string, ParameterDeclaration[]> kvp in delegatesInLibrary)
+                Cache.AddDelegateType(kvp.Key, kvp.Value);
         }
 
         /// <summary>

@@ -3010,7 +3010,10 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             foreach (AttributeSection attr in attributes)
             {
-                formatter.WriteComment(CommentType.SingleLine, "Deleted attribute");
+                foreach(Attribute at in attr.Attributes)
+                {
+                    formatter.WriteComment(CommentType.SingleLine, "Attribute: " + at.ToString());
+                }
                 continue;
                 //attr.AcceptVisitor(this, null);
             }
