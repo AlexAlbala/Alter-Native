@@ -93,7 +93,7 @@ namespace AlterNative
         /// <param name="args">{ assembly, destinationPath, language, Params } (In CPP: Params is the path of the library)</param>
         public void ConsoleMain(string[] args)
         {
-            if (System.Environment.GetEnvironmentVariable("ALTERNATIVE_BIN_PATH") != null)
+            if (System.Environment.GetEnvironmentVariable("ALTERNATIVE_BIN_PATH") == null)
             {
                 Utils.WriteToConsole("ALTERNATIVE_BIN_PATH not setted, please execute alternative-init command");
             }
