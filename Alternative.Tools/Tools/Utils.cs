@@ -11,14 +11,18 @@ namespace AlterNative.Tools
     {
         public static void WriteToConsole(string message)
         {
+#if !CORE
             AttachConsole(-1);
+#endif
             //Console.WriteLine(message);
             Console.Out.WriteLine(message);
             //TextWriter stdWriter = Console.Out;
             //stdWriter.WriteLine(message);            
         }
 
+#if !CORE
         [DllImport("Kernel32.dll")]
         public static extern bool AttachConsole(int processId);
+#endif
     }
 }
