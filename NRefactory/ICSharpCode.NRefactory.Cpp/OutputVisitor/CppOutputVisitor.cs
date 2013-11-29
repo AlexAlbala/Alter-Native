@@ -816,7 +816,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 LPar();
                 WriteKeyword("float");
                 RPar();
-                formatter.WriteToken(f.ToString());
+                formatter.WriteToken(f.ToString(NumberFormatInfo.InvariantInfo));
                 lastWritten = LastWritten.Other;
             }
             else if (val is double)
@@ -1843,6 +1843,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 WriteForwardDeclaration(type2);                     
 
             WriteAttributes(typeDeclaration.Attributes);
+
             //WriteModifiers(typeDeclaration.ModifierTokens);           
 
             BraceStyle braceStyle = WriteClassType(typeDeclaration.ClassType);
@@ -2948,6 +2949,16 @@ namespace ICSharpCode.NRefactory.Cpp
 
         void WriteAccesorModifier(IEnumerable<CppModifierToken> modifierTokens)
         {
+            if (modifierTokens.Any())
+            {
+                CppModifierToken tmp = modifierTokens.ElementAt(0);
+                if (Resolver.IsChildOf(tmp, typeof(TypeDeclaration)))
+                {
+                    if ((Resolver.GetParentOf(tmp, typeof(TypeDeclaration)) as TypeDeclaration).ClassType == ClassType.Struct)
+                        return;
+                }
+            }
+
             bool isFirst = true;
             if (!modifierTokens.Any())
             {
@@ -3851,7 +3862,7 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             StartNode(headerAbstractMethodDeclaration);
             WriteAttributes(headerAbstractMethodDeclaration.Attributes);
-
+            
             WriteAccesorModifier(headerAbstractMethodDeclaration.ModifierTokens);
             formatter.Indent();
 
