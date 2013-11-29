@@ -93,9 +93,9 @@ namespace AlterNative
         /// <param name="args">{ assembly, destinationPath, language, Params } (In CPP: Params is the path of the library)</param>
         public void ConsoleMain(string[] args)
         {
-            if (System.Environment.GetEnvironmentVariable("ALTERNATIVE_BIN_PATH") == null)
+            if (System.Environment.GetEnvironmentVariable("ALTERNATIVE_HOME") == null)
             {
-                Utils.WriteToConsole("ALTERNATIVE_BIN_PATH not setted, please execute alternative-init command");
+                Utils.WriteToConsole("ALTERNATIVE_HOME not setted, please execute alternative-init command");
             }
 
             Utils.WriteToConsole("\n");
@@ -104,19 +104,14 @@ namespace AlterNative
             if (args[0].ToLower() == "new")
             {
                 Utils.WriteToConsole("Creating blank template...");
-                if (System.Environment.GetEnvironmentVariable("ALTERNATIVE_BIN_PATH") != null)
+                if (System.Environment.GetEnvironmentVariable("ALTERNATIVE_HOME") != null)
                 {
-#if CORE
-                    adef = LoadAssembly(Environment.GetEnvironmentVariable("ALTERNATIVE_BIN_PATH")
-                                                    + @"../../../../../Tools/Templates/Blank/Blank.exe");
-#else
-                    adef = LoadAssembly(Environment.GetEnvironmentVariable("ALTERNATIVE_BIN_PATH")
-                                                    + @"../../../../Tools/Templates/Blank/Blank.exe");
-#endif
+                    adef = LoadAssembly(Environment.GetEnvironmentVariable("ALTERNATIVE_HOME")
+                                                    + @"/Tools/Templates/Blank/Blank.exe");
                 }
                 else
                 {
-                    Utils.WriteToConsole("WARNING: ALTERNATIVE_BIN_PATH not setted");
+                    Utils.WriteToConsole("WARNING: ALTERNATIVE_HOME not setted");
 #if CORE
                     adef = LoadAssembly(@"../../../../Tools/Templates/Blank/Blank.exe");
                     Utils.WriteToConsole("Trying to get templates from: " + @"../../../../Tools/Templates/Blank/Blank.exe");
