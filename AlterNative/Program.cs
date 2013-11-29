@@ -106,8 +106,13 @@ namespace AlterNative
                 Utils.WriteToConsole("Creating blank template...");
                 if (System.Environment.GetEnvironmentVariable("ALTERNATIVE_BIN_PATH") != null)
                 {
+#if CORE
+                    adef = LoadAssembly(Environment.GetEnvironmentVariable("ALTERNATIVE_BIN_PATH")
+                                                    + @"../../../../../Tools/Templates/Blank/Blank.exe");
+#else
                     adef = LoadAssembly(Environment.GetEnvironmentVariable("ALTERNATIVE_BIN_PATH")
                                                     + @"../../../../Tools/Templates/Blank/Blank.exe");
+#endif
                 }
                 else
                 {
