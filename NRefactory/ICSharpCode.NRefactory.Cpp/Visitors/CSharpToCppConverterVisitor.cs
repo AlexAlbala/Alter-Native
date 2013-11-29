@@ -824,6 +824,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             attr.Type = (AstType)attribute.Type.AcceptVisitor(this, data);            
             ConvertNodes(attribute.Arguments, attr.Arguments);
 
+            //Will be removed !!
+            Resolver.RemoveInclude(Resolver.GetTypeName(attr.Type));
+
             return EndNode(attribute, attr);
         }
 
@@ -1982,6 +1985,39 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 hmd.Name="an_init_sync";
                 Cache.AddExtraHeaderNode(hmd);
                 
+            }
+
+            if (Resolver.IsDLLImportMethod(methodDeclaration))
+            {
+                ExternMethodDeclaration e = new ExternMethodDeclaration();
+                e.NameToken = (Identifier)result.NameToken.Clone();
+                e.ReturnType = (AstType)result.ReturnType.Clone();
+
+                foreach (ParameterDeclaration p in result.Parameters)
+                {
+                    e.Parameters.Add((ParameterDeclaration)p.Clone());
+                }
+
+                String entryPoint = Resolver.GetEntryPointFromDllImport(methodDeclaration.Attributes);
+                e.EntryPoint = entryPoint == String.Empty ?  methodDeclaration.Name : entryPoint;
+
+                String library = Resolver.GetLibraryFromDllImport(methodDeclaration.Attributes);
+                e.Library = library == String.Empty ? "LIBRARYERROR" : library;
+
+                Cache.AddDllImport(e.Library, e);
+
+                List<Expression> arguments = new List<Expression>();
+                foreach(ParameterDeclaration p in result.Parameters)
+                {
+                    arguments.Add(new IdentifierExpression(p.Name));
+                }
+                e.Body = BlockStatement.Null;
+
+                result.Body = new BlockStatement();
+                result.Body.Add(new ReturnStatement(
+                    new GlobalNamespaceReferenceExpression(
+                    new InvocationExpression(
+                        new IdentifierExpression(e.EntryPoint), arguments))));                
             }
 
             result.PrivateImplementationType = (AstType)methodDeclaration.PrivateImplementationType.AcceptVisitor(this, data);

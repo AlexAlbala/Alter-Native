@@ -19,7 +19,7 @@ namespace ICSharpCode.NRefactory.Cpp
             //********************** SYSTEM:
             libraryMap.Add("System", "\"System/System.h\"");
             libraryMap.Add("Console", "\"System/Console.h\"");
-            libraryMap.Add("Array", "\"System/Array.h\"");            
+            libraryMap.Add("Array", "\"System/Array.h\"");
             libraryMap.Add("Random", "\"System/Random.h\"");
             libraryMap.Add("Math", "\"System/Math.h\"");
             libraryMap.Add("GC", "\"System/GC.h\"");
@@ -44,6 +44,7 @@ namespace ICSharpCode.NRefactory.Cpp
             //********************** SYSTEM THREADING:
             libraryMap.Add("Thread", "\"System/Threading/Thread.h\"");
             libraryMap.Add("ThreadStart", "\"System/Threading/Thread.h\"");
+            libraryMap.Add("ParameterizedThreadStart", "\"System/Threading/Thread.h\"");
             //*************************************************************//
 
             //********************** SYSTEM COLLECTIONS GENERIC:
@@ -66,15 +67,23 @@ namespace ICSharpCode.NRefactory.Cpp
             //*************************************************************//
 
 
-            
+
 
             //Add delegate types in cache for the delegates in library
 
-            Dictionary<string, ParameterDeclaration[]> delegatesInLibrary = new Dictionary<string,ParameterDeclaration[]>();
-            delegatesInLibrary.Add("ThreadStart",new ParameterDeclaration[0]);
+            Dictionary<string, ParameterDeclaration[]> delegatesInLibrary = new Dictionary<string, ParameterDeclaration[]>();
+            delegatesInLibrary.Add("ThreadStart", new ParameterDeclaration[0]);
+            delegatesInLibrary.Add("ParameterizedThreadStart", new ParameterDeclaration[] { new VariadicParameterDeclaration() });
 
             Dictionary<string, string> propertiesInLibrary = new Dictionary<string, string>();
             propertiesInLibrary.Add("Now", "DateTime");
+            propertiesInLibrary.Add("Day", "DateTime");
+            propertiesInLibrary.Add("DayOfWeek", "DateTime");
+            propertiesInLibrary.Add("DayOfYear", "DateTime");
+            propertiesInLibrary.Add("Hour", "DateTime");
+            propertiesInLibrary.Add("Millisecond", "DateTime");
+            propertiesInLibrary.Add("Minute", "DateTime");
+            propertiesInLibrary.Add("Month", "DateTime");
 
             foreach (KeyValuePair<string, ParameterDeclaration[]> kvp in delegatesInLibrary)
                 Cache.AddDelegateType(kvp.Key, kvp.Value);
@@ -123,6 +132,12 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             Cache.SaveIncludes(includes);
         }
+
+        public static void RemoveInclude(string typeName)
+        {
+            Cache.RemoveIncldue(typeName);
+        }
+
 
         /// <summary>
         /// Returns if a forward declaration is needed between two types
@@ -334,7 +349,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 return libraryMap[CSharpName];
             else
                 return "\"" + CSharpName.Replace('.', '/') + ".h\"";
-        }        
+        }
 
         /// <summary>
         /// Gets the types have to be included
@@ -348,10 +363,10 @@ namespace ICSharpCode.NRefactory.Cpp
             {
                 if (!kvp.Key.IsBasicType)
                 {
-                    if (!Cache.GetTemplateTypes().Contains(kvp.Value) && !tmp.Contains(GetCppName(kvp.Value)))
+                    if (!Cache.GetTemplateTypes().Contains(kvp.Value) && !tmp.Contains(GetCppName(kvp.Value)) && !Cache.GetRemovedIncludes().Contains(kvp.Value))
                         tmp.Add(GetCppName(kvp.Value));
                 }
-            }
+            }          
             return tmp.ToArray();
         }
 
@@ -361,7 +376,7 @@ namespace ICSharpCode.NRefactory.Cpp
         public static void Restart()
         {
             Cache.ClearResolver();
-        }        
+        }
 
         /// <summary>
         /// Resolves the namespace of a given type name
@@ -377,7 +392,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 return symbols[type].Namespace;
             }
             return "Default";
-        }        
+        }
 
         /// <summary>
         /// Gets the needed namespaces of the current type
@@ -770,7 +785,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 foreach (var att in _node.Attributes)
                     headerNode.AddChild((AttributeSection)att.Clone(), HeaderConstructorDeclaration.AttributeRole);
 
-                 foreach (var param in _node.Parameters)
+                foreach (var param in _node.Parameters)
                     headerNode.AddChild((ParameterDeclaration)param.Clone(), HeaderConstructorDeclaration.Roles.Parameter);
 
                 foreach (var tparam in _node.TypeParameters)
@@ -792,7 +807,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     headerNode.AddChild((AttributeSection)att.Clone(), HeaderEventDeclaration.AttributeRole);
 
                 foreach (var variable in _node.Variables)
-                    headerNode.AddChild((VariableInitializer)variable.Clone(), HeaderEventDeclaration.Roles.Variable);                
+                    headerNode.AddChild((VariableInitializer)variable.Clone(), HeaderEventDeclaration.Roles.Variable);
 
                 _header.ReturnType = (AstType)_node.ReturnType.Clone();
             }
@@ -960,7 +975,7 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             else
             {
-                if(HasChildOf(type, typeof(SimpleType)))
+                if (HasChildOf(type, typeof(SimpleType)))
                 {
                     bool aux = false;
                     foreach (var node in GetChildrenOf(type, typeof(SimpleType)))
@@ -1065,7 +1080,7 @@ namespace ICSharpCode.NRefactory.Cpp
         /// <returns>Bool indicating if is child or not</returns>
         public static bool IsDirectChildOf(AstNode member, Type type)
         {
-            AstNode m = member as AstNode;            
+            AstNode m = member as AstNode;
             return m.Parent.GetType() == type;
         }
 
@@ -1207,12 +1222,12 @@ namespace ICSharpCode.NRefactory.Cpp
             return result;
         }
 
-       /// <summary>
-       /// Converts template types to Object type (useful for inline methods and template specialization types)
-       /// </summary>
-       /// <param name="type"></param>
-       /// <param name="newType"></param>
-       /// <returns>Returns if the type is actually changed or not</returns>
+        /// <summary>
+        /// Converts template types to Object type (useful for inline methods and template specialization types)
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="newType"></param>
+        /// <returns>Returns if the type is actually changed or not</returns>
         public static bool TryPatchTemplateToObjectType(AstType type, out AstType newType)
         {
             newType = (AstType)type.Clone();
@@ -1399,7 +1414,7 @@ namespace ICSharpCode.NRefactory.Cpp
         /// <param name="accessor">Get or Set accessor</param>
         /// <returns></returns>
         public static Expression RefactorPropety(Expression input, String currentTypeName, String accessor)
-        {            
+        {
             if (input is MemberReferenceExpression)
             {
                 MemberReferenceExpression r = input as MemberReferenceExpression;
@@ -1545,6 +1560,11 @@ namespace ICSharpCode.NRefactory.Cpp
             }
         }
 
+        /// <summary>
+        /// Returns if a method is marked as synchronized or not
+        /// </summary>
+        /// <param name="method"></param>
+        /// <returns>True if synchronized</returns>
         public static bool IsSynchronizedMethod(MethodDeclaration method)
         {
             foreach (AttributeSection section in method.Attributes)
@@ -1569,6 +1589,11 @@ namespace ICSharpCode.NRefactory.Cpp
             return false;
         }
 
+        /// <summary>
+        /// Returns if a method is marked as synchronized or not
+        /// </summary>
+        /// <param name="method"></param>
+        /// <returns>True if synchronized</returns>
         public static bool IsSynchronizedMethod(CSharp.MethodDeclaration method)
         {
             foreach (CSharp.AttributeSection section in method.Attributes)
@@ -1592,5 +1617,75 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             return false;
         }
-    }    
+
+        /// <summary>
+        /// Returns if a method is marked as an external method or not
+        /// </summary>
+        /// <param name="method"></param>
+        /// <returns>True if is external</returns>
+        public static bool IsDLLImportMethod(CSharp.MethodDeclaration method)
+        {
+            foreach (CSharp.AttributeSection section in method.Attributes)
+            {
+                foreach (CSharp.Attribute t in section.Attributes)
+                {
+                    if (Resolver.GetTypeName(t.Type).Equals("DllImport"))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Gets the library in which the external method is located
+        /// </summary>
+        /// <param name="attributes"></param>
+        /// <returns>The library name</returns>
+        public static string GetLibraryFromDllImport(CSharp.AstNodeCollection<CSharp.AttributeSection> attributes)
+        {
+            foreach (CSharp.AttributeSection section in attributes)
+            {
+                foreach (CSharp.Attribute t in section.Attributes)
+                {
+                    if (Resolver.GetTypeName(t.Type).Equals("DllImport"))
+                    {
+                        foreach (CSharp.Expression e in t.Arguments)
+                        {
+                            if (e is CSharp.PrimitiveExpression)
+                            {
+                                return (e as CSharp.PrimitiveExpression).Value as string;
+                            }
+                        }
+                    }
+                }
+            }
+            return String.Empty;
+        }
+
+        /// <summary>
+        /// Returns the name of the target external function
+        /// </summary>
+        /// <param name="attributes"></param>
+        /// <returns>The real name of the external function in the library</returns>
+        public static string GetEntryPointFromDllImport(CSharp.AstNodeCollection<CSharp.AttributeSection> attributes)
+        {
+            foreach (CSharp.AttributeSection section in attributes)
+            {
+                foreach (CSharp.Attribute t in section.Attributes)
+                {
+                    if (Resolver.GetTypeName(t.Type).Equals("DllImport"))
+                    {
+                        foreach (CSharp.Expression e in t.Arguments)
+                        {
+
+                        }
+                    }
+                }
+            }
+            return String.Empty;
+        }
+
+    }
 }

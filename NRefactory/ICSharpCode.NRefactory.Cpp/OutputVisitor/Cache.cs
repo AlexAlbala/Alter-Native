@@ -19,12 +19,10 @@ namespace ICSharpCode.NRefactory.Cpp
         private static Dictionary<string, List<VariableDeclarationStatement>> variablesMethod = new Dictionary<string, List<VariableDeclarationStatement>>();
         private static Dictionary<string, List<ParameterDeclaration>> parameters = new Dictionary<string, List<ParameterDeclaration>>();
         private static List<IncludeDeclaration> includeDeclaration = new List<IncludeDeclaration>();
+        private static List<String> removedIncludes = new List<String>();
         private static Dictionary<Ast.AstType, List<MethodDeclaration>> privateImplementations = new Dictionary<Ast.AstType, List<MethodDeclaration>>();
         private static Dictionary<String, List<String>> templatizedAbstractMethods = new Dictionary<string, List<String>>();
         private static List<AstNode> extraHeadernodes = new List<AstNode>();
-
-        //Type -> customEvents
-        private static Dictionary<string, List<string>> customEvents = new Dictionary<string, List<string>>();
 
         //RESOLVER
         private static Dictionary<string, string> libraryMap = new Dictionary<string, string>();
@@ -34,6 +32,10 @@ namespace ICSharpCode.NRefactory.Cpp
         private static Dictionary<string, List<string>> includes = new Dictionary<string, List<string>>();
         private static List<string> templateTypes = new List<string>();
 
+        //DELEGATES & EVENTS
+
+        //Type -> customEvents
+        private static Dictionary<string, List<string>> customEvents = new Dictionary<string, List<string>>();
 
         //Name->Args
         private static Dictionary<string, ParameterDeclaration[]> delegatesArgs = new Dictionary<string, ParameterDeclaration[]>();
@@ -46,6 +48,12 @@ namespace ICSharpCode.NRefactory.Cpp
 
         //Name->Type
         private static Dictionary<string, string> eventIdentifiers = new Dictionary<string, string>();
+
+
+
+
+        //PINVOKE AND DLLIMPORTS*********************************************************
+        private static Dictionary<string, List<ExternMethodDeclaration>> dllImports = new Dictionary<string, List<ExternMethodDeclaration>>();        
 
         #region RESOLVER
 
@@ -60,6 +68,24 @@ namespace ICSharpCode.NRefactory.Cpp
         public static Dictionary<Ast.AstType, List<MethodDeclaration>> GetPrivateImplementation()
         {
             return privateImplementations;
+        }
+
+        public static void AddDllImport(String name, ExternMethodDeclaration method)
+        {
+            if (dllImports.ContainsKey(name))
+                dllImports[name].Add(method);
+            else
+                dllImports.Add(name, new List<ExternMethodDeclaration>() { method });
+        }
+
+        public static Dictionary<String, List<ExternMethodDeclaration>> GetDllImport()
+        {
+            return dllImports;
+        }
+
+        public static void ClearDllImport()
+        {
+            dllImports.Clear();
         }
 
         public static void ClearPrivateImplementations()
@@ -170,6 +196,7 @@ namespace ICSharpCode.NRefactory.Cpp
             visitedTypes.Clear();
             namespaces.Clear();
             extraHeadernodes.Clear();
+            addedConstructorStatements.Clear();
         }
 
         public static void AddTemplateType(string type)
@@ -255,6 +282,19 @@ namespace ICSharpCode.NRefactory.Cpp
                 includes.Add(owner, new List<string>());
                 includes[owner].Add(included);
             }
+        }
+
+        public static void RemoveIncldue(string name)
+        {
+            if (!removedIncludes.Contains(name))
+            {
+                removedIncludes.Add(name);
+            }
+        }
+
+        public static List<string> GetRemovedIncludes()
+        {
+            return removedIncludes;
         }
 
         public static void SaveIncludes(Dictionary<string, List<string>> _includes)

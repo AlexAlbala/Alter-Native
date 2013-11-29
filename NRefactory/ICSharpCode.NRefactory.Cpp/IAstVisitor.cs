@@ -72,6 +72,7 @@ namespace ICSharpCode.NRefactory.Cpp
         S VisitEmptyExpression(EmptyExpression emptyExpression, T data);
         S VisitBoxExpression(BoxExpression boxExpression, T data);//******************
         S VisitUnBoxExpression(UnBoxExpression unBoxExpression, T data);//******************
+        S VisitGlobalNamespaceReferenceReferenceExpression(GlobalNamespaceReferenceExpression globalNamespaceReferenceExpression, T data);//************
 
         S VisitQueryExpression(QueryExpression queryExpression, T data);
         S VisitQueryContinuationClause(QueryContinuationClause queryContinuationClause, T data);
@@ -149,12 +150,14 @@ namespace ICSharpCode.NRefactory.Cpp
         S VisitHeaderFieldDeclaration(HeaderFieldDeclaration headerFieldDeclaration, T data);//**************
         S VisitIndexerDeclaration(IndexerDeclaration indexerDeclaration, T data);
         S VisitMethodDeclaration(MethodDeclaration methodDeclaration, T data);
+        S VisitExternMethodDeclaration(ExternMethodDeclaration externMethodDeclaration, T data);//**************
         S VisitHeaderMethodDeclaration(HeaderMethodDeclaration headerMethodDeclaration, T data);//***************
         S VisitHeaderAbstractMethodDeclaration(HeaderAbstractMethodDeclaration headerAbstractMethodDeclaration, T data);//***************
         S VisitOperatorDeclaration(OperatorDeclaration operatorDeclaration, T data);
         S VisitConversionConstructorDeclaration(ConversionConstructorDeclaration conversionConstructorDeclaration, T data);//************
         S VisitHeaderConversionConstructorDeclaration(HeaderConversionConstructorDeclaration headerConversionConstructorDeclaration, T data);//**********
         S VisitParameterDeclaration(ParameterDeclaration parameterDeclaration, T data);
+        S VisitVariadicParameterDeclaration(VariadicParameterDeclaration variadicParameterDeclaration, T data);//**************
         S VisitPropertyDeclaration(PropertyDeclaration propertyDeclaration, T data);
         S VisitVariableInitializer(VariableInitializer variableInitializer, T data);
         S VisitFixedFieldDeclaration(FixedFieldDeclaration fixedFieldDeclaration, T data);

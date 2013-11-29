@@ -1833,14 +1833,14 @@ namespace ICSharpCode.NRefactory.Cpp
             formatter.ChangeFile(typeDeclaration.Name + ".h");
             FileWritterManager.AddSourceFile(typeDeclaration.Name + ".h");
 
-            WritePragmaOnceDirective();
+            WritePragmaOnceDirective();           
 
             //Write using declarations in header file
             WriteImports(data, typeDeclaration);
 
             string type2 = String.Empty;
             if (Resolver.NeedsForwardDeclaration(typeDeclaration.Name, out type2))
-                WriteForwardDeclaration(type2);
+                WriteForwardDeclaration(type2);                     
 
             WriteAttributes(typeDeclaration.Attributes);
             //WriteModifiers(typeDeclaration.ModifierTokens);           
@@ -1919,6 +1919,16 @@ namespace ICSharpCode.NRefactory.Cpp
                 NewLine();
             }
             NewLine();
+            //Write the extern directive if needed
+            foreach (KeyValuePair<string, List<ExternMethodDeclaration>> kvp in Cache.GetDllImport())
+            {
+                foreach (ExternMethodDeclaration emd in kvp.Value)
+                {
+                    emd.AcceptVisitor(this, data);
+                }
+            }
+            Cache.ClearDllImport();
+
             UsingNamespaces();
             Resolver.Restart();
             WriteNamespace();
@@ -3011,7 +3021,7 @@ namespace ICSharpCode.NRefactory.Cpp
             foreach (AttributeSection attr in attributes)
             {
                 foreach(Attribute at in attr.Attributes)
-                {
+                {   
                     formatter.WriteComment(CommentType.SingleLine, "Attribute: " + at.ToString());
                 }
                 continue;
@@ -4030,6 +4040,39 @@ namespace ICSharpCode.NRefactory.Cpp
             Space(policy.SpaceBeforeMethodCallParentheses);
             WriteCommaSeparatedListInParenthesis(eventFireExpression.Arguments, policy.SpaceWithinMethodCallParentheses);
             return EndNode(eventFireExpression);
+        }
+
+
+        public object VisitExternMethodDeclaration(ExternMethodDeclaration externMethodDeclaration, object data)
+        {
+            StartNode(externMethodDeclaration);
+            formatter.WriteComment(CommentType.SingleLine , "Extern method of: Library: " + externMethodDeclaration.Library + " | method: " + externMethodDeclaration.EntryPoint + " | alias: " + externMethodDeclaration.Name);
+            WriteKeyword("extern \"C\"");
+            externMethodDeclaration.ReturnType.AcceptVisitor(this, data);
+            Space();
+            WriteIdentifier(externMethodDeclaration.EntryPoint);
+            Space(policy.SpaceBeforeMethodDeclarationParentheses);
+            WriteCommaSeparatedListInParenthesis(externMethodDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
+            Semicolon();
+            NewLine();
+            return EndNode(externMethodDeclaration);
+        }
+
+
+        public object VisitGlobalNamespaceReferenceReferenceExpression(GlobalNamespaceReferenceExpression globalNamespaceReferenceExpression, object data)
+        {
+            StartNode(globalNamespaceReferenceExpression);
+            WriteToken("::", GlobalNamespaceReferenceExpression.Roles.DoubleColon);
+            globalNamespaceReferenceExpression.Target.AcceptVisitor(this, data);            
+            return EndNode(globalNamespaceReferenceExpression);
+        }
+
+
+        public object VisitVariadicParameterDeclaration(VariadicParameterDeclaration variadicParameterDeclaration, object data)
+        {
+            StartNode(variadicParameterDeclaration);
+            WriteToken("...", VariadicParameterDeclaration.VariadicRole);
+            return EndNode(variadicParameterDeclaration);
         }
     }
 }

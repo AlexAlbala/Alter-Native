@@ -93,18 +93,34 @@ namespace AlterNative
         /// <param name="args">{ assembly, destinationPath, language, Params } (In CPP: Params is the path of the library)</param>
         public void ConsoleMain(string[] args)
         {
+            if (System.Environment.GetEnvironmentVariable("ALTERNATIVE_BIN_PATH") != null)
+            {
+                Utils.WriteToConsole("ALTERNATIVE_BIN_PATH not setted, please execute alternative-init command");
+            }
+
             Utils.WriteToConsole("\n");
 
             AssemblyDefinition adef = null;
             if (args[0].ToLower() == "new")
             {
                 Utils.WriteToConsole("Creating blank template...");
+                if (System.Environment.GetEnvironmentVariable("ALTERNATIVE_BIN_PATH") != null)
+                {
+                    adef = LoadAssembly(Environment.GetEnvironmentVariable("ALTERNATIVE_BIN_PATH")
+                                                    + @"../../../../Tools/Templates/Blank/Blank.exe");
+                }
+                else
+                {
+                    Utils.WriteToConsole("WARNING: ALTERNATIVE_BIN_PATH not setted");
 #if CORE
-                adef = LoadAssembly(@"../../../../Tools/Templates/Blank/Blank.exe");                
+                    adef = LoadAssembly(@"../../../../Tools/Templates/Blank/Blank.exe");
+                    Utils.WriteToConsole("Trying to get templates from: " + @"../../../../Tools/Templates/Blank/Blank.exe");
 #else
-                adef = LoadAssembly(@"../../../Tools/Templates/Blank/Blank.exe");
+                    adef = LoadAssembly(@"../../../Tools/Templates/Blank/Blank.exe");
+                    Utils.WriteToConsole("Trying to get templates from: " + @"../../../Tools/Templates/Blank/Blank.exe");
                
 #endif
+                }
             }
             else
             {
@@ -151,11 +167,21 @@ namespace AlterNative
                 }
             }
 
+            string libPath = "";
+            if (System.Environment.GetEnvironmentVariable("ALTERNATIVE_CPP_LIB_PATH") != null)
+            {
+                libPath = System.Environment.GetEnvironmentVariable("ALTERNATIVE_CPP_LIB_PATH");
+            }
+            else
+            {
 #if CORE
-            string libPath = @"../../../../Lib/src";
+                libPath = @"../../../../Lib/src";
 #else
-            string libPath = @"../../../Lib/src";
+                libPath = @"../../../Lib/src";
 #endif
+                Console.WriteLine("ALTERNATIVE_CPP_LIB_PATH not defined, please execute alternative-init command");
+                Console.WriteLine("Trying to locate the library at: " + libPath);
+            }
             //COPY LIB FILES            
             CopyAll(new DirectoryInfo(libPath), new DirectoryInfo(outputDir));
 

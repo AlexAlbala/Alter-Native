@@ -11,7 +11,7 @@ namespace AlterNative.Tools
     {
         public static void WriteToConsole(string message)
         {
-            //AttachConsole(-1);
+            AttachConsole(-1);
             //Console.WriteLine(message);
             Console.Out.WriteLine(message);
             //TextWriter stdWriter = Console.Out;
