@@ -1761,7 +1761,7 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteNamespace();
 
             foreach (var member in typeDeclaration.Members)
-            {
+            {                
                 member.AcceptVisitor(this, data);
             }
 
@@ -1818,7 +1818,10 @@ namespace ICSharpCode.NRefactory.Cpp
 
                 foreach (var member in typeDeclaration.Members)
                 {
-                    WriteAccesorModifier(member.ModifierTokens);
+                    if (nestedTypeDeclaration.ClassType != ClassType.Struct)
+                    {
+                        WriteAccesorModifier(member.ModifierTokens);
+                    }
                     member.AcceptVisitor(this, data);
                 }
             }
