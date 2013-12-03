@@ -1092,8 +1092,12 @@ namespace ICSharpCode.NRefactory.Cpp
         /// <returns>Bool indicating if is child or not</returns>
         public static bool IsDirectChildOf(CSharp.AstNode member, Type type)
         {
-            CSharp.AstNode m = member as CSharp.AstNode;
-            return m.Parent.GetType() == type;
+            if (member == null)
+                return false;
+            if (member.Parent == null)
+                return false;
+
+            return member.Parent.GetType() == type;
         }
 
         /// <summary>

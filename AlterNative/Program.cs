@@ -8,6 +8,7 @@ using ICSharpCode.ILSpy;
 #endif
 using AlterNative.BuildTools;
 using AlterNative.Tools;
+using System.Collections.Generic;
 
 namespace AlterNative
 {
@@ -52,7 +53,15 @@ namespace AlterNative
         private AssemblyDefinition LoadAssembly(string path)
         {
             //LOAD TARGET ASSEMBLY            
-            ReaderParameters readerParams = new ReaderParameters() { ReadSymbols = true };
+           
+            var resolver = new DefaultAssemblyResolver();
+            resolver.AddSearchDirectory(path.Substring(0, path.Replace('\\','/').LastIndexOf("/")));
+
+            ReaderParameters readerParams = new ReaderParameters() 
+            { 
+                ReadSymbols = true,
+                AssemblyResolver = resolver
+            };
             AssemblyDefinition adef = AssemblyDefinition.ReadAssembly(path, readerParams);
             Utils.WriteToConsole("Loaded Assembly " + adef.Name);
             return adef;
@@ -93,6 +102,17 @@ namespace AlterNative
         /// <param name="args">{ assembly, destinationPath, language, Params } (In CPP: Params is the path of the library)</param>
         public void ConsoleMain(string[] args)
         {
+            List<string> addedLibs = new List<string>();
+
+            for (int i = 0; i < args.Length; i++)
+            {
+                string arg = args[i];
+                if (arg.ToLower().Equals("-l"))
+                {
+                    addedLibs.Add(args[++i]);
+                }
+            }
+
             if (System.Environment.GetEnvironmentVariable("ALTERNATIVE_HOME") == null)
             {
                 Utils.WriteToConsole("ALTERNATIVE_HOME not setted, please execute alternative-init command");
@@ -153,7 +173,7 @@ namespace AlterNative
             {
                 if (!tdef.Name.Contains("<"))
                 {
-                    lang.DecompileType(tdef, textOutput, new ICSharpCode.ILSpy.DecompilationOptions() { FullDecompilation = true });
+                    lang.DecompileType(tdef, textOutput, new ICSharpCode.ILSpy.DecompilationOptions() { FullDecompilation = false });
                 }
             }
 
@@ -162,7 +182,7 @@ namespace AlterNative
             {
                 if (!tdef.Name.Contains("<"))
                 {
-                    lang.DecompileType(tdef, textOutput, new ICSharpCode.ILSpy.DecompilationOptions() { FullDecompilation = true });
+                    lang.DecompileType(tdef, textOutput, new ICSharpCode.ILSpy.DecompilationOptions() { FullDecompilation = false });
                     Utils.WriteToConsole("Decompiled: " + tdef.FullName);
                 }
             }
@@ -188,9 +208,9 @@ namespace AlterNative
             //TRIM END .EXE : BUG If The name is File.exe, trim end ".exe" returns Fil !!!!
             string name = adef.MainModule.Name.Substring(0, adef.MainModule.Name.Length - 4);
             if (args.Contains("-r") || args.Contains("-R"))
-                CMakeGenerator.GenerateCMakeLists(name + "Proj", name, outputDir, FileWritterManager.GetSourceFiles(), true);
+                CMakeGenerator.GenerateCMakeLists(name + "Proj", name, outputDir, FileWritterManager.GetSourceFiles(), addedLibs, true);
             else
-                CMakeGenerator.GenerateCMakeLists(name + "Proj", name, outputDir, FileWritterManager.GetSourceFiles());
+                CMakeGenerator.GenerateCMakeLists(name + "Proj", name, outputDir, FileWritterManager.GetSourceFiles(), addedLibs);
 
             Console.ForegroundColor = ConsoleColor.Green;
             Utils.WriteToConsole("Done");

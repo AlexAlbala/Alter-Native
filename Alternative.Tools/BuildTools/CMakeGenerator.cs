@@ -10,7 +10,7 @@ namespace AlterNative.BuildTools
 {
     public class CMakeGenerator
     {
-        public static void GenerateCMakeLists(string projectName, string execName, string workingDir, string[] sourceFiles, bool release = false)
+        public static void GenerateCMakeLists(string projectName, string execName, string workingDir, string[] sourceFiles,  List<string> addedLibs, bool release = false)
         {
             Utils.WriteToConsole("Generating CMakeLists.txt for project " + projectName + " and executable " + execName);           
 
@@ -40,6 +40,12 @@ namespace AlterNative.BuildTools
             sb.AppendLine("ADD_EXECUTABLE(" + execName + " ${EXECPATH})");
             sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " System)");
             sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " gc-lib)");
+
+            foreach (String s in addedLibs)
+            {
+                sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " " + s + ")");
+            }
+
             sb.AppendLine("IF(UNIX)");
             sb.AppendLine("IF(!ANDROID)");
             sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " pthread)");
