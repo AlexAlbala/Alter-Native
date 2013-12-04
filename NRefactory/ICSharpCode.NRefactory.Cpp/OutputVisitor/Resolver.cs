@@ -27,6 +27,7 @@ namespace ICSharpCode.NRefactory.Cpp
             libraryMap.Add("Convert", "\"System/Convert.h\"");
             libraryMap.Add("Delegate", "\"System/Delegate.h\"");
             libraryMap.Add("Event", "\"System/events.h\"");
+            libraryMap.Add("DateTime", "\"System/DateTime.h\"");
             //exceptions:
             libraryMap.Add("Exception", "\"System/Exception.h\"");
             //                          SystemExceptions
@@ -42,7 +43,7 @@ namespace ICSharpCode.NRefactory.Cpp
             //*************************************************************//
 
             //********************** SYSTEM THREADING:
-            libraryMap.Add("Thread", "\"System/Threading/Thread.h\"");
+            libraryMap.Add("Thread", "\"System/Threading/Thread.h\"");            
             libraryMap.Add("ThreadStart", "\"System/Threading/Thread.h\"");
             libraryMap.Add("ParameterizedThreadStart", "\"System/Threading/Thread.h\"");
             //*************************************************************//
@@ -73,7 +74,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
             Dictionary<string, ParameterDeclaration[]> delegatesInLibrary = new Dictionary<string, ParameterDeclaration[]>();
             delegatesInLibrary.Add("ThreadStart", new ParameterDeclaration[0]);
-            delegatesInLibrary.Add("ParameterizedThreadStart", new ParameterDeclaration[] { new VariadicParameterDeclaration() });
+            delegatesInLibrary.Add("ParameterizedThreadStart", new ParameterDeclaration[] { new VariadicParameterDeclaration() });            
 
             Dictionary<string, string> propertiesInLibrary = new Dictionary<string, string>();
             propertiesInLibrary.Add("Now", "DateTime");

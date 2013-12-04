@@ -1212,9 +1212,53 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             StartNode(delegateDeclaration);
 
-            formatter.WriteComment(CommentType.SingleLine, "Delegate declaration moved to header file");
+            if (Resolver.IsChildOf(delegateDeclaration, typeof(TypeDeclaration)))
+            {
+                formatter.WriteComment(CommentType.SingleLine, "Delegate declaration moved to header file");
+            }
+            else
+            {
+                WriteNoClassNode(delegateDeclaration);
+            }
 
             return EndNode(delegateDeclaration);
+        }
+
+        public void WriteNoClassNode(AstNode node)
+        {            
+            if (node is DelegateDeclaration)
+            {
+                DelegateDeclaration delegateDeclaration = node as DelegateDeclaration;                
+                formatter.ChangeFile(delegateDeclaration.Name + ".h");
+                FileWritterManager.AddSourceFile(delegateDeclaration.Name + ".h");
+
+                //WRITE RESOLVED TYPE DEPENDENCES
+                foreach (string s in Resolver.GetTypeIncludes())
+                {
+                    WriteKeyword("#include");
+                    WriteIdentifier(s);
+                    NewLine();
+                }
+                NewLine();
+
+                UsingNamespaces();
+                WriteNamespace();
+                
+                HeaderDelegateDeclaration hdd = new HeaderDelegateDeclaration();
+                Resolver.GetHeaderNode(delegateDeclaration, hdd);
+
+                if (hdd != null)
+                {
+                    VisitHeaderDelegateDeclaration(hdd, null);
+                }
+                else
+                {
+                    formatter.WriteComment(CommentType.SingleLine, "Error converting the delegate node");
+                }
+            }
+            CloseNamespaceBraces();
+
+            formatter.ChangeFile("tmp");
         }
 
         public object VisitNamespaceDeclaration(NamespaceDeclaration namespaceDeclaration, object data)
@@ -1761,7 +1805,7 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteNamespace();
 
             foreach (var member in typeDeclaration.Members)
-            {                
+            {
                 member.AcceptVisitor(this, data);
             }
 
@@ -1836,14 +1880,14 @@ namespace ICSharpCode.NRefactory.Cpp
             formatter.ChangeFile(typeDeclaration.Name + ".h");
             FileWritterManager.AddSourceFile(typeDeclaration.Name + ".h");
 
-            WritePragmaOnceDirective();           
+            WritePragmaOnceDirective();
 
             //Write using declarations in header file
             WriteImports(data, typeDeclaration);
 
             string type2 = String.Empty;
             if (Resolver.NeedsForwardDeclaration(typeDeclaration.Name, out type2))
-                WriteForwardDeclaration(type2);                     
+                WriteForwardDeclaration(type2);
 
             WriteAttributes(typeDeclaration.Attributes);
 
@@ -2315,7 +2359,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
                 if (!Resolver.IsChildOf(fieldDeclaration, typeof(GenericTemplateTypeDeclaration)))
                 {
-                    TypeDeclaration tdecl = fieldDeclaration.Parent as TypeDeclaration;                    
+                    TypeDeclaration tdecl = fieldDeclaration.Parent as TypeDeclaration;
                     WriteIdentifier(tdecl != null ? tdecl.Name : String.Empty, MethodDeclaration.Roles.Identifier);
                     WriteToken("::", MethodDeclaration.Roles.DoubleColon);
                 }
@@ -3034,8 +3078,8 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             foreach (AttributeSection attr in attributes)
             {
-                foreach(Attribute at in attr.Attributes)
-                {   
+                foreach (Attribute at in attr.Attributes)
+                {
                     formatter.WriteComment(CommentType.SingleLine, "Attribute: " + at.ToString());
                 }
                 continue;
@@ -3865,7 +3909,7 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             StartNode(headerAbstractMethodDeclaration);
             WriteAttributes(headerAbstractMethodDeclaration.Attributes);
-            
+
             WriteAccesorModifier(headerAbstractMethodDeclaration.ModifierTokens);
             formatter.Indent();
 
@@ -4009,7 +4053,7 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             StartNode(headerDelegateDeclaration);
 
-            WriteAttributes(headerDelegateDeclaration.Attributes);
+            WriteAttributes(headerDelegateDeclaration.Attributes);            
             WriteAccesorModifier(headerDelegateDeclaration.ModifierTokens);
 
             formatter.Indent();
@@ -4060,7 +4104,7 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitExternMethodDeclaration(ExternMethodDeclaration externMethodDeclaration, object data)
         {
             StartNode(externMethodDeclaration);
-            formatter.WriteComment(CommentType.SingleLine , "Extern method of: Library: " + externMethodDeclaration.Library + " | method: " + externMethodDeclaration.EntryPoint + " | alias: " + externMethodDeclaration.Name);
+            formatter.WriteComment(CommentType.SingleLine, "Extern method of: Library: " + externMethodDeclaration.Library + " | method: " + externMethodDeclaration.EntryPoint + " | alias: " + externMethodDeclaration.Name);
             WriteKeyword("extern \"C\"");
             externMethodDeclaration.ReturnType.AcceptVisitor(this, data);
             Space();
@@ -4077,7 +4121,7 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             StartNode(globalNamespaceReferenceExpression);
             WriteToken("::", GlobalNamespaceReferenceExpression.Roles.DoubleColon);
-            globalNamespaceReferenceExpression.Target.AcceptVisitor(this, data);            
+            globalNamespaceReferenceExpression.Target.AcceptVisitor(this, data);
             return EndNode(globalNamespaceReferenceExpression);
         }
 

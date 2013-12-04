@@ -9,6 +9,7 @@ using ICSharpCode.ILSpy;
 using AlterNative.BuildTools;
 using AlterNative.Tools;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace AlterNative
 {
@@ -50,22 +51,7 @@ namespace AlterNative
         }
 
         #region Console
-        private AssemblyDefinition LoadAssembly(string path)
-        {
-            //LOAD TARGET ASSEMBLY            
-           
-            var resolver = new DefaultAssemblyResolver();
-            resolver.AddSearchDirectory(path.Substring(0, path.Replace('\\','/').LastIndexOf("/")));
-
-            ReaderParameters readerParams = new ReaderParameters() 
-            { 
-                ReadSymbols = true,
-                AssemblyResolver = resolver
-            };
-            AssemblyDefinition adef = AssemblyDefinition.ReadAssembly(path, readerParams);
-            Utils.WriteToConsole("Loaded Assembly " + adef.Name);
-            return adef;
-        }
+        
 
         private ICSharpCode.ILSpy.Language OutputLanguage(string language)
         {
@@ -102,62 +88,57 @@ namespace AlterNative
         /// <param name="args">{ assembly, destinationPath, language, Params } (In CPP: Params is the path of the library)</param>
         public void ConsoleMain(string[] args)
         {
-            List<string> addedLibs = new List<string>();
-
-            for (int i = 0; i < args.Length; i++)
-            {
-                string arg = args[i];
-                if (arg.ToLower().Equals("-l"))
-                {
-                    addedLibs.Add(args[++i]);
-                }
-            }
+            Commands.SetLinkedLibraries(args);
 
             if (System.Environment.GetEnvironmentVariable("ALTERNATIVE_HOME") == null)
             {
                 Utils.WriteToConsole("ALTERNATIVE_HOME not setted, please execute alternative-init command");
             }
+            else
+            {
+                Config.AlterNativeHome = System.Environment.GetEnvironmentVariable("ALTERNATIVE_HOME");
+            }
 
             Utils.WriteToConsole("\n");
+
+            string outputDir = Utils.InitOutputPath(args[1]);
 
             AssemblyDefinition adef = null;
             if (args[0].ToLower() == "new")
             {
-                Utils.WriteToConsole("Creating blank template...");
-                if (System.Environment.GetEnvironmentVariable("ALTERNATIVE_HOME") != null)
-                {
-                    adef = LoadAssembly(Environment.GetEnvironmentVariable("ALTERNATIVE_HOME")
-                                                    + @"/Tools/Templates/Blank/Blank.exe");
-                }
-                else
-                {
-                    Utils.WriteToConsole("WARNING: ALTERNATIVE_HOME not setted");
-#if CORE
-                    adef = LoadAssembly(@"../../../../Tools/Templates/Blank/Blank.exe");
-                    Utils.WriteToConsole("Trying to get templates from: " + @"../../../../Tools/Templates/Blank/Blank.exe");
-#else
-                    adef = LoadAssembly(@"../../../Tools/Templates/Blank/Blank.exe");
-                    Utils.WriteToConsole("Trying to get templates from: " + @"../../../Tools/Templates/Blank/Blank.exe");
-               
-#endif
-                }
+                adef = Commands.NewTemplate(new DirectoryInfo(outputDir));
+            }
+            else if (args[0].ToLower() == "make")
+            {
+                Commands.RunCMake(new DirectoryInfo(outputDir));
+                Console.ForegroundColor = ConsoleColor.Green;
+                Utils.WriteToConsole("alternative make done");
+                Console.ResetColor();
+                return;
             }
             else
             {
                 //LOAD TARGET ASSEMBLY
-                adef = LoadAssembly(args[0].Replace('\\', '/'));
+                adef = Commands.LoadAssembly(args[0].Replace('\\', '/'));
+            }           
+            
+            if (args[0].EndsWith("dll"))
+            {
+                Config.targetType = TargetType.DynamicLinkLibrary;
             }
-
-            //CONFIGURE OUTPUT PATH           
-            string outputDir = args[1].Replace('\\', '/');
-
-            if (!outputDir.EndsWith("/"))
-                outputDir += "/";
+            else if (args[0].EndsWith("exe"))
+            {
+                Config.targetType = TargetType.Executable;
+            }
 
             if (!Directory.Exists(outputDir))
             {
                 Utils.WriteToConsole(outputDir + " does not exists. Created");
                 Directory.CreateDirectory(outputDir);
+            }
+            else
+            {
+                Utils.CleanDirectory(new DirectoryInfo(outputDir));
             }
 
             //Each visitor is responsible of changing the file if necessary (from here it is ipmossible to know the file names)
@@ -187,55 +168,35 @@ namespace AlterNative
                 }
             }
 
-            string libPath = "";
+            
             if (System.Environment.GetEnvironmentVariable("ALTERNATIVE_CPP_LIB_PATH") != null)
             {
-                libPath = System.Environment.GetEnvironmentVariable("ALTERNATIVE_CPP_LIB_PATH");
+                Config.AlterNativeLib = System.Environment.GetEnvironmentVariable("ALTERNATIVE_CPP_LIB_PATH");
             }
             else
             {
 #if CORE
-                libPath = @"../../../../Lib/src";
+                Config.AlterNativeLib = @"../../../../Lib/src";
 #else
-                libPath = @"../../../Lib/src";
+                Config.AlterNativeLib = @"../../../Lib/src";
 #endif
                 Console.WriteLine("ALTERNATIVE_CPP_LIB_PATH not defined, please execute alternative-init command");
-                Console.WriteLine("Trying to locate the library at: " + libPath);
+                Console.WriteLine("Trying to locate the library at: " + Config.AlterNativeLib);
             }
-            //COPY LIB FILES            
-            CopyAll(new DirectoryInfo(libPath), new DirectoryInfo(outputDir));
+
+            Commands.CopyLibFiles(new DirectoryInfo(outputDir));
 
             //TRIM END .EXE : BUG If The name is File.exe, trim end ".exe" returns Fil !!!!
             string name = adef.MainModule.Name.Substring(0, adef.MainModule.Name.Length - 4);
             if (args.Contains("-r") || args.Contains("-R"))
-                CMakeGenerator.GenerateCMakeLists(name + "Proj", name, outputDir, FileWritterManager.GetSourceFiles(), addedLibs, true);
+                CMakeGenerator.GenerateCMakeLists(name + "Proj", name, outputDir, FileWritterManager.GetSourceFiles(), true);
             else
-                CMakeGenerator.GenerateCMakeLists(name + "Proj", name, outputDir, FileWritterManager.GetSourceFiles(), addedLibs);
+                CMakeGenerator.GenerateCMakeLists(name + "Proj", name, outputDir, FileWritterManager.GetSourceFiles());
 
             Console.ForegroundColor = ConsoleColor.Green;
             Utils.WriteToConsole("Done");
             Console.ResetColor();
-        }
-
-        public void CopyAll(DirectoryInfo source, DirectoryInfo target)
-        {
-            // Copy each file into it’s new directory.
-            foreach (FileInfo fi in source.GetFiles())
-            {
-                Utils.WriteToConsole(@"Copying: " + target.FullName + "/" + fi.Name);
-                fi.CopyTo(System.IO.Path.Combine(target.ToString(), fi.Name), true);
-            }
-
-            // Copy each subdirectory using recursion.
-            foreach (DirectoryInfo diSourceSubDir in source.GetDirectories())
-            {
-                DirectoryInfo nextTargetSubDir =
-                    target.CreateSubdirectory(diSourceSubDir.Name);
-
-
-                CopyAll(diSourceSubDir, nextTargetSubDir);
-            }
-        }
+        }        
         #endregion
 
     }

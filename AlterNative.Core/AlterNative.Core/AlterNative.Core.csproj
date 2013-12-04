@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\AlterNative\Program.cs" />
+	<Compile Include="..\..\AlterNative\Commands.cs" />
     <Compile Include="..\..\AlterNative\Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

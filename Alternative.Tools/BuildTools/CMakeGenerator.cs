@@ -10,20 +10,20 @@ namespace AlterNative.BuildTools
 {
     public class CMakeGenerator
     {
-        public static void GenerateCMakeLists(string projectName, string execName, string workingDir, string[] sourceFiles,  List<string> addedLibs, bool release = false)
+        public static void GenerateCMakeLists(string projectName, string execName, string workingDir, string[] sourceFiles, bool release = false)
         {
-            Utils.WriteToConsole("Generating CMakeLists.txt for project " + projectName + " and executable " + execName);           
+            Utils.WriteToConsole("Generating CMakeLists.txt for project " + projectName + " and executable " + execName);
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("CMAKE_MINIMUM_REQUIRED(VERSION 2.8)");
-           
+
 
             /*FileInfo v120Cmake = new FileInfo(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\..\..\..\Tools\Code\CMAKE-vs120");
             StreamReader srv120 = new StreamReader(v120Cmake.FullName);
             sb.AppendLine(srv120.ReadToEnd());*/
 
             sb.AppendLine("PROJECT(" + projectName + " CXX)");
-            
+
             sb.AppendLine("SET_PROPERTY(GLOBAL PROPERTY GL_IS_RELEASE " + (release ? "1" : "0") + ")");
 
             sb.AppendLine("ADD_SUBDIRECTORY(System)");
@@ -37,11 +37,17 @@ namespace AlterNative.BuildTools
             }
 
             sb.AppendLine(")");
-            sb.AppendLine("ADD_EXECUTABLE(" + execName + " ${EXECPATH})");
+            if (Config.targetType == TargetType.Executable)
+                sb.AppendLine("ADD_EXECUTABLE(" + execName + " ${EXECPATH})");
+            else if (Config.targetType == TargetType.DynamicLinkLibrary)
+                sb.AppendLine("ADD_LIBRARY(" + execName + " ${EXECPATH})");
+            else
+                sb.AppendLine("ERROR");
+
             sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " System)");
             sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " gc-lib)");
 
-            foreach (String s in addedLibs)
+            foreach (String s in Config.addedLibs)
             {
                 sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " " + s + ")");
             }
@@ -54,7 +60,7 @@ namespace AlterNative.BuildTools
 
             if (release)
                 sb.AppendLine("SET(CMAKE_BUILD_TYPE Release)");
-            
+
 #if CORE
             FileInfo boostCmake = new FileInfo(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"/../../../../Tools/Code/CMAKE-BOOST");
 #else
