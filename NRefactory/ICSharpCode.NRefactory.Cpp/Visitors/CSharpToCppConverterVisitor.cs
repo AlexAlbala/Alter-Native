@@ -207,7 +207,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitBaseReferenceExpression(CSharp.BaseReferenceExpression baseReferenceExpression, object data)
-        {
+        {            
             return EndNode(baseReferenceExpression, new BaseReferenceExpression());
         }
 
@@ -1791,11 +1791,15 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             var cinit = new ConstructorInitializer();
             if (constructorInitializer.ConstructorInitializerType == CSharp.ConstructorInitializerType.Base)//BASE
             {
-                //cinit.Base = (ConstructorInitializerType)constructorInitializer.ConstructorInitializerType;
+                //C# does not support multiple inheritance, so, the base type will be extracted from the base types list                
+                cinit.Base = new SimpleType(Resolver.GetTypeName(currentType.BaseTypes.ElementAt(0)));
             }
             else //THIS
+            {
+                
+            }
 
-                ConvertNodes(constructorInitializer.Arguments, cinit.Arguments);
+            ConvertNodes(constructorInitializer.Arguments, cinit.Arguments);
             return EndNode(constructorInitializer, cinit);
         }
 
@@ -1922,7 +1926,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitMethodDeclaration(CSharp.MethodDeclaration methodDeclaration, object data)
         {
             Cache.ClearParametersAndFieldsDeclarations();
-            currentMethod = methodDeclaration.Name;
+            currentMethod = methodDeclaration.Name;            
 
             if (isInterface || methodDeclaration.HasModifier(CSharp.Modifiers.Abstract))
             {
@@ -1949,6 +1953,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     InvocationExpression ic = new InvocationExpression(new IdentifierExpression("TypeDecl"), new IdentifierExpression(Resolver.GetTypeName(res.ReturnType)));
                     res.ReturnType = new ExpressionType(ic);
                 }
+                
 
                 //END
                 return EndNode(methodDeclaration, res);

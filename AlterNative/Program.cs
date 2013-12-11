@@ -3,9 +3,7 @@ using System.Linq;
 using Mono.Cecil;
 using System.IO;
 using ICSharpCode.NRefactory.Cpp.Formatters;
-#if !CONSOLE
 using ICSharpCode.ILSpy;
-#endif
 using AlterNative.BuildTools;
 using AlterNative.Tools;
 using System.Collections.Generic;

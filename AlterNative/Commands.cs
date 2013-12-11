@@ -17,7 +17,7 @@ namespace AlterNative
             Environment.CurrentDirectory = di.FullName + "build";
             Process p = new Process();
 #if CORE
-            p.StartInfo = new ProcessStartInfo("cmake", "-G \"Unix Makefiles \" ..");
+            p.StartInfo = new ProcessStartInfo("cmake", "-G \"Unix Makefiles\" ..");
 #else
             p.StartInfo = new ProcessStartInfo("cmake", "..");
 #endif
