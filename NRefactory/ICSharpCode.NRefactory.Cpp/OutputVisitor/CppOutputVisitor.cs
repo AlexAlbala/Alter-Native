@@ -2221,7 +2221,13 @@ namespace ICSharpCode.NRefactory.Cpp
             StartNode(constructorInitializer);
             WriteToken(":", ConstructorInitializer.Roles.Colon);
             Space();
+
+            //Call the constructor: BaseType::BaseType(args...)
             constructorInitializer.Base.AcceptVisitor(this, data);
+            WriteToken("::", ConstructorInitializer.Roles.DoubleColon);
+            constructorInitializer.Base.AcceptVisitor(this, data);
+            //--//
+
             Space(policy.SpaceBeforeMethodCallParentheses);
             WriteCommaSeparatedListInParenthesis(constructorInitializer.Arguments, policy.SpaceWithinMethodCallParentheses);
             return EndNode(constructorInitializer);
