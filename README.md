@@ -47,13 +47,18 @@ On Windows
 On MacOS X
 ==========
 
-* Install Mono 3.0 and Xamarin Studio 4.1, (http://www.mono-project.com/)
+* Install Mono >= 3.0 and Xamarin Studio >= 4.1, (http://www.mono-project.com/)
 * Install MacPorts (http://www.macports.org/)
 * Install cmake and boost 
 
 		sudo port install cmake boost
 	
 * Open the AlterNative.Core.sln with Xamarin Studio and compile
+* Or use command line:
+
+		xbuild AlterNative.Core.sln /t:Clean
+		xbuild AlterNative.Core.sln
+		
 
 On Linux
 ========
@@ -105,9 +110,9 @@ On Linux
 Testing
 -------
 
-	source ./alternative-init.sh
 	cd AlterNative
-	source alternative-init.sh
+	source ./alternative-init.sh
+
 	mcs -debug test.cs
 	alternative test.exe ./output/ CXX ./AlterNative.Core/Lib/
 	cd output
@@ -116,3 +121,12 @@ Testing
 	cmake ..
 	make
 	./test
+
+Support for easy compiling is being added.
+
+	alternative new example
+	alternative make example
+	cd example
+	cd build
+	make
+	./Blank
