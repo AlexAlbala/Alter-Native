@@ -21,7 +21,6 @@
     <DocumentationFile>..\ICSharpCode.NRefactory\bin\$(Configuration)\ICSharpCode.NRefactory.CSharp.xml</DocumentationFile>
     <NoWarn>1591,1587,1570</NoWarn>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
