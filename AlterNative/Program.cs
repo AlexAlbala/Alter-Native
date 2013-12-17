@@ -108,7 +108,9 @@ namespace AlterNative
             }
             else if (args[0].ToLower() == "make")
             {
-                Commands.RunCMake(new DirectoryInfo(outputDir));
+                DirectoryInfo buildDir = Commands.RunCMake(new DirectoryInfo(outputDir));
+                Commands.Compile(buildDir);
+
                 Console.ForegroundColor = ConsoleColor.Green;
                 Utils.WriteToConsole("alternative make done");
                 Console.ResetColor();

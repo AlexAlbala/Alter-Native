@@ -87,35 +87,36 @@ namespace Microsoft.SPOT.Hardware
 
         public SPI(Configuration config)
         {
-            //HardwareProvider hwProvider = HardwareProvider.HwProvider;
+            HardwareProvider hwProvider = HardwareProvider.HwProvider;
 
-            //if (hwProvider != null)
-            //{
-            //    Cpu.Pin msk;
-            //    Cpu.Pin miso;
-            //    Cpu.Pin mosi;
+            if (hwProvider != null)
+            {
+                Cpu.Pin msk;
+                Cpu.Pin miso;
+                Cpu.Pin mosi;
 
-            //    hwProvider.GetSpiPins(config.SPI_mod, out msk, out miso, out mosi);
+                hwProvider.GetSpiPins(config.SPI_mod, out msk, out miso, out mosi);
 
-            //    if (msk != Cpu.Pin.GPIO_NONE)
-            //    {
-            //        Port.ReservePin(msk, true);
-            //    }
+                if (msk != Cpu.Pin.GPIO_NONE)
+                {
+                    Port.ReservePin(msk, true);
+                }
 
-            //    if (miso != Cpu.Pin.GPIO_NONE)
-            //    {
-            //        Port.ReservePin(miso, true);
-            //    }
+                if (miso != Cpu.Pin.GPIO_NONE)
+                {
+                    Port.ReservePin(miso, true);
+                }
 
-            //    if (mosi != Cpu.Pin.GPIO_NONE)
-            //    {
-            //        Port.ReservePin(mosi, true);
-            //    }
-            //}
+                if (mosi != Cpu.Pin.GPIO_NONE)
+                {
+                    Port.ReservePin(mosi, true);
+                }
+            }
 
             //if (config.ChipSelect_Port != Cpu.Pin.GPIO_NONE)
             //{
-            //    m_cs = new OutputPort(config.ChipSelect_Port, !config.ChipSelect_ActiveState);
+            //    //m_cs = new OutputPort(config.ChipSelect_Port, !config.ChipSelect_ActiveState);
+            //    Port.ReservePin(config.ChipSelect_Port, true);
             //}
 
             if (config.ChipSelect_Port != Cpu.Pin.GPIO_NONE)
@@ -137,43 +138,43 @@ namespace Microsoft.SPOT.Hardware
         {
             if (!m_disposed)
             {
-            //    try
-            //    {
-            //        HardwareProvider hwProvider = HardwareProvider.HwProvider;
+                try
+                {
+                    HardwareProvider hwProvider = HardwareProvider.HwProvider;
 
-            //        if (hwProvider != null)
-            //        {
-            //            Cpu.Pin msk;
-            //            Cpu.Pin miso;
-            //            Cpu.Pin mosi;
+                    if (hwProvider != null)
+                    {
+                        Cpu.Pin msk;
+                        Cpu.Pin miso;
+                        Cpu.Pin mosi;
 
-            //            hwProvider.GetSpiPins(m_config.SPI_mod, out msk, out miso, out mosi);
+                        hwProvider.GetSpiPins(m_config.SPI_mod, out msk, out miso, out mosi);
 
-            //            if (msk != Cpu.Pin.GPIO_NONE)
-            //            {
-            //                Port.ReservePin(msk, false);
-            //            }
+                        if (msk != Cpu.Pin.GPIO_NONE)
+                        {
+                            Port.ReservePin(msk, false);
+                        }
 
-            //            if (miso != Cpu.Pin.GPIO_NONE)
-            //            {
-            //                Port.ReservePin(miso, false);
-            //            }
+                        if (miso != Cpu.Pin.GPIO_NONE)
+                        {
+                            Port.ReservePin(miso, false);
+                        }
 
-            //            if (mosi != Cpu.Pin.GPIO_NONE)
-            //            {
-            //                Port.ReservePin(mosi, false);
-            //            }
-            //        }
+                        if (mosi != Cpu.Pin.GPIO_NONE)
+                        {
+                            Port.ReservePin(mosi, false);
+                        }
+                    }
 
-            //        if (m_config.ChipSelect_Port != Cpu.Pin.GPIO_NONE)
-            //        {
-            //            m_cs.Dispose();
-            //        }
-            //    }
-            //    finally
-            //    {
-            //        m_disposed = true;
-            //    }
+                    if (m_config.ChipSelect_Port != Cpu.Pin.GPIO_NONE)
+                    {
+                        m_cs.Dispose();
+                    }
+                }
+                finally
+                {
+                    m_disposed = true;
+                }
             }
         }
 

@@ -21,7 +21,7 @@ namespace RegressionTest
              string lib_var_tmp = Environment.GetEnvironmentVariable("ALTERNATIVE_CPP_LIBRARY_PATH");
              
             if (alt_var_tmp != null)
-                 alternativePath = alt_var_tmp;
+                 alternativePath = alt_var_tmp + @"/AlterNative.exe";
              else
                  WarningMessage("Variable <ALTERNATIVE_BIN_PATH> should be setted. Default is: " + alternativePath);
 

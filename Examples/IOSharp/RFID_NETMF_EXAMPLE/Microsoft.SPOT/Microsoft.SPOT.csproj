@@ -34,7 +34,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin/Debug</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -62,8 +62,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\HardwareProvidedNotRegistered.cs" />
     <Compile Include="Hardware\Cpu.cs" />
     <Compile Include="Hardware\Debug.cs" />
+    <Compile Include="Hardware\HardwareProvider.cs" />
     <Compile Include="Hardware\Ports.cs" />
     <Compile Include="Manager\GPIOManager.cs" />
     <Compile Include="Hardware\IOPorts.cs" />

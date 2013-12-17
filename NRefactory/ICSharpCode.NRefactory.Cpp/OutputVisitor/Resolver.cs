@@ -28,6 +28,8 @@ namespace ICSharpCode.NRefactory.Cpp
             libraryMap.Add("Delegate", "\"System/Delegate.h\"");
             libraryMap.Add("Event", "\"System/events.h\"");
             libraryMap.Add("DateTime", "\"System/DateTime.h\"");
+            libraryMap.Add("DateTimeKind", "\"System/DateTimeKind.h\"");
+            libraryMap.Add("TimeSpan", "\"System/TimeSpan.h\"");
             //exceptions:
             libraryMap.Add("Exception", "\"System/Exception.h\"");
             //                          SystemExceptions
@@ -43,7 +45,7 @@ namespace ICSharpCode.NRefactory.Cpp
             //*************************************************************//
 
             //********************** SYSTEM THREADING:
-            libraryMap.Add("Thread", "\"System/Threading/Thread.h\"");            
+            libraryMap.Add("Thread", "\"System/Threading/Thread.h\"");
             libraryMap.Add("ThreadStart", "\"System/Threading/Thread.h\"");
             libraryMap.Add("ParameterizedThreadStart", "\"System/Threading/Thread.h\"");
             //*************************************************************//
@@ -74,7 +76,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
             Dictionary<string, ParameterDeclaration[]> delegatesInLibrary = new Dictionary<string, ParameterDeclaration[]>();
             delegatesInLibrary.Add("ThreadStart", new ParameterDeclaration[0]);
-            delegatesInLibrary.Add("ParameterizedThreadStart", new ParameterDeclaration[] { new VariadicParameterDeclaration() });            
+            delegatesInLibrary.Add("ParameterizedThreadStart", new ParameterDeclaration[] { new VariadicParameterDeclaration() });
 
             Dictionary<string, string> propertiesInLibrary = new Dictionary<string, string>();
             propertiesInLibrary.Add("Now", "DateTime");
@@ -367,7 +369,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     if (!Cache.GetTemplateTypes().Contains(kvp.Value) && !tmp.Contains(GetCppName(kvp.Value)) && !Cache.GetRemovedIncludes().Contains(kvp.Value))
                         tmp.Add(GetCppName(kvp.Value));
                 }
-            }          
+            }
             return tmp.ToArray();
         }
 
@@ -876,7 +878,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
                             string ret = Resolver.GetTypeName(fdecl.ReturnType);
                             AstType _type = Resolver.GetType(identifierExpression.Identifier, currentType, null, null);
-                            if (_type.IsBasicType)
+                            if (_type.IsBasicType || IsEnumType(GetTypeName(_type)))
                                 return false;
                             string id = Resolver.GetTypeName(_type);
                             if (ret != id)
@@ -890,7 +892,7 @@ namespace ICSharpCode.NRefactory.Cpp
                             var vdecl = (CSharp.VariableDeclarationStatement)GetParentOf(node, typeof(CSharp.VariableDeclarationStatement));
                             string ret = Resolver.GetTypeName(vdecl.Type);
                             AstType _type = Resolver.GetType(identifierExpression.Identifier, null, currentMethod, identifierExpression.Identifier);
-                            if (_type.IsBasicType)
+                            if (_type.IsBasicType || IsEnumType(GetTypeName(_type)))
                                 return false;
                             string id = Resolver.GetTypeName(_type);
                             if (ret != id)
@@ -904,7 +906,7 @@ namespace ICSharpCode.NRefactory.Cpp
                             var pdecl = (CSharp.ParameterDeclaration)GetParentOf(node, typeof(CSharp.ParameterDeclaration));
                             string ret = Resolver.GetTypeName(pdecl.Type);
                             AstType _type = Resolver.GetType(identifierExpression.Identifier, null, currentMethod, pdecl.Name);
-                            if (_type.IsBasicType)
+                            if (_type.IsBasicType || IsEnumType(GetTypeName(_type)))
                                 return false;
                             string id = Resolver.GetTypeName(_type);
                             if (ret != id)
@@ -1366,14 +1368,16 @@ namespace ICSharpCode.NRefactory.Cpp
                 {
                     return (properties[memberReferenceExpression.MemberName].Contains(currentTypeName));
                 }
-                else
+                else if (memberReferenceExpression.Target is IdentifierExpression)
                 {
-                    if (memberReferenceExpression.Target is IdentifierExpression)
-                    {
-                        IdentifierExpression tmp = memberReferenceExpression.Target as IdentifierExpression;
-                        ICSharpCode.Decompiler.Ast.TypeInformation ann = (ICSharpCode.Decompiler.Ast.TypeInformation)tmp.Annotation(typeof(ICSharpCode.Decompiler.Ast.TypeInformation));
-                        return (properties[memberReferenceExpression.MemberName].Contains(ann.InferredType.Name));
-                    }
+                    IdentifierExpression tmp = memberReferenceExpression.Target as IdentifierExpression;
+                    ICSharpCode.Decompiler.Ast.TypeInformation ann = (ICSharpCode.Decompiler.Ast.TypeInformation)tmp.Annotation(typeof(ICSharpCode.Decompiler.Ast.TypeInformation));
+                    return (properties[memberReferenceExpression.MemberName].Contains(ann.InferredType.Name));
+                }
+                else if (memberReferenceExpression.Target is TypeReferenceExpression)
+                {
+                    TypeReferenceExpression tmp = memberReferenceExpression.Target as TypeReferenceExpression;
+                    return properties[memberReferenceExpression.MemberName].Contains(GetTypeName(tmp.Type));
                 }
             }
 
@@ -1563,6 +1567,52 @@ namespace ICSharpCode.NRefactory.Cpp
                 type = "";
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Returns if a type is Enum type
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns>True if the type is enum</returns>
+        public static bool IsEnumType(String type)
+        {
+            if (type.Contains(".") || type.Contains("::"))
+            {
+                String[] elements = type.Contains(".") ? type.Split('.') : type.Split(':');
+
+                String member = elements[0];
+
+                foreach (KeyValuePair<string, TypeReference> kvp in Cache.GetSymbols())
+                {
+                    if (member.Equals(kvp.Key))
+                    {
+                        TypeDefinition resolved = kvp.Value.Resolve();
+                        if (resolved != null)
+                        {
+                            foreach (TypeDefinition t in resolved.NestedTypes)
+                            {
+                                for (int i = 0; i < elements.Length - 1; i++)//TODO: This loop is for if there are more levels of nested types, but actually is only taken into account one level
+                                {
+                                    if (t.Name.Equals(elements[i + 1]))
+                                        return t.IsEnum;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (KeyValuePair<string, TypeReference> kvp in Cache.GetSymbols())
+                {
+                    if (type.Equals(kvp.Key))
+                    {
+                        TypeDefinition t = kvp.Value.Resolve();
+                        return t.IsEnum;
+                    }
+                }
+            }
+            return false;
         }
 
         /// <summary>

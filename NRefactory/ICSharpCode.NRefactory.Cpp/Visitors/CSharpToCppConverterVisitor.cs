@@ -207,15 +207,18 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitBaseReferenceExpression(CSharp.BaseReferenceExpression baseReferenceExpression, object data)
-        {            
-            return EndNode(baseReferenceExpression, new BaseReferenceExpression());
+        {
+            //return EndNode(baseReferenceExpression, new BaseReferenceExpression());
+
+            AstType type = (AstType)currentType.BaseTypes.ElementAt(0).AcceptVisitor(this, data);
+            return EndNode(baseReferenceExpression, new TypeReferenceExpression(type));
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitBinaryOperatorExpression(CSharp.BinaryOperatorExpression binaryOperatorExpression, object data)
         {
             var left = (Expression)binaryOperatorExpression.Left.AcceptVisitor(this, data);
             var op = BinaryOperatorType.Any;
-            var right = (Expression)binaryOperatorExpression.Right.AcceptVisitor(this, data);            
+            var right = (Expression)binaryOperatorExpression.Right.AcceptVisitor(this, data);
 
             switch (binaryOperatorExpression.Operator)
             {
@@ -817,11 +820,11 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitAttribute(CSharp.Attribute attribute, object data)
-        {            
+        {
             var attr = new Cpp.Ast.Attribute();
             //AttributeTarget target;
             //attr.A = target;
-            attr.Type = (AstType)attribute.Type.AcceptVisitor(this, data);            
+            attr.Type = (AstType)attribute.Type.AcceptVisitor(this, data);
             ConvertNodes(attribute.Arguments, attr.Arguments);
 
             //Will be removed !!
@@ -934,6 +937,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 if (n is TypeDeclaration)
                 {
                     type.HeaderNodes.Add(new NestedTypeDeclaration((TypeDeclaration)n.Clone()));
+
+                    //RESET CURRENT TYPE DECLARATION
+                    currentType = typeDeclaration;
                 }
                 else
                 {
@@ -1796,7 +1802,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             }
             else //THIS
             {
-                
+
             }
 
             ConvertNodes(constructorInitializer.Arguments, cinit.Arguments);
@@ -1891,7 +1897,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                             new AssignmentExpression(
                                 new IdentifierExpression(vi.Name), vi.Initializer.Clone()));
 
-                        Cache.AddConstructorStatement(st);                       
+                        Cache.AddConstructorStatement(st);
                     }
 
                     //Check if the field is of a delegate type in order to append it to the delegates list
@@ -1926,7 +1932,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitMethodDeclaration(CSharp.MethodDeclaration methodDeclaration, object data)
         {
             Cache.ClearParametersAndFieldsDeclarations();
-            currentMethod = methodDeclaration.Name;            
+            currentMethod = methodDeclaration.Name;
 
             if (isInterface || methodDeclaration.HasModifier(CSharp.Modifiers.Abstract))
             {
@@ -1953,7 +1959,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     InvocationExpression ic = new InvocationExpression(new IdentifierExpression("TypeDecl"), new IdentifierExpression(Resolver.GetTypeName(res.ReturnType)));
                     res.ReturnType = new ExpressionType(ic);
                 }
-                
+
 
                 //END
                 return EndNode(methodDeclaration, res);
@@ -1962,7 +1968,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
             var result = new MethodDeclaration();
 
-            ConvertNodes(methodDeclaration.Attributes.Where(section => section.AttributeTarget != "return"), result.Attributes);            
+            ConvertNodes(methodDeclaration.Attributes.Where(section => section.AttributeTarget != "return"), result.Attributes);
 
             ConvertNodes(methodDeclaration.ModifierTokens, result.ModifierTokens);
             result.Name = methodDeclaration.Name;
@@ -1970,7 +1976,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             ConvertNodes(methodDeclaration.Parameters, result.Parameters);
             ConvertNodes(methodDeclaration.TypeParameters, result.TypeParameters);
 
-            result.ReturnType = (AstType)methodDeclaration.ReturnType.AcceptVisitor(this, data);            
+            result.ReturnType = (AstType)methodDeclaration.ReturnType.AcceptVisitor(this, data);
             result.Body = (BlockStatement)methodDeclaration.Body.AcceptVisitor(this, data);
 
             //Put mutex lockers if the method is marked as Synchronized
@@ -1983,13 +1989,13 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
                 result.Body.Statements.InsertBefore(first, start_lock);
                 result.Body.Statements.Add(end_lock);
-                
+
                 //add an_init_lock(); declaration to the header file in order to set up the boost::mutex
                 HeaderMethodDeclaration hmd = new HeaderMethodDeclaration();
                 hmd.ModifierTokens.Add(new CppModifierToken(TextLocation.Empty, Modifiers.Private));
-                hmd.Name="an_init_sync";
+                hmd.Name = "an_init_sync";
                 Cache.AddExtraHeaderNode(hmd);
-                
+
             }
 
             if (Resolver.IsDLLImportMethod(methodDeclaration))
@@ -2004,7 +2010,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 }
 
                 String entryPoint = Resolver.GetEntryPointFromDllImport(methodDeclaration.Attributes);
-                e.EntryPoint = entryPoint == String.Empty ?  methodDeclaration.Name : entryPoint;
+                e.EntryPoint = entryPoint == String.Empty ? methodDeclaration.Name : entryPoint;
 
                 String library = Resolver.GetLibraryFromDllImport(methodDeclaration.Attributes);
                 e.Library = library == String.Empty ? "LIBRARYERROR" : library;
@@ -2012,7 +2018,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 Cache.AddDllImport(e.Library, e);
 
                 List<Expression> arguments = new List<Expression>();
-                foreach(ParameterDeclaration p in result.Parameters)
+                foreach (ParameterDeclaration p in result.Parameters)
                 {
                     arguments.Add(new IdentifierExpression(p.Name));
                 }
@@ -2022,7 +2028,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 result.Body.Add(new ReturnStatement(
                     new GlobalNamespaceReferenceExpression(
                     new InvocationExpression(
-                        new IdentifierExpression(e.EntryPoint), arguments))));                
+                        new IdentifierExpression(e.EntryPoint), arguments))));
             }
 
             result.PrivateImplementationType = (AstType)methodDeclaration.PrivateImplementationType.AcceptVisitor(this, data);
@@ -2170,7 +2176,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
                 //For protection
                 if (currentType == null)
-                    return EndNode(simpleType, type);
+                    return EndNode(simpleType, new PtrType(type));
 
                 //If the type is in the Visual Tree, the parent is null. 
                 //If its parent is a TypeReferenceExpression it is like Console::ReadLine          
@@ -2182,6 +2188,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 //The type is like MyTemplate<MyType> 
                 //Maybe we should not check the TypeParameter ?
                 if (simpleType.Role == CSharp.Roles.TypeArgument || simpleType.Role == CSharp.Roles.TypeParameter)
+                    return EndNode(simpleType, type);
+
+                if (Resolver.IsEnumType(Resolver.GetTypeName(simpleType)))
                     return EndNode(simpleType, type);
 
                 var ptrType = new PtrType(type);
@@ -2203,13 +2212,18 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             //    target = (AstType)memberType.Target.AcceptVisitor(this, data);
 
             target = (AstType)memberType.Target.AcceptVisitor(this, data);
+
             bool isPtr = target is PtrType;
+
             if (isPtr)
                 target = (AstType)(target as PtrType).Target.Clone();
 
-
             var type = new QualifiedType(target, new Identifier(memberType.MemberName, TextLocation.Empty));
             ConvertNodes(memberType.TypeArguments, type.TypeArguments);
+
+            if (Resolver.IsEnumType(memberType.ToString()))
+                return EndNode(memberType, type);
+
             if (isPtr)
                 return EndNode(memberType, new PtrType(type));
 

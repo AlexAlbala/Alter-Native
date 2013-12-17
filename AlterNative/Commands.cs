@@ -11,7 +11,7 @@ namespace AlterNative
 {
     class Commands
     {
-        public static void RunCMake(DirectoryInfo di)
+        public static DirectoryInfo RunCMake(DirectoryInfo di)
         {
             di.CreateSubdirectory("build");
             Environment.CurrentDirectory = di.FullName + "build";
@@ -21,9 +21,62 @@ namespace AlterNative
 #else
             p.StartInfo = new ProcessStartInfo("cmake", "..");
 #endif
+            p.StartInfo.CreateNoWindow = true;
+            p.StartInfo.UseShellExecute = false;
+
+            p.StartInfo.RedirectStandardOutput = true;
+            p.OutputDataReceived += (sender, args) => Utils.WriteToConsole(args.Data);
+
             p.Start();
+            p.BeginOutputReadLine();
             p.WaitForExit();
-            return;
+
+            DirectoryInfo buildDir = new DirectoryInfo(di.FullName + "build");
+            return buildDir;
+        }
+
+        public static void Compile(DirectoryInfo di)
+        {
+            Environment.CurrentDirectory = di.FullName;
+#if CORE
+            Process make = new Process();
+            make.StartInfo = new ProcessStartInfo("make");
+            make.StartInfo.UseShellExecute = false;
+            make.StartInfo.CreateNoWindow = true;    
+            make.StartInfo.RedirectStandardOutput = true;
+            make.OutputDataReceived += (sender, args) => Utils.WriteToConsole(args.Data);
+            make.Start();
+            make.BeginOutputReadLine();
+            make.WaitForExit();
+#else
+            string msbuildPath = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
+            msbuildPath += @"msbuild.exe";
+
+            //Compile the code
+            FileInfo[] finfos = di.GetFiles("*.sln");
+
+            if (finfos.Count() > 0)
+            {
+                string targetFile = finfos[0].FullName;
+                string msbuildArgs = targetFile + " /p:PlatformToolset=v120_CTP_Nov2012";
+
+                //Run msbuild
+                Process msbuild = new Process();
+                msbuild.StartInfo = new ProcessStartInfo(msbuildPath, msbuildArgs);
+                msbuild.StartInfo.UseShellExecute = false;
+                msbuild.StartInfo.CreateNoWindow = true;
+                msbuild.StartInfo.RedirectStandardOutput = true;
+                msbuild.OutputDataReceived += (sender, args) => Utils.WriteToConsole(args.Data);
+                msbuild.Start();
+                msbuild.BeginOutputReadLine();
+                msbuild.WaitForExit();
+            }
+            else
+            {
+                Utils.WriteToConsole("No .sln file found in " + di.FullName);
+            }
+#endif
+
         }
 
         public static AssemblyDefinition NewTemplate(DirectoryInfo output)
@@ -43,7 +96,7 @@ namespace AlterNative
 #else
                 Utils.WriteToConsole("Trying to get templates from: " + @"../../../Tools/Templates/Blank/Blank.exe");
                 return LoadAssembly(@"../../../Tools/Templates/Blank/Blank.exe");
-                
+
 #endif
             }
         }

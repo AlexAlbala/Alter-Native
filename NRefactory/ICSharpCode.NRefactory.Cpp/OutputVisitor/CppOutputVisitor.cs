@@ -1225,10 +1225,10 @@ namespace ICSharpCode.NRefactory.Cpp
         }
 
         public void WriteNoClassNode(AstNode node)
-        {            
+        {
             if (node is DelegateDeclaration)
             {
-                DelegateDeclaration delegateDeclaration = node as DelegateDeclaration;                
+                DelegateDeclaration delegateDeclaration = node as DelegateDeclaration;
                 formatter.ChangeFile(delegateDeclaration.Name + ".h");
                 FileWritterManager.AddSourceFile(delegateDeclaration.Name + ".h");
 
@@ -1243,7 +1243,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
                 UsingNamespaces();
                 WriteNamespace();
-                
+
                 HeaderDelegateDeclaration hdd = new HeaderDelegateDeclaration();
                 Resolver.GetHeaderNode(delegateDeclaration, hdd);
 
@@ -1822,19 +1822,12 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteAttributes(typeDeclaration.Attributes);
             WriteAccesorModifier(nestedTypeDeclaration.ModifierTokens);
 
-            BraceStyle braceStyle2 = WriteClassType(typeDeclaration.ClassType);
+            BraceStyle braceStyle = WriteClassType(typeDeclaration.ClassType);
             WriteIdentifier(typeDeclaration.Name);
+            
+            WriteTypeBaseTypes(typeDeclaration);
 
-            Space();
-            WriteToken(":", TypeDeclaration.ColonRole);
-            Space();
-
-            //ÑAPA se añade virtual modifier y se quita
-            var modif2 = new CppModifierToken(TextLocation.Empty, Modifiers.Virtual);
-            typeDeclaration.ModifierTokens.Add(modif2);
-            WriteCommaSeparatedListWithModifiers(typeDeclaration.BaseTypes, typeDeclaration.ModifierTokens);
-            typeDeclaration.ModifierTokens.Remove(modif2);
-            OpenBrace(braceStyle2);
+            OpenBrace(braceStyle);
 
             if (typeDeclaration.ClassType == ClassType.Enum)
             {
@@ -1869,10 +1862,37 @@ namespace ICSharpCode.NRefactory.Cpp
                     member.AcceptVisitor(this, data);
                 }
             }
-            CloseBrace(braceStyle2);//END OF TYPE
+            CloseBrace(braceStyle);//END OF TYPE
             Semicolon();
 
             return EndNode(nestedTypeDeclaration);
+        }
+
+        private void WriteTypeBaseTypes(TypeDeclaration typeDeclaration)
+        {
+            if (typeDeclaration.ClassType == ClassType.Enum)
+            {
+                //Remove the inheritance from object !
+                typeDeclaration.BaseTypes.Remove(typeDeclaration.BaseTypes.ElementAt(typeDeclaration.BaseTypes.Count - 1));
+                if (typeDeclaration.BaseTypes.Any())
+                {
+                    Space();
+                    WriteToken(":", TypeDeclaration.ColonRole);
+                    Space();
+                    WriteCommaSeparatedList(typeDeclaration.BaseTypes);
+                }
+            }
+            else
+            {
+                Space();
+                WriteToken(":", TypeDeclaration.ColonRole);
+                Space();
+
+                var modif2 = new CppModifierToken(TextLocation.Empty, Modifiers.Virtual);
+                typeDeclaration.ModifierTokens.Add(modif2);
+                WriteCommaSeparatedListWithModifiers(typeDeclaration.BaseTypes, typeDeclaration.ModifierTokens);
+                typeDeclaration.ModifierTokens.Remove(modif2);
+            }
         }
 
         private void TypeDeclarationHeader(TypeDeclaration typeDeclaration, object data)
@@ -1898,15 +1918,8 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteIdentifier(typeDeclaration.Name);
             WriteTypeParameters(typeDeclaration.TypeParameters);
 
-            Space();
-            WriteToken(":", TypeDeclaration.ColonRole);
-            Space();
-            //ÑAPA se añade virtual modifier y se quita
-            var modif = new CppModifierToken(TextLocation.Empty, Modifiers.Virtual);
-            typeDeclaration.ModifierTokens.Add(modif);
-            WriteCommaSeparatedListWithModifiers(typeDeclaration.BaseTypes, typeDeclaration.ModifierTokens);
-            typeDeclaration.ModifierTokens.Remove(modif);
-
+            WriteTypeBaseTypes(typeDeclaration);
+           
             OpenBrace(braceStyle);
 
             if (typeDeclaration.ClassType == ClassType.Enum)
@@ -2002,15 +2015,7 @@ namespace ICSharpCode.NRefactory.Cpp
             BraceStyle braceStyle2 = WriteClassType(typeDeclaration.ClassType);
             WriteIdentifier(typeDeclaration.Name);
 
-            Space();
-            WriteToken(":", TypeDeclaration.ColonRole);
-            Space();
-
-            //ÑAPA se añade virtual modifier y se quita
-            var modif2 = new CppModifierToken(TextLocation.Empty, Modifiers.Virtual);
-            typeDeclaration.ModifierTokens.Add(modif2);
-            WriteCommaSeparatedListWithModifiers(typeDeclaration.BaseTypes, typeDeclaration.ModifierTokens);
-            typeDeclaration.ModifierTokens.Remove(modif2);
+            WriteTypeBaseTypes(typeDeclaration);
             OpenBrace(braceStyle2);
 
             if (typeDeclaration.ClassType == ClassType.Enum)
@@ -2102,6 +2107,7 @@ namespace ICSharpCode.NRefactory.Cpp
             {
                 case ClassType.Enum:
                     WriteKeyword("enum");
+                    WriteKeyword("class");
                     braceStyle = policy.EnumBraceStyle;
                     break;
                 case ClassType.Struct:
@@ -2220,14 +2226,8 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             StartNode(constructorInitializer);
             WriteToken(":", ConstructorInitializer.Roles.Colon);
-            Space();
-
-            //Call the constructor: BaseType::BaseType(args...)
+            Space();            
             constructorInitializer.Base.AcceptVisitor(this, data);
-            WriteToken("::", ConstructorInitializer.Roles.DoubleColon);
-            constructorInitializer.Base.AcceptVisitor(this, data);
-            //--//
-
             Space(policy.SpaceBeforeMethodCallParentheses);
             WriteCommaSeparatedListInParenthesis(constructorInitializer.Arguments, policy.SpaceWithinMethodCallParentheses);
             return EndNode(constructorInitializer);
@@ -4059,7 +4059,7 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             StartNode(headerDelegateDeclaration);
 
-            WriteAttributes(headerDelegateDeclaration.Attributes);            
+            WriteAttributes(headerDelegateDeclaration.Attributes);
             WriteAccesorModifier(headerDelegateDeclaration.ModifierTokens);
 
             formatter.Indent();
@@ -4075,8 +4075,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
             foreach (ParameterDeclaration p in headerDelegateDeclaration.Parameters)
             {
-                formatter.WriteToken(Resolver.GetTypeName(p.Type));
-
+                p.AcceptVisitor(this, data);
 
                 if (i < count - 1)
                 {

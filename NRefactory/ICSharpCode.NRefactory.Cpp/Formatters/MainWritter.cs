@@ -20,11 +20,13 @@ namespace ICSharpCode.NRefactory.Cpp
             writer.WriteLine();
             writer.WriteLine("int main(int argc, char *argv[])");
             writer.WriteLine("{");
+            writer.WriteLine("\tGC::Init();");
             writer.WriteLine("\tString *args = new String[argc];");
             writer.WriteLine("\tfor(int i = 0; i < argc; i++)");
             writer.WriteLine("\t\targs[i] = argv[i];");
             writer.WriteLine();
             writer.WriteLine("\t" + entryType + "::Main(" + (inputArgs ? "&args" : "") + ");");
+            writer.WriteLine("\tGC::Collect();");
             writer.Write("}");
 
             writer.Flush();
