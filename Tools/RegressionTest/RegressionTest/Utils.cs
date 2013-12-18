@@ -10,7 +10,7 @@ namespace RegressionTest
     {
         private static List<string> ignoreFolders;
         public static string testPath = Environment.CurrentDirectory;
-        public static string alternativePath = Environment.CurrentDirectory + "/../AlterNative/bin/Debug/AlterNative.exe";
+        public static string alternativePath = Environment.CurrentDirectory + "/../AlterNative.Core/AlterNative.Core/bin/Debug/AlterNative.Core.exe";
         public static string alternativeDirectory = Environment.CurrentDirectory + "/../AlterNative/bin/Debug";
         public static string cxxLibraryPath = testPath + "/../Lib/src";
 
@@ -29,7 +29,13 @@ namespace RegressionTest
                 cxxLibraryPath = lib_var_tmp;
             else
                 WarningMessage("Variable <ALTERNATIVE_CPP_LIBRARY_PATH> should be setted. Default is: " + cxxLibraryPath);
-                
+               
+
+	    Console.WriteLine("testPath="+testPath);
+	    Console.WriteLine("alternativePath="+alternativePath);
+	    Console.WriteLine("alternativeDirectory="+alternativeDirectory);
+	    Console.WriteLine("cxxLibraryPath="+cxxLibraryPath);
+	    
         }
 
         public static ITest CreateTest(Platform platform)

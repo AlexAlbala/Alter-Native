@@ -11,7 +11,7 @@ namespace RegressionTest
         public void Alternative(DirectoryInfo di, TestResult res)
         {
             DirectoryInfo outd = new DirectoryInfo(di.FullName + "/Output");
-            Console.WriteLine("Cleanning directory: " + outd.Name);
+            Console.WriteLine("Cleaning directory: " + outd.Name);
             Utils.CleanDirectory(outd);
             Console.WriteLine("Running alternative...");
 

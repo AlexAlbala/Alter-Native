@@ -160,7 +160,7 @@ namespace RegressionTest
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("ERROR IN ALTERNATIVE" + e.Message);
+                    Console.WriteLine("ERROR IN ALTERNATIVE: " + e.Message);
                     res.alternative = 1;
                 }
 
@@ -171,7 +171,7 @@ namespace RegressionTest
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("ERROR IN DIFF" + e.Message);
+                    Console.WriteLine("ERROR IN DIFF: " + e.Message);
                     res.diffCode = 1;
                 }
                 if (Config.fast)
@@ -188,7 +188,7 @@ namespace RegressionTest
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("ERROR IN CMAKE" + e.Message);
+                        Console.WriteLine("ERROR IN CMAKE: " + e.Message);
                         res.cmakeCode = 1;
                     }
                 }
@@ -205,7 +205,7 @@ namespace RegressionTest
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine("ERROR COMPILING" + e.Message);
+                            Console.WriteLine("ERROR COMPILING: " + e.Message);
                             res.msbuildCode = 1;
                         }
                     }
@@ -221,7 +221,7 @@ namespace RegressionTest
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("ERROR COMPARING OUTPUTS" + e.Message);
+                        Console.WriteLine("ERROR COMPARING OUTPUTS: " + e.Message);
                         res.output = 1;
                     }
 
@@ -239,7 +239,7 @@ namespace RegressionTest
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("ERROR OVERWRITING FILES OR COUNTING LINES" + e.Message);
+                    Console.WriteLine("ERROR OVERWRITING FILES OR COUNTING LINES: " + e.Message);
                 }
             }
 
