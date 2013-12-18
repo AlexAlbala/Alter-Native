@@ -13,7 +13,7 @@ namespace ICSharpCode.NRefactory.Cpp
         //OUTPUTVISITOR
         private static List<CSharp.ArraySpecifier> arraySpecifiers = new List<CSharp.ArraySpecifier>();
         private static Dictionary<string, List<string>> properties = new Dictionary<string, List<string>>();
-        private static Dictionary<string, Ast.AstType> auxVariables = new Dictionary<string, Ast.AstType>();
+        private static Dictionary<string, FieldDeclaration> auxVariables = new Dictionary<string, FieldDeclaration>();
         private static List<Ast.Statement> addedConstructorStatements = new List<Ast.Statement>();
         private static Dictionary<string, List<FieldDeclaration>> fields = new Dictionary<string, List<FieldDeclaration>>();
         private static Dictionary<string, List<VariableDeclarationStatement>> variablesMethod = new Dictionary<string, List<VariableDeclarationStatement>>();
@@ -123,7 +123,7 @@ namespace ICSharpCode.NRefactory.Cpp
             extraHeadernodes.Clear();
         }
 
-        public static void AddAuxVariable(Ast.AstType type, string identifier)
+        public static void AddAuxVariable(FieldDeclaration type, string identifier)
         {
             if (!auxVariables.ContainsKey(identifier))
                 auxVariables.Add(identifier, type);
@@ -181,7 +181,7 @@ namespace ICSharpCode.NRefactory.Cpp
             return delegatesIdentifiers;
         }
 
-        public static Dictionary<string, Ast.AstType> GetAuxVariables()
+        public static Dictionary<string, FieldDeclaration> GetAuxVariables()
         {
             return auxVariables;
         }

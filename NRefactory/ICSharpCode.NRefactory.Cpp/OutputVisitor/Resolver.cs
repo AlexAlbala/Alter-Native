@@ -1742,5 +1742,31 @@ namespace ICSharpCode.NRefactory.Cpp
             return String.Empty;
         }
 
+        public static List<AstType> ExtractAllTypesFrom(AstNodeCollection<Expression> elist)
+        {
+            List<AstType> result = new List<AstType>();
+
+            foreach (Expression e in elist)
+            {
+                result.AddRange(ExtractAllTypesFrom(e));
+            }
+            return result;
+        }
+
+        public static List<AstType> ExtractAllTypesFrom(Expression e)
+        {
+            List<AstType> result = new List<AstType>();
+            if (e is MemberReferenceExpression)
+            {
+                var arg = e as MemberReferenceExpression;
+                if (arg.Target is TypeReferenceExpression)
+                {
+                    var tref = arg.Target as TypeReferenceExpression;
+                    result.Add(tref.Type);
+                }
+            }
+            return result;
+        }
+
     }
 }

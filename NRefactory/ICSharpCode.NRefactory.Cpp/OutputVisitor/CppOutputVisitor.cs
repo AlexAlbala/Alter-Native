@@ -4075,7 +4075,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
             foreach (ParameterDeclaration p in headerDelegateDeclaration.Parameters)
             {
-                p.AcceptVisitor(this, data);
+                p.Type.AcceptVisitor(this, data);
 
                 if (i < count - 1)
                 {
