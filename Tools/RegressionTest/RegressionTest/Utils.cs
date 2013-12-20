@@ -11,7 +11,7 @@ namespace RegressionTest
         private static List<string> ignoreFolders;
         public static string testPath = Environment.CurrentDirectory;
         public static string alternativePath = Environment.CurrentDirectory + "/../AlterNative.Core/AlterNative.Core/bin/Debug/AlterNative.Core.exe";
-        public static string alternativeDirectory = Environment.CurrentDirectory + "/../AlterNative/bin/Debug";
+        public static string alternativeDirectory = Environment.CurrentDirectory + "/../AlterNative.Core/AlterNative.Core/bin/Debug";
         public static string cxxLibraryPath = testPath + "/../Lib/src";
 
         static Utils()
@@ -20,9 +20,10 @@ namespace RegressionTest
              string alt_var_tmp = Environment.GetEnvironmentVariable("ALTERNATIVE_BIN_PATH");
              string lib_var_tmp = Environment.GetEnvironmentVariable("ALTERNATIVE_CPP_LIBRARY_PATH");
              
-            if (alt_var_tmp != null)
-                 alternativePath = alt_var_tmp + @"/AlterNative.exe";
-             else
+            if (alt_var_tmp != null) {
+		 alternativeDirectory = alt_var_tmp;
+                 alternativePath = alt_var_tmp + @"/AlterNative.Core.exe";
+	    } else
                  WarningMessage("Variable <ALTERNATIVE_BIN_PATH> should be setted. Default is: " + alternativePath);
 
             if (lib_var_tmp != null)

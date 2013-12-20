@@ -82,7 +82,7 @@ namespace RegressionTest
 
         public void Compile(DirectoryInfo di, TestResult res)
         {
-            Console.WriteLine("Building native code...");
+            Console.WriteLine("Building native code [POSIX]...");
             //Compile the code
             string msbuildPath = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
             msbuildPath += @"msbuild.exe";
