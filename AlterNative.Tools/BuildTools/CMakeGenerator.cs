@@ -18,8 +18,7 @@ namespace AlterNative.BuildTools
             sb.AppendLine("CMAKE_MINIMUM_REQUIRED(VERSION 2.8)");
 
             sb.AppendLine("PROJECT(" + projectName + " CXX)");
-
-	    sb.AppendLine("SET(CMAKE_CXX_FLAGS  \"${CMAKE_CXX_FLAGS} -std=c++11\")");
+			sb.AppendLine("SET(CMAKE_CXX_FLAGS  \"${CMAKE_CXX_FLAGS} -std=c++11\")");
 
             sb.AppendLine("SET_PROPERTY(GLOBAL PROPERTY GL_IS_RELEASE " + (release ? "1" : "0") + ")");
 
