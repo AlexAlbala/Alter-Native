@@ -942,7 +942,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 var member = typeDeclaration.Members.ElementAt(i);
                 AstNode n = member.AcceptVisitor(this, data);
                 if (n is TypeDeclaration)
-                {
+                {                    
                     type.HeaderNodes.Add(new NestedTypeDeclaration((TypeDeclaration)n.Clone()));
 
                     //RESET CURRENT TYPE DECLARATION
@@ -1028,9 +1028,10 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             {
                 FieldDeclaration fdecl = kvp.Value;
                 type.AddChild(fdecl, TypeDeclaration.MemberRole);
+                CastExpression ce = new CastExpression((AstType)fdecl.ReturnType.Clone(), new PrimitiveExpression(0));
                 Cache.AddConstructorStatement(new ExpressionStatement(
                     new AssignmentExpression(
-                        new IdentifierExpression(kvp.Key),(Expression)fdecl.Variables.ElementAt(0).Initializer.Clone())));
+                        new IdentifierExpression(kvp.Key), ce)));
                     /*new AssignmentExpression(
                         new IdentifierExpression(kvp.Key), new PrimitiveExpression(0))));*/
 
@@ -1729,14 +1730,13 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                         string varName = propName + "_var";
                         CSharp.BlockStatement blck = new CSharp.BlockStatement();
                         blck.AddChild(new CSharp.ReturnStatement(
-                                new CSharp.MemberReferenceExpression(
-                                    new CSharp.ThisReferenceExpression(), varName)), CSharp.BlockStatement.StatementRole);
+                                new CSharp.IdentifierExpression(varName)), CSharp.BlockStatement.StatementRole);
                         method.Body = blck;
 
                         FieldDeclaration fdecl = new FieldDeclaration();
                         fdecl.ReturnType = (AstType)returnType.AcceptVisitor(this, data).Clone();
-                        CastExpression ce = new CastExpression((AstType)fdecl.ReturnType.Clone(), new PrimitiveExpression(0));
-                        fdecl.AddChild(new VariableInitializer(varName, ce), FieldDeclaration.Roles.Variable);
+                        //CastExpression ce = new CastExpression((AstType)fdecl.ReturnType.Clone(), new PrimitiveExpression(0));
+                        fdecl.AddChild(new VariableInitializer(varName), FieldDeclaration.Roles.Variable);
                         ConvertNodes((accessor.Parent as CSharp.PropertyDeclaration).ModifierTokens, fdecl.ModifierTokens);
                         Cache.AddAuxVariable(fdecl, varName);
                     }
@@ -1753,14 +1753,14 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                         CSharp.BlockStatement blck = new CSharp.BlockStatement();
                         blck.AddChild(new CSharp.ExpressionStatement(
                             new CSharp.AssignmentExpression(
-                                new CSharp.MemberReferenceExpression(
-                                    new CSharp.ThisReferenceExpression(), varName), new CSharp.IdentifierExpression("value"))), CSharp.BlockStatement.StatementRole);
+                                new CSharp.IdentifierExpression(varName),
+                                new CSharp.IdentifierExpression("value"))), CSharp.BlockStatement.StatementRole);
                         method.Body = blck;
 
                         FieldDeclaration fdecl = new FieldDeclaration();
                         fdecl.ReturnType = (AstType)returnType.AcceptVisitor(this, data).Clone();
-                        CastExpression ce = new CastExpression((AstType)fdecl.ReturnType.Clone(), new PrimitiveExpression(0));
-                        fdecl.AddChild(new VariableInitializer(varName, ce), FieldDeclaration.Roles.Variable);
+                        //CastExpression ce = new CastExpression((AstType)fdecl.ReturnType.Clone(), new PrimitiveExpression(0));
+                        fdecl.AddChild(new VariableInitializer(varName), FieldDeclaration.Roles.Variable);
                         ConvertNodes((accessor.Parent as CSharp.PropertyDeclaration).ModifierTokens, fdecl.ModifierTokens);
                         Cache.AddAuxVariable(fdecl, varName);
                     }

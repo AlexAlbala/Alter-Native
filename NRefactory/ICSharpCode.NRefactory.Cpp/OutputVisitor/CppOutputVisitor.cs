@@ -1820,7 +1820,13 @@ namespace ICSharpCode.NRefactory.Cpp
             StartNode(nestedTypeDeclaration);
 
             WriteAttributes(typeDeclaration.Attributes);
-            WriteAccesorModifier(nestedTypeDeclaration.ModifierTokens);
+
+            if (typeDeclaration.HasModifier(Modifiers.Private)) //Change modifier from private to public for nested classes            
+                typeDeclaration.ModifierTokens.Remove(typeDeclaration.ModifierTokens.First((x) => x.Modifier == Modifiers.Private));            
+
+            typeDeclaration.ModifierTokens.Add(new CppModifierToken(TextLocation.Empty, Modifiers.Public));
+
+            WriteAccesorModifier(typeDeclaration.ModifierTokens);
 
             BraceStyle braceStyle = WriteClassType(typeDeclaration.ClassType);
             WriteIdentifier(typeDeclaration.Name);
