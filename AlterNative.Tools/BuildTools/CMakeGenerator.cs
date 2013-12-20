@@ -16,13 +16,10 @@ namespace AlterNative.BuildTools
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("CMAKE_MINIMUM_REQUIRED(VERSION 2.8)");
-            sb.AppendLine("SET(CMAKE_CXX_FLAGS  \"${CMAKE_CXX_FLAGS} -std=c++11\")");
-
-            /*FileInfo v120Cmake = new FileInfo(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\..\..\..\Tools\Code\CMAKE-vs120");
-            StreamReader srv120 = new StreamReader(v120Cmake.FullName);
-            sb.AppendLine(srv120.ReadToEnd());*/
 
             sb.AppendLine("PROJECT(" + projectName + " CXX)");
+
+	    sb.AppendLine("SET(CMAKE_CXX_FLAGS  \"${CMAKE_CXX_FLAGS} -std=c++11\")");
 
             sb.AppendLine("SET_PROPERTY(GLOBAL PROPERTY GL_IS_RELEASE " + (release ? "1" : "0") + ")");
 
