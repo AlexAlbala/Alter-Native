@@ -825,10 +825,17 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             //AttributeTarget target;
             //attr.A = target;
             attr.Type = (AstType)attribute.Type.AcceptVisitor(this, data);
-            ConvertNodes(attribute.Arguments, attr.Arguments);
 
             //Will be removed !!
             Resolver.RemoveInclude(Resolver.GetTypeName(attr.Type));
+
+            ConvertNodes(attribute.Arguments, attr.Arguments);
+
+            List<AstType> res = Resolver.ExtractAllTypesFrom(attr.Arguments);
+            foreach (AstType t in res)
+            {
+                Resolver.RemoveInclude(Resolver.GetTypeName(t));
+            }
 
             return EndNode(attribute, attr);
         }
@@ -1017,15 +1024,15 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 node.AcceptVisitor(this, data);
 
             //Add auxiliar variables for emptyproperties
-            foreach (KeyValuePair<string, AstType> kvp in Cache.GetAuxVariables())
+            foreach (KeyValuePair<string, FieldDeclaration> kvp in Cache.GetAuxVariables())
             {
-                FieldDeclaration fdecl = new FieldDeclaration();
-                fdecl.ReturnType = (AstType)kvp.Value.Clone();
-                fdecl.AddChild(new VariableInitializer(kvp.Key), FieldDeclaration.Roles.Variable);
+                FieldDeclaration fdecl = kvp.Value;
                 type.AddChild(fdecl, TypeDeclaration.MemberRole);
                 Cache.AddConstructorStatement(new ExpressionStatement(
                     new AssignmentExpression(
-                        new IdentifierExpression(kvp.Key), new PrimitiveExpression(0))));
+                        new IdentifierExpression(kvp.Key),(Expression)fdecl.Variables.ElementAt(0).Initializer.Clone())));
+                    /*new AssignmentExpression(
+                        new IdentifierExpression(kvp.Key), new PrimitiveExpression(0))));*/
 
                 HeaderFieldDeclaration hf = new HeaderFieldDeclaration();
                 Resolver.GetHeaderNode(fdecl, hf);
@@ -1713,6 +1720,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 isEmptyProperty = !method.Body.Statements.Any();
 
 
+
                 if (acc == "get")
                 {
                     method.ReturnType = returnType.Clone();
@@ -1725,7 +1733,12 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                                     new CSharp.ThisReferenceExpression(), varName)), CSharp.BlockStatement.StatementRole);
                         method.Body = blck;
 
-                        Cache.AddAuxVariable((AstType)returnType.AcceptVisitor(this, data).Clone(), varName);
+                        FieldDeclaration fdecl = new FieldDeclaration();
+                        fdecl.ReturnType = (AstType)returnType.AcceptVisitor(this, data).Clone();
+                        CastExpression ce = new CastExpression((AstType)fdecl.ReturnType.Clone(), new PrimitiveExpression(0));
+                        fdecl.AddChild(new VariableInitializer(varName, ce), FieldDeclaration.Roles.Variable);
+                        ConvertNodes((accessor.Parent as CSharp.PropertyDeclaration).ModifierTokens, fdecl.ModifierTokens);
+                        Cache.AddAuxVariable(fdecl, varName);
                     }
                 }
                 else if (acc == "set")
@@ -1744,7 +1757,12 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                                     new CSharp.ThisReferenceExpression(), varName), new CSharp.IdentifierExpression("value"))), CSharp.BlockStatement.StatementRole);
                         method.Body = blck;
 
-                        Cache.AddAuxVariable((AstType)returnType.AcceptVisitor(this, data).Clone(), varName);
+                        FieldDeclaration fdecl = new FieldDeclaration();
+                        fdecl.ReturnType = (AstType)returnType.AcceptVisitor(this, data).Clone();
+                        CastExpression ce = new CastExpression((AstType)fdecl.ReturnType.Clone(), new PrimitiveExpression(0));
+                        fdecl.AddChild(new VariableInitializer(varName, ce), FieldDeclaration.Roles.Variable);
+                        ConvertNodes((accessor.Parent as CSharp.PropertyDeclaration).ModifierTokens, fdecl.ModifierTokens);
+                        Cache.AddAuxVariable(fdecl, varName);
                     }
                 }
                 else
