@@ -167,13 +167,13 @@ namespace Microsoft.SPOT.Hardware
         protected Port(Cpu.Pin portId, bool glitchFilter, ResistorMode resistor, InterruptMode interruptMode)
         {
             this.Id = portId;
-            GPIOManager.Instance.Export(portId);
+            GPIOManager.GetInstance().Export(portId);
         }
 
         protected Port(Cpu.Pin portId, bool initialState)
         {
             this.Id = portId;
-            GPIOManager.Instance.Export(portId);
+            GPIOManager.GetInstance().Export(portId);
         }
 
         protected Port(Cpu.Pin portId, bool initialState, bool glitchFilter, ResistorMode resistor)
@@ -186,21 +186,26 @@ namespace Microsoft.SPOT.Hardware
         {
             if (disposing)
             {
-                Console.WriteLine("Disposing({0})", this.Id);
-                GPIOManager.Instance.Unexport(this.Id);
+                Console.Write("Disposing(");
+                Console.Write(this.Id);
+                Console.WriteLine(")");
+                GPIOManager.GetInstance().Unexport(this.Id);
             }
         }
 
         public bool Read()
         {
-            Console.WriteLine("Reading({0})", this.Id);
-            return GPIOManager.Instance.Read(this.Id);
+            Console.Write("Reading(");
+            Console.Write(this.Id);
+            Console.WriteLine(")");
+            return GPIOManager.GetInstance().Read(this.Id);
         }
 
         public Cpu.Pin Id { get; set; }
 
-        static public bool ReservePin(Cpu.Pin pin, bool fReserve) {
-            return GPIOManager.Instance.ReservePin(pin, fReserve);
+        static public bool ReservePin(Cpu.Pin pin, bool fReserve)
+        {
+            return GPIOManager.GetInstance().ReservePin(pin, fReserve);
         }
     }
 
@@ -211,13 +216,13 @@ namespace Microsoft.SPOT.Hardware
         public InputPort(Cpu.Pin portId, bool glitchFilter, ResistorMode resistor)
             : base(portId, glitchFilter, resistor, InterruptMode.InterruptNone)
         {
-            GPIOManager.Instance.SetPortType(portId, PortType.INPUT);
+            GPIOManager.GetInstance().SetPortType(portId, PortType.INPUT);
         }
 
         protected InputPort(Cpu.Pin portId, bool glitchFilter, ResistorMode resistor, InterruptMode interruptMode)
             : base(portId, glitchFilter, resistor, interruptMode)
         {
-            GPIOManager.Instance.SetPortType(portId, PortType.INPUT);
+            GPIOManager.GetInstance().SetPortType(portId, PortType.INPUT);
         }
 
         protected InputPort(Cpu.Pin portId, bool initialState, bool glitchFilter, ResistorMode resistor)
@@ -239,7 +244,7 @@ namespace Microsoft.SPOT.Hardware
         public OutputPort(Cpu.Pin portId, bool initialState)
             : base(portId, initialState)
         {
-            GPIOManager.Instance.SetPortType(portId, PortType.OUTPUT);
+            GPIOManager.GetInstance().SetPortType(portId, PortType.OUTPUT);
         }
 
         protected OutputPort(Cpu.Pin portId, bool initialState, bool glitchFilter, ResistorMode resistor)
@@ -250,8 +255,10 @@ namespace Microsoft.SPOT.Hardware
 
         public void Write(bool state)
         {
-            Console.WriteLine("Write({0})", this.Id);
-            GPIOManager.Instance.Write(this.Id, state);
+            Console.Write("Write(");
+            Console.Write(this.Id);
+            Console.WriteLine(")");
+            GPIOManager.GetInstance().Write(this.Id, state);
         }
 
         public bool InitialState { get; set; }
@@ -267,10 +274,10 @@ namespace Microsoft.SPOT.Hardware
         public TristatePort(Cpu.Pin portId, bool initialState, bool glitchFilter, ResistorMode resistor)
             : base(portId, initialState, glitchFilter, resistor)
         {
-                GPIOManager.Instance.SetPortType(portId, PortType.INPUT);
-                active = false;
-                this.InitialState = initialState;
-                this.firstTimeOutput = true;
+            GPIOManager.GetInstance().SetPortType(portId, PortType.INPUT);
+            active = false;
+            this.InitialState = initialState;
+            this.firstTimeOutput = true;
         }
 
         public bool Active
@@ -283,7 +290,7 @@ namespace Microsoft.SPOT.Hardware
             {
                 if (Active)
                 {
-                    GPIOManager.Instance.SetPortType(this.Id, PortType.OUTPUT);
+                    GPIOManager.GetInstance().SetPortType(this.Id, PortType.OUTPUT);
                     if (firstTimeOutput)
                     {
                         this.Write(InitialState);
@@ -292,7 +299,7 @@ namespace Microsoft.SPOT.Hardware
                 }
                 else
                 {
-                    GPIOManager.Instance.SetPortType(this.Id, PortType.INPUT);
+                    GPIOManager.GetInstance().SetPortType(this.Id, PortType.INPUT);
                 }
                 this.active = Active;
             }
@@ -314,8 +321,8 @@ namespace Microsoft.SPOT.Hardware
         {
             //m_threadSpawn = null;
             //m_callbacks = null;
-            GPIOManager.Instance.SetPortType(portId, PortType.INTERRUPT);
-            GPIOManager.Instance.SetEdge(portId, interrupt);
+            GPIOManager.GetInstance().SetPortType(portId, PortType.INTERRUPT);
+            GPIOManager.GetInstance().SetEdge(portId, interrupt);
         }
 
         public void ClearInterrupt() { }
@@ -328,7 +335,7 @@ namespace Microsoft.SPOT.Hardware
             add
             {
                 //GPIOManager.start_polling(17, value);
-                GPIOManager.Instance.Listen_events(this.Id, value);
+                GPIOManager.GetInstance().Listen_events(this.Id, value);
             }
 
             [MethodImplAttribute(MethodImplOptions.Synchronized)]

@@ -33,16 +33,13 @@ namespace Microsoft.SPOT.Manager
 
         private GPIOManager() { }
 
-        public static GPIOManager Instance
+        public static GPIOManager GetInstance()
         {
-            get
+            if (instance == null)
             {
-                if (instance == null)
-                {
-                    instance = new GPIOManager();
-                }
-                return instance;
+                instance = new GPIOManager();
             }
+            return instance;
         }
 
         public void Export(Cpu.Pin pin)
@@ -113,8 +110,8 @@ namespace Microsoft.SPOT.Manager
             {
                 if ((_activePins[pin] == PortType.OUTPUT))
                 {
-                    int value = state == true ? 1 : 0;
-                    File.WriteAllText(GPIO_PATH + "gpio" + ((int)pin) + "/value", (value).ToString().ToLower());
+                    int value = state == true ? 1 : 0;                    
+                    File.WriteAllText(GPIO_PATH + "gpio" + ((int)pin) + "/value", value.ToString().ToLower());
                 }
                 else if ((_activePins[pin] == PortType.TRISTATE))
                 {
@@ -226,9 +223,7 @@ namespace Microsoft.SPOT.Manager
             while (true)
             {
                 callback_p cback = GPIOManager.start_polling((int)th.Pin);
-
-                DateTime dt = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds(cback.poll_time * 1000);
-                th.Callback((uint)cback.pin, (uint)0, dt);
+                th.Callback((uint)cback.pin, (uint)0, DateTime.Now);
             }
         }
 
