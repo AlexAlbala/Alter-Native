@@ -673,6 +673,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitTypeOfExpression(CSharp.TypeOfExpression typeOfExpression, object data)
         {
+            //http://www.boost.org/doc/libs/1_55_0/doc/html/typeof/tuto.html
             throw new NotImplementedException();
         }
 
@@ -942,7 +943,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 var member = typeDeclaration.Members.ElementAt(i);
                 AstNode n = member.AcceptVisitor(this, data);
                 if (n is TypeDeclaration)
-                {                    
+                {
                     type.HeaderNodes.Add(new NestedTypeDeclaration((TypeDeclaration)n.Clone()));
 
                     //RESET CURRENT TYPE DECLARATION
@@ -1032,8 +1033,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 Cache.AddConstructorStatement(new ExpressionStatement(
                     new AssignmentExpression(
                         new IdentifierExpression(kvp.Key), ce)));
-                    /*new AssignmentExpression(
-                        new IdentifierExpression(kvp.Key), new PrimitiveExpression(0))));*/
+                /*new AssignmentExpression(
+                    new IdentifierExpression(kvp.Key), new PrimitiveExpression(0))));*/
 
                 HeaderFieldDeclaration hf = new HeaderFieldDeclaration();
                 Resolver.GetHeaderNode(fdecl, hf);
@@ -2291,9 +2292,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 case "sbyte":
                     typeName = "short";
                     break;
-                //case "byte":
-                //typeName = "char";
-                //break;
+                case "byte":
+                    typeName = "char";
+                    break;
                 case "decimal":
                     typeName = "float";
                     break;

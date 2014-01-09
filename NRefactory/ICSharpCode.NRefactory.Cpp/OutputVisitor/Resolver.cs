@@ -35,6 +35,8 @@ namespace ICSharpCode.NRefactory.Cpp
             //                          SystemExceptions
             libraryMap.Add("NotImplementedException", "\"System/Exception/SystemException/NotImplementedException.h\"");
             libraryMap.Add("ArgumentException", "\"System/Exception/SystemException/ArgumentException.h\"");
+            libraryMap.Add("ArgumentOutOfRangeException", "\"System/Exception/SystemException/ArgumentException/ArgumentOutOfRangeException.h\"");
+            libraryMap.Add("ArgumentNullException", "\"System/Exception/SystemException/ArgumentException/ArgumentNullException.h\"");
             libraryMap.Add("InvalidOperationException", "\"System/Exception/SystemException/InvalidOperationException.h\"");
             libraryMap.Add("ObjectDisposedException", "\"System/Exception/SystemException/InvalidOperationException/ObjectDisposedException.h\"");
             //*************************************************************//

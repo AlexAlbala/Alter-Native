@@ -17,12 +17,12 @@ namespace IOSharp.Utils
 
         public static void PrintConsole(byte input)
         {
-            PrintConsole(ByteToString(input)+"");
+            PrintConsole(ByteToString(input));
         }
 
         public static void PrintConsole(byte[] input)
         {
-            PrintConsole(ByteArrayToString(input)+"");
+            PrintConsole(ByteArrayToString(input));
         }
 
         private static String ByteToString(byte input)

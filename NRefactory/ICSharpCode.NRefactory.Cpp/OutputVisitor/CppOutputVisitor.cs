@@ -1768,8 +1768,6 @@ namespace ICSharpCode.NRefactory.Cpp
             NewLine();
             genericTemplateTypeDeclaration.TypeDefinition.AcceptVisitor(this, data);
 
-
-
             CloseNamespaceBraces();
 
             formatter.ChangeFile("tmp");
@@ -1822,7 +1820,7 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteAttributes(typeDeclaration.Attributes);
 
             if (typeDeclaration.HasModifier(Modifiers.Private)) //Change modifier from private to public for nested classes            
-                typeDeclaration.ModifierTokens.Remove(typeDeclaration.ModifierTokens.First((x) => x.Modifier == Modifiers.Private));            
+                typeDeclaration.ModifierTokens.Remove(typeDeclaration.ModifierTokens.First((x) => x.Modifier == Modifiers.Private));
 
             typeDeclaration.ModifierTokens.Add(new CppModifierToken(TextLocation.Empty, Modifiers.Public));
 
@@ -1830,7 +1828,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
             BraceStyle braceStyle = WriteClassType(typeDeclaration.ClassType);
             WriteIdentifier(typeDeclaration.Name);
-            
+
             WriteTypeBaseTypes(typeDeclaration);
 
             OpenBrace(braceStyle);
@@ -1925,7 +1923,7 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteTypeParameters(typeDeclaration.TypeParameters);
 
             WriteTypeBaseTypes(typeDeclaration);
-           
+
             OpenBrace(braceStyle);
 
             if (typeDeclaration.ClassType == ClassType.Enum)
@@ -1957,6 +1955,19 @@ namespace ICSharpCode.NRefactory.Cpp
             CloseBrace(braceStyle);//END OF TYPE
             Semicolon();
             CloseNamespaceBraces();
+
+
+            //Write the extern directive if needed
+            foreach (KeyValuePair<string, List<ExternMethodDeclaration>> kvp in Cache.GetDllImport())
+            {
+                foreach (ExternMethodDeclaration emd in kvp.Value)
+                {
+                    emd.AcceptVisitor(this, null);
+                }
+            }
+            Cache.ClearDllImport();
+
+
             //Cache.ClearHeaderNodes();
 
             formatter.ChangeFile("tmp");
@@ -1986,15 +1997,6 @@ namespace ICSharpCode.NRefactory.Cpp
                 NewLine();
             }
             NewLine();
-            //Write the extern directive if needed
-            foreach (KeyValuePair<string, List<ExternMethodDeclaration>> kvp in Cache.GetDllImport())
-            {
-                foreach (ExternMethodDeclaration emd in kvp.Value)
-                {
-                    emd.AcceptVisitor(this, data);
-                }
-            }
-            Cache.ClearDllImport();
 
             UsingNamespaces();
             Resolver.Restart();
@@ -2232,7 +2234,7 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             StartNode(constructorInitializer);
             WriteToken(":", ConstructorInitializer.Roles.Colon);
-            Space();            
+            Space();
             constructorInitializer.Base.AcceptVisitor(this, data);
             Space(policy.SpaceBeforeMethodCallParentheses);
             WriteCommaSeparatedListInParenthesis(constructorInitializer.Arguments, policy.SpaceWithinMethodCallParentheses);
@@ -2371,9 +2373,12 @@ namespace ICSharpCode.NRefactory.Cpp
 
                 if (!Resolver.IsChildOf(fieldDeclaration, typeof(GenericTemplateTypeDeclaration)))
                 {
-                    TypeDeclaration tdecl = fieldDeclaration.Parent as TypeDeclaration;
-                    WriteIdentifier(tdecl != null ? tdecl.Name : String.Empty, MethodDeclaration.Roles.Identifier);
-                    WriteToken("::", MethodDeclaration.Roles.DoubleColon);
+                    if (!Resolver.IsDirectChildOf(fieldDeclaration, typeof(NestedTypeDeclaration))) //In Nested types, TypeName::MemberName will cause an "over-qualified name error"
+                    {
+                        TypeDeclaration tdecl = fieldDeclaration.Parent as TypeDeclaration;
+                        WriteIdentifier(tdecl != null ? tdecl.Name : String.Empty, MethodDeclaration.Roles.Identifier);
+                        WriteToken("::", MethodDeclaration.Roles.DoubleColon);
+                    }
                 }
 
                 WriteCommaSeparatedList(fieldDeclaration.Variables);
@@ -2462,8 +2467,11 @@ namespace ICSharpCode.NRefactory.Cpp
             //I think it is not necessary...
             if (!Resolver.IsChildOf(methodDeclaration, typeof(ExplicitInterfaceTypeDeclaration)) && !Resolver.IsChildOf(methodDeclaration, typeof(GenericTemplateTypeDeclaration)))
             {
-                WriteIdentifier(type == null ? (tdecl != null ? (avoidPointers ? tdecl.Name + "_T_Base" : tdecl.Name) : String.Empty) : (avoidPointers ? type.Name + "_Base" : type.Name), MethodDeclaration.Roles.Identifier);
-                WriteToken("::", MethodDeclaration.Roles.DoubleColon);
+                if (!Resolver.IsDirectChildOf(methodDeclaration, typeof(NestedTypeDeclaration))) //In Nested types, TypeName::MemberName will cause an "over-qualified name error"
+                {
+                    WriteIdentifier(type == null ? (tdecl != null ? (avoidPointers ? tdecl.Name + "_T_Base" : tdecl.Name) : String.Empty) : (avoidPointers ? type.Name + "_Base" : type.Name), MethodDeclaration.Roles.Identifier);
+                    WriteToken("::", MethodDeclaration.Roles.DoubleColon);
+                }
                 WritePrivateImplementationType(methodDeclaration.PrivateImplementationType);
             }
 
