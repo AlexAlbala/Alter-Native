@@ -166,6 +166,7 @@ namespace ICSharpCode.NRefactory.Cpp
         S VisitCompilationUnit(CompilationUnit compilationUnit, T data);
         S VisitSimpleType(SimpleType simpleType, T data);
         S VisitPtrType(PtrType ptrType, T data);//**************
+        S VisitReferenceType(ReferenceType referenceType, T data);//**************
         //S VisitMemberType(MemberType memberType, T data);
         S VisitExpressionType(ExpressionType expressionType, T data);//************
         S VisitTypeNameType(TypeNameType typeNameType, T data);

@@ -10,25 +10,25 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
     /// <summary>
     /// Description of QualifiedType.
     /// </summary>
-    public class PtrType : AstType
+    public class ReferenceType : AstType
     {
-        public static readonly Role<AstType> TargetRole = new Role<AstType>("Target", AstType.Null);
-        public static readonly Role<CppTokenNode> PointerRole = new Role<CppTokenNode>("Pointer", CppTokenNode.Null);        
+        public static readonly Role<AstType> TargetRole = new Role<AstType>("Target", AstType.Null);        
+        public static readonly Role<CppTokenNode> AddressRole = new Role<CppTokenNode>("Address", CppTokenNode.Null);
 
         public AstType Target
         {
             get { return GetChildByRole(TargetRole); }
             set { SetChildByRole(TargetRole, value); }
-        }        
+        }
 
-        public PtrType(AstType target)
+        public ReferenceType(AstType target)
         {
             Target = target;
         }
 
         public override S AcceptVisitor<T, S>(IAstVisitor<T, S> visitor, T data)
         {
-            return visitor.VisitPtrType(this, data);
+            return visitor.VisitReferenceType(this, data);
         }
 
         protected internal override bool DoMatch(AstNode other, PatternMatching.Match match)
@@ -40,7 +40,7 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
         public override string ToString()
         {
             StringBuilder b = new StringBuilder();
-            b.Append(this.Target);           
+            b.Append(this.Target);
             return b.ToString();
         }
     }

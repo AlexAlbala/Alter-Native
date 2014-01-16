@@ -4151,5 +4151,14 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteToken("...", VariadicParameterDeclaration.VariadicRole);
             return EndNode(variadicParameterDeclaration);
         }
+
+
+        public object VisitReferenceType(ReferenceType referenceType, object data)
+        {
+            StartNode(referenceType);
+            referenceType.Target.AcceptVisitor(this, data);
+            WriteToken("&", ReferenceType.AddressRole);
+            return EndNode(referenceType);
+        }
     }
 }

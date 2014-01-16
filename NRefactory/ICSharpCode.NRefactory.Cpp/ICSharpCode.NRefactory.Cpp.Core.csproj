@@ -159,6 +159,7 @@
     <Compile Include="Ast\GeneralScope\TypeParameterDeclaration.cs" />
     <Compile Include="Ast\TypeName\ExpressionType.cs" />
     <Compile Include="Ast\TypeName\PtrType.cs" />
+	<Compile Include="Ast\TypeName\ReferenceType.cs" />
     <Compile Include="Ast\TypeName\QualifiedType.cs" />
     <Compile Include="Ast\ComposedIdentifier.cs" />
     <Compile Include="Ast\TypeName\TypeNameType.cs" />

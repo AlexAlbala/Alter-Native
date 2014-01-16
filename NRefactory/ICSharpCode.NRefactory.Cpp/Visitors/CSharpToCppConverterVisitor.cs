@@ -1821,7 +1821,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             }
             else //THIS
             {
-
+                cinit.Base = new SimpleType(currentType.Name);
             }
 
             ConvertNodes(constructorInitializer.Arguments, cinit.Arguments);
@@ -2088,8 +2088,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 if (param.Type.IsBasicType)
                 {
                     //REFERENCETYPE e.g. int&
-
-                    throw new NotImplementedException("Reference Type !!");
+                    param.Type = new ReferenceType((AstType)param.Type.Clone());
                 }
                 else
                 {
@@ -2099,9 +2098,13 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     }
                     else
                     {
-                        throw new Exception("Invalid case");
+                        //ENUM / STRUCTS
+                        //REFERENCETYPE e.g. int&
+                        param.Type = new ReferenceType((AstType)param.Type.Clone());
                     }
                 }
+
+                param.ParameterModifier = ParameterModifier.None;
             }
 
             //if (param.NameToken is ComposedIdentifier)
@@ -2500,8 +2503,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
             if ((modifier & CSharp.Modifiers.Public) == CSharp.Modifiers.Public)
                 mod |= Modifiers.Public;
-            if ((modifier & CSharp.Modifiers.Protected) == CSharp.Modifiers.Protected)
-                mod |= Modifiers.Protected;
+            if ((modifier & CSharp.Modifiers.Protected) == CSharp.Modifiers.Protected) //In C++ Prtoected is less accessible than in C#
+                mod |= Modifiers.Public;
             if ((modifier & CSharp.Modifiers.Internal) == CSharp.Modifiers.Internal)
                 mod |= Modifiers.Public;
             if ((modifier & CSharp.Modifiers.Private) == CSharp.Modifiers.Private)

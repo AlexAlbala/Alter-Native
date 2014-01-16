@@ -161,6 +161,7 @@
     <Compile Include="Ast\TypeName\PtrType.cs" />
     <Compile Include="Ast\TypeName\QualifiedType.cs" />
     <Compile Include="Ast\ComposedIdentifier.cs" />
+    <Compile Include="Ast\TypeName\ReferenceType.cs" />
     <Compile Include="Ast\TypeName\TypeNameType.cs" />
     <Compile Include="Formatters\FileWritterManager.cs" />
     <Compile Include="Formatters\MainWritter.cs" />
