@@ -2565,7 +2565,7 @@ namespace ICSharpCode.NRefactory.Cpp
             {
                 case ParameterModifier.Ref:
                     //WriteKeyword("ref", ParameterDeclaration.ModifierRole);
-                    WriteKeyword("*", ParameterDeclaration.ModifierRole);
+                    WriteKeyword("ref", ParameterDeclaration.ModifierRole);
                     break;
                 case ParameterModifier.Out:
                     WriteKeyword("out", ParameterDeclaration.ModifierRole);

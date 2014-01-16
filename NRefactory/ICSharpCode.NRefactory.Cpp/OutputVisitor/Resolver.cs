@@ -90,6 +90,9 @@ namespace ICSharpCode.NRefactory.Cpp
             propertiesInLibrary.Add("Minute", "DateTime");
             propertiesInLibrary.Add("Month", "DateTime");
 
+            propertiesInLibrary.Add("Count", "Dictioanry");
+            propertiesInLibrary.Add("Length", "String");
+
             foreach (KeyValuePair<string, ParameterDeclaration[]> kvp in delegatesInLibrary)
                 Cache.AddDelegateType(kvp.Key, kvp.Value);
 

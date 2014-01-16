@@ -224,10 +224,6 @@
     <Compile Include="Visitors\CSharpToCppConverterVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ICSharpCode.Decompiler\ICSharpCode.Decompiler.csproj">
-      <Project>{984cc812-9470-4a13-aff9-cc44068d666c}</Project>
-      <Name>ICSharpCode.Decompiler</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ICSharpCode.NRefactory.CSharp\ICSharpCode.NRefactory.CSharp.csproj">
       <Project>{53DCA265-3C3C-42F9-B647-F72BA678122B}</Project>
       <Name>ICSharpCode.NRefactory.CSharp</Name>
@@ -236,9 +232,13 @@
       <Project>{3B2A5653-EC97-4001-BB9B-D90F1AF2C371}</Project>
       <Name>ICSharpCode.NRefactory</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\AlterNative.Tools\AlterNative.Tools.csproj">
+    <ProjectReference Include="..\..\AlterNative.Tools\AlterNative.Tools.Core.csproj">
       <Project>{38C5F3CB-339F-4DD3-9197-98989CA94F9D}</Project>
       <Name>AlterNative.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ICSharpCode.Decompiler\ICSharpCode.Decompiler.Core.csproj">
+      <Project>{984CC812-9470-4A13-AFF9-CC44068D666C}</Project>
+      <Name>ICSharpCode.Decompiler</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />

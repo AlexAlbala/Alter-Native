@@ -2078,11 +2078,32 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitParameterDeclaration(CSharp.ParameterDeclaration parameterDeclaration, object data)
         {
             var param = new ParameterDeclaration();
-
             ConvertNodes(parameterDeclaration.Attributes, param.Attributes);
-            param.ParameterModifier = (ParameterModifier)parameterDeclaration.ParameterModifier;
+            param.ParameterModifier = (ParameterModifier)parameterDeclaration.ParameterModifier;            
             param.Type = (AstType)parameterDeclaration.Type.AcceptVisitor(this, data);
             param.NameToken = (Identifier)parameterDeclaration.NameToken.AcceptVisitor(this, data);
+
+            if (parameterDeclaration.ParameterModifier == CSharp.ParameterModifier.Out || parameterDeclaration.ParameterModifier == CSharp.ParameterModifier.Ref)
+            {
+                if (param.Type.IsBasicType)
+                {
+                    //REFERENCETYPE e.g. int&
+
+                    throw new NotImplementedException("Reference Type !!");
+                }
+                else
+                {
+                    if (param.Type is PtrType)
+                    {
+                        //DO NOTHING, the pointer already acts as a reference
+                    }
+                    else
+                    {
+                        throw new Exception("Invalid case");
+                    }
+                }
+            }
+
             //if (param.NameToken is ComposedIdentifier)
             //{
             //    CSharp.MethodDeclaration m = null;
@@ -2100,6 +2121,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             //    param.NameToken = (Identifier)(param.NameToken as ComposedIdentifier).BaseIdentifier.Clone();
             //}
             //End:
+
             param.DefaultExpression = (Expression)parameterDeclaration.DefaultExpression.AcceptVisitor(this, data);
 
             if (currentMethod != null)
