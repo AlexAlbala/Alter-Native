@@ -175,11 +175,8 @@ namespace AlterNative
             }
             else
             {
-#if CORE
-                Config.AlterNativeLib = @"../../../../Lib/src";
-#else
                 Config.AlterNativeLib = @"../../../Lib/src";
-#endif
+
                 Console.WriteLine("ALTERNATIVE_CPP_LIB_PATH not defined, please execute alternative-init command");
                 Console.WriteLine("Trying to locate the library at: " + Config.AlterNativeLib);
             }

@@ -90,14 +90,9 @@ namespace AlterNative
             else
             {
                 Utils.WriteToConsole("WARNING: ALTERNATIVE_HOME not setted");
-#if CORE
-                Utils.WriteToConsole("Trying to get templates from: " + @"../../../../Tools/Templates/Blank/Blank.exe");
-                return LoadAssembly(@"../../../../Tools/Templates/Blank/Blank.exe");
-#else
+
                 Utils.WriteToConsole("Trying to get templates from: " + @"../../../Tools/Templates/Blank/Blank.exe");
                 return LoadAssembly(@"../../../Tools/Templates/Blank/Blank.exe");
-
-#endif
             }
         }
 
