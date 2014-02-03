@@ -4129,6 +4129,8 @@ namespace ICSharpCode.NRefactory.Cpp
             Space();
             WriteIdentifier(externMethodDeclaration.EntryPoint);
             Space(policy.SpaceBeforeMethodDeclarationParentheses);
+
+            Resolver.ConvertToExternTypeParameters(externMethodDeclaration.Parameters);
             WriteCommaSeparatedListInParenthesis(externMethodDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
             Semicolon();
             NewLine();

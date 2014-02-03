@@ -155,7 +155,7 @@ namespace AlterNative
                 if (!tdef.Name.Contains("<"))
                 {
                     lang.DecompileType(tdef, textOutput, new ICSharpCode.ILSpy.DecompilationOptions() { FullDecompilation = false });
-                }
+                }                
             }
 
             //DECOMPILE

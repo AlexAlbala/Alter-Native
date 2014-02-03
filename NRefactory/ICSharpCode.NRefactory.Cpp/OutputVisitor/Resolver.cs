@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Mono.Cecil;
 using ICSharpCode.NRefactory.Cpp.Ast;
+using ICSharpCode.NRefactory.Cpp.Visitors;
 
 namespace ICSharpCode.NRefactory.Cpp
 {
@@ -878,7 +879,6 @@ namespace ICSharpCode.NRefactory.Cpp
                     {
                         if (IsChildOf(node, typeof(CSharp.FieldDeclaration)))
                         {
-
                             var fdecl = (CSharp.FieldDeclaration)GetParentOf(node, typeof(CSharp.FieldDeclaration));
 
                             string ret = Resolver.GetTypeName(fdecl.ReturnType);
@@ -888,6 +888,14 @@ namespace ICSharpCode.NRefactory.Cpp
                             string id = Resolver.GetTypeName(_type);
                             if (ret != id)
                             {
+                                //SPECIAL CASE: ARRAYS
+                                if (fdecl.ReturnType is CSharp.ComposedType)
+                                {
+                                    CSharp.ComposedType ct = fdecl.ReturnType as CSharp.ComposedType;
+                                    if (ct.ArraySpecifiers.Any() && id.Equals("Array"))
+                                        return false;
+                                };
+
                                 return !((fdecl.ReturnType is CSharp.PrimitiveType && id == "Object") ||
                                     (ret == "Object" && Resolver.GetType(identifierExpression.Identifier, currentType, null, null).IsBasicType));
                             }
@@ -899,9 +907,17 @@ namespace ICSharpCode.NRefactory.Cpp
                             AstType _type = Resolver.GetType(identifierExpression.Identifier, null, currentMethod, identifierExpression.Identifier);
                             if (_type.IsBasicType || IsEnumType(GetTypeName(_type)))
                                 return false;
-                            string id = Resolver.GetTypeName(_type);
+                            string id = Resolver.GetTypeName(_type);                            
                             if (ret != id)
                             {
+                                //SPECIAL CASE: ARRAYS
+                                if (vdecl.Type is CSharp.ComposedType)
+                                {
+                                    CSharp.ComposedType ct = vdecl.Type as CSharp.ComposedType;
+                                    if (ct.ArraySpecifiers.Any() && id.Equals("Array"))
+                                        return false;
+                                }
+
                                 return !((vdecl.Type is CSharp.PrimitiveType && id == "Object") ||
                                     (ret == "Object" && Resolver.GetType(identifierExpression.Identifier, null, currentMethod, null).IsBasicType));
                             }
@@ -916,6 +932,14 @@ namespace ICSharpCode.NRefactory.Cpp
                             string id = Resolver.GetTypeName(_type);
                             if (ret != id)
                             {
+                                //SPECIAL CASE: ARRAYS
+                                if (pdecl.Type is CSharp.ComposedType)
+                                {
+                                    CSharp.ComposedType ct = pdecl.Type as CSharp.ComposedType;
+                                    if (ct.ArraySpecifiers.Any() && id.Equals("Array"))
+                                        return false;
+                                }
+
                                 return !((pdecl.Type is CSharp.PrimitiveType && id == "Object") ||
                                     (ret == "Object" && Resolver.GetType(identifierExpression.Identifier, null, currentMethod, pdecl.Name).IsBasicType));
                             }
@@ -942,6 +966,11 @@ namespace ICSharpCode.NRefactory.Cpp
                     {
                         var id = iexpTar.Target as CSharp.IdentifierExpression;
                         return Resolver.IsPointer(iexpTar.MemberName, id.Identifier, null, null);
+                    }
+                    else if (iexpTar.Target is CSharp.TypeReferenceExpression)
+                    {
+                        var id = iexpTar.Target as CSharp.TypeReferenceExpression;
+                        return Resolver.IsPointer(iexpTar.MemberName, Resolver.GetTypeName(id.Type), null, null);
                     }
                     else
                         return false;
@@ -1739,7 +1768,8 @@ namespace ICSharpCode.NRefactory.Cpp
                     {
                         foreach (CSharp.Expression e in t.Arguments)
                         {
-
+                            //TODO
+                            throw new NotImplementedException("In progress...");
                         }
                     }
                 }
@@ -1771,6 +1801,50 @@ namespace ICSharpCode.NRefactory.Cpp
                 }
             }
             return result;
+        }
+
+        public static AstNodeCollection<ParameterDeclaration> ConvertToExternTypeParameters(AstNodeCollection<ParameterDeclaration> parameters)
+        {
+            foreach (ParameterDeclaration p in parameters)
+            {
+                if (Resolver.GetTypeName(p.Type).Equals("Array"))
+                {
+                    if (p.Type is PtrType)
+                    {
+                        var ptr = p.Type as PtrType;
+                        if (ptr.Target is SimpleType)
+                        {
+                            SimpleType s = ptr.Target as SimpleType;
+                            if (s.TypeArguments.Any())
+                            {
+                                p.Type = new PtrType((AstType)s.TypeArguments.ElementAt(0).Clone());                                
+                            }
+                        }
+                    }
+                }
+            }
+            return parameters;
+        }
+
+        public static List<Expression> ConvertToExternTypeArguments(AstNodeCollection<ParameterDeclaration> parameters)
+        {
+            List<Expression> arguments = new List<Expression>();
+            foreach (ParameterDeclaration p in parameters)
+            {
+                if (Resolver.GetTypeName(p.Type).Equals("Array"))
+                {
+                    if (p.Type is PtrType)
+                    {
+                        arguments.Add(new PointerExpression(new IdentifierExpression(p.Name)));
+                    }
+                }
+                else
+                {
+                    arguments.Add(new IdentifierExpression(p.Name));
+                }
+            }
+
+            return arguments;
         }
 
     }

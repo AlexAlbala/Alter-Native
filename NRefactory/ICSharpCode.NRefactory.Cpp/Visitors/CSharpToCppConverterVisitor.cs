@@ -2017,6 +2017,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
             }
 
+            //Generate method to redirect the local method to the extern "C" method
             if (Resolver.IsDLLImportMethod(methodDeclaration))
             {
                 ExternMethodDeclaration e = new ExternMethodDeclaration();
@@ -2035,12 +2036,15 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 e.Library = library == String.Empty ? "LIBRARYERROR" : library;
 
                 Cache.AddDllImport(e.Library, e);
-
-                List<Expression> arguments = new List<Expression>();
-                foreach (ParameterDeclaration p in result.Parameters)
-                {
-                    arguments.Add(new IdentifierExpression(p.Name));
-                }
+                               
+                //Convert arguments for match the calling convention
+                //i.e.
+                //void A(Array<char>* myByte)
+                //{
+                //      return ::internalA(*myByte); //--> Here needs the dereference in order to convert it to char*
+                //}
+                List<Expression> arguments = Resolver.ConvertToExternTypeArguments(result.Parameters);
+               
                 e.Body = BlockStatement.Null;
 
                 result.Body = new BlockStatement();
@@ -2157,7 +2161,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
             vi.Initializer = (Expression)variableInitializer.Initializer.AcceptVisitor(this, data);
 
-            //vi.Initializer = Resolver.RefactorPropety(vi.Initializer, currentType.Name, "get");           
+            //vi.Initializer = Resolver.RefactorPropety(vi.Initializer, currentType.Name, "get");          
 
             vi.Name = variableInitializer.Name;
             vi.NameToken = (Identifier)variableInitializer.NameToken.AcceptVisitor(this, data);
