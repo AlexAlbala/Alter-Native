@@ -114,27 +114,19 @@ On Linux
 			ILSpy
 			AlterNative
 
-	+ Now remove the ICSharpCode.NRefactory.VB project (Inside "ILSpy project") and build again
-
-* Finally you need to export two environment variables that will be used by cmake.
-	
-		export USR_BOOST_INCLUDE=/usr/include/boost/
-		export USR_BOOST_LIBRARY=/usr/lib
-
 Testing
 -------
 
 	cd AlterNative
 	source ./alternative-init.sh
 
-	mcs -debug test.cs
-	alternative test.exe ./output/
+	alternative Tests/001.Statements/NETbin/Statements.exe ./output/
 	cd output
 	mkdir build
 	cd build
 	cmake ..
 	make
-	./test
+	./Statements.exe
 
 Support for easy compiling is being added.
 	cd AlterNative
