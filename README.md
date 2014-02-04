@@ -31,13 +31,17 @@ On Windows
 	+ Be sure to add cmake to the PATH
 * Install Boost libraries from http://www.boost.org
 	+ Unzip to C:\Boost_x_y_z
-	+ Compile it
+	+ Compile it (NOTE: The current version is working with compiler msvc-11.0 included in Visual Studio 2012)
 
 			cd C:\Boost_x_y_z
 			bootstrap.bat
-			b2
+			b2.exe --prefix=<INSTALLATION_DIR> --toolset=msvc-11.0
 	+ Have a coffee or two :)
-	+ Set Enviroment variables
+	+ Execute the provided .bat file
+			
+			alternative-init.bat
+
+	+ Or set Enviroment variables
 			
 			USR_BOOST_INCLUDE=C:\Boost_x_y_z
 			USR_BOOST_LIBRARY=C:\Boost_x_y_z\stage\lib
@@ -54,10 +58,20 @@ On MacOS X
 		sudo port install cmake boost
 	
 * Open the AlterNative.Core.sln with Xamarin Studio and compile
+* Or use the provided command:
+ 
+		alternative.core-compile.sh
+
 * Or use command line:
 
 		xbuild AlterNative.Core.sln /t:Clean
 		xbuild AlterNative.Core.sln
+		
+* Initialize command line:
+ 		
+		source ./alternative-init.sh
+		
+
 		
 
 On Linux
@@ -75,9 +89,9 @@ On Linux
 
 * If you check your software version, you should have:
 	
-		Mono = 2.10.8.1
-		MonoDevelop = 3.0.3.2
-		libboost = 1.49
+		Mono = 2.10.8.1 or higher
+		MonoDevelop = 3.0.3.2 or higher
+		libboost = 1.49 or higher
 	
 * The next step is make some arrangements to AlterNative.Core project.
 
@@ -114,7 +128,7 @@ Testing
 	source ./alternative-init.sh
 
 	mcs -debug test.cs
-	alternative test.exe ./output/ CXX ./AlterNative.Core/Lib/
+	alternative test.exe ./output/
 	cd output
 	mkdir build
 	cd build
@@ -123,7 +137,8 @@ Testing
 	./test
 
 Support for easy compiling is being added.
-
+	cd AlterNative
+	source ./alternative-init.sh
 	alternative new example
 	alternative make example
 	cd example
