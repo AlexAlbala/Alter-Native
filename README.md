@@ -129,6 +129,7 @@ Testing
 	./Statements.exe
 
 Support for easy compiling is being added.
+
 	cd AlterNative
 	source ./alternative-init.sh
 	alternative new example
