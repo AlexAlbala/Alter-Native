@@ -19,7 +19,7 @@ namespace AlterNative
 #if CORE
             p.StartInfo = new ProcessStartInfo("cmake", "-G \"Unix Makefiles\" ..");
 #else
-            p.StartInfo = new ProcessStartInfo("cmake", "..");
+            p.StartInfo = new ProcessStartInfo("cmake", "-G \"Visual Studio 11\" ..");
 #endif
             p.StartInfo.CreateNoWindow = true;
             p.StartInfo.UseShellExecute = false;
@@ -59,6 +59,7 @@ namespace AlterNative
             {
                 string targetFile = finfos[0].FullName;
                 string msbuildArgs = targetFile + " /p:PlatformToolset=v120_CTP_Nov2012";
+                //string msbuildArgs = targetFile + " /p:PlatformToolset=CTP_Nov2013";
 
                 //Run msbuild
                 Process msbuild = new Process();
