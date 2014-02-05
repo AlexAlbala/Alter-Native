@@ -138,7 +138,4 @@ Support for easy compiling is being added.
 	source ./alternative-init.sh
 	alternative new example
 	alternative make example
-	cd example
-	cd build
-	make
 	./Blank
