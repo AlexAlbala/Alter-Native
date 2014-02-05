@@ -46,7 +46,10 @@ On Windows
 			USR_BOOST_INCLUDE=C:\Boost_x_y_z
 			USR_BOOST_LIBRARY=C:\Boost_x_y_z\stage\lib
 		
-* Use the supplied solution on Visual Studio 2012
+* Use the supplied solution on Visual Studio 2012 or higher
+	+ Be sure to select one of these solution configurations Otherwise it won't compile:
+	 		net_4_0_Debug
+			net_4_0_Release configuration
 
 On MacOS X
 ==========
