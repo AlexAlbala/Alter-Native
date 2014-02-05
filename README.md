@@ -50,7 +50,7 @@ On Windows
 	+ Be sure to select one of these solution configurations Otherwise it won't compile:
 	
 	 		net_4_0_Debug
-			net_4_0_Release configuration
+			net_4_0_Release
 
 On MacOS X
 ==========
