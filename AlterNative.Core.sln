@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlterNative.Core", "AlterNative\AlterNative.Core.csproj", "{F7E31C2B-26A3-4AB1-AF11-4C86F27E28E4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlterNative.Tools", "AlterNative.Tools\AlterNative.Tools.Core.csproj", "{38C5F3CB-339F-4DD3-9197-98989CA94F9D}"
