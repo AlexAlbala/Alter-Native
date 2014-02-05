@@ -48,6 +48,7 @@ On Windows
 		
 * Use the supplied solution on Visual Studio 2012 or higher
 	+ Be sure to select one of these solution configurations Otherwise it won't compile:
+	
 	 		net_4_0_Debug
 			net_4_0_Release configuration
 
