@@ -55,13 +55,10 @@ namespace AlterNative.BuildTools
             sb.AppendLine("ENDIF(UNIX)");
 
             if (release)
-                sb.AppendLine("SET(CMAKE_BUILD_TYPE Release)");
+                sb.AppendLine("SET(CMAKE_BUILD_TYPE Release)");            
 
-#if CORE
-            FileInfo boostCmake = new FileInfo(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"/../../../../Tools/Code/CMAKE-BOOST");
-#else
             FileInfo boostCmake = new FileInfo(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"/../../../Tools/Code/CMAKE-BOOST");
-#endif
+
             StreamReader sr = new StreamReader(boostCmake.FullName);
             sb.AppendLine("SET(PROJ_NAME " + execName + ")");
             sb.Append(sr.ReadToEnd());
