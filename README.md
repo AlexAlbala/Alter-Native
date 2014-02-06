@@ -97,7 +97,7 @@ On Linux
 
 * Use the provided command:
  
-		alternative.core-compile.sh
+		./alternative.core-compile.sh
 
 * Or use command line:
 
