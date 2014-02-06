@@ -52,6 +52,11 @@ On Windows
 	 		net_4_0_Debug
 			net_4_0_Release
 
+*For use the c++11 features you will need the compiler v120 CTP of November 2012:
+	+ The new released v120 CTP November 2013 for visual Studio 2013 does not work properly
+	
+			http://www.microsoft.com/en-us/download/details.aspx?id=35515
+
 On MacOS X
 ==========
 
