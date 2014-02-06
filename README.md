@@ -113,7 +113,7 @@ On Linux
 Testing
 -------
 
-+ Make sure you have a c++11 compatible compiler
+Make sure you have a c++11 compatible compiler
 
 	cd AlterNative
 	source ./alternative-init.sh
