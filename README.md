@@ -76,50 +76,44 @@ On MacOS X
 		source ./alternative-init.sh
 		
 
-		
-
 On Linux
 ========
 ### Debian Wheezy (Stable)
 * The following software will be installed from the official debian repositories.
 
-	+ Install Mono Runtime and the MonoDevelop.
+	+ Install Mono Runtime.
 
-			sudo apt-get install mono-complete monodevelop
+			sudo apt-get install mono-complete
 
 	+ Install the necessary tools to run AlterNative. 
 	
-			sudo apt-get install libboost-all-dev cmake build-essential
+			sudo apt-get install libboost-dev cmake build-essential
 
 * If you check your software version, you should have:
 	
 		Mono = 2.10.8.1 or higher
 		MonoDevelop = 3.0.3.2 or higher
 		libboost = 1.49 or higher
-	
-* The next step is make some arrangements to AlterNative.Core project.
 
-	+ Edit and modify Alter-Native/AlterNative/AlterNative.Core.sln as it's shown below
+* Use the provided command:
+ 
+		alternative.core-compile.sh
 
-			nano Alter-Native/AlterNative/AlterNative.Core.sln
+* Or use command line:
+
+		xbuild AlterNative.Core.sln /t:Clean
+		xbuild AlterNative.Core.sln
 		
-			Microsoft Visual Studio Solution File, Format Version 11.00
-			# Visual Studio 2010
+* Initialize command line:
+ 		
+		source ./alternative-init.sh
+	
 
-	+ Open Alter-Native/AlterNative/AlterNative.Core.sln using MonoDevelop and Build it.  
-	Once it tries to compile, it will crash with an error saying "Framework '.NETFramework 4.5' not installed."  
-	Correct the errors applying "Right Click -> Options -> Build/General -> and change to "Mono / .NET 4.0"" to the following projects:
-			
-			ICSharpCode.NRefactory
-			ICSharpCode.NRefactory.CSharp
-			ICSharpCode.Decompile
-			ICSharpCode.NRefactory.Cpp
-			ICSharpCode.NRefactory.VB
-			ILSpy
-			AlterNative
 
 Testing
 -------
+
++ Make sure you have a c++11 compatible compiler
 
 	cd AlterNative
 	source ./alternative-init.sh
