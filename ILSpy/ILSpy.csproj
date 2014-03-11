@@ -220,9 +220,6 @@
     <Compile Include="XmlDoc\XmlDocKeyProvider.cs" />
     <Compile Include="XmlDoc\XmlDocLoader.cs" />
     <Compile Include="XmlDoc\XmlDocRenderer.cs" />
-    <EmbeddedResource Include="..\README.txt">
-      <Link>README.txt</Link>
-    </EmbeddedResource>
     <EmbeddedResource Include="..\doc\LGPL.txt">
       <Link>LGPL.txt</Link>
     </EmbeddedResource>
