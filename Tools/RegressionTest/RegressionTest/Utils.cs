@@ -10,8 +10,8 @@ namespace RegressionTest
     {
         private static List<string> ignoreFolders;
         public static string testPath = Environment.CurrentDirectory;
-        public static string alternativePath = Environment.CurrentDirectory + "/../AlterNative.Core/AlterNative.Core/bin/Debug/AlterNative.Core.exe";
-        public static string alternativeDirectory = Environment.CurrentDirectory + "/../AlterNative.Core/AlterNative.Core/bin/Debug";
+        public static string alternativePath = Environment.CurrentDirectory + "/../AlterNative.Core.bin/bin/Debug/AlterNative.Core.exe";
+        public static string alternativeDirectory = Environment.CurrentDirectory + "/../AlterNative.Core.bin/bin/Debug";
         public static string cxxLibraryPath = testPath + "/../Lib/src";
 
         static Utils()

@@ -62,7 +62,7 @@ namespace RegressionTest
             Console.WriteLine("Configuring native source project...");
             //Run cmake
             Process runCmake = new Process();
-            runCmake.StartInfo = new ProcessStartInfo("cmake", "..");
+            runCmake.StartInfo = new ProcessStartInfo("cmake", "-G \"Visual Studio 11\" ..");
 
             runCmake.StartInfo.CreateNoWindow = true;
             runCmake.StartInfo.UseShellExecute = false;
