@@ -3,6 +3,10 @@
 \begin_document
 \begin_header
 \textclass IEEEtran
+\begin_preamble
+\usepackage{float}
+\floatname{algorithm}{Listing}
+\end_preamble
 \use_default_options true
 \maintain_unincluded_children false
 \language english
@@ -108,6 +112,14 @@ Nowadays all the service sectors like industrial, energy, healthcare, security
  the use of elements which can be perjudicial to the performance like virtual
  machines and aims to increase the efficiency of the code by using native
  languages.
+ AlterNative is based on a .NET decompiler called ILSpy 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-1"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Section
@@ -118,8 +130,15 @@ State Of The Art
 Cross-platform development tools
 \end_layout
 
+\begin_layout Standard
+In the field of cross-platform tools, the major development of the community
+ is focused on reducing the complexity of programming multiplatform applications
+ (mainly mobile applications).
+ Virtual Machines are the most used approach in cross-platform environments.
+\end_layout
+
 \begin_layout Subsubsection
-Mono
+Mono-project
 \end_layout
 
 \begin_layout Standard
@@ -132,57 +151,39 @@ Mono is a software platform designed to allow developers to easily create
 \end_layout
 
 \begin_layout Subsubsection
-Cross-platform languages
-\end_layout
-
-\begin_layout Enumerate
-Forth: is an imperative stack-based computer programming language and programmin
-g environment.
- Language features include structured programming, reflection (the ability
- to modify the program structure during program execution), concatenative
- programming (functions are composed with juxtaposition) and extensibility
- (the programmer can create new commands).
- Although not an acronym, the language's name is sometimes spelled with
- all capital letters as FORTH, following the customary usage during its
- earlier years.
-\end_layout
-
-\begin_layout Enumerate
-Squirrel: is a high level imperative, object-oriented programming language,
- designed to be a light-weight scripting language that fits in the size,
- memory bandwidth, and real-time requirements of applications like video
- games and hardware such as Electric Imp.
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Hablar de Electric IMp ?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
-Mobile app cross-platform tools
+Qt Project
 \end_layout
 
 \begin_layout Standard
-There are different multi-platform tools that aim to make easy the development
- of mobile applications targeting the different operating systems of the
- market.
- 
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-asdasd
+Qt is an open source cross-platform application and UI framework for developers
+ using C++ or QML, a CSS & JavaScript like language.
+ The main advantage of Qt is that is focused on logical and graphical part
+ of the applications.
+ Qt also is optimized for mobile environments.
+ Qt Creator is the supporting Qt IDE.
 \end_layout
+
+\begin_layout Subsubsection
+Cross-platform mobile tools
+\end_layout
+
+\begin_layout Standard
+Nowadays mobile applications are becoming increasingly more present in our
+ daily life, allowing people to perform several tasks through the use of
+ smartphones, tablets or equivalent devices.
+ The existence of different mobile operating systems with different programming
+ languages and development tools can be a problem when someone wants to
+ release an application in as many platforms as possible.
+ For this reason, the cross-platform world in mobile development is growing
+ rapidly.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-4"
 
 \end_inset
 
-
+ shows the main mobile frameworks used to develop cross-platform applications.
 \end_layout
 
 \begin_layout Subsection
@@ -350,7 +351,7 @@ status open
 Identical code in different operative systems (often with syntaxis differences
  but the syntactic sugar is the same).
  This occurs because the logical structures of the applications are the
- same in any machine or languaje and the different features of the operating
+ same in any machine or language and the different features of the operating
  system must be identical in different languages because they are targeting
  the same OS.
  AlterNative is trying to work with this kind of code.
@@ -2470,7 +2471,8 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename Figures/rpi_iosharp.pdf
+	filename Figures/rpi_iosharp.PNG
+	lyxscale 70
 	width 100col%
 
 \end_inset
@@ -2482,7 +2484,7 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-IOSharp benchmark results
+IOSharp benchmark results in Raspberry Pi
 \begin_inset CommandInset label
 LatexCommand label
 name "fig:IOSharp-benchmark-results"
@@ -2708,6 +2710,27 @@ Modern Compiler Design
 
 , Vrije Universiteit, Amsterdam and Delf University, John Wiley & Sons,
  Ltd, England, 2000
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-4"
+
+\end_inset
+
+M.
+ Palmieri, I.
+ Singh, A.
+ Cicchetti, 
+\begin_inset Quotes eld
+\end_inset
+
+Comparison of Cross-Platform Mobile Development Tools
+\begin_inset Quotes erd
+\end_inset
+
+, Innovation, Design and Engineering Mälardalen University, Sweden, 2012
 \end_layout
 
 \begin_layout Bibliography
