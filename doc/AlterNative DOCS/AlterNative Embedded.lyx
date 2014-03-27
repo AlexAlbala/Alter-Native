@@ -334,16 +334,13 @@ Some initial assumptions have made in AlterNative development:
 \begin_layout Enumerate
 The computational theory says that all the source code can be translated
  from one machine to another 
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-(REF)
-\end_layout
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-5,key-12"
 
 \end_inset
 
-, however, the code of an application can be divided in two parts:
+ , however, the code of an application can be divided in two parts:
 \end_layout
 
 \begin_deeper
@@ -427,7 +424,6 @@ Hay mucho codigo de tipo que tiene sentido en optimizar, p.e codigo algoritmo
  es que el codigo ha de ser entendible por un humano y facilmente modificable.
  De forma que el codigo traducido pueda ser completado, por ejemplo reemplazando
  el GC por gestion manual de la memoria.
- 
 \end_layout
 
 \end_inset
@@ -519,12 +515,9 @@ Abstract Syntax Tree transformation
 
 \begin_layout Standard
 AlterNative is based on Abstract Syntax Tree (AST) 
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-revisar referencias
-\end_layout
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-5,key-12"
 
 \end_inset
 
@@ -1202,10 +1195,6 @@ name "fig:Java-vs-C++"
 
 \end_layout
 
-\begin_layout Plain Layout
-
-\end_layout
-
 \end_inset
 
 
@@ -1225,12 +1214,9 @@ As an example of a real case where AlterNative fits perfectly is on the
  the TinyCLR interpreter, so a standard computer cannot run any NETMF program
  although it is written and compiled to .NET code.
  In order to fill this gap, a library named IOSharp 
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-REF
-\end_layout
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-7"
 
 \end_inset
 
@@ -2424,7 +2410,7 @@ Cross-platform embedded systems
 
 \begin_layout Standard
 The tests shown in this subsection are performed in a Raspberry Pi model
- B revision 2.0: 
+ B revision 2.0:
 \end_layout
 
 \begin_layout Itemize
@@ -2496,10 +2482,6 @@ name "fig:IOSharp-benchmark-results"
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Plain Layout
 
 \end_layout
 
@@ -2665,6 +2647,45 @@ ILSpy homepage, http://ilspy.net/, May 2013
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
+key "key-4"
+
+\end_inset
+
+M.
+ Palmieri, I.
+ Singh, A.
+ Cicchetti, 
+\begin_inset Quotes eld
+\end_inset
+
+Comparison of Cross-Platform Mobile Development Tools
+\begin_inset Quotes erd
+\end_inset
+
+, Innovation, Design and Engineering Mälardalen University, Sweden, 2012
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-14"
+
+\end_inset
+
+Particlecode, 
+\begin_inset Quotes eld
+\end_inset
+
+Overview | Particle Code
+\begin_inset Quotes erd
+\end_inset
+
+, http://www.particlecode.com/features/overview/, May 2013
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
 key "key-12"
 
 \end_inset
@@ -2715,40 +2736,21 @@ Modern Compiler Design
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
-key "key-4"
+key "key-7"
 
 \end_inset
 
-M.
- Palmieri, I.
- Singh, A.
- Cicchetti, 
+G.
+ Solé, J.
+ López, 
 \begin_inset Quotes eld
 \end_inset
 
-Comparison of Cross-Platform Mobile Development Tools
+IOSharp: .NET Micro Framework on Linux
 \begin_inset Quotes erd
 \end_inset
 
-, Innovation, Design and Engineering Mälardalen University, Sweden, 2012
-\end_layout
-
-\begin_layout Bibliography
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-key "key-14"
-
-\end_inset
-
-Particlecode, 
-\begin_inset Quotes eld
-\end_inset
-
-Overview | Particle Code
-\begin_inset Quotes erd
-\end_inset
-
-, http://www.particlecode.com/features/overview/, May 2013
+, Universitat Politécnica de Catalunya, Bachelor's thesis, Spain, 2014
 \end_layout
 
 \begin_layout Bibliography
