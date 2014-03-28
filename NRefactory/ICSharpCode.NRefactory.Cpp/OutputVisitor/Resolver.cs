@@ -51,6 +51,8 @@ namespace ICSharpCode.NRefactory.Cpp
             libraryMap.Add("Thread", "\"System/Threading/Thread.h\"");
             libraryMap.Add("ThreadStart", "\"System/Threading/Thread.h\"");
             libraryMap.Add("ParameterizedThreadStart", "\"System/Threading/Thread.h\"");
+            libraryMap.Add("Timer", "\"System/Threading/Timer.h\"");
+            libraryMap.Add("TimerCallback", "\"System/Threading/Timer.h\"");
             //*************************************************************//
 
             //********************** SYSTEM COLLECTIONS GENERIC:
@@ -80,6 +82,9 @@ namespace ICSharpCode.NRefactory.Cpp
             Dictionary<string, ParameterDeclaration[]> delegatesInLibrary = new Dictionary<string, ParameterDeclaration[]>();
             delegatesInLibrary.Add("ThreadStart", new ParameterDeclaration[0]);
             delegatesInLibrary.Add("ParameterizedThreadStart", new ParameterDeclaration[] { new VariadicParameterDeclaration() });
+            delegatesInLibrary.Add("TimerCallback", new ParameterDeclaration[] { new ParameterDeclaration(new PtrType(new SimpleType("Object")), "state")});
+
+            //Add properties types in cache for the properties in library
 
             Dictionary<string, string> propertiesInLibrary = new Dictionary<string, string>();
             propertiesInLibrary.Add("Now", "DateTime");

@@ -18,10 +18,10 @@ namespace RegressionTest
         {
              ignoreFolders = new List<string>() { "gc", "boost", "System", "build" };
              string alt_var_tmp = Environment.GetEnvironmentVariable("ALTERNATIVE_BIN_PATH");
-             string lib_var_tmp = Environment.GetEnvironmentVariable("ALTERNATIVE_CPP_LIBRARY_PATH");
+             string lib_var_tmp = Environment.GetEnvironmentVariable("ALTERNATIVE_CPP_LIB");
              
             if (alt_var_tmp != null) {
-		 alternativeDirectory = alt_var_tmp;
+		         alternativeDirectory = alt_var_tmp;
                  alternativePath = alt_var_tmp + @"/AlterNative.Core.exe";
 	    } else
                  WarningMessage("Variable <ALTERNATIVE_BIN_PATH> should be setted. Default is: " + alternativePath);
@@ -29,7 +29,7 @@ namespace RegressionTest
             if (lib_var_tmp != null)
                 cxxLibraryPath = lib_var_tmp;
             else
-                WarningMessage("Variable <ALTERNATIVE_CPP_LIBRARY_PATH> should be setted. Default is: " + cxxLibraryPath);
+                WarningMessage("Variable <ALTERNATIVE_CPP_LIB_PATH> should be setted. Default is: " + cxxLibraryPath);
                
 
 	    Console.WriteLine("testPath="+testPath);
