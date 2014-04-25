@@ -1,11 +1,6 @@
-# - Use C++11 standard
-#
-# Author:
-#   Kevin M. Godby <kevin@godby.org>
-#
-
-# Note that Microsoft Visual C++ compiler enables C++11 by default
-
+##################################################
+#Enable C++11 mode
+##################################################
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR CMAKE_COMPILER_IS_GNUCXX)
     include(CheckCXXCompilerFlag)
     check_cxx_compiler_flag(--std=c++11 SUPPORTS_STD_CXX11)

@@ -17,14 +17,16 @@ namespace RegressionTest
         static Utils()
         {
              ignoreFolders = new List<string>() { "gc", "boost", "System", "build" };
+             string alt_exe_var_tmp = Environment.GetEnvironmentVariable("ALTERNATIVE_BIN");
              string alt_var_tmp = Environment.GetEnvironmentVariable("ALTERNATIVE_BIN_PATH");
              string lib_var_tmp = Environment.GetEnvironmentVariable("ALTERNATIVE_CPP_LIB");
-             
-            if (alt_var_tmp != null) {
+
+             if (alt_exe_var_tmp != null)
+             {
 		         alternativeDirectory = alt_var_tmp;
-                 alternativePath = alt_var_tmp + @"/AlterNative.Core.exe";
+                 alternativePath = alt_exe_var_tmp;
 	    } else
-                 WarningMessage("Variable <ALTERNATIVE_BIN_PATH> should be setted. Default is: " + alternativePath);
+                 WarningMessage("Variable <ALTERNATIVE_BIN> should be setted. Default is: " + alternativePath);
 
             if (lib_var_tmp != null)
                 cxxLibraryPath = lib_var_tmp;

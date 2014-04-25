@@ -16,9 +16,13 @@ namespace AlterNative.BuildTools
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("CMAKE_MINIMUM_REQUIRED(VERSION 2.8)");
-
             sb.AppendLine("PROJECT(" + projectName + " CXX)");
-			//sb.AppendLine("SET(CMAKE_CXX_FLAGS  \"${CMAKE_CXX_FLAGS} -std=c++11\")");
+
+            FileInfo cxx11Cmake = new FileInfo(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"/../../../Tools/Code/CMAKE-CXX11");
+            StreamReader sr_cxx11 = new StreamReader(cxx11Cmake.FullName);
+            sb.AppendLine(sr_cxx11.ReadToEnd());
+
+                       
 
             sb.AppendLine("SET_PROPERTY(GLOBAL PROPERTY GL_IS_RELEASE " + (release ? "1" : "0") + ")");
 
