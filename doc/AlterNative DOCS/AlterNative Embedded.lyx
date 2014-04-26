@@ -1,5 +1,5 @@
-#LyX 2.0 created this file. For more info see http://www.lyx.org/
-\lyxformat 413
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
 \begin_document
 \begin_header
 \textclass IEEEtran
@@ -16,13 +16,13 @@
 \font_roman default
 \font_sans default
 \font_typewriter default
+\font_math auto
 \font_default_family default
 \use_non_tex_fonts false
 \font_sc false
 \font_osf false
 \font_sf_scale 100
 \font_tt_scale 100
-
 \graphics default
 \default_output_format default
 \output_sync 0
@@ -33,15 +33,24 @@
 \use_hyperref false
 \papersize default
 \use_geometry false
-\use_amsmath 1
-\use_esint 1
-\use_mhchem 1
-\use_mathdots 1
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 0
+\use_package mhchem 1
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
 \cite_engine basic
+\cite_engine_type default
+\biblio_style plain
 \use_bibtopic false
 \use_indices false
 \paperorientation portrait
 \suppress_date false
+\justification true
 \use_refstyle 1
 \index Index
 \shortcut idx
@@ -67,7 +76,7 @@
 
 \begin_layout Title
 AlterNative: An executable to executable Cross-platform system for translating
- high-level to native applications
+ Virtual Machine applications to native
 \end_layout
 
 \begin_layout Author
@@ -102,14 +111,14 @@ Nowadays all the service sectors like industrial, energy, healthcare, security
  In other words the future situation can be described as an heterogeneous
  distributed system.
  The future of the devices tends to converge in a multiplatform environment
- composed by different devices and elements but with similar capabilites
+ composed by different devices and elements but with similar capabilities
  and possibilities, not only smartphones, smart TVs or tablets but also
  all kind of elements.
  In this work we present the AlterNative software as a cross-platform code
  translation tool focused on the performance of applications maintaining
  the maximum number of functionalities.
  AlterNative tries to solve the problem of multiplatform software avoiding
- the use of elements which can be perjudicial to the performance like virtual
+ the use of elements which can be harmful to the performance like virtual
  machines and aims to increase the efficiency of the code by using native
  languages.
  AlterNative is based on a .NET decompiler called ILSpy 
@@ -234,7 +243,7 @@ status open
 \align center
 \begin_inset Graphics
 	filename Figures/ParticleCode.png
-	lyxscale 50
+	lyxscale 40
 	width 70col%
 
 \end_inset
@@ -243,7 +252,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 Particle Code engine
@@ -265,7 +274,7 @@ AlterNative contributions
 
 \begin_layout Standard
 AlterNative will take benefit of all the work done in this line and will
- use ILSpy decompiler for obtain the source code of an assemblied file in
+ use ILSpy decompiler for obtain the source code of an assembled file in
  order to translate it to a low level language.
 \end_layout
 
@@ -317,7 +326,7 @@ The philosophy of AlterNative is to provide the user with a system for taking
  the advantage of performance of low-level languages, and also exploit the
  possibility of run the native code in several systems, in other words,
  this philosophy is similar to the WORA (Write Once, Run Anywhere) slogan
- created by Sun Microsystems to illustrate the cross-platform benets of
+ created by Sun Microsystems to illustrate the cross-platform benefits of
  the Java Virtual Machine.
  The difference is focused on the final performance since AlterNative outputs
  in native language and does not depend on any virtual machine.
@@ -345,7 +354,7 @@ key "key-5,key-12"
 
 \begin_deeper
 \begin_layout Enumerate
-Identical code in different operative systems (often with syntaxis differences
+Identical code in different operative systems (often with syntax differences
  but the syntactic sugar is the same).
  This occurs because the logical structures of the applications are the
  same in any machine or language and the different features of the operating
@@ -455,6 +464,7 @@ status open
 \align center
 \begin_inset Graphics
 	filename Figures/Process.PNG
+	lyxscale 60
 	width 80col%
 
 \end_inset
@@ -463,7 +473,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 AlterNative process
@@ -492,17 +502,17 @@ First of all the assembly received is passed through a decompiler in order
  AST in order to obtain a second AST representing the source code but in
  other language (in this case C++).
  The final step consists on compile the C++ code into a new assembly.
- This final assembly maintains the same funcionalities of the first assembly
- but takes benet of the native code performance.
+ This final assembly maintains the same functionalities of the first assembly
+ but takes benefit of the native code performance.
  The effort of this software is not focused on the code translation, but
  it is focused in maintaining all the features and functionalities of the
  original code.
  The problem is that these features and functionalities often are directly
- related to the language, for instance a garbage collector, specic expressions
+ related to the language, for instance a garbage collector, specific expressions
  or even language syntax.
  AlterNative is able to provide most of the features of the original code
- to the final code using external open-source libraries and propietary libraries
- in order to be fully compatible with high-level languages.
+ to the final code using external open-source libraries and proprietary
+ libraries in order to be fully compatible with high-level languages.
 \end_layout
 
 \begin_layout Subsection
@@ -549,6 +559,7 @@ status open
 \align center
 \begin_inset Graphics
 	filename Figures/AlterNative_AST_REPORT_pag1.pdf
+	lyxscale 60
 	width 100col%
 	rotateAngle 270
 
@@ -558,7 +569,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 AST example 
@@ -617,6 +628,7 @@ status open
 \align center
 \begin_inset Graphics
 	filename Figures/AlterNative_AST_REPORT_pag2.pdf
+	lyxscale 60
 	width 100col%
 	rotateAngle 270
 
@@ -626,7 +638,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 AST example C++ 
@@ -812,7 +824,7 @@ namespace ForEach {
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 ForEach example input C#
@@ -935,7 +947,7 @@ namespace ForEach {
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 ForEach example C++ header output
@@ -1037,7 +1049,7 @@ namespace ForEach {
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 ForEach example C++ code implementation output
@@ -1127,7 +1139,7 @@ You have an application for Android written in Java.
  (Java Virtual Machine) which is running over a unix distribution.
  This application takes several images from the camera and processes each
  frame in order to change from YUV format (Android standard) to RGB format.
- After trying your application in Java environment you obtain a framerate
+ After trying your application in Java environment you obtain a frame rate
  of 7 frames per second.
  After this test you want to upgrade your application improving the performance.
  AlterNative platform allows you to take the Java code layer in charge of
@@ -1176,7 +1188,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 Java vs C++ performance.
@@ -1280,7 +1292,7 @@ status open
 \end_inset
 
 
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 Stack comparison 
@@ -1638,7 +1650,7 @@ n", pf[0], n, pf[1]);
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 Fannkuch-redux test C# code
@@ -1671,7 +1683,7 @@ reference "fig:Time-in-function-1"
  In the Windows platform, C# .NET performs several optimizations that allows
  the executable to run with a reasonable performance.
  Even sometimes these optimizations makes the executable overcome to the
- C++ exectuable version.
+ C++ executable version.
 \end_layout
 
 \begin_layout Standard
@@ -1693,7 +1705,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 Time in function of the target platform for the Fannkuch-redux test
@@ -1719,9 +1731,9 @@ name "fig:Time-in-function-1"
 \begin_layout Standard
 The C++ original code obtains the better benchmark as expected.
  The AlterNative C++ generated code is near the original code.
- This behaviour is also expected because AlterNative does not implement
- stack or heap optimizations in the variables, now all the variables are
- allocated dynamically.
+ This behavior is also expected because AlterNative does not implement stack
+ or heap optimizations in the variables, now all the variables are allocated
+ dynamically.
  The access to these variables are computationally expensive than in stack
  variables.
 \end_layout
@@ -2321,7 +2333,7 @@ class Body {
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 N-Bodies algorithm
@@ -2373,7 +2385,7 @@ status open
 
 \begin_layout Plain Layout
 \align center
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 Time in function of the target platform for the N-Body test
@@ -2414,7 +2426,7 @@ The tests shown in this subsection are performed in a Raspberry Pi model
 \end_layout
 
 \begin_layout Itemize
-ARM6 700MHz (Overclocked to 1GHz) processor
+ARM6 700MHz (Over-clocked to 1GHz) processor
 \end_layout
 
 \begin_layout Itemize
@@ -2458,7 +2470,7 @@ status open
 \align center
 \begin_inset Graphics
 	filename Figures/rpi_iosharp.PNG
-	lyxscale 70
+	lyxscale 60
 	width 100col%
 
 \end_inset
@@ -2467,7 +2479,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 IOSharp benchmark results in Raspberry Pi
@@ -2593,7 +2605,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 Memory allocation in Binary-tree test
@@ -2873,7 +2885,7 @@ P.
 \begin_inset Quotes eld
 \end_inset
 
-The Effectiveness of Tegression Testing Techniques in Reducing the Occurrence
+The Effectiveness of Regression Testing Techniques in Reducing the Occurrence
  of Residual Defects
 \begin_inset Quotes erd
 \end_inset
