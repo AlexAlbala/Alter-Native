@@ -2244,7 +2244,17 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
                 //For protection
                 if (currentType == null)
-                    return EndNode(simpleType, new PtrType(type));
+                {
+                    //If the type is in the Visual Tree, the parent is null. 
+                    if (simpleType.Parent == null)
+                    {
+                        return EndNode(simpleType, type);
+                    }
+                    else
+                    {
+                        return EndNode(simpleType, new PtrType(type));
+                    }
+                }
 
                 //If the type is in the Visual Tree, the parent is null. 
                 //If its parent is a TypeReferenceExpression it is like Console::ReadLine          
