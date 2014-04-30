@@ -231,7 +231,7 @@ namespace RegressionTest
 
                 try
                 {
-                    if (res.AllSuccess() && Config.overwriteTarget)
+                    if (res.msbuildCode == 0 && Config.overwriteTarget)
                         Utils.OverwriteTarget(di);
 
                     if (res.alternative == 0)
