@@ -1822,7 +1822,8 @@ namespace ICSharpCode.NRefactory.Cpp
             if (typeDeclaration.HasModifier(Modifiers.Private)) //Change modifier from private to public for nested classes            
                 typeDeclaration.ModifierTokens.Remove(typeDeclaration.ModifierTokens.First((x) => x.Modifier == Modifiers.Private));
 
-            typeDeclaration.ModifierTokens.Add(new CppModifierToken(TextLocation.Empty, Modifiers.Public));
+            if(!typeDeclaration.HasModifier(Modifiers.Public))
+                typeDeclaration.ModifierTokens.Add(new CppModifierToken(TextLocation.Empty, Modifiers.Public));
 
             WriteAccesorModifier(typeDeclaration.ModifierTokens);
 

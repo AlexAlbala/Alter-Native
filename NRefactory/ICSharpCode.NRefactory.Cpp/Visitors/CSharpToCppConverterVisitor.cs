@@ -1419,15 +1419,35 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         {
             ForeachStatement feach = new ForeachStatement();
 
+            bool isObject = false;
             //Add variable declaration to the foreach body (in order to dereference from iterator to the variable)
             string tmpVar = "_" + foreachStatement.VariableName.ToUpper();
+            
+            AstType tmpVarType = (AstType)foreachStatement.VariableType.AcceptVisitor(this, data);
+            AstType tmpDeRefVarType = null;
+            if (tmpVarType is PtrType)
+            {
+                isObject = true;
+                tmpDeRefVarType = (tmpVarType as PtrType).Target;
+            }
+
             VariableDeclarationStatement vds = new VariableDeclarationStatement(
-                (AstType)foreachStatement.VariableType.AcceptVisitor(this, data),
-                foreachStatement.VariableName,
+                isObject ? (AstType)tmpDeRefVarType.Clone() : (AstType)tmpVarType.Clone(),
+                isObject ? "deref_" + foreachStatement.VariableName : foreachStatement.VariableName,
                 new PointerExpression(new IdentifierExpression(tmpVar)));
 
             BlockStatement blckstmt = new BlockStatement();
             blckstmt.AddChild(vds, BlockStatement.StatementRole);
+            if (isObject)
+            {
+                //Convert the stack object to dynamic object for continue coding normally
+                VariableDeclarationStatement vds2 = new VariableDeclarationStatement(
+                tmpVarType,
+                foreachStatement.VariableName,
+                new AddressOfExpression(new IdentifierExpression("deref_" + foreachStatement.VariableName)));
+                blckstmt.AddChild(vds2, BlockStatement.StatementRole);
+            }   
+
             foreach (CSharp.Statement st in foreachStatement.EmbeddedStatement.GetChildrenByRole(CSharp.BlockStatement.StatementRole))
                 blckstmt.AddChild((Statement)st.AcceptVisitor(this, data), BlockStatement.StatementRole);
             feach.ForEachStatement = blckstmt;
