@@ -46,22 +46,23 @@ namespace AlterNative.BuildTools
 
             string libPub = (Environment.GetEnvironmentVariable("ALTERNATIVE_CPP_LIB_PATH") + @"\src\public").Replace('\\','/');
             string libPrv = (Environment.GetEnvironmentVariable("ALTERNATIVE_CPP_LIB_PATH") + @"\src\private").Replace('\\','/');
-
-            string libSys = (Environment.GetEnvironmentVariable("ALTERNATIVE_CPP_LIB_PATH") + @"\build\libfiles\System.lib").Replace('\\', '/');
-            string libGc = (Environment.GetEnvironmentVariable("ALTERNATIVE_CPP_LIB_PATH") + @"\build\libfiles\gc-lib.lib").Replace('\\', '/');
-
-            List<string> libToLink = new List<string>();
-            libToLink.Add(libSys);
-            libToLink.Add(libGc);
-            
+            string libDir = (Environment.GetEnvironmentVariable("ALTERNATIVE_CPP_LIB_PATH") + @"\build\libfiles");
 
             sb.AppendLine("INCLUDE_DIRECTORIES(" + libPub + ")");
             sb.AppendLine("INCLUDE_DIRECTORIES(" + libPrv + ")");
 
-            foreach (string lib in libToLink)
+            DirectoryInfo di = new DirectoryInfo(libDir);
+            if (!di.Exists)
             {
-                sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " " + lib + ")");
-            }            
+                Utils.WriteToConsole("Library files not found. Make sure to execute script Lib/alternative-lib-compile");
+            }
+            List<string> libToLink = new List<string>();
+
+            foreach (FileInfo f in di.GetFiles())
+                libToLink.Add(f.FullName.Replace('\\','/'));
+
+            foreach (string lib in libToLink)            
+                sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " " + lib +")");
 
             foreach (String s in Config.addedLibs)
             {
