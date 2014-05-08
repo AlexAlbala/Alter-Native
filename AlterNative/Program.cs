@@ -181,7 +181,7 @@ namespace AlterNative
                 Console.WriteLine("Trying to locate the library at: " + Config.AlterNativeLib);
             }
 
-            Commands.CopyLibFiles(new DirectoryInfo(outputDir));
+           // Commands.CopyLibFiles(new DirectoryInfo(outputDir));
 
             //TRIM END .EXE : BUG If The name is File.exe, trim end ".exe" returns Fil !!!!
             string name = adef.MainModule.Name.Substring(0, adef.MainModule.Name.Length - 4);

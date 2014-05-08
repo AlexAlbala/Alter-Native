@@ -26,8 +26,8 @@ namespace AlterNative.BuildTools
 
             sb.AppendLine("SET_PROPERTY(GLOBAL PROPERTY GL_IS_RELEASE " + (release ? "1" : "0") + ")");
 
-            sb.AppendLine("ADD_SUBDIRECTORY(System)");
-            sb.AppendLine("ADD_SUBDIRECTORY(gc)");
+            //sb.AppendLine("ADD_SUBDIRECTORY(System)");
+            //sb.AppendLine("ADD_SUBDIRECTORY(gc)");
             sb.Append("SET(EXECPATH");
 
             foreach (string s in sourceFiles)
@@ -44,8 +44,24 @@ namespace AlterNative.BuildTools
             else
                 sb.AppendLine("ERROR");
 
-            sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " System)");
-            sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " gc-lib)");
+            string libPub = (Environment.GetEnvironmentVariable("ALTERNATIVE_CPP_LIB_PATH") + @"\src\public").Replace('\\','/');
+            string libPrv = (Environment.GetEnvironmentVariable("ALTERNATIVE_CPP_LIB_PATH") + @"\src\private").Replace('\\','/');
+
+            string libSys = (Environment.GetEnvironmentVariable("ALTERNATIVE_CPP_LIB_PATH") + @"\build\libfiles\System.lib").Replace('\\', '/');
+            string libGc = (Environment.GetEnvironmentVariable("ALTERNATIVE_CPP_LIB_PATH") + @"\build\libfiles\gc-lib.lib").Replace('\\', '/');
+
+            List<string> libToLink = new List<string>();
+            libToLink.Add(libSys);
+            libToLink.Add(libGc);
+            
+
+            sb.AppendLine("INCLUDE_DIRECTORIES(" + libPub + ")");
+            sb.AppendLine("INCLUDE_DIRECTORIES(" + libPrv + ")");
+
+            foreach (string lib in libToLink)
+            {
+                sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " " + lib + ")");
+            }            
 
             foreach (String s in Config.addedLibs)
             {

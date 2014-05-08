@@ -953,9 +953,11 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitStackAllocExpression(StackAllocExpression stackAllocExpression, object data)
         {
             StartNode(stackAllocExpression);
-            WriteKeyword("stackalloc");
+            WriteKeyword("STACKALLOC");
+            LPar();
             stackAllocExpression.Type.AcceptVisitor(this, data);
             WriteCommaSeparatedListInBrackets(new[] { stackAllocExpression.CountExpression });
+            RPar();
             return EndNode(stackAllocExpression);
         }
 
@@ -1822,7 +1824,7 @@ namespace ICSharpCode.NRefactory.Cpp
             if (typeDeclaration.HasModifier(Modifiers.Private)) //Change modifier from private to public for nested classes            
                 typeDeclaration.ModifierTokens.Remove(typeDeclaration.ModifierTokens.First((x) => x.Modifier == Modifiers.Private));
 
-            if(!typeDeclaration.HasModifier(Modifiers.Public))
+            if (!typeDeclaration.HasModifier(Modifiers.Public))
                 typeDeclaration.ModifierTokens.Add(new CppModifierToken(TextLocation.Empty, Modifiers.Public));
 
             WriteAccesorModifier(typeDeclaration.ModifierTokens);
@@ -3364,16 +3366,28 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitFixedStatement(FixedStatement fixedStatement, object data)
         {
             StartNode(fixedStatement);
-            WriteKeyword("fixed");
-            Space(policy.SpaceBeforeUsingParentheses);
-            LPar();
-            Space(policy.SpacesWithinUsingParentheses);
+            formatter.WriteComment(CommentType.SingleLine, "Fixed statement ignored");
             fixedStatement.Type.AcceptVisitor(this, data);
-            Space();
             WriteCommaSeparatedList(fixedStatement.Variables);
-            Space(policy.SpacesWithinUsingParentheses);
-            RPar();
-            WriteEmbeddedStatement(fixedStatement.EmbeddedStatement);
+            Semicolon();
+            NewLine();
+            if (!fixedStatement.EmbeddedStatement.IsNull)
+            {
+                BlockStatement block = fixedStatement.EmbeddedStatement as BlockStatement;
+                if (block != null)
+                {
+                    formatter.WriteComment(CommentType.SingleLine, "Start fixed block");
+                    foreach (var node in block.Statements)
+                    {
+                        node.AcceptVisitor(this, data);
+                    }
+                    formatter.WriteComment(CommentType.SingleLine, "End fixed block");
+                }
+                else
+                {
+                    fixedStatement.EmbeddedStatement.AcceptVisitor(this, null);
+                }
+            }
             return EndNode(fixedStatement);
         }
 
@@ -3651,8 +3665,19 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitUncheckedStatement(UncheckedStatement uncheckedStatement, object data)
         {
             StartNode(uncheckedStatement);
-            WriteKeyword("unchecked");
+            formatter.WriteComment(CommentType.SingleLine, "unchecked ignored");
             uncheckedStatement.Body.AcceptVisitor(this, data);
+
+
+            BlockStatement block = uncheckedStatement.Body;
+            formatter.WriteComment(CommentType.SingleLine, "Start unchecked block");
+            foreach (var node in block.Statements)
+            {
+                node.AcceptVisitor(this, data);
+            }
+            formatter.WriteComment(CommentType.SingleLine, "End unchecked block");
+
+
             return EndNode(uncheckedStatement);
         }
 
