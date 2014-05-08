@@ -16,7 +16,7 @@ namespace RegressionTest
 
         static Utils()
         {
-             ignoreFolders = new List<string>() { "gc", "boost", "System", "build", "Microsoft.SPOT" };
+             ignoreFolders = new List<string>() {"build" };
              string alt_exe_var_tmp = Environment.GetEnvironmentVariable("ALTERNATIVE_BIN");
              string alt_var_tmp = Environment.GetEnvironmentVariable("ALTERNATIVE_BIN_PATH");
              string lib_var_tmp = Environment.GetEnvironmentVariable("ALTERNATIVE_CPP_LIB");
