@@ -53,7 +53,7 @@ namespace AlterNative.BuildTools
             sb.AppendLine("INCLUDE_DIRECTORIES(" + libPub + ")");
             sb.AppendLine("INCLUDE_DIRECTORIES(" + libPrv + ")");
 
-            DirectoryInfo di = new DirectoryInfo(libDir);
+            DirectoryInfo di = new DirectoryInfo(libDir.Replace('\\', '/'));
             if (!di.Exists)
             {
                 Utils.WriteToConsole("Library files not found. Make sure to execute script Lib/alternative-lib-compile");
