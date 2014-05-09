@@ -72,7 +72,7 @@ namespace AlterNative.BuildTools
             }
 
             sb.AppendLine("IF(UNIX)");
-            sb.AppendLine("IF(!ANDROID)");
+            sb.AppendLine("IF(NOT ANDROID)");
             sb.AppendLine("TARGET_LINK_LIBRARIES(" + execName + " pthread)");
             sb.AppendLine("ENDIF()");
             sb.AppendLine("ENDIF(UNIX)");
