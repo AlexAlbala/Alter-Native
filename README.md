@@ -119,6 +119,7 @@ Testing
 -------
 
 Make sure you have a c++11 compatible compiler
+
 Make sure you have compiled the C++ AlterNative library before running some test: https://github.com/AlexAlbala/AlterNative-CXX-Lib
 
 	cd AlterNative
