@@ -20,7 +20,7 @@ namespace AlterNative.BuildTools
             sb.AppendLine("CMAKE_MINIMUM_REQUIRED(VERSION 2.8)");
             sb.AppendLine("PROJECT(" + projectName + " CXX)");
 
-            FileInfo cxx11Cmake = new FileInfo(altTools + @"/Code/CMAKE-CXX11");
+            FileInfo cxx11Cmake = new FileInfo((altTools + @"\Code\CMAKE-CXX11").Replace('\\','/'));
             StreamReader sr_cxx11 = new StreamReader(cxx11Cmake.FullName);
             sb.AppendLine(sr_cxx11.ReadToEnd());
 
@@ -80,7 +80,7 @@ namespace AlterNative.BuildTools
             if (release)
                 sb.AppendLine("SET(CMAKE_BUILD_TYPE Release)");            
 
-            FileInfo boostCmake = new FileInfo(altTools + @"\Code\CMAKE-BOOST");
+            FileInfo boostCmake = new FileInfo((altTools + @"\Code\CMAKE-BOOST").Replace('\\','/'));
 
             StreamReader sr = new StreamReader(boostCmake.FullName);
             sb.AppendLine("SET(PROJ_NAME " + execName + ")");
