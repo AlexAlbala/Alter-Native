@@ -88,13 +88,13 @@ namespace AlterNative
         {
             Commands.SetLinkedLibraries(args);
 
-            if (System.Environment.GetEnvironmentVariable("ALTERNATIVE_HOME") == null)
+            if (System.Environment.GetEnvironmentVariable("ALTERNATIVE_TOOLS_PATH") == null)
             {
-                Utils.WriteToConsole("ALTERNATIVE_HOME not setted, please execute alternative-init command");
+                Utils.WriteToConsole("ALTERNATIVE_TOOLS_PATH not setted, please execute alternative-init command");
             }
             else
             {
-                Config.AlterNativeHome = System.Environment.GetEnvironmentVariable("ALTERNATIVE_HOME");
+                Config.AlterNativeTools = System.Environment.GetEnvironmentVariable("ALTERNATIVE_TOOLS_PATH");
             }
 
             Utils.WriteToConsole("\n");

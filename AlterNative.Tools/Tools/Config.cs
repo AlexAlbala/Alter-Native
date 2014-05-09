@@ -18,7 +18,7 @@ namespace AlterNative
             get;
             set;
         }
-        public static string AlterNativeHome
+        public static string AlterNativeTools
         {
             get;
             set;

@@ -83,14 +83,14 @@ namespace AlterNative
         public static AssemblyDefinition NewTemplate(DirectoryInfo output)
         {
             Utils.WriteToConsole("Creating blank template...");
-            if (Config.AlterNativeHome != null)
+            if (Config.AlterNativeTools != null)
             {
                 Config.targetType = TargetType.Executable;
-                return LoadAssembly(Config.AlterNativeHome + @"/Tools/Templates/Blank/Blank.exe");
+                return LoadAssembly(Config.AlterNativeTools + @"/Templates/Blank/Blank.exe");
             }
             else
             {
-                Utils.WriteToConsole("WARNING: ALTERNATIVE_HOME not setted");
+                Utils.WriteToConsole("WARNING: ALTERNATIVE_TOOLS_PATH not setted");
 
                 Utils.WriteToConsole("Trying to get templates from: " + @"../../../Tools/Templates/Blank/Blank.exe");
                 return LoadAssembly(@"../../../Tools/Templates/Blank/Blank.exe");
