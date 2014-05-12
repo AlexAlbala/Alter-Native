@@ -111,9 +111,13 @@ namespace AlterNative
                 DirectoryInfo buildDir = Commands.RunCMake(new DirectoryInfo(outputDir));
                 Commands.Compile(buildDir);
 
+#if !CORE
                 Console.ForegroundColor = ConsoleColor.Green;
+#endif
                 Utils.WriteToConsole("alternative make done");
+#if !CORE
                 Console.ResetColor();
+#endif
                 return;
             }
             else
@@ -190,9 +194,13 @@ namespace AlterNative
             else
                 CMakeGenerator.GenerateCMakeLists(name + "Proj", name, outputDir, FileWritterManager.GetSourceFiles());
 
+#if !CORE
             Console.ForegroundColor = ConsoleColor.Green;
+#endif
             Utils.WriteToConsole("Done");
-            Console.ResetColor();
+#if !CORE
+            Console.ForegroundColor = ConsoleColor.Green;
+#endif
         }        
         #endregion
 
