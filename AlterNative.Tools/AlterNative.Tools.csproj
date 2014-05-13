@@ -44,13 +44,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BuildTools\CMakeGenerator.cs" />
+    <Compile Include="Mono.Options\Options.cs" />
     <Compile Include="Tools\Config.cs" />
     <Compile Include="Tools\Utils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools\StringExtension.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <Content Include="Antlr4.StringTemplate\Antlr4.StringTemplate.dll" />
+    <Content Include="Antlr4.StringTemplate\Antlr4.StringTemplate.pdb" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

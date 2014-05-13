@@ -67,7 +67,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ICSharpCode.Decompiler\ICSharpCode.Decompiler.Core.csproj">
       <Project>{984CC812-9470-4A13-AFF9-CC44068D666C}</Project>
-      <Name>ICSharpCode.Decompiler</Name>
+      <Name>ICSharpCode.Decompiler.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Mono.Cecil\Mono.Cecil.csproj">
       <Project>{D68133BD-1E63-496E-9EDE-4FBDBF77B486}</Project>
@@ -79,7 +79,7 @@
     </ProjectReference>
     <ProjectReference Include="..\NRefactory\ICSharpCode.NRefactory.Cpp\ICSharpCode.NRefactory.Cpp.Core.csproj">
       <Project>{37669DE0-87E0-4CD0-AB53-170C38270857}</Project>
-      <Name>ICSharpCode.NRefactory.Cpp</Name>
+      <Name>ICSharpCode.NRefactory.Cpp.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\NRefactory\ICSharpCode.NRefactory.CSharp\ICSharpCode.NRefactory.CSharp.csproj">
       <Project>{53DCA265-3C3C-42F9-B647-F72BA678122B}</Project>

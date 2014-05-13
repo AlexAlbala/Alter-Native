@@ -1,17 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlterNative.Core", "AlterNative\AlterNative.Core.csproj", "{F7E31C2B-26A3-4AB1-AF11-4C86F27E28E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlterNative.Tools", "AlterNative.Tools\AlterNative.Tools.Core.csproj", "{38C5F3CB-339F-4DD3-9197-98989CA94F9D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlterNative.Tools.Core", "AlterNative.Tools\AlterNative.Tools.Core.csproj", "{38C5F3CB-339F-4DD3-9197-98989CA94F9D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mono.Cecil", "Mono.Cecil\Mono.Cecil.csproj", "{D68133BD-1E63-496E-9EDE-4FBDBF77B486}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICSharpCode.NRefactory.Cpp", "NRefactory\ICSharpCode.NRefactory.Cpp\ICSharpCode.NRefactory.Cpp.Core.csproj", "{37669DE0-87E0-4CD0-AB53-170C38270857}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICSharpCode.NRefactory.Cpp.Core", "NRefactory\ICSharpCode.NRefactory.Cpp\ICSharpCode.NRefactory.Cpp.Core.csproj", "{37669DE0-87E0-4CD0-AB53-170C38270857}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mono.Cecil.Pdb", "Mono.Cecil\symbols\pdb\Mono.Cecil.Pdb.csproj", "{63E6915C-7EA4-4D76-AB28-0D7191EEA626}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICSharpCode.Decompiler", "ICSharpCode.Decompiler\ICSharpCode.Decompiler.Core.csproj", "{984CC812-9470-4A13-AFF9-CC44068D666C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICSharpCode.Decompiler.Core", "ICSharpCode.Decompiler\ICSharpCode.Decompiler.Core.csproj", "{984CC812-9470-4A13-AFF9-CC44068D666C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ILSpy projects", "ILSpy projects", "{FA6D62B1-9F34-422E-A925-76BA470432FD}"
 EndProject
@@ -19,7 +19,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICSharpCode.NRefactory", "N
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICSharpCode.NRefactory.CSharp", "NRefactory\ICSharpCode.NRefactory.CSharp\ICSharpCode.NRefactory.CSharp.csproj", "{53DCA265-3C3C-42F9-B647-F72BA678122B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ILSpy", "ILSpy\ILSpy.Core.csproj", "{A7F4A36C-A108-434A-BDF8-FD819C362E8D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ILSpy.Core", "ILSpy\ILSpy.Core.csproj", "{A7F4A36C-A108-434A-BDF8-FD819C362E8D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{491FA65A-86EC-4411-93A4-D28655F284A2}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -257,30 +264,6 @@ Global
 		{A7F4A36C-A108-434A-BDF8-FD819C362E8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7F4A36C-A108-434A-BDF8-FD819C362E8D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A7F4A36C-A108-434A-BDF8-FD819C362E8D}.Release|x86.ActiveCfg = Release|Any CPU
-		{7B82B671-419F-45F4-B778-D9286F996EFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7B82B671-419F-45F4-B778-D9286F996EFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7B82B671-419F-45F4-B778-D9286F996EFA}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_2_0_Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_2_0_Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_2_0_Debug|x86.ActiveCfg = Debug|Any CPU
-		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_2_0_Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_2_0_Release|Any CPU.Build.0 = Release|Any CPU
-		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_2_0_Release|x86.ActiveCfg = Release|Any CPU
-		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_3_5_Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_3_5_Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_3_5_Debug|x86.ActiveCfg = Debug|Any CPU
-		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_3_5_Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_3_5_Release|Any CPU.Build.0 = Release|Any CPU
-		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_3_5_Release|x86.ActiveCfg = Release|Any CPU
-		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_4_0_Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_4_0_Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_4_0_Debug|x86.ActiveCfg = Debug|Any CPU
-		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_4_0_Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_4_0_Release|Any CPU.Build.0 = Release|Any CPU
-		{7B82B671-419F-45F4-B778-D9286F996EFA}.net_4_0_Release|x86.ActiveCfg = Release|Any CPU
-		{7B82B671-419F-45F4-B778-D9286F996EFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7B82B671-419F-45F4-B778-D9286F996EFA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7B82B671-419F-45F4-B778-D9286F996EFA}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -291,6 +274,5 @@ Global
 		{3B2A5653-EC97-4001-BB9B-D90F1AF2C371} = {FA6D62B1-9F34-422E-A925-76BA470432FD}
 		{53DCA265-3C3C-42F9-B647-F72BA678122B} = {FA6D62B1-9F34-422E-A925-76BA470432FD}
 		{A7F4A36C-A108-434A-BDF8-FD819C362E8D} = {FA6D62B1-9F34-422E-A925-76BA470432FD}
-		{7B82B671-419F-45F4-B778-D9286F996EFA} = {FA6D62B1-9F34-422E-A925-76BA470432FD}
 	EndGlobalSection
 EndGlobal
