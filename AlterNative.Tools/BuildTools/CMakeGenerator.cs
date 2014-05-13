@@ -19,7 +19,7 @@ namespace AlterNative.BuildTools
             Utils.WriteToConsole("Generating CMakeLists.txt for project " + projectName + " and executable " + execName);
 
             string altTools = Config.AlterNativeTools;
-            StreamReader sr = new StreamReader(altTools + @"\Templates\CMake\CMakeLists.stg");
+            StreamReader sr = new StreamReader((altTools + @"\Templates\CMake\CMakeLists.stg").Replace('\\','/'));
             txt = sr.ReadToEnd();
 
             template = new Template(txt);

@@ -1,8 +1,6 @@
 ##################################################
 #Find boost libraries
 ##################################################
-GET_PROPERTY(IS_RELEASE GLOBAL PROPERTY GL_IS_RELEASE)
-
 SET(Boost_USE_STATIC_LIBS        ON)
 SET(Boost_USE_MULTITHREADED      ON)
 SET(Boost_USE_STATIC_RUNTIME    OFF)
