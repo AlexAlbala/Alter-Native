@@ -11,7 +11,7 @@ namespace AlterNative
 {
     class Commands
     {
-        public static DirectoryInfo RunCMake(DirectoryInfo di)
+        public static DirectoryInfo RunCMake(DirectoryInfo di, out int cmakeCode)
         {
             di.CreateSubdirectory("build");
             Environment.CurrentDirectory = di.FullName + "build";
@@ -24,30 +24,42 @@ namespace AlterNative
             p.StartInfo.CreateNoWindow = true;
             p.StartInfo.UseShellExecute = false;
 
-            p.StartInfo.RedirectStandardOutput = true;
-            p.OutputDataReceived += (sender, args) => Utils.WriteToConsole(args.Data);
+            if (Config.Verbose)
+            {
+                p.StartInfo.RedirectStandardOutput = true;
+                p.OutputDataReceived += (sender, args) => Utils.WriteToConsole(args.Data);
+            }
 
             p.Start();
-            p.BeginOutputReadLine();
+            if(Config.Verbose)
+                p.BeginOutputReadLine();
+
             p.WaitForExit();
 
+            cmakeCode = p.ExitCode;
             DirectoryInfo buildDir = new DirectoryInfo(di.FullName + "build");
             return buildDir;
         }
 
-        public static void Compile(DirectoryInfo di)
+        public static int Compile(DirectoryInfo di)
         {
+            int exitCode = 0;
             Environment.CurrentDirectory = di.FullName;
 #if CORE
             Process make = new Process();
             make.StartInfo = new ProcessStartInfo("make");
             make.StartInfo.UseShellExecute = false;
             make.StartInfo.CreateNoWindow = true;    
-            make.StartInfo.RedirectStandardOutput = true;
-            make.OutputDataReceived += (sender, args) => Utils.WriteToConsole(args.Data);
+            if(Config.Verbose){
+                make.StartInfo.RedirectStandardOutput = true;
+                make.OutputDataReceived += (sender, args) => Utils.WriteToConsole(args.Data);
+            }
             make.Start();
-            make.BeginOutputReadLine();
+            if(Config.Verbose)
+                make.BeginOutputReadLine();
+
             make.WaitForExit();
+            exitCode = make.ExitCode;
 #else
             string msbuildPath = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
             msbuildPath += @"msbuild.exe";
@@ -66,18 +78,28 @@ namespace AlterNative
                 msbuild.StartInfo = new ProcessStartInfo(msbuildPath, msbuildArgs);
                 msbuild.StartInfo.UseShellExecute = false;
                 msbuild.StartInfo.CreateNoWindow = true;
-                msbuild.StartInfo.RedirectStandardOutput = true;
-                msbuild.OutputDataReceived += (sender, args) => Utils.WriteToConsole(args.Data);
+
+                if (Config.Verbose)
+                {
+                    msbuild.StartInfo.RedirectStandardOutput = true;
+                    msbuild.OutputDataReceived += (sender, args) => Utils.WriteToConsole(args.Data);
+                }
+
                 msbuild.Start();
-                msbuild.BeginOutputReadLine();
+
+                if(Config.Verbose)
+                    msbuild.BeginOutputReadLine();
+
                 msbuild.WaitForExit();
+                exitCode = msbuild.ExitCode;
             }
             else
             {
                 Utils.WriteToConsole("No .sln file found in " + di.FullName);
+                exitCode = 1;
             }
 #endif
-
+            return exitCode;
         }
 
         public static AssemblyDefinition NewTemplate(DirectoryInfo output)

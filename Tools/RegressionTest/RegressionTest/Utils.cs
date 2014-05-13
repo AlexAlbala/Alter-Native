@@ -43,20 +43,21 @@ namespace RegressionTest
 
         public static ITest CreateTest(Platform platform)
         {
-            switch (platform)
-            {
-                case Platform.Windows32:
-                case Platform.Windows64:
-                    return new Win32Test();
-		        case Platform.MacOS: 
-                case Platform.Linux: 
-                    return new PosixTest();
-                case Platform.Android: 
-                    return new AndroidTest();
-                default: 
-					break;
-            }
-            return null;
+            return new GenericTest();
+            //switch (platform)
+            //{
+            //    case Platform.win32:
+            //    case Platform.win64:
+            //        return new Win32Test();
+            //    case Platform.macos:
+            //    case Platform.linux:
+            //        return new PosixTest();
+            //    case Platform.android: 
+            //        return new AndroidTest();
+            //    default: 
+            //        break;
+            //}
+            //return null;
         }
 
         public static string GetAltCompileArg(CompileMode comp)
