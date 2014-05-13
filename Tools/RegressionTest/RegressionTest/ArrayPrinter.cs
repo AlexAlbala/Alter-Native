@@ -36,7 +36,8 @@ class ArrayPrinter
                 }
             }
         }
-
+	if(maxWidth > (int)(Console.BufferWidth/arrValues.GetLength(0)))
+		return (int)(Console.BufferWidth / arrValues.GetLength(0));
         return maxWidth;
     }
 
@@ -54,12 +55,12 @@ class ArrayPrinter
 
         int width = maxCellWidth * dimension2Length + dimension2Length + 2;
         //if (width > Console.WindowWidth)
-        //    Console.WindowWidth = width;
+          //  Console.WindowWidth = width;
 
         try
         {
             if (width > Console.BufferWidth)
-                Console.BufferWidth = width;
+               Console.BufferWidth = width;
         }
         catch { }//Some consoles does not accept that parameter
 

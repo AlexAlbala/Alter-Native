@@ -17,3 +17,5 @@ declare -x ALTERNATIVE_TOOLS_PATH=$ALTERNATIVE_HOME/Tools
 
 # Shell Scripts
 PATH=$PATH:$ALTERNATIVE_HOME/Tools/ShellScripts
+
+chmod +x $ALTERNATIVE_HOME/Tools/ShellScripts/alternative

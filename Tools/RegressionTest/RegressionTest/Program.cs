@@ -76,14 +76,10 @@ namespace RegressionTest
             }
             else
             {
-                foreach (string s in tests)
-                {
-                }
                 p.RunTests(tests.ToArray());
             }
 
             return 0;
-
         }
 
         static void ShowHelp(OptionSet p)
@@ -128,9 +124,10 @@ namespace RegressionTest
             Utils.DebugMessage("*******************************************");
             Console.WriteLine();
             Console.WriteLine();
-            foreach (string s in tests)
+            foreach (string _s in tests)
             {
-
+		//Removed final '/' if exists
+		string s = _s.TrimEnd('/');
                 Environment.CurrentDirectory = Utils.testPath;
                 KeyValuePair<DirectoryInfo, TestResult> kvp = Tests.First(x => x.Key.Name == s);
                 
@@ -241,8 +238,9 @@ namespace RegressionTest
             arr[0, 6] = "TIME DIFFERENCE";
             arr[0, 7] = "LINES DIFFERENCE";
             int i = 1;
-            foreach (string s in tests)
+            foreach (string _s in tests)
             {
+		string s = _s.TrimEnd('/');
                 KeyValuePair<DirectoryInfo, TestResult> kvp = Tests.First(x => x.Key.Name == s);
                 //KeyValuePair<DirectoryInfo, TestResult> kvp = SearchFirstWithName(s);
                 arr[i, 0] = kvp.Value.name;

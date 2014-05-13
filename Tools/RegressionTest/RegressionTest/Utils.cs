@@ -19,7 +19,7 @@ namespace RegressionTest
              ignoreFolders = new List<string>() {"build" };
              string alt_exe_var_tmp = Environment.GetEnvironmentVariable("ALTERNATIVE_BIN");
              string alt_var_tmp = Environment.GetEnvironmentVariable("ALTERNATIVE_BIN_PATH");
-             string lib_var_tmp = Environment.GetEnvironmentVariable("ALTERNATIVE_CPP_LIB");
+             string lib_var_tmp = Environment.GetEnvironmentVariable("ALTERNATIVE_CPP_LIB_PATH");
 
              if (alt_exe_var_tmp != null)
              {
@@ -34,12 +34,29 @@ namespace RegressionTest
                 WarningMessage("Variable <ALTERNATIVE_CPP_LIB_PATH> should be setted. Default is: " + cxxLibraryPath);
                
 
-	    Console.WriteLine("testPath="+testPath);
-	    Console.WriteLine("alternativePath="+alternativePath);
-	    Console.WriteLine("alternativeDirectory="+alternativeDirectory);
-	    Console.WriteLine("cxxLibraryPath="+cxxLibraryPath);
-	    
         }
+
+	public static bool IsWinPlatform()
+	{
+		OperatingSystem os = Environment.OSVersion;
+		PlatformID pid = os.Platform;
+
+		switch(pid)
+		{
+			case PlatformID.Win32NT:
+        		case PlatformID.Win32S:
+        		case PlatformID.Win32Windows:
+        		case PlatformID.WinCE:
+            			return true;
+			break;
+        		case PlatformID.Unix:
+            			return false;
+			break;
+        		default:
+				return false;            
+			break;
+		}
+	}
 
         public static ITest CreateTest(Platform platform)
         {
