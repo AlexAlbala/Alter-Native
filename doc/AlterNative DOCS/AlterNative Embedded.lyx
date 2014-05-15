@@ -66,7 +66,7 @@
 \paperpagestyle default
 \listings_params "basicstyle={\tiny},language={[GNU]C++}"
 \tracking_changes false
-\output_changes false
+\output_changes true
 \html_math_output 0
 \html_css_as_file 0
 \html_be_strict false
@@ -75,8 +75,8 @@
 \begin_body
 
 \begin_layout Title
-AlterNative: An executable to executable Cross-platform system for translating
- Virtual Machine applications to native
+AlterNative: An executable to executable cross-platform system for translating
+ virtual machine applications to native
 \end_layout
 
 \begin_layout Author
@@ -88,13 +88,15 @@ A.
 \end_layout
 
 \begin_layout Abstract
-Cross-platform applications are increasing their market due to the growing
+Cross-platform applications are increasing their scope due to the growing
  number of heterogeneous devices in the market.
- Developers are required to design and implement the software application
- in all the different targets that the product will be available.
- In this paper it is presented AlterNative, a cross-platform that tries
- to solve the problem of the fast development in multi-platform (cross-platform)
- applications maintaining a good performance.
+ Developers are required to design and implement software applications in
+ all the different targets that the product will be available.
+ This task is time consuming and cross-platform solutions tend not to be
+ native and not to have ideal performance.
+ In this paper, it is presented AlterNative, a cross-platform tool that
+ tries to solve the problem of fast development of cross-platform applications
+ while achieving good performance.
 \end_layout
 
 \begin_layout Section
@@ -102,33 +104,40 @@ Introduction
 \end_layout
 
 \begin_layout Standard
-Nowadays all the service sectors like industrial, energy, healthcare, security
- among others are including new technological devices connected in the network.
- The number of interconnected devices is increasing exponentially in the
- last years.
- Therefore there are appearing huge variety of devices, with different operating
- systems and different programming languages.
+Nowadays all the service sectors like entertainment, industrial, energy,
+ healthcare, security among others are offering new devices connected to
+ the network.
+ The number of interconnected devices is increasing exponentially
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+references?
+\end_layout
+
+\end_inset
+
+ in the last years.
+ Therefore there is appearing a huge variety of devices, with different
+ operating systems and different programming languages.
  In other words the future situation can be described as an heterogeneous
  distributed system.
- The future of the devices tends to converge in a multiplatform environment
+ The future of the devices tends to converge in a multi-platform environment
  composed by different devices and elements but with similar capabilities
  and possibilities, not only smartphones, smart TVs or tablets but also
  all kind of elements.
  In this work we present the AlterNative software as a cross-platform code
  translation tool focused on the performance of applications maintaining
  the maximum number of functionalities.
- AlterNative tries to solve the problem of multiplatform software avoiding
+ AlterNative tries to solve the problem of multi-platform software avoiding
  the use of elements which can be harmful to the performance like virtual
  machines and aims to increase the efficiency of the code by using native
  languages.
- AlterNative is based on a .NET decompiler called ILSpy 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "key-1"
+ 
+\end_layout
 
-\end_inset
+\begin_layout Standard
 
-.
 \end_layout
 
 \begin_layout Section
@@ -141,8 +150,8 @@ Cross-platform development tools
 
 \begin_layout Standard
 In the field of cross-platform tools, the major development of the community
- is focused on reducing the complexity of programming multiplatform applications
- (mainly mobile applications).
+ is focused on reducing the complexity of programming multi-platform application
+s (mainly mobile applications).
  Virtual Machines are the most used approach in cross-platform environments.
 \end_layout
 
@@ -252,6 +261,8 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
+\noindent
+\align center
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -279,7 +290,7 @@ AlterNative will take benefit of all the work done in this line and will
 \end_layout
 
 \begin_layout Standard
-Nowadays, as the mobile and embedded market is increasing, the multiplatform
+Nowadays, as the mobile and embedded market is increasing, the multi-platform
  tools for these markets are growing.
  However, these tools are focused on unify the application graphical user
  interface by means of standard web languages (i.e.
@@ -513,6 +524,14 @@ First of all the assembly received is passed through a decompiler in order
  AlterNative is able to provide most of the features of the original code
  to the final code using external open-source libraries and proprietary
  libraries in order to be fully compatible with high-level languages.
+ AlterNative is based on a .NET decompiler called ILSpy 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-1"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsection
@@ -569,6 +588,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -584,10 +604,6 @@ name "fig:AST-example"
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Plain Layout
 
 \end_layout
 
@@ -653,10 +669,6 @@ name "fig:AST-example-C++"
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Plain Layout
 
 \end_layout
 
@@ -1292,6 +1304,24 @@ status open
 \end_inset
 
 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Codigo de colores
+\end_layout
+
+\begin_layout Plain Layout
+Verde = Managed
+\end_layout
+
+\begin_layout Plain Layout
+Azul = Native
+\end_layout
+
+\end_inset
+
+
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -1695,8 +1725,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename Figures/pegado2.emf
-	lyxscale 30
+	filename Figures/pegado2.pdf
 	width 100col%
 
 \end_inset
@@ -2344,10 +2373,6 @@ N-Bodies algorithm
 
 \end_layout
 
-\begin_layout Plain Layout
-
-\end_layout
-
 \end_inset
 
 
@@ -2374,8 +2399,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename Figures/pegado4.emf
-	lyxscale 30
+	filename Figures/pegado4.pdf
 	width 100col%
 
 \end_inset
@@ -2512,7 +2536,7 @@ Most of the cross-platform tools in the community are focused only on fast
  AlterNative a part of maintaining the objective of facilitate the easy
  and fast development, also is focused on the final performance of the applicati
 on.
- Multiplatform systems based on virtual machines, or in HTML + CSS frameworks
+ multi-platform systems based on virtual machines, or in HTML + CSS frameworks
  are useful for visual applications which do not require a high computational
  power, the main advantage of AlterNative software is that it is able to
  run code with native performance while the user is programming its code
@@ -2595,8 +2619,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename Figures/pegado3.emf
-	lyxscale 30
+	filename Figures/pegado3.pdf
 	width 100col%
 
 \end_inset
