@@ -6,7 +6,7 @@ using System.Text;
 
 namespace RegressionTest
 {
-    class PosixTest : ITest
+    class GenericTest : ITest
     {
         public void Alternative(DirectoryInfo di, TestResult res)
         {
@@ -15,16 +15,21 @@ namespace RegressionTest
             Utils.CleanDirectory(outd);
             Console.WriteLine("Running alternative...");
 
-            Process runAlt = new Process();           
+            Process runAlt = new Process();
 
             string altArgs = di.FullName + "/NETbin/" + di.Name.Split('.')[1] + ".exe" + " "
                                                     + di.FullName + "/Output/" + " "
-                                                    + Utils.GetAltCompileArg(Config.compileMode);
+                                                    + Utils.GetAltCompileArg(Config.compileMode) + " "
+                                                    + (Config.Verbose ? "-v" : "");
 
             Utils.DebugMessage("ALTERNATIVE COMMAND:");
-            Utils.DebugMessage(Utils.alternativePath + " " + altArgs);
+            Utils.DebugMessage("alternative " + altArgs);
 
-            runAlt.StartInfo = new ProcessStartInfo(Utils.alternativePath, altArgs);
+            if (Utils.IsWinPlatform())
+                runAlt.StartInfo = new ProcessStartInfo("alternative", altArgs);
+            else
+                runAlt.StartInfo = new ProcessStartInfo("bash", "-c 'alternative " + altArgs + "'");
+
             runAlt.StartInfo.CreateNoWindow = true;
             runAlt.StartInfo.UseShellExecute = false;
             if (Config.Verbose)
@@ -53,16 +58,19 @@ namespace RegressionTest
             res.alternative = (short)runAlt.ExitCode;
         }
 
-        public void Cmake(DirectoryInfo di, TestResult res)
+        public void Make(DirectoryInfo di, TestResult res)
         {
-            //Create folder and run cmake                
-            Directory.CreateDirectory(di.FullName + "/Output/build");
-            Directory.SetCurrentDirectory(di.FullName + "/Output/build");
+            //Compile code            
+            Directory.SetCurrentDirectory(di.FullName);
 
-            Console.WriteLine("Configuring native source project...");
+            Console.WriteLine("Compiling code...");
             //Run cmake
             Process runCmake = new Process();
-            runCmake.StartInfo = new ProcessStartInfo("cmake", "..");
+
+            if (Utils.IsWinPlatform())
+                runCmake.StartInfo = new ProcessStartInfo("alternative", " make Output" + (Config.Verbose ? " -v" : ""));
+            else
+                runCmake.StartInfo = new ProcessStartInfo("bash", "-c 'alternative make Output" + (Config.Verbose ? " -v" : "") + "'");
 
             runCmake.StartInfo.CreateNoWindow = true;
             runCmake.StartInfo.UseShellExecute = false;
@@ -76,39 +84,15 @@ namespace RegressionTest
                 runCmake.BeginOutputReadLine();
             runCmake.WaitForExit();
 
+            short exitCode = (short)runCmake.ExitCode;
+
+            if (exitCode == 0) res.cmakeCode = res.msbuildCode = 0;
+            else if (exitCode == -1) res.cmakeCode = 1;
+            else if (exitCode == -2) res.msbuildCode = 1; res.cmakeCode = 0;
+
             res.cmakeCode = (short)runCmake.ExitCode;
             Utils.DebugMessage("Exit Code: " + res.cmakeCode);
         }
-
-        public void Compile(DirectoryInfo di, TestResult res)
-        {
-            Console.WriteLine("Building native code [POSIX]...");
-            //Compile the code
-            string msbuildPath = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
-            msbuildPath += @"msbuild.exe";
-
-            string targetFile = di.Name.Split('.')[1] + "Proj.sln";
-            string msbuildArgs = targetFile + Utils.GetMsBuildCompileArg(Config.compileMode);
-            Utils.DebugMessage("MSBUILD COMMAND:");
-            Utils.DebugMessage("msbuild " + msbuildArgs);
-            //Run msbuild
-            Process msbuild = new Process();
-            msbuild.StartInfo = new ProcessStartInfo(msbuildPath, msbuildArgs);
-            msbuild.StartInfo.UseShellExecute = false;
-            msbuild.StartInfo.CreateNoWindow = true;
-            if (Config.Verbose)
-            {
-                msbuild.StartInfo.RedirectStandardOutput = true;
-                msbuild.OutputDataReceived += (sender, args) => Console.WriteLine(args.Data);
-            }
-            msbuild.Start();
-            if (Config.Verbose)
-                msbuild.BeginOutputReadLine();
-            msbuild.WaitForExit();
-
-            res.msbuildCode = (short)msbuild.ExitCode;
-            Utils.DebugMessage("Exit Code: " + res.msbuildCode);
-        }       
 
         public void CompareOutputs(DirectoryInfo di, TestResult res)
         {
@@ -127,7 +111,7 @@ namespace RegressionTest
             String originalOutput = orig.StandardOutput.ReadToEnd();
 
             Process final = new Process();
-            final.StartInfo = new ProcessStartInfo(di.FullName + @"/Output/build/" + Utils.GetOutputFolderName(Config.compileMode) + "/"  + di.Name.Split('.')[1] + ".exe");
+            final.StartInfo = new ProcessStartInfo(di.FullName + @"/Output/build/" + Utils.GetOutputFolderName(Config.compileMode) + "/" + di.Name.Split('.')[1] + ".exe");
             final.StartInfo.RedirectStandardOutput = true;
             final.StartInfo.CreateNoWindow = true;
             final.StartInfo.UseShellExecute = false;

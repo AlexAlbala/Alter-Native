@@ -22,3 +22,6 @@
 [submodule "AlterNative.Core/Tools/Android/Boost-for-Android"]
 	path = AlterNative.Core/Tools/Android/Boost-for-Android
 	url = https://github.com/MysticTreeGames/Boost-for-Android
+[submodule "Tools/Cotire"]
+	path = Tools/Cotire
+	url = ../../sakra/cotire

@@ -18,60 +18,71 @@ namespace ICSharpCode.NRefactory.Cpp
             Dictionary<string, string> libraryMap = new Dictionary<string, string>();
 
             //********************** SYSTEM:
-            libraryMap.Add("System", "\"System/System.h\"");
-            libraryMap.Add("Console", "\"System/Console.h\"");
-            libraryMap.Add("Array", "\"System/Array.h\"");
-            libraryMap.Add("Random", "\"System/Random.h\"");
-            libraryMap.Add("Math", "\"System/Math.h\"");
-            libraryMap.Add("GC", "\"System/GC.h\"");
-            libraryMap.Add("IDisposable", "\"System/IDisposable.h\"");
-            libraryMap.Add("Convert", "\"System/Convert.h\"");
-            libraryMap.Add("Delegate", "\"System/Delegate.h\"");
-            libraryMap.Add("Event", "\"System/events.h\"");
-            libraryMap.Add("DateTime", "\"System/DateTime.h\"");
-            libraryMap.Add("DateTimeKind", "\"System/DateTimeKind.h\"");
-            libraryMap.Add("TimeSpan", "\"System/TimeSpan.h\"");
+            libraryMap.Add("System", "<System/System.h>");
+            libraryMap.Add("Console", "<System/Console.h>");
+            libraryMap.Add("Array", "<System/Array.h>");
+            libraryMap.Add("Random", "<System/Random.h>");
+            libraryMap.Add("Math", "<System/Math.h>");
+            libraryMap.Add("GC", "<System/GC.h>");
+            libraryMap.Add("IDisposable", "<System/IDisposable.h>");
+            libraryMap.Add("Convert", "<System/Convert.h>");
+            libraryMap.Add("Delegate", "<System/Delegate.h>");
+            libraryMap.Add("Event", "<System/events.h>");
+            libraryMap.Add("DateTime", "<System/DateTime.h>");
+            libraryMap.Add("DateTimeKind", "<System/DateTimeKind.h>");
+            libraryMap.Add("TimeSpan", "<System/TimeSpan.h>");
             //exceptions:
-            libraryMap.Add("Exception", "\"System/Exception.h\"");
+            libraryMap.Add("Exception", "<System/Exception.h>");
             //                          SystemExceptions
-            libraryMap.Add("NotImplementedException", "\"System/Exception/SystemException/NotImplementedException.h\"");
-            libraryMap.Add("ArgumentException", "\"System/Exception/SystemException/ArgumentException.h\"");
-            libraryMap.Add("ArgumentOutOfRangeException", "\"System/Exception/SystemException/ArgumentException/ArgumentOutOfRangeException.h\"");
-            libraryMap.Add("ArgumentNullException", "\"System/Exception/SystemException/ArgumentException/ArgumentNullException.h\"");
-            libraryMap.Add("InvalidOperationException", "\"System/Exception/SystemException/InvalidOperationException.h\"");
-            libraryMap.Add("ObjectDisposedException", "\"System/Exception/SystemException/InvalidOperationException/ObjectDisposedException.h\"");
+            libraryMap.Add("NotImplementedException", "<System/Exception/SystemException/NotImplementedException.h>");
+            libraryMap.Add("ArgumentException", "<System/Exception/SystemException/ArgumentException.h>");
+            libraryMap.Add("ArgumentOutOfRangeException", "<System/Exception/SystemException/ArgumentException/ArgumentOutOfRangeException.h>");
+            libraryMap.Add("ArgumentNullException", "<System/Exception/SystemException/ArgumentException/ArgumentNullException.h>");
+            libraryMap.Add("InvalidOperationException", "<System/Exception/SystemException/InvalidOperationException.h>");
+            libraryMap.Add("ObjectDisposedException", "<System/Exception/SystemException/InvalidOperationException/ObjectDisposedException.h>");
             //*************************************************************//
 
             //********************** SYSTEM COLLECTIONS:
-            libraryMap.Add("IEnumerable", "\"System/Collections/IEnumerable.h\"");
-            libraryMap.Add("IEnumerator", "\"System/Collections/IEnumeratorCXX.h\"");
+            libraryMap.Add("IEnumerable", "<System/Collections/IEnumerable.h>");
+            libraryMap.Add("IEnumerator", "<System/Collections/IEnumeratorCXX.h>");
             //*************************************************************//
 
             //********************** SYSTEM THREADING:
-            libraryMap.Add("Thread", "\"System/Threading/Thread.h\"");
-            libraryMap.Add("ThreadStart", "\"System/Threading/Thread.h\"");
-            libraryMap.Add("ParameterizedThreadStart", "\"System/Threading/Thread.h\"");
-            libraryMap.Add("Timer", "\"System/Threading/Timer.h\"");
-            libraryMap.Add("TimerCallback", "\"System/Threading/Timer.h\"");
+            libraryMap.Add("Thread", "<System/Threading/Thread.h>");
+            libraryMap.Add("ThreadStart", "<System/Threading/Thread.h>");
+            libraryMap.Add("ParameterizedThreadStart", "<System/Threading/Thread.h>");
+            libraryMap.Add("Timer", "<System/Threading/Timer.h>");
+            libraryMap.Add("TimerCallback", "<System/Threading/Timer.h>");
             //*************************************************************//
 
             //********************** SYSTEM COLLECTIONS GENERIC:
-            libraryMap.Add("List_T", "\"System/Collections/Generic/List.h\"");
-            libraryMap.Add("IEnumerable_T", "\"System/Collections/Generic/IEnumerable.h\"");
-            libraryMap.Add("IEnumerator_T", "\"System/Collections/Generic/IEnumeratorCXX.h\"");
-            libraryMap.Add("Dictionary_T", "\"System/Collections/Generic/Dictionary.h\"");
+            libraryMap.Add("List_T", "<System/Collections/Generic/List.h>");
+            libraryMap.Add("IEnumerable_T", "<System/Collections/Generic/IEnumerable.h>");
+            libraryMap.Add("IEnumerator_T", "<System/Collections/Generic/IEnumeratorCXX.h>");
+            libraryMap.Add("Dictionary_T", "<System/Collections/Generic/Dictionary.h>");
             //*************************************************************//
 
             //********************** SYSTEM TEXT:
-            libraryMap.Add("UTF8Encoding", "\"System/Text/Encoding.h\"");
-            libraryMap.Add("Encoding", "\"System/Text/Encoding.h\"");
+            libraryMap.Add("UTF8Encoding", "<System/Text/Encoding.h>");
+            libraryMap.Add("Encoding", "<System/Text/Encoding.h>");
+            libraryMap.Add("StringBuilder", "<System/Text/StringBuilder.h>");
             //*************************************************************//
 
             //********************** SYSTEM IO:
-            libraryMap.Add("StreamReader", "\"System/IO/StreamReaderCXX.h\"");
-            libraryMap.Add("StreamWriter", "\"System/IO/StreamWriterCXX.h\"");
-            libraryMap.Add("FileStream", "\"System/IO/FileStream.h\"");
-            libraryMap.Add("File", "\"System/IO/File.h\"");
+            libraryMap.Add("StreamReader", "<System/IO/StreamReaderCXX.h>");
+            libraryMap.Add("StreamWriter", "<System/IO/StreamWriterCXX.h>");
+            libraryMap.Add("FileStream", "<System/IO/FileStream.h>");
+            libraryMap.Add("File", "<System/IO/File.h>");
+            //*************************************************************//
+
+            //********************** SYSTEM NET:
+            libraryMap.Add("Socket", "<System/Net/Sockets/Socket.h>");
+            libraryMap.Add("IPEndPoint", "<System/Net/IPEndPoint.h>");
+            libraryMap.Add("EndPoint", "<System/Net/EndPoint.h>");
+            libraryMap.Add("IPAddress", "<System/Net/IPAddress.h>");
+            libraryMap.Add("SocketType", "<System/Net/Sockets/SocketType.h>");
+            libraryMap.Add("AddressFamily", "<System/Net/Sockets/AddressFamily.h>");
+            libraryMap.Add("ProtocolType", "<System/Net/Sockets/ProtocolType.h>");
             //*************************************************************//
 
 
@@ -1411,7 +1422,8 @@ namespace ICSharpCode.NRefactory.Cpp
                 {
                     IdentifierExpression tmp = memberReferenceExpression.Target as IdentifierExpression;
                     ICSharpCode.Decompiler.Ast.TypeInformation ann = (ICSharpCode.Decompiler.Ast.TypeInformation)tmp.Annotation(typeof(ICSharpCode.Decompiler.Ast.TypeInformation));
-                    return (properties[memberReferenceExpression.MemberName].Contains(ann.InferredType.Name));
+                    if (ann != null)
+                        return (properties[memberReferenceExpression.MemberName].Contains(ann.InferredType.Name));                    
                 }
                 else if (memberReferenceExpression.Target is TypeReferenceExpression)
                 {

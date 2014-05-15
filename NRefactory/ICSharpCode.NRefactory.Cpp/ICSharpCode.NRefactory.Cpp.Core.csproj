@@ -159,7 +159,7 @@
     <Compile Include="Ast\GeneralScope\TypeParameterDeclaration.cs" />
     <Compile Include="Ast\TypeName\ExpressionType.cs" />
     <Compile Include="Ast\TypeName\PtrType.cs" />
-	<Compile Include="Ast\TypeName\ReferenceType.cs" />
+    <Compile Include="Ast\TypeName\ReferenceType.cs" />
     <Compile Include="Ast\TypeName\QualifiedType.cs" />
     <Compile Include="Ast\ComposedIdentifier.cs" />
     <Compile Include="Ast\TypeName\TypeNameType.cs" />
@@ -235,11 +235,11 @@
     </ProjectReference>
     <ProjectReference Include="..\..\AlterNative.Tools\AlterNative.Tools.Core.csproj">
       <Project>{38C5F3CB-339F-4DD3-9197-98989CA94F9D}</Project>
-      <Name>AlterNative.Tools</Name>
+      <Name>AlterNative.Tools.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\ICSharpCode.Decompiler\ICSharpCode.Decompiler.Core.csproj">
       <Project>{984CC812-9470-4A13-AFF9-CC44068D666C}</Project>
-      <Name>ICSharpCode.Decompiler</Name>
+      <Name>ICSharpCode.Decompiler.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />

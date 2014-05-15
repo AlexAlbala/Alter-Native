@@ -4,6 +4,7 @@ using System.Text;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Mono.Options;
 
 namespace RegressionTest
 {
@@ -11,66 +12,62 @@ namespace RegressionTest
     {
         ITest test;
         Dictionary<DirectoryInfo, TestResult> Tests = new Dictionary<DirectoryInfo, TestResult>();
-        
-        static void Main(string[] args)
-        {
-            List<string> _args = new List<string>();
-            List<string> _opts = new List<string>();
 
-            foreach (string s in args)
+        public static int Main(string[] args)
+        {
+            bool show_help = false;
+
+            var opts = new OptionSet() { 
+                { "d", "debug messages" ,
+                    v => Config.Debug = v!= null},
+                { "v", "increase debug message verbosity.",
+				    v => Config.Verbose = v != null },
+			    { "r", "Compile in release mode.",
+				    v => Config.compileMode  = v != null ? CompileMode.Release :CompileMode.Debug },
+			    { "f", "Fast mode. Only compares target/output files.",
+				    v => Config.fast = v != null },
+			    { "o", "Overwrite target files with output files.",
+				    v => Config.overwriteTarget = v != null },
+			    { "u", "Output messages are unlimited.",
+				    v => Config.Unlimited = v != null },
+			    { "p", "Performance tests are also included.",
+				    v => Config.performanceTests = v != null },
+			    { "platform=", "Platform to use: [win|win32|win64|linux|macos|android].",
+				    (String v) => Config.platform = (Platform)Enum.Parse(typeof(Platform), v) },
+			    { "h|help",  "show this message and exit", 
+				    v => show_help = v != null },
+		    };
+
+            List<string> tests;
+            try
             {
-                if (s.StartsWith("-"))
-                    _opts.Add(s);
-                else
-                    _args.Add(s);
+                tests = opts.Parse(args);
+            }
+            catch (OptionException e)
+            {
+                Console.Write("RegressionTest: ");
+                Console.WriteLine(e.Message);
+                Console.WriteLine("Try `RegressionTest --help' for more information.");
+                return -1;
+            }
+
+            if (show_help)
+            {
+                ShowHelp(opts);
+                return -1;
             }
 
             Program p = new Program();
 
-            foreach (string s in _opts)
-            {
-                if (s.Contains("="))
-                {
-                    if (s.Split("=".ToCharArray())[0] == "-platform")
-                    {
-                        string tmp = s.Split("=".ToCharArray())[1].ToLowerInvariant();
-
-                        if (tmp == "win" || tmp == "win32")
-                            Config.platform = Platform.Windows32;
-                        if (tmp == "win64")
-                            Config.platform = Platform.Windows64;
-                        if (tmp == "linux")
-                            Config.platform = Platform.Linux;
-                        if (tmp == "macos")
-                            Config.platform = Platform.MacOS;
-                        if (tmp == "android")
-                            Config.platform = Platform.Android;
-                    }
-                }
-                else
-                {
-
-                    if (s.ToLowerInvariant().Contains("d"))
-                        Config.Debug = true;
-                    if (s.ToLowerInvariant().Contains("v"))
-                        Config.Verbose = true;
-                    if (s.ToLowerInvariant().Contains("u"))
-                        Config.Unlimited = true;
-                    if (s.ToLowerInvariant().Contains("f"))
-                        Config.fast = true;
-                    if (s.ToLowerInvariant().Contains("o"))
-                        Config.overwriteTarget = true;
-                    if (s.ToLowerInvariant().Contains("r"))
-                        Config.compileMode = CompileMode.Release;
-                    if (s.ToLowerInvariant().Contains("p"))
-                        Config.performanceTests = true;
-                }
-            }
-
             p.test = Utils.CreateTest(Config.platform);
-
             p.AvailableTests();
-            if (_args.Count == 0)
+
+
+            foreach (string s in tests)
+                Console.WriteLine(s);
+
+
+            if (tests.Count == 0)
             {
                 List<string> t = new List<string>();
                 foreach (DirectoryInfo di in p.Tests.Keys)
@@ -78,8 +75,20 @@ namespace RegressionTest
                 p.RunTests(t.ToArray());
             }
             else
-                p.RunTests(_args.ToArray());
+            {
+                p.RunTests(tests.ToArray());
+            }
 
+            return 0;
+        }
+
+        static void ShowHelp(OptionSet p)
+        {
+            Console.WriteLine("Usage: RegressionTest [OPTIONS]+ <001.test> <002.test> ...");
+            Console.WriteLine("Executes AlterNative regression tests.");
+            Console.WriteLine();
+            Console.WriteLine("Options:");
+            p.WriteOptionDescriptions(Console.Out);
         }
 
         public void AvailableTests()
@@ -90,7 +99,6 @@ namespace RegressionTest
             {
                 if (Utils.ContainsDirectory(di, "Target") &&
                     Utils.ContainsDirectory(di, "src") &&
-                    /*ContainsDirectory(di, "Output") &&*/
                     Utils.ContainsDirectory(di, "NETbin"))
                 {
                     Tests.Add(di, new TestResult() { name = di.Name });
@@ -102,18 +110,8 @@ namespace RegressionTest
             Console.WriteLine();
         }
 
-        //private  KeyValuePair<DirectoryInfo, TestResult> SearchFirstWithName(string name)
-        //{
-        //    foreach (KeyValuePair<DirectoryInfo, TestResult> kvp in Tests)
-        //    {
-        //        if (kvp.Key.Name == name)
-        //            return kvp;
-        //    }
-        //    throw new KeyNotFoundException("name");
-        //}
-
         public void RunTests(string[] tests)
-        {            
+        {
             Utils.DebugMessage("************* CONFIGURATION ***************");
             Utils.DebugMessage("TEST PLATFORM: " + Config.platform.ToString());
             Utils.DebugMessage("");
@@ -126,14 +124,13 @@ namespace RegressionTest
             Utils.DebugMessage("*******************************************");
             Console.WriteLine();
             Console.WriteLine();
-            foreach (string s in tests)
+            foreach (string _s in tests)
             {
-
+		//Removed final '/' if exists
+		string s = _s.TrimEnd('/');
                 Environment.CurrentDirectory = Utils.testPath;
                 KeyValuePair<DirectoryInfo, TestResult> kvp = Tests.First(x => x.Key.Name == s);
-
-               
-                //KeyValuePair<DirectoryInfo, TestResult> kvp = SearchFirstWithName(s);
+                
                 DirectoryInfo di = kvp.Key;
                 TestResult res = kvp.Value;
 
@@ -184,34 +181,18 @@ namespace RegressionTest
                 {
                     try
                     {
-                        test.Cmake(di, res);
+                        test.Make(di, res);
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("ERROR IN CMAKE: " + e.Message);
-                        res.cmakeCode = 1;
+                        Console.WriteLine("ERROR IN MAKE: " + e.Message);
+                        res.cmakeCode = -2;
+                        res.cmakeCode = -2;
                     }
                 }
                 else
                     res.output = res.msbuildCode = res.cmakeCode = -10;
 
-                if (res.cmakeCode == 0)
-                {
-                    if (Config.platform == Platform.Windows32 || Config.platform == Platform.Windows64)
-                    {
-                        try
-                        {
-                            test.Compile(di, res);
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine("ERROR COMPILING: " + e.Message);
-                            res.msbuildCode = 1;
-                        }
-                    }
-                }
-                else
-                    res.output = res.msbuildCode = -10;
 
                 if (kvp.Value.msbuildCode == 0)
                 {
@@ -231,7 +212,7 @@ namespace RegressionTest
 
                 try
                 {
-                    if (res.AllSuccess() && Config.overwriteTarget)
+                    if (res.msbuildCode == 0 && Config.overwriteTarget)
                         Utils.OverwriteTarget(di);
 
                     if (res.alternative == 0)
@@ -257,12 +238,13 @@ namespace RegressionTest
             arr[0, 6] = "TIME DIFFERENCE";
             arr[0, 7] = "LINES DIFFERENCE";
             int i = 1;
-            foreach (string s in tests)
+            foreach (string _s in tests)
             {
+		string s = _s.TrimEnd('/');
                 KeyValuePair<DirectoryInfo, TestResult> kvp = Tests.First(x => x.Key.Name == s);
                 //KeyValuePair<DirectoryInfo, TestResult> kvp = SearchFirstWithName(s);
                 arr[i, 0] = kvp.Value.name;
-                arr[i, 1] = kvp.Value.alternative == 0 ? "#gSUCCESS" : (kvp.Value.alternative == -10 ? "#ySKIPPED": "#rFAIL. Code: " + kvp.Value.alternative);
+                arr[i, 1] = kvp.Value.alternative == 0 ? "#gSUCCESS" : (kvp.Value.alternative == -10 ? "#ySKIPPED" : "#rFAIL. Code: " + kvp.Value.alternative);
                 arr[i, 2] = kvp.Value.diffCode == 0 ? "#gNo Differ" : (kvp.Value.diffCode == 1 ? "#rDiffer" : (kvp.Value.diffCode == -10 ? "#ySKIPPED" : "#rError. Code: " + kvp.Value.diffCode));
                 arr[i, 3] = kvp.Value.cmakeCode == 0 ? "#gSUCCESS" : (kvp.Value.cmakeCode == -10 ? "#ySKIPPED" : "#rFAIL. Code: " + kvp.Value.cmakeCode);
                 arr[i, 4] = kvp.Value.msbuildCode == 0 ? "#gBUILD SUCCEEDED" : (kvp.Value.msbuildCode == -10 ? "#ySKIPPED" : "#rFAIL. Code: " + kvp.Value.msbuildCode);

@@ -6,15 +6,16 @@ namespace RegressionTest
 {
     public enum Platform
     {
-        Windows32,
-        Windows64,
-        Linux,
-        MacOS,
-        Android
+        win,
+        win32,
+        win64,
+        linux,
+        macos,
+        android
     }
 
     public enum CompileMode
-    { 
+    {
         Debug,
         Release
     }
@@ -22,7 +23,7 @@ namespace RegressionTest
     public class Config
     {
         /*******************CONFIGURATION****************/
-        public static Platform platform = Platform.Windows32;
+        public static Platform platform = Platform.win32;
         public static bool Debug = false;
         public static bool Verbose = false;
         public static bool Unlimited = false;

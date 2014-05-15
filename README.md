@@ -120,16 +120,18 @@ Testing
 
 Make sure you have a c++11 compatible compiler
 
+Make sure you have compiled the C++ AlterNative library before running some test: https://github.com/AlexAlbala/AlterNative-CXX-Lib
+
 	cd AlterNative
 	source ./alternative-init.sh
 
-	alternative Tests/001.Statements/NETbin/Statements.exe ./output/
+	alternative MyExe.exe ./output/
 	cd output
 	mkdir build
 	cd build
 	cmake ..
 	make
-	./Statements.exe
+	./MyExe
 
 Support for easy compiling is being added.
 

@@ -12,6 +12,8 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -45,7 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
-	<Compile Include="Commands.cs" />
+    <Compile Include="Commands.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -54,15 +56,15 @@
   <ItemGroup>
     <ProjectReference Include="..\AlterNative.Tools\AlterNative.Tools.Core.csproj">
       <Project>{38c5f3cb-339f-4dd3-9197-98989ca94f9d}</Project>
-      <Name>AlterNative.Tools</Name>
+      <Name>AlterNative.Tools.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\ICSharpCode.Decompiler\ICSharpCode.Decompiler.Core.csproj">
       <Project>{984cc812-9470-4a13-aff9-cc44068d666c}</Project>
-      <Name>ICSharpCode.Decompiler</Name>
+      <Name>ICSharpCode.Decompiler.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\ILSpy\ILSpy.Core.csproj">
       <Project>{a7f4a36c-a108-434a-bdf8-fd819c362e8d}</Project>
-      <Name>ILSpy</Name>
+      <Name>ILSpy.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Mono.Cecil\Mono.Cecil.csproj">
       <Project>{d68133bd-1e63-496e-9ede-4fbdbf77b486}</Project>
@@ -72,15 +74,16 @@
       <Project>{63e6915c-7ea4-4d76-ab28-0d7191eea626}</Project>
       <Name>Mono.Cecil.Pdb</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NRefactory\ICSharpCode.NRefactory.Cpp\ICSharpCode.NRefactory.Cpp.csproj">
+    <ProjectReference Include="..\NRefactory\ICSharpCode.NRefactory.Cpp\ICSharpCode.NRefactory.Cpp.Core.csproj">
       <Project>{37669de0-87e0-4cd0-ab53-170c38270857}</Project>
-      <Name>ICSharpCode.NRefactory.Cpp</Name>
+      <Name>ICSharpCode.NRefactory.Cpp.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

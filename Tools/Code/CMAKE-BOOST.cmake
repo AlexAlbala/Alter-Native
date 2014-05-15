@@ -1,13 +1,11 @@
 ##################################################
 #Find boost libraries
 ##################################################
-GET_PROPERTY(IS_RELEASE GLOBAL PROPERTY GL_IS_RELEASE)
-
 SET(Boost_USE_STATIC_LIBS        ON)
 SET(Boost_USE_MULTITHREADED      ON)
 SET(Boost_USE_STATIC_RUNTIME    OFF)
 
-FIND_PACKAGE( Boost REQUIRED COMPONENTS system locale thread date_time chrono)
+FIND_PACKAGE( Boost REQUIRED COMPONENTS system locale thread date_time chrono filesystem regex)
 
 IF(Boost_FOUND)
 	INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})

@@ -23,7 +23,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
     public class CSharpToCppConverterVisitor : CSharp.IAstVisitor<object, Cpp.AstNode>
     {
-        //Auxiliar list to change the array specifiers from one branch to another        
+        //Auxiliar list to change the array specifiers from one branch to another 
         private CSharp.TypeDeclaration currentType;
         private string currentMethod;
         private bool isInterface;
@@ -663,7 +663,16 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitStackAllocExpression(CSharp.StackAllocExpression stackAllocExpression, object data)
         {
-            throw new NotImplementedException();
+            var stackAlloc = new StackAllocExpression();
+            stackAlloc.Type = (AstType)stackAllocExpression.Type.AcceptVisitor(this, data);
+
+            if (stackAlloc.Type is PtrType)
+            {
+                stackAlloc.Type = (stackAlloc.Type as PtrType).Target;
+            }
+
+            stackAlloc.CountExpression = (Expression)stackAllocExpression.CountExpression.AcceptVisitor(this, data);
+            return EndNode(stackAllocExpression, stackAlloc);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitThisReferenceExpression(CSharp.ThisReferenceExpression thisReferenceExpression, object data)
@@ -1412,22 +1421,51 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitFixedStatement(CSharp.FixedStatement fixedStatement, object data)
         {
-            throw new NotImplementedException();
+            var fstmt = new FixedStatement();
+            fstmt.Type = (AstType)fixedStatement.Type.AcceptVisitor(this, data);
+
+            if (fstmt.Type.IsBasicType)
+                fstmt.Type = new PtrType(fstmt.Type);
+
+            fstmt.EmbeddedStatement = (Statement)fixedStatement.EmbeddedStatement.AcceptVisitor(this, data);
+            ConvertNodes(fixedStatement.Variables, fstmt.Variables);
+
+            return EndNode(fixedStatement, fstmt);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitForeachStatement(CSharp.ForeachStatement foreachStatement, object data)
         {
             ForeachStatement feach = new ForeachStatement();
 
+            bool isObject = false;
             //Add variable declaration to the foreach body (in order to dereference from iterator to the variable)
             string tmpVar = "_" + foreachStatement.VariableName.ToUpper();
+
+            AstType tmpVarType = (AstType)foreachStatement.VariableType.AcceptVisitor(this, data);
+            AstType tmpDeRefVarType = null;
+            if (tmpVarType is PtrType)
+            {
+                isObject = true;
+                tmpDeRefVarType = (tmpVarType as PtrType).Target;
+            }
+
             VariableDeclarationStatement vds = new VariableDeclarationStatement(
-                (AstType)foreachStatement.VariableType.AcceptVisitor(this, data),
-                foreachStatement.VariableName,
+                isObject ? (AstType)tmpDeRefVarType.Clone() : (AstType)tmpVarType.Clone(),
+                isObject ? "deref_" + foreachStatement.VariableName : foreachStatement.VariableName,
                 new PointerExpression(new IdentifierExpression(tmpVar)));
 
             BlockStatement blckstmt = new BlockStatement();
             blckstmt.AddChild(vds, BlockStatement.StatementRole);
+            if (isObject)
+            {
+                //Convert the stack object to dynamic object for continue coding normally
+                VariableDeclarationStatement vds2 = new VariableDeclarationStatement(
+                tmpVarType,
+                foreachStatement.VariableName,
+                new AddressOfExpression(new IdentifierExpression("deref_" + foreachStatement.VariableName)));
+                blckstmt.AddChild(vds2, BlockStatement.StatementRole);
+            }
+
             foreach (CSharp.Statement st in foreachStatement.EmbeddedStatement.GetChildrenByRole(CSharp.BlockStatement.StatementRole))
                 blckstmt.AddChild((Statement)st.AcceptVisitor(this, data), BlockStatement.StatementRole);
             feach.ForEachStatement = blckstmt;
@@ -2036,7 +2074,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 e.Library = library == String.Empty ? "LIBRARYERROR" : library;
 
                 Cache.AddDllImport(e.Library, e);
-                               
+
                 //Convert arguments for match the calling convention
                 //i.e.
                 //void A(Array<char>* myByte)
@@ -2044,7 +2082,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 //      return ::internalA(*myByte); //--> Here needs the dereference in order to convert it to char*
                 //}
                 List<Expression> arguments = Resolver.ConvertToExternTypeArguments(result.Parameters);
-               
+
                 e.Body = BlockStatement.Null;
 
                 result.Body = new BlockStatement();
@@ -2083,7 +2121,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         {
             var param = new ParameterDeclaration();
             ConvertNodes(parameterDeclaration.Attributes, param.Attributes);
-            param.ParameterModifier = (ParameterModifier)parameterDeclaration.ParameterModifier;            
+            param.ParameterModifier = (ParameterModifier)parameterDeclaration.ParameterModifier;
             param.Type = (AstType)parameterDeclaration.Type.AcceptVisitor(this, data);
             param.NameToken = (Identifier)parameterDeclaration.NameToken.AcceptVisitor(this, data);
 
@@ -2224,7 +2262,17 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
                 //For protection
                 if (currentType == null)
-                    return EndNode(simpleType, new PtrType(type));
+                {
+                    //If the type is in the Visual Tree, the parent is null. 
+                    if (simpleType.Parent == null)
+                    {
+                        return EndNode(simpleType, type);
+                    }
+                    else
+                    {
+                        return EndNode(simpleType, new PtrType(type));
+                    }
+                }
 
                 //If the type is in the Visual Tree, the parent is null. 
                 //If its parent is a TypeReferenceExpression it is like Console::ReadLine          
