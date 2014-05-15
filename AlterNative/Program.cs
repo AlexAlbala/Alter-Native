@@ -21,7 +21,9 @@ namespace AlterNative
         public static int Main(string[] args)
         {
             int exitcode;
-            if (!args[0].Equals("/separate"))
+
+#if !CORE
+            if (args.Length > 0)
             {
                 try
                 {
@@ -37,15 +39,32 @@ namespace AlterNative
             }
             else
             {
-#if !CORE
                 ICSharpCode.ILSpy.App app = new ICSharpCode.ILSpy.App();
                 app.InitializeComponent();
                 app.Run();
                 exitcode = 0;
-#else
-                exitcode = 1;
-#endif
             }
+#else
+            if (args.Length >= 0)
+            {
+                try
+                {
+                    Program p = new Program();
+                    exitcode = p.ConsoleMain(args);
+
+                }
+                catch (Exception e)
+                {
+                    Utils.WriteToConsole("Exception: " + e.ToString());
+                    exitcode = 1;
+                }
+            }
+            else
+            {
+                exitcode = 1;
+            }
+#endif
+
             return exitcode;
         }
 
@@ -92,13 +111,15 @@ namespace AlterNative
             bool show_help = false;
 
             var opts = new OptionSet() {
-                {"v", "Increase the verbosity of debug messages",
-                    v => Config.Verbose = v!= null},
-                {"r", "Compiles in release mode",
-                    v => Config.Release = v!= null},
-				{ "h|help",  "show this message and exit", 
-					v => show_help = v != null }
-			};
+            {"v", "Increase the verbosity of debug messages",
+            v => Config.Verbose = v!= null},
+            {"r", "Compiles in release mode",
+            v => Config.Release = v!= null},
+            {"R", "Recursive mode. The dependencies are decompiled",
+            v => Config.RecursiveDependencies = v != null},
+            { "h|help",  "show this message and exit", 
+            v => show_help = v != null }
+            };
 
             try
             {
@@ -184,8 +205,62 @@ namespace AlterNative
 
             return errorCode;
         }
+
+        private void DecompileAssembly(AssemblyDefinition adef, string outputDir, string location)
+        {
+            Utils.WriteToConsole("Decompiling assembly: " + adef.FullName);
+            //Each visitor is responsible of changing the file if necessary (from here it is ipmossible to know the file names)
+            ICSharpCode.Decompiler.ITextOutput textOutput = new ICSharpCode.ILSpy.FileTextOutput(outputDir);
+            FileWritterManager.WorkingPath = outputDir;
+
+            //CONFIGURE OUTPUT LANGUAGE
+            ICSharpCode.ILSpy.Language lang = OutputLanguage("CXX");
+
+            if (Config.RecursiveDependencies)
+            {
+                var resolver = new DefaultAssemblyResolver();
+                Utils.WriteToConsole("Adding " + location + " to resolver search directories");
+                resolver.AddSearchDirectory(location);
+                foreach (AssemblyNameReference anref in adef.MainModule.AssemblyReferences)
+                {
+                    if (!Config.IgnoreReferences.Contains(anref.Name))
+                    {
+                        AssemblyDefinition assembly = resolver.Resolve(anref);
+
+                        //TODO: Change directory ?
+                        DecompileAssembly(assembly, outputDir, location);
+                        if (assembly == null)
+                        {
+                            Utils.WriteToConsole("alternative: ");
+                            Utils.WriteToConsole("ERROR - could not resolve assembly " + anref.FullName + " .");
+                        }
+                    }
+                }
+            }
+
+            //DECOMPILE FIRST TIME AND FILL THE TABLES
+            foreach (TypeDefinition tdef in adef.MainModule.Types)
+            {
+                if (!tdef.Name.Contains("<"))
+                {
+                    lang.DecompileType(tdef, textOutput, new ICSharpCode.ILSpy.DecompilationOptions() { FullDecompilation = false });
+                }
+            }
+
+            //DECOMPILE
+            foreach (TypeDefinition tdef in adef.MainModule.Types)
+            {
+                if (!tdef.Name.Contains("<"))
+                {
+                    lang.DecompileType(tdef, textOutput, new ICSharpCode.ILSpy.DecompilationOptions() { FullDecompilation = false });
+                    Utils.WriteToConsole("Decompiled: " + tdef.FullName);
+                }
+            }
+        }
+
         public int Run()
         {
+            Utils.WriteToConsole("\n");
             Utils.WriteToConsole("Executing alternative command --> " + Config.Command);
 
             if (System.Environment.GetEnvironmentVariable("ALTERNATIVE_TOOLS_PATH") == null)
@@ -195,9 +270,7 @@ namespace AlterNative
             else
             {
                 Config.AlterNativeTools = System.Environment.GetEnvironmentVariable("ALTERNATIVE_TOOLS_PATH");
-            }
-
-            Utils.WriteToConsole("\n");
+            }            
 
             string outputDir = Utils.InitOutputPath(Config.OutputPath);
 
@@ -251,32 +324,8 @@ namespace AlterNative
 
             try
             {
-                //Each visitor is responsible of changing the file if necessary (from here it is ipmossible to know the file names)
-                ICSharpCode.Decompiler.ITextOutput textOutput = new ICSharpCode.ILSpy.FileTextOutput(outputDir);
-                FileWritterManager.WorkingPath = outputDir;
-
-                //CONFIGURE OUTPUT LANGUAGE
-                ICSharpCode.ILSpy.Language lang = OutputLanguage("CXX");
-
-
-                //DECOMPILE FIRST TIME AND FILL THE TABLES
-                foreach (TypeDefinition tdef in adef.MainModule.Types)
-                {
-                    if (!tdef.Name.Contains("<"))
-                    {
-                        lang.DecompileType(tdef, textOutput, new ICSharpCode.ILSpy.DecompilationOptions() { FullDecompilation = false });
-                    }
-                }
-
-                //DECOMPILE
-                foreach (TypeDefinition tdef in adef.MainModule.Types)
-                {
-                    if (!tdef.Name.Contains("<"))
-                    {
-                        lang.DecompileType(tdef, textOutput, new ICSharpCode.ILSpy.DecompilationOptions() { FullDecompilation = false });
-                        Utils.WriteToConsole("Decompiled: " + tdef.FullName);
-                    }
-                }
+                String assemblyLocation = Config.Extra[0].Substring(0, Config.Extra[0].Replace('\\', '/').LastIndexOf('/')).Replace('\\', '/');
+                DecompileAssembly(adef, outputDir, assemblyLocation);
 
                 if (System.Environment.GetEnvironmentVariable("ALTERNATIVE_CPP_LIB_PATH") != null)
                 {
@@ -323,6 +372,10 @@ namespace AlterNative
             Utils.WriteToConsole("Usage: alternative <command> <parameters>");
             Utils.WriteToConsole("Translates a .NET assembly to C++11.");
             Utils.WriteToConsole("\n");
+#if !CORE
+            Utils.WriteToConsole("  alternative");
+            Utils.WriteToConsole("    Opens the visual gui for alternative (only windows)");
+#endif
             Utils.WriteToConsole("  alternative <INPUT-ASSEMBLY> <PROJECT-DIR>");
             Utils.WriteToConsole("      Translates a .NET assembly.");
             Utils.WriteToConsole("  alternative new <PROJECT-DIR>");

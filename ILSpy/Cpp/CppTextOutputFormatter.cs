@@ -60,6 +60,19 @@ namespace ICSharpCode.ILSpy.Cpp
                 (output as FileTextOutput).NewFile(newFile);
         }
 
+        public void Close()
+        {
+            if (!(output is FileTextOutput))
+            {
+                output.WriteLine();
+                WriteComment(CommentType.SingleLine, "End of file");
+                output.WriteLine();
+            }
+
+            if (output is FileTextOutput)
+                (output as FileTextOutput).Close();
+        }
+
         public void StartNode(AstNode node)
         {
             //			var ranges = node.Annotation<List<ILRange>>();

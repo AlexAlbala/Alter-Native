@@ -256,7 +256,7 @@ namespace RegressionTest
             Utils.DebugMessage("Exit Code: " + res.diffCode);
         }
 
-        public static long CountTotalDirectoryLines(DirectoryInfo di)
+        /*public static long CountTotalDirectoryLines(DirectoryInfo di)
         {
             long lines = 0;
             foreach (FileInfo fi in di.GetFiles())
@@ -271,9 +271,9 @@ namespace RegressionTest
             }
 
             return lines;
-        }
+        }*/
 
-        public static long CountLinesInFile(FileInfo fi)
+        /*public static long CountLinesInFile(FileInfo fi)
         {
             long count = 0;
             using (StreamReader r = new StreamReader(fi.FullName))
@@ -285,9 +285,9 @@ namespace RegressionTest
                 }
             }
             return count;
-        }
+        }*/
 
-        public static void CountLines(DirectoryInfo di, TestResult res)
+        /*public static void CountLines(DirectoryInfo di, TestResult res)
         {
             Directory.SetCurrentDirectory(di.FullName);
             res.finalLines = CountTotalDirectoryLines(new DirectoryInfo(di.FullName + "/Output"));
@@ -297,7 +297,7 @@ namespace RegressionTest
 
             Utils.DebugMessage("Original Lines: " + res.originalLines);
             Utils.DebugMessage("Final Lines: " + res.finalLines);
-        }
+        }*/
 
         public static void CopyAll(DirectoryInfo source, DirectoryInfo target)
         {

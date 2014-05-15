@@ -36,8 +36,8 @@ class ArrayPrinter
                 }
             }
         }
-	if(maxWidth > (int)(Console.BufferWidth/arrValues.GetLength(0)))
-		return (int)(Console.BufferWidth / arrValues.GetLength(0));
+	/*if(maxWidth > (int)(Console.BufferWidth/arrValues.GetLength(0)))
+		return (int)(Console.BufferWidth / arrValues.GetLength(0));*/
         return maxWidth;
     }
 

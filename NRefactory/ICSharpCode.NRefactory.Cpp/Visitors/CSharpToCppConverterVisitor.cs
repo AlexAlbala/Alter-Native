@@ -2236,7 +2236,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 && !Resolver.IsChildOf(simpleType, typeof(CSharp.TypeParameterDeclaration)))
             {
                 id = Resolver.GetCppName(simpleType.Identifier);
-                Cache.AddInclude(simpleType.Identifier);
+                //Cache.AddInclude(simpleType.Identifier);
                 isPtr = false;
             }
 

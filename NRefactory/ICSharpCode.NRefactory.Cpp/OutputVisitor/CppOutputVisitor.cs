@@ -1260,7 +1260,8 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             CloseNamespaceBraces();
 
-            formatter.ChangeFile("tmp");
+            //formatter.ChangeFile("tmp");
+            formatter.Close();
         }
 
         public object VisitNamespaceDeclaration(NamespaceDeclaration namespaceDeclaration, object data)
@@ -1772,7 +1773,8 @@ namespace ICSharpCode.NRefactory.Cpp
 
             CloseNamespaceBraces();
 
-            formatter.ChangeFile("tmp");
+            //formatter.ChangeFile("tmp");
+            formatter.Close();
             //TypeDeclarationTemplatesHeader(genericTemplateTypeDeclaration.Type, data);
             //genericTemplateTypeDeclaration.Type.AcceptVisitor(this, data);
             return EndNode(genericTemplateTypeDeclaration);
@@ -1969,11 +1971,8 @@ namespace ICSharpCode.NRefactory.Cpp
                 }
             }
             Cache.ClearDllImport();
-
-
-            //Cache.ClearHeaderNodes();
-
-            formatter.ChangeFile("tmp");
+            //formatter.ChangeFile("tmp");
+            formatter.Close();
         }
 
         private void WritePragmaOnceDirective()
@@ -1986,13 +1985,18 @@ namespace ICSharpCode.NRefactory.Cpp
         private void WriteImports(object data, TypeDeclaration type)
         {
             //Write using declarations in header file
-            foreach (IncludeDeclaration n in Cache.GetIncludeDeclaration())
+
+            //TO BE REMOVED...
+            /*foreach (IncludeDeclaration n in Cache.GetIncludeDeclaration())
             {
                 VisitIncludeDeclarationHeader(n, data);
-            }
+            }*/
             Cache.ClearIncludeDeclaration();
 
-            //WRITE RESOLVED TYPE DEPENDENCES
+            //WRITE RESOLVED TYPE DEPENDENCES      
+            WriteKeyword("#include");
+            WriteIdentifier(Resolver.GetCppName("System"));
+            NewLine();
             foreach (string s in Resolver.GetTypeIncludes())
             {
                 WriteKeyword("#include");
@@ -2059,7 +2063,8 @@ namespace ICSharpCode.NRefactory.Cpp
 
             CloseNamespaceBraces();
             //Cache.ClearHeaderNodes();
-            formatter.ChangeFile("tmp");
+            //formatter.ChangeFile("tmp");
+            formatter.Close();
             return EndNode(interfaceTypeDeclaration);
         }
 
@@ -2149,7 +2154,7 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             StartNode(includeDeclaration);
             //Cache.AddHeaderNode(includeDeclaration); 
-            Cache.AddIncludeDeclaration(includeDeclaration);
+            //Cache.AddIncludeDeclaration(includeDeclaration);
 
             return EndNode(includeDeclaration);
         }

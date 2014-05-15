@@ -190,8 +190,8 @@ namespace ICSharpCode.NRefactory.Cpp
                     }
                 }
             }
-            else
-                throw new InvalidOperationException("Must be included. It is impossible to enter this funcion before the type is included!");
+            //else
+              //  throw new InvalidOperationException("Must be included. It is impossible to enter this funcion before the type is included!");
 
             fw_dcl_type2 = String.Empty;
             return false;

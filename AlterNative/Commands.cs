@@ -149,14 +149,14 @@ namespace AlterNative
 
         public static void SetLinkedLibraries(string[] args)
         {
-            Config.addedLibs = new List<string>();
+            Config.AdditionalLibraries = new List<string>();
 
             for (int i = 0; i < args.Length; i++)
             {
                 string arg = args[i];
                 if (arg.ToLower().Equals("-l"))
                 {
-                    Config.addedLibs.Add(args[++i]);
+                    Config.AdditionalLibraries.Add(args[++i]);
                 }
             }
         }

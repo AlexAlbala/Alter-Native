@@ -20,7 +20,8 @@ namespace RegressionTest
             string altArgs = di.FullName + "/NETbin/" + di.Name.Split('.')[1] + ".exe" + " "
                                                     + di.FullName + "/Output/" + " "
                                                     + Utils.GetAltCompileArg(Config.compileMode) + " "
-                                                    + (Config.Verbose ? "-v" : "");
+                                                    + (Config.Verbose ? "-v" : "") + " "
+                                                    + (Config.RecursiveDependencies ? "-R" : "");
 
             Utils.DebugMessage("ALTERNATIVE COMMAND:");
             Utils.DebugMessage("alternative " + altArgs);

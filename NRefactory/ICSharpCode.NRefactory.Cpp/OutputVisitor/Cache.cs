@@ -237,6 +237,8 @@ namespace ICSharpCode.NRefactory.Cpp
             if (!visitedTypes.ContainsValue(name) && !visitedTypes.ContainsKey(type))
                 visitedTypes.Add(type, name);
 
+            if (name == "Depth1")
+            { }
             AddInclude(name);
         }
 
@@ -270,6 +272,8 @@ namespace ICSharpCode.NRefactory.Cpp
         /// <param name="included">The type included</param>
         public static void AddInclude(string included)
         {
+            if (included == "Depth1")
+            { }
             string owner = "N/P";
 
             if (includes.ContainsKey(owner))
@@ -279,7 +283,7 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             else
             {
-                includes.Add(owner, new List<string>());
+                includes.Add(owner, new List<string>(){"Sysetm"});
                 includes[owner].Add(included);
             }
         }
@@ -336,16 +340,16 @@ namespace ICSharpCode.NRefactory.Cpp
             return templatizedAbstractMethods;
         }
 
-        public static void AddIncludeDeclaration(IncludeDeclaration node)
+        /*public static void AddIncludeDeclaration(IncludeDeclaration node)
         {
             if (!includeDeclaration.Contains(node))
                 includeDeclaration.Add(node);
-        }
+        }*/
 
-        public static List<IncludeDeclaration> GetIncludeDeclaration()
+        /*public static List<IncludeDeclaration> GetIncludeDeclaration()
         {
             return includeDeclaration;
-        }
+        }*/
 
         public static void ClearIncludeDeclaration()
         {

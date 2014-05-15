@@ -18,25 +18,27 @@ namespace RegressionTest
             bool show_help = false;
 
             var opts = new OptionSet() { 
-                { "d", "debug messages" ,
-                    v => Config.Debug = v!= null},
-                { "v", "increase debug message verbosity.",
-				    v => Config.Verbose = v != null },
-			    { "r", "Compile in release mode.",
-				    v => Config.compileMode  = v != null ? CompileMode.Release :CompileMode.Debug },
-			    { "f", "Fast mode. Only compares target/output files.",
-				    v => Config.fast = v != null },
-			    { "o", "Overwrite target files with output files.",
-				    v => Config.overwriteTarget = v != null },
-			    { "u", "Output messages are unlimited.",
-				    v => Config.Unlimited = v != null },
-			    { "p", "Performance tests are also included.",
-				    v => Config.performanceTests = v != null },
-			    { "platform=", "Platform to use: [win|win32|win64|linux|macos|android].",
-				    (String v) => Config.platform = (Platform)Enum.Parse(typeof(Platform), v) },
-			    { "h|help",  "show this message and exit", 
-				    v => show_help = v != null },
-		    };
+            { "d", "debug messages" ,
+            v => Config.Debug = v!= null},
+            { "v", "increase debug message verbosity.",
+            v => Config.Verbose = v != null },
+            { "r", "Compile in release mode.",
+            v => Config.compileMode  = v != null ? CompileMode.Release :CompileMode.Debug },
+            { "R", "Recursive translation.",
+            v => Config.RecursiveDependencies  = v != null},
+            { "f", "Fast mode. Only compares target/output files.",
+            v => Config.fast = v != null },
+            { "o", "Overwrite target files with output files.",
+            v => Config.overwriteTarget = v != null },
+            { "u", "Output messages are unlimited.",
+            v => Config.Unlimited = v != null },
+            { "p", "Performance tests are also included.",
+            v => Config.performanceTests = v != null },
+            { "platform=", "Platform to use: [win|win32|win64|linux|macos|android].",
+            (String v) => Config.platform = (Platform)Enum.Parse(typeof(Platform), v) },
+            { "h|help",  "show this message and exit", 
+            v => show_help = v != null },
+            };
 
             List<string> tests;
             try
@@ -215,8 +217,8 @@ namespace RegressionTest
                     if (res.msbuildCode == 0 && Config.overwriteTarget)
                         Utils.OverwriteTarget(di);
 
-                    if (res.alternative == 0)
-                        Utils.CountLines(di, res);
+                    //if (res.alternative == 0)
+                      //  Utils.CountLines(di, res);
                 }
                 catch (Exception e)
                 {
@@ -228,7 +230,7 @@ namespace RegressionTest
             Console.WriteLine("******************************************************************** TEST RESULTS ***************************************************************");
             Console.ResetColor();
 
-            string[,] arr = new string[tests.Length + 1, 8];
+            string[,] arr = new string[tests.Length + 1, 7];
             arr[0, 0] = "NAME";
             arr[0, 1] = "ALTERNATIVE";
             arr[0, 2] = "FILE DIFFER";
@@ -236,7 +238,6 @@ namespace RegressionTest
             arr[0, 4] = "COMPILE (" + Config.platform.ToString() + "|" + Config.compileMode.ToString() + ")";
             arr[0, 5] = "OUTPUT";
             arr[0, 6] = "TIME DIFFERENCE";
-            arr[0, 7] = "LINES DIFFERENCE";
             int i = 1;
             foreach (string _s in tests)
             {
@@ -250,7 +251,6 @@ namespace RegressionTest
                 arr[i, 4] = kvp.Value.msbuildCode == 0 ? "#gBUILD SUCCEEDED" : (kvp.Value.msbuildCode == -10 ? "#ySKIPPED" : "#rFAIL. Code: " + kvp.Value.msbuildCode);
                 arr[i, 5] = kvp.Value.output == 0 ? "#gOK" : (kvp.Value.output == -10 ? "#ySKIPPED" : "#rFAIL");
                 arr[i, 6] = (kvp.Value.msTimeSpan >= 0 ? (kvp.Value.msTimeSpan == 0 ? "#y" : "#r") : "#g") + kvp.Value.msTimeSpan.ToString() + " ms " + "(" + kvp.Value.relativeTime.ToString("N2") + "%)";
-                arr[i, 7] = (kvp.Value.linesDifference >= 0 ? (kvp.Value.linesDifference == 0 ? "#y" : "#r") : "#g") + kvp.Value.linesDifference.ToString() + " lines " + "(" + kvp.Value.relativeLines.ToString("N2") + "%)";
 
                 i++;
             }

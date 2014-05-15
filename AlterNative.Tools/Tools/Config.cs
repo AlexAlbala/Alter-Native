@@ -13,6 +13,12 @@ namespace AlterNative
 
     public class Config
     {
+        private static List<string> ignoreReferences = new List<string>(){"mscorlib", "System", "System.Core"};
+        public static List<string> IgnoreReferences
+        {
+            get{ return ignoreReferences; }
+        }
+
         public static TargetType targetType
         {
             get;
@@ -45,7 +51,7 @@ namespace AlterNative
         {
             get;
             set;
-        }
+        }        
 
         public static bool Verbose
         {
@@ -59,7 +65,13 @@ namespace AlterNative
             set;
         }
 
-        public static List<string> addedLibs
+        public static List<string> AdditionalLibraries
+        {
+            get;
+            set;
+        }
+
+        public static bool RecursiveDependencies
         {
             get;
             set;

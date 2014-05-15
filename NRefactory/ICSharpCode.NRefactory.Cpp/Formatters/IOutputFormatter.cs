@@ -51,6 +51,7 @@ namespace ICSharpCode.NRefactory.Cpp
 		void CloseBrace(BraceStyle style);
 
         void ChangeFile(string path);
+        void Close();
 		
 		void Indent();
 		void Unindent();

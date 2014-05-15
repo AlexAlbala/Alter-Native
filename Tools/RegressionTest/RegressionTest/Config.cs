@@ -32,6 +32,7 @@ namespace RegressionTest
         public static CompileMode compileMode = CompileMode.Debug;
         public static bool performanceTests = false;
         public static bool featuresTest = true;
+        public static bool RecursiveDependencies = false;
         /*******************CONFIGURATION****************/
     }
 }

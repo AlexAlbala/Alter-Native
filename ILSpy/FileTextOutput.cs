@@ -30,9 +30,21 @@ namespace ICSharpCode.ILSpy
             {
                 output.Flush();
                 output.Close();
-            }
-
+                output.Dispose();
+            }            
             output = new StreamWriter(Path.Combine(WorkingDirectory, FileName));
+        }
+
+        public void Close()
+        {
+            indent = 0;
+            if (output != null)
+            {
+                output.Flush();
+                output.Close();
+                output.Dispose();
+            }
+            output = null;
         }
 
         public NRefactory.TextLocation Location
