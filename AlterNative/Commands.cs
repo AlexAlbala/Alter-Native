@@ -31,7 +31,7 @@ namespace AlterNative
             }
 
             p.Start();
-            if(Config.Verbose)
+            if (Config.Verbose)
                 p.BeginOutputReadLine();
 
             p.WaitForExit();
@@ -87,7 +87,7 @@ namespace AlterNative
 
                 msbuild.Start();
 
-                if(Config.Verbose)
+                if (Config.Verbose)
                     msbuild.BeginOutputReadLine();
 
                 msbuild.WaitForExit();
@@ -121,9 +121,8 @@ namespace AlterNative
 
         public static AssemblyDefinition LoadAssembly(string path)
         {
-#if CORE
-            string directoryPath = path.Substring(0,  path.Replace('\\','/').LastIndexOf("/"));
-		
+            string directoryPath = path.Substring(0, path.Replace('\\', '/').LastIndexOf("/"));
+#if CORE		
             if (File.Exists(Path.Combine(directoryPath,Path.GetFileNameWithoutExtension(path) + ".pdb")) &&
                 !File.Exists(Path.Combine(directoryPath,Path.GetFileNameWithoutExtension(path) + ".mdb")))
             {

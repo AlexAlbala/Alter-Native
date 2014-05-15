@@ -186,7 +186,7 @@ namespace AlterNative
         }
         public int Run()
         {
-            Utils.WriteToConsole("COMMAND:" + Config.Command);
+            Utils.WriteToConsole("Executing alternative command --> " + Config.Command);
 
             if (System.Environment.GetEnvironmentVariable("ALTERNATIVE_TOOLS_PATH") == null)
             {
@@ -213,7 +213,7 @@ namespace AlterNative
                 int compileCode = Commands.Compile(buildDir);
 
 
-		ConsoleColor current = Console.ForegroundColor;
+                ConsoleColor current = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Green;
                 Utils.WriteToConsole("alternative make done");
                 Console.ForegroundColor = current;

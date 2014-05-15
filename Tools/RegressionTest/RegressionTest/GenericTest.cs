@@ -24,13 +24,13 @@ namespace RegressionTest
 
             Utils.DebugMessage("ALTERNATIVE COMMAND:");
             Utils.DebugMessage("alternative " + altArgs);
-		
-	    if(Utils.IsWinPlatform())
-            	runAlt.StartInfo = new ProcessStartInfo("alternative", altArgs);
-            else
-		runAlt.StartInfo = new ProcessStartInfo("bash", "-c 'alternative " + altArgs + "'");
 
-	    runAlt.StartInfo.CreateNoWindow = true;
+            if (Utils.IsWinPlatform())
+                runAlt.StartInfo = new ProcessStartInfo("alternative", altArgs);
+            else
+                runAlt.StartInfo = new ProcessStartInfo("bash", "-c 'alternative " + altArgs + "'");
+
+            runAlt.StartInfo.CreateNoWindow = true;
             runAlt.StartInfo.UseShellExecute = false;
             if (Config.Verbose)
             {
@@ -67,10 +67,10 @@ namespace RegressionTest
             //Run cmake
             Process runCmake = new Process();
 
-	    if(Utils.IsWinPlatform())
-            	runCmake.StartInfo = new ProcessStartInfo("alternative", " make Output" + (Config.Verbose ? " -v" : ""));
-	    else
-		runCmake.StartInfo = new ProcessStartInfo("bash", "-c 'alternative make Output" + (Config.Verbose ? " -v" : "") + "'");
+            if (Utils.IsWinPlatform())
+                runCmake.StartInfo = new ProcessStartInfo("alternative", " make Output" + (Config.Verbose ? " -v" : ""));
+            else
+                runCmake.StartInfo = new ProcessStartInfo("bash", "-c 'alternative make Output" + (Config.Verbose ? " -v" : "") + "'");
 
             runCmake.StartInfo.CreateNoWindow = true;
             runCmake.StartInfo.UseShellExecute = false;
