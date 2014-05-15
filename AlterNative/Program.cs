@@ -89,9 +89,6 @@ namespace AlterNative
         /// <param name="args">{ assembly, destinationPath, language, Params } (In CPP: Params is the path of the library)</param>
         public int ConsoleMain(string[] args)
         {
-            foreach (string s in args)
-                Utils.WriteToConsole(s);
-
             bool show_help = false;
 
             var opts = new OptionSet() {
@@ -190,12 +187,6 @@ namespace AlterNative
         public int Run()
         {
             Utils.WriteToConsole("COMMAND:" + Config.Command);
-            foreach (var s in Config.Extra)
-            {
-                Utils.WriteToConsole(s);
-            }
-
-            //Commands.SetLinkedLibraries(args);
 
             if (System.Environment.GetEnvironmentVariable("ALTERNATIVE_TOOLS_PATH") == null)
             {
@@ -222,13 +213,10 @@ namespace AlterNative
                 int compileCode = Commands.Compile(buildDir);
 
 
-#if !CORE
+		ConsoleColor current = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Green;
-#endif
                 Utils.WriteToConsole("alternative make done");
-#if !CORE
-                Console.ResetColor();
-#endif
+                Console.ForegroundColor = current;
                 if (cmakeCode == 0 && compileCode == 0)
                     return 0;
                 else if (cmakeCode == 0 && compileCode != 0)

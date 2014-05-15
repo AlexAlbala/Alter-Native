@@ -121,9 +121,22 @@ namespace AlterNative
 
         public static AssemblyDefinition LoadAssembly(string path)
         {
+#if CORE
+            string directoryPath = path.Substring(0,  path.Replace('\\','/').LastIndexOf("/"));
+		
+            if (File.Exists(Path.Combine(directoryPath,Path.GetFileNameWithoutExtension(path) + ".pdb")) &&
+                !File.Exists(Path.Combine(directoryPath,Path.GetFileNameWithoutExtension(path) + ".mdb")))
+            {
+		Utils.WriteToConsole("Executing pdb2mdb process for decompilation in mono environment");
+                Process p = new Process();
+                p.StartInfo = new ProcessStartInfo("bash", "-c 'pdb2mdb \"" + path + "\"'");
+                p.Start();
+                p.WaitForExit();
+            }
+#endif
             //LOAD TARGET ASSEMBLY
             var resolver = new DefaultAssemblyResolver();
-            resolver.AddSearchDirectory(path.Substring(0, path.Replace('\\', '/').LastIndexOf("/")));
+            resolver.AddSearchDirectory(directoryPath);
 
             ReaderParameters readerParams = new ReaderParameters()
             {
