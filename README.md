@@ -49,7 +49,7 @@ On Windows
 	+ Initialize environment variables
 
 			alternative-init.bat
-	+ Compile the alternative library
+	+ Compile the AlterNative library
 
 			cd Lib/
 			alternative-lib-compile.bat
@@ -89,7 +89,7 @@ On MacOS X
 
 			./alternative.core-compile.sh
 	* Also you can open the AlterNative.Core.sln with Xamarin Studio and compile
-	+ Compile the alternative library
+	+ Compile the AlterNative library
 
 			cd Lib/
 			source ./alternative-lib-compile.sh
@@ -122,7 +122,7 @@ On Linux
 	+ Compile AlterNative
 
 			./alternative.core-compile.sh
-	+ Compile the alternative library
+	+ Compile the AlterNative library
 
 			cd Lib/
 			source ./alternative-lib-compile.sh
@@ -130,26 +130,26 @@ On Linux
 Testing
 -------
 
-Make sure you have a c++11 compatible compiler
+* Make sure you have a c++11 compatible compiler
 
-Make sure you have compiled the C++ AlterNative library before running some test: https://github.com/AlexAlbala/AlterNative-CXX-Lib
+* Make sure you have compiled the C++ AlterNative library before running some test: https://github.com/AlexAlbala/AlterNative-CXX-Lib
 
-	cd AlterNative
-	source ./alternative-init.sh
+		cd AlterNative
+		source ./alternative-init.sh
+		
+		alternative MyExe.exe ./output/
+		cd output
+		mkdir build
+		cd build
+		cmake ..
+		make
+		./MyExe
 
-	alternative MyExe.exe ./output/
-	cd output
-	mkdir build
-	cd build
-	cmake ..
-	make
-	./MyExe
+* Support for easy testing is being added.
 
-Support for easy compiling is being added.
-
-	cd AlterNative
-	source ./alternative-init.sh
-	alternative new example
-	alternative make example
-	cd build
-	./Blank
+		cd AlterNative
+		source ./alternative-init.sh
+		alternative new example
+		alternative make example
+		cd build
+		./Blank
