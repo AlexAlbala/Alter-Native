@@ -17,6 +17,7 @@ namespace ICSharpCode.NRefactory.Cpp
 {
     public class CppOutputVisitor : IAstVisitor<object, object>
     {
+        readonly bool enableExcepttions = false;
         IOutputFormatter formatter;
         readonly CppFormattingOptions policy;
 
@@ -65,6 +66,24 @@ namespace ICSharpCode.NRefactory.Cpp
             this.formatter = formatter;
             this.policy = formattingPolicy;
             this.avoidPointers = false;
+        }
+
+        private object VisitorException(Exception e, AstNode node, bool init = true)
+        {            
+            if (enableExcepttions)
+                throw e;
+            else
+            {
+                if(init)
+                    StartNode(node);
+
+
+                NewLine();
+                formatter.WriteComment(CommentType.SingleLine, "ERROR: Cannot translate: " + e.ToString());
+                NewLine();
+                
+                return EndNode(node);
+            }
         }
 
         void StartNode(AstNode node)
@@ -280,47 +299,12 @@ namespace ICSharpCode.NRefactory.Cpp
         #region Expressions
         public object VisitAnonymousMethodExpression(AnonymousMethodExpression anonymousMethodExpression, object data)
         {
-            StartNode(anonymousMethodExpression);
-            if (anonymousMethodExpression.IsAsync)
-            {
-                WriteKeyword("async", AnonymousMethodExpression.AsyncModifierRole);
-                Space();
-            }
-            WriteKeyword("delegate");
-            if (anonymousMethodExpression.HasParameterList)
-            {
-                Space(policy.SpaceBeforeMethodDeclarationParentheses);
-                WriteCommaSeparatedListInParenthesis(anonymousMethodExpression.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
-            }
-            anonymousMethodExpression.Body.AcceptVisitor(this, data);
-            return EndNode(anonymousMethodExpression);
+            return this.VisitorException(new NotImplementedException("anonymousMethodExpression"), anonymousMethodExpression);
         }
 
         public object VisitUndocumentedExpression(UndocumentedExpression undocumentedExpression, object data)
         {
-            StartNode(undocumentedExpression);
-            switch (undocumentedExpression.UndocumentedExpressionType)
-            {
-                case UndocumentedExpressionType.ArgList:
-                case UndocumentedExpressionType.ArgListAccess:
-                    WriteKeyword("__arglist");
-                    break;
-                case UndocumentedExpressionType.MakeRef:
-                    WriteKeyword("__makeref");
-                    break;
-                case UndocumentedExpressionType.RefType:
-                    WriteKeyword("__reftype");
-                    break;
-                case UndocumentedExpressionType.RefValue:
-                    WriteKeyword("__refvalue");
-                    break;
-            }
-            if (undocumentedExpression.Arguments.Count > 0)
-            {
-                Space(policy.SpaceBeforeMethodCallParentheses);
-                WriteCommaSeparatedListInParenthesis(undocumentedExpression.Arguments, policy.SpaceWithinMethodCallParentheses);
-            }
-            return EndNode(undocumentedExpression);
+            return this.VisitorException(new NotImplementedException("undocumentedExpression"), undocumentedExpression);
         }
 
         public object VisitArrayCreateExpression(ArrayCreateExpression arrayCreateExpression, object data)
@@ -506,14 +490,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitCheckedExpression(CheckedExpression checkedExpression, object data)
         {
-            StartNode(checkedExpression);
-            WriteKeyword("checked");
-            LPar();
-            Space(policy.SpacesWithinCheckedExpressionParantheses);
-            checkedExpression.Expression.AcceptVisitor(this, data);
-            Space(policy.SpacesWithinCheckedExpressionParantheses);
-            RPar();
-            return EndNode(checkedExpression);
+            return this.VisitorException(new NotImplementedException("checkedExpression"), checkedExpression);
         }
 
         public object VisitConditionalExpression(ConditionalExpression conditionalExpression, object data)
@@ -538,16 +515,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitDefaultValueExpression(DefaultValueExpression defaultValueExpression, object data)
         {
-            StartNode(defaultValueExpression);
-
-            WriteKeyword("default");
-            LPar();
-            Space(policy.SpacesWithinTypeOfParentheses);
-            defaultValueExpression.Type.AcceptVisitor(this, data);
-            Space(policy.SpacesWithinTypeOfParentheses);
-            RPar();
-
-            return EndNode(defaultValueExpression);
+            return this.VisitorException(new NotImplementedException("defaultValueExpression"), defaultValueExpression);
         }
 
         public object VisitDirectionExpression(DirectionExpression directionExpression, object data)
@@ -607,25 +575,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitLambdaExpression(LambdaExpression lambdaExpression, object data)
         {
-            StartNode(lambdaExpression);
-            if (lambdaExpression.IsAsync)
-            {
-                WriteKeyword("async", LambdaExpression.AsyncModifierRole);
-                Space();
-            }
-            if (LambdaNeedsParenthesis(lambdaExpression))
-            {
-                WriteCommaSeparatedListInParenthesis(lambdaExpression.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
-            }
-            else
-            {
-                lambdaExpression.Parameters.Single().AcceptVisitor(this, data);
-            }
-            Space();
-            WriteToken("=>", LambdaExpression.ArrowRole);
-            Space();
-            lambdaExpression.Body.AcceptVisitor(this, data);
-            return EndNode(lambdaExpression);
+            return this.VisitorException(new NotImplementedException("lambdaExpression"), lambdaExpression);
         }
 
         bool LambdaNeedsParenthesis(LambdaExpression lambdaExpression)
@@ -665,12 +615,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitNamedArgumentExpression(NamedArgumentExpression namedArgumentExpression, object data)
         {
-            StartNode(namedArgumentExpression);
-            WriteIdentifier(namedArgumentExpression.Identifier);
-            WriteToken(":", NamedArgumentExpression.Roles.Colon);
-            Space();
-            namedArgumentExpression.Expression.AcceptVisitor(this, data);
-            return EndNode(namedArgumentExpression);
+            return this.VisitorException(new NotImplementedException("namedArgumentExpression"), namedArgumentExpression);
         }
 
         public object VisitNamedExpression(NamedExpression namedExpression, object data)
@@ -711,10 +656,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitAnonymousTypeCreateExpression(AnonymousTypeCreateExpression anonymousTypeCreateExpression, object data)
         {
-            StartNode(anonymousTypeCreateExpression);
-            WriteKeyword("new");
-            PrintInitializerElements(anonymousTypeCreateExpression.Initializers);
-            return EndNode(anonymousTypeCreateExpression);
+            return this.VisitorException(new NotImplementedException("anonymousTypeCreateExpression"), anonymousTypeCreateExpression);
         }
 
         public object VisitParenthesizedExpression(ParenthesizedExpression parenthesizedExpression, object data)
@@ -730,12 +672,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitPointerReferenceExpression(PointerReferenceExpression pointerReferenceExpression, object data)
         {
-            StartNode(pointerReferenceExpression);
-            pointerReferenceExpression.Target.AcceptVisitor(this, data);
-            WriteToken("->", PointerReferenceExpression.ArrowRole);
-            WriteIdentifier(pointerReferenceExpression.MemberName);
-            WriteTypeArguments(pointerReferenceExpression.TypeArguments);
-            return EndNode(pointerReferenceExpression);
+            return this.VisitorException(new NotImplementedException("pointerReferenceExpression"), pointerReferenceExpression);
         }
 
         public object VisitEmptyExpression(EmptyExpression emptyExpression, object data)
@@ -970,16 +907,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitTypeOfExpression(TypeOfExpression typeOfExpression, object data)
         {
-            StartNode(typeOfExpression);
-
-            WriteKeyword("typeof");
-            LPar();
-            Space(policy.SpacesWithinTypeOfParentheses);
-            typeOfExpression.Type.AcceptVisitor(this, data);
-            Space(policy.SpacesWithinTypeOfParentheses);
-            RPar();
-
-            return EndNode(typeOfExpression);
+            return this.VisitorException(new NotImplementedException("typeOfExpression: --> TODO: --> http://www.boost.org/doc/libs/1_55_0/doc/html/typeof/tuto.html"), typeOfExpression);
         }
 
         public object VisitTypeReferenceExpression(TypeReferenceExpression typeReferenceExpression, object data)
@@ -1010,14 +938,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitUncheckedExpression(UncheckedExpression uncheckedExpression, object data)
         {
-            StartNode(uncheckedExpression);
-            WriteKeyword("unchecked");
-            LPar();
-            Space(policy.SpacesWithinCheckedExpressionParantheses);
-            uncheckedExpression.Expression.AcceptVisitor(this, data);
-            Space(policy.SpacesWithinCheckedExpressionParantheses);
-            RPar();
-            return EndNode(uncheckedExpression);
+            return this.VisitorException(new NotImplementedException("uncheckedExpression"), uncheckedExpression);
         }
 
         #endregion
@@ -1025,155 +946,52 @@ namespace ICSharpCode.NRefactory.Cpp
         #region Query Expressions
         public object VisitQueryExpression(QueryExpression queryExpression, object data)
         {
-            StartNode(queryExpression);
-            bool indent = !(queryExpression.Parent is QueryContinuationClause);
-            if (indent)
-            {
-                formatter.Indent();
-                NewLine();
-            }
-            bool first = true;
-            foreach (var clause in queryExpression.Clauses)
-            {
-                if (first)
-                {
-                    first = false;
-                }
-                else
-                {
-                    if (!(clause is QueryContinuationClause))
-                        NewLine();
-                }
-                clause.AcceptVisitor(this, data);
-            }
-            if (indent)
-                formatter.Unindent();
-            return EndNode(queryExpression);
+            return this.VisitorException(new NotImplementedException("queryExpression"), queryExpression);
         }
 
         public object VisitQueryContinuationClause(QueryContinuationClause queryContinuationClause, object data)
         {
-            StartNode(queryContinuationClause);
-            queryContinuationClause.PrecedingQuery.AcceptVisitor(this, data);
-            Space();
-            WriteKeyword("into", QueryContinuationClause.IntoKeywordRole);
-            Space();
-            WriteIdentifier(queryContinuationClause.Identifier);
-            return EndNode(queryContinuationClause);
+            return this.VisitorException(new NotImplementedException("queryContinuationClause"), queryContinuationClause);
         }
 
         public object VisitQueryFromClause(QueryFromClause queryFromClause, object data)
         {
-            throw new NotImplementedException();
-            //StartNode(queryFromClause);
-            //WriteKeyword("from", QueryFromClause.FromKeywordRole);
-            //queryFromClause.Type.AcceptVisitor(this, data);
-            //Space();
-            //WriteIdentifier(queryFromClause.Identifier);
-            //Space();
-            //WriteKeyword("in", QueryFromClause.InKeywordRole);
-            //Space();
-            //queryFromClause.Expression.AcceptVisitor(this, data);
-            //return EndNode(queryFromClause);
+            return this.VisitorException(new NotImplementedException("queryFromClause"), queryFromClause);
         }
 
         public object VisitQueryLetClause(QueryLetClause queryLetClause, object data)
         {
-            StartNode(queryLetClause);
-            WriteKeyword("let");
-            Space();
-            WriteIdentifier(queryLetClause.Identifier);
-            Space(policy.SpaceAroundAssignment);
-            WriteToken("=", QueryLetClause.Roles.Assign);
-            Space(policy.SpaceAroundAssignment);
-            queryLetClause.Expression.AcceptVisitor(this, data);
-            return EndNode(queryLetClause);
+            return this.VisitorException(new NotImplementedException("queryLetClause"), queryLetClause);
         }
 
         public object VisitQueryWhereClause(QueryWhereClause queryWhereClause, object data)
         {
-            StartNode(queryWhereClause);
-            WriteKeyword("where");
-            Space();
-            queryWhereClause.Condition.AcceptVisitor(this, data);
-            return EndNode(queryWhereClause);
+            return this.VisitorException(new NotImplementedException("queryWhereClause"), queryWhereClause);
         }
 
         public object VisitQueryJoinClause(QueryJoinClause queryJoinClause, object data)
         {
-            StartNode(queryJoinClause);
-            WriteKeyword("join", QueryJoinClause.JoinKeywordRole);
-            queryJoinClause.Type.AcceptVisitor(this, data);
-            Space();
-            WriteIdentifier(queryJoinClause.JoinIdentifier, QueryJoinClause.JoinIdentifierRole);
-            Space();
-            WriteKeyword("in", QueryJoinClause.InKeywordRole);
-            Space();
-            queryJoinClause.InExpression.AcceptVisitor(this, data);
-            Space();
-            WriteKeyword("on", QueryJoinClause.OnKeywordRole);
-            Space();
-            queryJoinClause.OnExpression.AcceptVisitor(this, data);
-            Space();
-            WriteKeyword("equals", QueryJoinClause.EqualsKeywordRole);
-            Space();
-            queryJoinClause.EqualsExpression.AcceptVisitor(this, data);
-            if (queryJoinClause.IsGroupJoin)
-            {
-                Space();
-                WriteKeyword("into", QueryJoinClause.IntoKeywordRole);
-                WriteIdentifier(queryJoinClause.IntoIdentifier, QueryJoinClause.IntoIdentifierRole);
-            }
-            return EndNode(queryJoinClause);
+            return this.VisitorException(new NotImplementedException("queryJoinClause"), queryJoinClause);
         }
 
         public object VisitQueryOrderClause(QueryOrderClause queryOrderClause, object data)
         {
-            StartNode(queryOrderClause);
-            WriteKeyword("orderby");
-            Space();
-            WriteCommaSeparatedList(queryOrderClause.Orderings);
-            return EndNode(queryOrderClause);
+            return this.VisitorException(new NotImplementedException("queryOrderClause"), queryOrderClause);
         }
 
         public object VisitQueryOrdering(QueryOrdering queryOrdering, object data)
         {
-            StartNode(queryOrdering);
-            queryOrdering.Expression.AcceptVisitor(this, data);
-            switch (queryOrdering.Direction)
-            {
-                case QueryOrderingDirection.Ascending:
-                    Space();
-                    WriteKeyword("ascending");
-                    break;
-                case QueryOrderingDirection.Descending:
-                    Space();
-                    WriteKeyword("descending");
-                    break;
-            }
-            return EndNode(queryOrdering);
+            return this.VisitorException(new NotImplementedException("queryOrdering"), queryOrdering);
         }
 
         public object VisitQuerySelectClause(QuerySelectClause querySelectClause, object data)
         {
-            StartNode(querySelectClause);
-            WriteKeyword("select");
-            Space();
-            querySelectClause.Expression.AcceptVisitor(this, data);
-            return EndNode(querySelectClause);
+            return this.VisitorException(new NotImplementedException("querySelectClause"), querySelectClause);
         }
 
         public object VisitQueryGroupClause(QueryGroupClause queryGroupClause, object data)
         {
-            StartNode(queryGroupClause);
-            WriteKeyword("group", QueryGroupClause.GroupKeywordRole);
-            Space();
-            queryGroupClause.Projection.AcceptVisitor(this, data);
-            Space();
-            WriteKeyword("by", QueryGroupClause.ByKeywordRole);
-            Space();
-            queryGroupClause.Key.AcceptVisitor(this, data);
-            return EndNode(queryGroupClause);
+            return this.VisitorException(new NotImplementedException("queryGroupClause"), queryGroupClause);
         }
 
         #endregion
@@ -2397,56 +2215,17 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitFixedFieldDeclaration(FixedFieldDeclaration fixedFieldDeclaration, object data)
         {
-            StartNode(fixedFieldDeclaration);
-            WriteAttributes(fixedFieldDeclaration.Attributes);
-            WriteModifiers(fixedFieldDeclaration.ModifierTokens);
-            WriteKeyword("fixed");
-            Space();
-            fixedFieldDeclaration.ReturnType.AcceptVisitor(this, data);
-            Space();
-            WriteCommaSeparatedList(fixedFieldDeclaration.Variables);
-            Semicolon();
-            return EndNode(fixedFieldDeclaration);
+            return this.VisitorException(new NotImplementedException("fixedFieldDeclaration"), fixedFieldDeclaration);
         }
 
         public object VisitFixedVariableInitializer(FixedVariableInitializer fixedVariableInitializer, object data)
         {
-            StartNode(fixedVariableInitializer);
-            WriteIdentifier(fixedVariableInitializer.Name);
-            fixedVariableInitializer.NameToken.AcceptVisitor(this, data);
-            if (!fixedVariableInitializer.CountExpression.IsNull)
-            {
-                WriteToken("[", AstNode.Roles.LBracket);
-                Space(policy.SpacesWithinBrackets);
-                fixedVariableInitializer.CountExpression.AcceptVisitor(this, data);
-                Space(policy.SpacesWithinBrackets);
-                WriteToken("]", AstNode.Roles.RBracket);
-            }
-            return EndNode(fixedVariableInitializer);
+            return this.VisitorException(new NotImplementedException("fixedVariableInitializer"), fixedVariableInitializer);
         }
 
         public object VisitIndexerDeclaration(IndexerDeclaration indexerDeclaration, object data)
         {
-            StartNode(indexerDeclaration);
-            WriteAttributes(indexerDeclaration.Attributes);
-            WriteModifiers(indexerDeclaration.ModifierTokens);
-            indexerDeclaration.ReturnType.AcceptVisitor(this, data);
-            WritePrivateImplementationType(indexerDeclaration.PrivateImplementationType);
-            WriteKeyword("this");
-            Space(policy.SpaceBeforeMethodDeclarationParentheses);
-            WriteCommaSeparatedListInBrackets(indexerDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
-            OpenBrace(policy.PropertyBraceStyle);
-            // output get/set in their original order
-            foreach (AstNode node in indexerDeclaration.Children)
-            {
-                if (node.Role == IndexerDeclaration.GetterRole || node.Role == IndexerDeclaration.SetterRole)
-                {
-                    node.AcceptVisitor(this, data);
-                }
-            }
-            CloseBrace(policy.PropertyBraceStyle);
-            NewLine();
-            return EndNode(indexerDeclaration);
+            return this.VisitorException(new NotImplementedException("indexerDeclaration"), indexerDeclaration);
         }
 
         public object VisitMethodDeclaration(MethodDeclaration methodDeclaration, object data)
@@ -2533,36 +2312,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitOperatorDeclaration(OperatorDeclaration operatorDeclaration, object data)
         {
-            StartNode(operatorDeclaration);
-            WriteAttributes(operatorDeclaration.Attributes);
-            WriteModifiers(operatorDeclaration.ModifierTokens);
-            if (operatorDeclaration.OperatorType == OperatorType.Explicit)
-            {
-                WriteKeyword("explicit", OperatorDeclaration.OperatorTypeRole);
-            }
-            else if (operatorDeclaration.OperatorType == OperatorType.Implicit)
-            {
-                WriteKeyword("implicit", OperatorDeclaration.OperatorTypeRole);
-            }
-            else
-            {
-                operatorDeclaration.ReturnType.AcceptVisitor(this, data);
-            }
-            WriteKeyword("operator", OperatorDeclaration.OperatorKeywordRole);
-            Space();
-            if (operatorDeclaration.OperatorType == OperatorType.Explicit
-                || operatorDeclaration.OperatorType == OperatorType.Implicit)
-            {
-                operatorDeclaration.ReturnType.AcceptVisitor(this, data);
-            }
-            else
-            {
-                WriteToken(OperatorDeclaration.GetToken(operatorDeclaration.OperatorType), OperatorDeclaration.OperatorTypeRole);
-            }
-            Space(policy.SpaceBeforeMethodDeclarationParentheses);
-            WriteCommaSeparatedListInParenthesis(operatorDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
-            WriteMethodBody(operatorDeclaration.Body);
-            return EndNode(operatorDeclaration);
+            return this.VisitorException(new NotImplementedException("operatorDeclaration"), operatorDeclaration);
         }
 
         public object VisitParameterDeclaration(ParameterDeclaration parameterDeclaration, object data)
@@ -2801,9 +2551,7 @@ namespace ICSharpCode.NRefactory.Cpp
         #region Pattern Nodes
         public object VisitPatternPlaceholder(AstNode placeholder, PatternMatching.Pattern pattern, object data)
         {
-            StartNode(placeholder);
-            VisitNodeInPattern(pattern, data);
-            return EndNode(placeholder);
+            return this.VisitorException(new NotImplementedException("patternPlaceHolder"), placeholder);
         }
 
         void VisitAnyNode(AnyNode anyNode, object data)
@@ -3323,10 +3071,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitCheckedStatement(CheckedStatement checkedStatement, object data)
         {
-            StartNode(checkedStatement);
-            WriteKeyword("checked");
-            checkedStatement.Body.AcceptVisitor(this, data);
-            return EndNode(checkedStatement);
+            return this.VisitorException(new NotImplementedException("checkedStatement"), checkedStatement);
         }
 
         public object VisitContinueStatement(ContinueStatement continueStatement, object data)
@@ -3437,22 +3182,12 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitGotoCaseStatement(GotoCaseStatement gotoCaseStatement, object data)
         {
-            StartNode(gotoCaseStatement);
-            WriteKeyword("goto");
-            WriteKeyword("case", GotoCaseStatement.CaseKeywordRole);
-            Space();
-            gotoCaseStatement.LabelExpression.AcceptVisitor(this, data);
-            Semicolon();
-            return EndNode(gotoCaseStatement);
+            return this.VisitorException(new NotImplementedException("gotoCaseStatement"), gotoCaseStatement);
         }
 
         public object VisitGotoDefaultStatement(GotoDefaultStatement gotoDefaultStatement, object data)
         {
-            StartNode(gotoDefaultStatement);
-            WriteKeyword("goto");
-            WriteKeyword("default", GotoDefaultStatement.DefaultKeywordRole);
-            Semicolon();
-            return EndNode(gotoDefaultStatement);
+            return this.VisitorException(new NotImplementedException("gotoDefaultStatement"), gotoDefaultStatement);
         }
 
         public object VisitGotoStatement(GotoStatement gotoStatement, object data)
@@ -3734,22 +3469,12 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitYieldBreakStatement(YieldBreakStatement yieldBreakStatement, object data)
         {
-            StartNode(yieldBreakStatement);
-            WriteKeyword("yield", YieldBreakStatement.YieldKeywordRole);
-            WriteKeyword("break", YieldBreakStatement.BreakKeywordRole);
-            Semicolon();
-            return EndNode(yieldBreakStatement);
+            return this.VisitorException(new NotImplementedException("yieldBreakStatement"), yieldBreakStatement);
         }
 
         public object VisitYieldReturnStatement(YieldReturnStatement yieldReturnStatement, object data)
         {
-            StartNode(yieldReturnStatement);
-            WriteKeyword("yield", YieldReturnStatement.YieldKeywordRole);
-            WriteKeyword("return", YieldReturnStatement.ReturnKeywordRole);
-            Space();
-            yieldReturnStatement.Expression.AcceptVisitor(this, data);
-            Semicolon();
-            return EndNode(yieldReturnStatement);
+            return this.VisitorException(new NotImplementedException("yieldReturnStatement"), yieldReturnStatement);
         }
 
         #endregion
