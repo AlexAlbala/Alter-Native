@@ -76,9 +76,8 @@ On MacOS X
 * Install cmake and boost 
 
 		sudo port install cmake boost
-	
-* Open the AlterNative.Core.sln with Xamarin Studio and compile
-* Or use the provided command:
+
+* Use the provided command:
 
 		install.sh
 
@@ -89,7 +88,7 @@ On MacOS X
 	+ Compile AlterNative
 
 			./alternative.core-compile.sh
-
+	* Also you can open the AlterNative.Core.sln with Xamarin Studio and compile
 	+ Compile the alternative library
 
 			cd Lib/
