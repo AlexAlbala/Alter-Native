@@ -37,24 +37,30 @@ On Windows
 			bootstrap.bat
 			b2.exe --prefix=<INSTALLATION_DIR> --toolset=msvc-11.0
 	+ Have a coffee or two :)
-	+ Execute the provided .bat file
-			
-			alternative-init.bat
+* For use the c++11 features you will need the compiler v120 CTP of November 2012
+	+ http://www.microsoft.com/en-us/download/details.aspx?id=35515
+	+ The new released v120 CTP November 2013 for visual Studio 2013 does not work properly
+	
+* Execute the provided .bat file
 
-	+ Or set Enviroment variables
+			install.bat
 			
-			USR_BOOST_INCLUDE=C:\Boost_x_y_z
-			USR_BOOST_LIBRARY=C:\Boost_x_y_z\stage\lib
-		
-* Use the supplied solution on Visual Studio 2012 or higher
+* If there are no errors yoe have finished. Other provided scripts:
+	+ Initialize environment variables
+	
+			alternative-init.bat
+	+ Compile the alternative library
+	
+			cd Lib/
+			alternative-lib-compile.bat
+
+* You also can use the supplied solution on Visual Studio 2012 or higher
 	+ Be sure to select one of these solution configurations Otherwise it won't compile:
 	
 	 		net_4_0_Debug
 			net_4_0_Release
 
-* For use the c++11 features you will need the compiler v120 CTP of November 2012 (http://www.microsoft.com/en-us/download/details.aspx?id=35515)
-	+ The new released v120 CTP November 2013 for visual Studio 2013 does not work properly
-	
+
 			
 
 On MacOS X
@@ -69,17 +75,14 @@ On MacOS X
 * Open the AlterNative.Core.sln with Xamarin Studio and compile
 * Or use the provided command:
  
-		alternative.core-compile.sh
+		install.sh
 
 * Or use command line:
 
-		xbuild AlterNative.Core.sln /t:Clean
-		xbuild AlterNative.Core.sln
-		
-* Initialize command line:
- 		
 		source ./alternative-init.sh
-		
+		./alternative.core-compile.sh
+		cd Lib/
+		source ./alternative-lib-compile.sh
 
 On Linux
 ========
@@ -102,19 +105,15 @@ On Linux
 
 * Use the provided command:
  
-		./alternative.core-compile.sh
+		./install.sh
 
 * Or use command line:
 
-		xbuild AlterNative.Core.sln /t:Clean
-		xbuild AlterNative.Core.sln
-		
-* Initialize command line:
- 		
 		source ./alternative-init.sh
-	
-
-
+		./alternative.core-compile.sh
+		cd Lib/
+		source ./alternative-lib-compile.sh
+		
 Testing
 -------
 
