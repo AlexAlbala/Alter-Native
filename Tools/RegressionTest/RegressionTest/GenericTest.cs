@@ -100,7 +100,11 @@ namespace RegressionTest
             Console.WriteLine("Comparing outputs...");
             //Run original app
             Process orig = new Process();
-            orig.StartInfo = new ProcessStartInfo(di.FullName + @"/NETbin/" + di.Name.Split('.')[1] + ".exe");
+
+            if(Utils.IsWinPlatform())
+                orig.StartInfo = new ProcessStartInfo(di.FullName + @"/NETbin/" + di.Name.Split('.')[1] + ".exe");
+            else
+                orig.StartInfo = new ProcessStartInfo("mono", di.FullName + @"/NETbin/" + di.Name.Split('.')[1] + ".exe");
 
             orig.StartInfo.RedirectStandardOutput = true;
             orig.StartInfo.CreateNoWindow = true;
@@ -112,7 +116,12 @@ namespace RegressionTest
             String originalOutput = orig.StandardOutput.ReadToEnd();
 
             Process final = new Process();
-            final.StartInfo = new ProcessStartInfo(di.FullName + @"/Output/build/" + Utils.GetOutputFolderName(Config.compileMode) + "/" + di.Name.Split('.')[1] + ".exe");
+
+            if (Utils.IsWinPlatform())
+                final.StartInfo = new ProcessStartInfo(di.FullName + @"/Output/build/" + Utils.GetOutputFolderName(Config.compileMode) + "/" + di.Name.Split('.')[1] + ".exe");
+            else
+                final.StartInfo = new ProcessStartInfo(di.FullName + @"/Output/build/" + di.Name.Split('.')[1]);
+
             final.StartInfo.RedirectStandardOutput = true;
             final.StartInfo.CreateNoWindow = true;
             final.StartInfo.UseShellExecute = false;
