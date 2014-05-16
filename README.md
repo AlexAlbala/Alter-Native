@@ -53,11 +53,17 @@ On Windows
 
 			cd Lib/
 			alternative-lib-compile.bat
-* You also can use the supplied solution on Visual Studio 2012 or higher
-	+ Be sure to select one of these solution configurations Otherwise it won't compile:
+			
+	+ Compile AlterNative.sln solution (Debug or Release)
 
-	 		net_4_0_Debug
-			net_4_0_Release
+			msbuild AlterNative.sln /p:Configuration=net_4_0_Debug
+			msbuild AlterNative.sln /p:Configuration=net_4_0_Release
+
+	+ You also can use the supplied solution on Visual Studio 2012 or higher
+		+ Be sure to select one of these solution configurations Otherwise it won't compile:
+
+	 			net_4_0_Debug
+				net_4_0_Release
 
 
 			
@@ -80,9 +86,12 @@ On MacOS X
 	+ Initialize environment variables
 
 			source ./alternative-init.sh
-	+ Compile the alternative library
+	+ Compile AlterNative
 
 			./alternative.core-compile.sh
+
+	+ Compile the alternative library
+
 			cd Lib/
 			source ./alternative-lib-compile.sh
 
@@ -111,9 +120,11 @@ On Linux
 	+ Initialize environment variables
 
 			source ./alternative-init.sh
-	+ Compile the alternative library
+	+ Compile AlterNative
 
 			./alternative.core-compile.sh
+	+ Compile the alternative library
+
 			cd Lib/
 			source ./alternative-lib-compile.sh
 
