@@ -45,18 +45,17 @@ On Windows
 
 			install.bat
 			
-* If there are no errors yoe have finished. Other provided scripts:
+* Or use command line:
 	+ Initialize environment variables
-	
+
 			alternative-init.bat
 	+ Compile the alternative library
-	
+
 			cd Lib/
 			alternative-lib-compile.bat
-
 * You also can use the supplied solution on Visual Studio 2012 or higher
 	+ Be sure to select one of these solution configurations Otherwise it won't compile:
-	
+
 	 		net_4_0_Debug
 			net_4_0_Release
 
@@ -74,15 +73,18 @@ On MacOS X
 	
 * Open the AlterNative.Core.sln with Xamarin Studio and compile
 * Or use the provided command:
- 
+
 		install.sh
 
 * Or use command line:
+	+ Initialize environment variables
 
-		source ./alternative-init.sh
-		./alternative.core-compile.sh
-		cd Lib/
-		source ./alternative-lib-compile.sh
+			source ./alternative-init.sh
+	+ Compile the alternative library
+
+			./alternative.core-compile.sh
+			cd Lib/
+			source ./alternative-lib-compile.sh
 
 On Linux
 ========
@@ -94,26 +96,27 @@ On Linux
 			sudo apt-get install mono-complete
 
 	+ Install the necessary tools to run AlterNative. 
-	
+
 			sudo apt-get install libboost-dev cmake build-essential
 
 * If you check your software version, you should have:
-	
+
 		Mono = 2.10.8.1 or higher
 		MonoDevelop = 3.0.3.2 or higher
 		libboost = 1.49 or higher
-
 * Use the provided command:
- 
+
 		./install.sh
-
 * Or use command line:
+	+ Initialize environment variables
 
-		source ./alternative-init.sh
-		./alternative.core-compile.sh
-		cd Lib/
-		source ./alternative-lib-compile.sh
-		
+			source ./alternative-init.sh
+	+ Compile the alternative library
+
+			./alternative.core-compile.sh
+			cd Lib/
+			source ./alternative-lib-compile.sh
+
 Testing
 -------
 
