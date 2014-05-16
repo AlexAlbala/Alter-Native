@@ -79,7 +79,7 @@ On MacOS X
 
 * Use the provided command:
 
-		install.sh
+		source ./install.sh
 
 * Or use command line:
 	+ Initialize environment variables
@@ -114,7 +114,7 @@ On Linux
 		libboost = 1.49 or higher
 * Use the provided command:
 
-		./install.sh
+		source ./install.sh
 * Or use command line:
 	+ Initialize environment variables
 
