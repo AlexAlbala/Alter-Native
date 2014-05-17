@@ -1,0 +1,195 @@
+/*
+* Borealis Theme
+*
+* Author: GerardSoleCa (http://twitter.com/GerardSoleCa)
+*/
+
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:300);
+@import url(http://fonts.googleapis.com/css?family=Allan);
+
+body {
+  background-color: #020613;
+  /*202027*/
+}
+canvas{
+  position: absolute;
+  z-index: -100;
+}
+
+.green {
+  color: #8eb645;
+}
+
+
+/* borealis-panel - Start */
+
+/* Main panel - White and Rounded*/
+.borealis-panel {
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  -ms-border-radius: 15px;
+  -o-border-radius: 15px;
+  border-radius: 15px;
+  -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+  padding: 25px;
+  background-color: #fff;
+}
+
+/* Define body of the panel */
+.borealis-panel .body {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eeeeee;
+}
+
+/* Define footer of the panel */
+.borealis-panel .footer {
+  margin-top: 20px;
+}
+
+
+/* Define Title of the panel */
+.borealis-panel legend{
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  font-family: 'Allan', cursive;
+  font-size: 36px;
+  font-weight: 400;
+  color: #333333;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+
+/* Define text of the panel */
+.borealis-panel label {
+  font-family: 'Open Sans', Helvetica, sans-serif;
+  font-size: 20px;
+  color: #333333;
+  font-weight: 300;
+}
+
+.borealis-panel .checkbox.inline {
+  display: inline;
+}
+.borealis-panel .checkbox.inline input[type="checkbox"] {
+  float: none;
+  margin-top: -4px;
+}
+
+/* Define OAuth images inline and margin 5px left each one */
+.borealis-panel .footer img{
+  display: inline;
+  text-align: center;
+}
+.borealis-panel .footer img:first-child{
+  margin-left: 5px;
+}
+/* borealis-panel - End */
+
+
+/* Button colours - Start */
+.btn-confirm {
+  color: #075807;
+  background-color: #a7d750;
+  border-color: #8eb645;
+}
+
+.btn-confirm:hover,
+.btn-confirm:focus,
+.btn-confirm:active,
+.btn-confirm.active,
+.open .dropdown-toggle.btn-confirm {
+  color: #075807;
+  background-color: #8eb645;
+  border-color: #8eb645;
+}
+
+.btn-confirm:active,
+.btn-confirm.active,
+.open .dropdown-toggle.btn-confirm {
+  background-image: none;
+}
+
+.btn-reset {
+  color: #ffffff;
+  background-color: #831100;
+  border-color: #5F0C00;
+}
+
+.btn-reset:hover,
+.btn-reset:focus,
+.btn-reset:active,
+.btn-reset.active,
+.open .dropdown-toggle.btn-reset {
+  color: #ffffff;
+  background-color: #5F0C00;
+  border-color: #5F0C00;
+}
+
+.btn-reset:active,
+.btn-reset.active,
+.open .dropdown-toggle.btn-reset {
+  background-image: none;
+}
+
+.btn-flip {
+  color: #FFF;
+  background-color: #54a8ee;
+  border-color: #4b94d0;
+}
+
+.btn-flip:hover,
+.btn-flip:focus,
+.btn-flip:active,
+.btn-flip.active,
+.open .dropdown-toggle.btn-flip {
+  color: #FFF;
+  background-color: #4b94d0;
+  border-color: #4b94d0;
+}
+
+.btn-flip:active,
+.btn-flip.active,
+.open .dropdown-toggle.btn-flip {
+  background-image: none;
+}
+/* Button colours - End */
+
+/* Remove underline in OAuth icons*/
+a.clean-link:link,a.clean-link:visited,a.clean-link:hover,a.clean-link:active{text-decoration:none !important;}
+
+
+/* Alter footer navbar, apply transparent background */
+#footer-nav.navbar-inverse {
+  background-color: rgba(34, 34, 34, 0.72);
+  border-color: rgba(8, 8, 8, 0);
+}
+#footer-nav.navbar-inverse .navbar-text {
+  color: #b6b6b6;
+}
+/* End - Alter footer nav */
+
+
+/* Media queries for better responsiveness - Start */
+@media (min-width: 481px) {
+  body{
+    /*background-image:url('../img/background.jpg');*/
+    padding-bottom: 70px;
+  }
+}
+
+@media (max-width: 480px) {
+  #footer-nav{
+    margin-top: 20px;
+  }
+
+  #footer-nav .navbar-nav {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .putMarginTop{
+    margin-top: 10px;
+  }
+}
+/* Media queries for better responsiveness - End */

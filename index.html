@@ -1,83 +1,448 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.png">
 
+    <title>AlterNative - Efficient Translations</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="alternative/css/alternative.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Raleway:500' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Nunito:300' rel='stylesheet' type='text/css'>
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <script src="alternative/js/html5shiv.js"></script>
+    <script src="alternative/js/respond.min.js"></script>
     <![endif]-->
+</head>
 
-    <title>Alter-native by AlexAlbala</title>
-  </head>
+<body data-spy="scroll" data-target="#navbar">
 
-  <body>
-    <header>
-      <div class="inner">
-        <h1>Alter-native</h1>
-        <h2>Source code translator: from high-level language to native language (C++)</h2>
-        <a href="https://github.com/AlexAlbala/Alter-Native" class="button"><small>View project on</small>GitHub</a>
-      </div>
-    </header>
+<!-- Fixed navbar -->
+<div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#"><img class="img-responsive" src="alternative/img/alternative.png"/></a>
+            <a class="navbar-brand" href="#">AlterNative</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="active">
+                    <a href="#home">Home</a>
+                </li>
+                <li>
+                    <a href="#description">Description</a>
+                </li>
+                <li>
+                    <a href="#howto">How to use</a>
+                </li>
+                <li>
+                    <a href="#examples">Examples</a>
+                </li>
+                <li>
+                    <a href="#contact">Contact</a>
+                </li>
+            </ul>
+        </div>
+        <!--/.nav-collapse --> </div>
+</div>
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+<main class="bs-masthead" id="home" role="main">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <img src="alternative/img/alternative.png" class="img-resposive">
+            </div>
+            <div class="col-lg-8">
+                <h1>AlterNative</h1>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+                <p class="lead">
+                    Human-Like translations from C# to C++. Experience the power and performance of native applications
+                    right now!
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-offset-onehalf col-sm-3">
+                <iframe src="http://ghbtns.com/github-btn.html?user=AlexAlbala&repo=Alter-Native&type=watch&count=true&size=large"
+                        allowtransparency="true" frameborder="0" scrolling="0" width="400" height="30"></iframe>
+            </div>
+            <div class="col-sm-3">
+                <iframe src="http://ghbtns.com/github-btn.html?user=AlexAlbala&repo=Alter-Native&type=fork&count=true&size=large"
+                        allowtransparency="true" frameborder="0" scrolling="0" width="400" height="30"></iframe>
+            </div>
+            <div class="col-sm-3">
+                <iframe src="http://ghbtns.com/github-btn.html?user=AlexAlbala&repo=Alter-Native&type=follow&count=true&size=large"
+                        allowtransparency="true" frameborder="0" scrolling="0" width="400" height="30"></iframe>
+            </div>
+        </div>
+    </div>
+    </div>
+</main>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+<div class="know-more color-6">
+    <div class="row inner-page">
+        <div class="col-md-12 hidden-xs">
+            <h4 class="pull-left">Experience the power of AlterNative.</h4>
+            <a href="#howto" class="scroll btn btn-primary pull-right" title="Mira nuestros servicios!"
+               style="margin-top: 10px;"> <i class="icon-caret-down"></i>
+                go and learn
+            </a>
+        </div>
+    </div>
+</div>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
-
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
-
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
-
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
-
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-        </section>
-
-        <aside id="sidebar">
-          <a href="https://github.com/AlexAlbala/Alter-Native/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/AlexAlbala/Alter-Native/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
-          </a>
-
-          <p class="repo-owner"><a href="https://github.com/AlexAlbala/Alter-Native"></a> is maintained by <a href="https://github.com/AlexAlbala">AlexAlbala</a>.</p>
-
-          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
-        </aside>
-      </div>
+<div id="description" class="page color-4">
+    <div class="inner-page">
+        <h2 class="page-headline">What is AlterNative?</h2>
     </div>
 
-  
-  </body>
+    <div class="inner-page row">
+        <div class="col-md-offset-onehalf col-md-9">
+
+            <p>
+                AlterNative is a tool made by Developers for Developers. Its concept is to maximize the idea of
+                happy-coding. It provides a tool to easy port applications from high-level languages such as .NET to
+                native languages like C++.
+            </p>
+
+            <p>
+                Most of the actual systems are C++ compatible, thus if the application is ported to this language, it
+                can be executed in several platforms (i.e. smartphones, tablets, embedded systems and computers).
+            </p>
+
+            <p>
+                AlterNative's philosophy is to provide the user with a system for taking the advantage of the .NET fast
+                development and also take the advantage of performance of low-level languages. But also, exploit the
+                possibility to run this native code in many systems or in other words, follow the WORA (Write Once, Run
+                Everywhere) philosophy.
+            </p>
+            <br>
+
+            <p>AlterNative is made with two assumptions:</p>
+            <ul>
+                <li><strong>Translatable source code:</strong> Theoretically any source code can be translated from one
+                    machine to another.
+                </li>
+                <li><strong>Readability and Usability:</strong> The developer should be able to understand and modify
+                    the generated code, or even replace some parts. So the translated code is really similar to the
+                    original .NET code.
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-offset-onehalf col-md-9">
+            <div class="inner-page">
+                <h2 class="page-headline">
+                    <small>Included open source libraries</small>
+                </h2>
+            </div>
+            <p>AlterNative uses the following open-sourced libraries to do it's job:</p>
+            <ul>
+                <li><strong>Mono.Cecil:</strong> MIT License</li>
+
+                <li><strong>AvalonEdit:</strong> LGPL</li>
+
+                <li><strong>SharpTreeView:</strong> LGPL</li>
+
+                <li><strong>ILSpy:</strong> MIT License</li>
+
+                <li><strong>ICSharpCode.Decompiler:</strong> MIT License (developed as part of ILSpy)</li>
+            </ul>
+        </div>
+        <div class="col-md-offset-onehalf col-md-9">
+            <div class="inner-page">
+                <h2 class="page-headline">
+                    <small>How it works</small>
+                </h2>
+            </div>
+            <p>AlterNative use AST transformations to do its magic and a set of C++ libraries that turn that AST
+                translations into real compilable codes.</p>
+            <img src="alternative/img/Process.png" class="img-responsive"/>
+
+            <p>With the release of AlterNative it also has been released a public set of libraries that are referenced
+                at compile time. This libraries are the C++ implementation of the C# runtime classes. For example, the
+                C# class Console is included in this library which implements the same methods but using the C++
+                syntax.</p>
+            </p>This means that all the hard work is made by us, so you will only need to enjoy the
+            performance of C++
+            with the appearance of .NET.</p>
+        </div>
+
+        <div class="col-md-offset-onehalf col-md-9">
+            <h2 class="page-headline">
+                <small>Road Map</small>
+            </h2>
+            <p>Some features that had been implemented and others that are projected for the future:</p>
+            <ul>
+                <li><del>State of the Art for Code Translating tools</del></li>
+                <li><del>State of the Art for Code Translating tools</del></li>
+                <li><del>Performance testing</del></li>
+                <li><del>Threading</del></li>
+                <li><del>IOSharp - Private Library</del></li>
+                <li><del>First public release</del></li>
+                <li>Sockets - Private Library</li>
+            </ul>
+        </div>
+        <div class="col-md-offset-onehalf col-md-9 row" style="text-align: center;">
+            <div class="inner-page">
+                <h2 class="page-headline">
+                    <small>Contributors</small>
+                </h2>
+            </div>
+            <div class="col-md-offset-onehalf col-sm-3">
+                <div class="thumbnail">
+                    <img src="alternative/img/people/alex-albala.jpg" alt="...">
+
+                    <div class="caption">
+                        <h3>Alex Albalá</h3>
+
+                        <a href="https://github.com/AlexAlbala"><i class="icon-github icon-2x"></i></a>
+                        <a href="mailto:alejandro.albala@upc.edu" title="alejandro.albala@upc.edu"><i class="icon-envelope icon-2x"></i></a>
+                        <a href="https://twitter.com/Alex_Albala"><i class="icon-twitter icon-2x"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="thumbnail">
+                    <img src="alternative/img/people/juan-lopez.jpg" alt="...">
+
+                    <div class="caption">
+                        <h3>Juan López</h3>
+
+                        <a href="https://github.com/jlopezr"><i class="icon-github icon-2x"></i></a>
+                        <a href="mailto:Juan.Lopez-Rubio@upc.edu" title="Juan.Lopez-Rubio@upc.edu"><i class="icon-envelope icon-2x"></i></a>
+                        <a href="https://twitter.com/j_lopez_r"><i class="icon-twitter icon-2x"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="thumbnail">
+                    <img src="alternative/img/people/gerard-sole.jpg" alt="...">
+
+                    <div class="caption">
+                        <h3>Gerard Solé</h3>
+
+                        <a href="https://github.com/GerardSoleCa"><i class="icon-github icon-2x"></i></a>
+                        <a href="mailto:g.sole.ca@gmail.com" title="g.sole.ca@gmail.com"><i class="icon-envelope icon-2x"></i></a>
+                        <a href="https://twitter.com/GerardSoleCa"><i class="icon-twitter icon-2x"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<hr>
+
+<div id="howto" class="page color-4">
+    <div class="inner-page">
+        <h2 class="page-headline">How to use?<br>
+            <small>Tutorials for Windows, Linux and Mac</small>
+        </h2>
+    </div>
+
+    <!--<div class="inner-page row">-->
+    <!--<div class="col-md-offset-1 col-md-5">-->
+    <!--<h3>Desarrollo web</h3>-->
+
+    <!--<p>-->
+    <!--Hemos trabajado con gestores de contenido como Joomla o Wordpress, pero también dominamos desarrollo web-->
+    <!--basado en Java, html 5 y PHP. ¡Nos adaptamos a otros entornos y lenguajes!-->
+    <!--</p>-->
+    <!--</div>-->
+    <!--<div class="col-md-5">-->
+    <!--<h3>Responsive</h3>-->
+
+    <!--<p>-->
+    <!--Hoy en día es interesante tener una web visible tanto en ordenadores como en móviles y tablets, usando-->
+    <!--responsive lograremos adaptar tu web a cada entorno. Ideal si te quieres ahorrar la creación de una-->
+    <!--versión móvil.-->
+    <!--</p>-->
+    <!--</div>-->
+    <!--</div>-->
+
+    <!--<div class="row inner-page">-->
+    <!--<div class="col-md-offset-1 col-md-5 lazy-container loaded">-->
+    <!--<img class="img-responsive" src="alternative/img/arch.jpg" data-original="img/two-phones.png"-->
+    <!--alt="Zombie ipsum"-->
+    <!--style="display: block;"></div>-->
+    <!--<div class="col-md-5">-->
+    <!--<h3>Fotografía de Producto, Localización y Evento</h3>-->
+
+    <!--<p>-->
+    <!--Muchas veces es complicado encontrar un fotógrafo capaz de dar buenos resultados por un precio ajustado,-->
+    <!--sin contar el trabajo extra que supone esa búsqueda, contacta con nosotros y estudiaremos tus-->
+    <!--necesidades.-->
+    <!--</p>-->
+    <!--</div>-->
+    <!--</div>-->
+
+    <!--<div class="inner-page row">-->
+    <!--<div class="col-md-offset-1 col-md-5">-->
+    <!--<h3>Posicionamiento SEO</h3>-->
+
+    <!--<p>-->
+    <!--La visibilidad de tu negocio es importante, no dejes que se hunda entre los resultados de los-->
+    <!--buscadores.-->
+    <!--</p>-->
+    <!--</div>-->
+    <!--<div class="col-md-5">-->
+    <!--<h3>Aplicaciones móviles</h3>-->
+
+    <!--<p>-->
+    <!--Sabemos programar para Android y para iOS. También podemos ofrecer soluciones con PhoneGap.-->
+    <!--</p>-->
+    <!--</div>-->
+    <!--</div>-->
+</div>
+
+<hr>
+
+<div id="examples" class="page color-4">
+    <div class="inner-page">
+        <h2 class="page-headline">Code Examples<br>
+            <small>Original C# and Translated C++</small>
+        </h2>
+    </div>
+
+    <!--<div class="row inner-page">-->
+    <!--<h3 class="col-md-offset-1" style="padding-left: 15px;">DefensorDelPasajero.com</h3>-->
+
+    <!--<div class="col-md-offset-1 col-md-6">-->
+    <!--<p>-->
+    <!--<a href="https://www.defensordelpasajero.com" target="_blank">DefensorDelPasajero.com</a> ofrece-->
+    <!--servicios de reclamación por problemas aéreos bien sean retrasos, cancelaciones o problemas de equipaje.-->
+    <!--</p>-->
+
+    <!--<p>-->
+    <!--Ha habido dos fases de desarrollo, explicadas a continuación:-->
+    <!--<ol align="justify">-->
+    <!--<li>-->
+    <!--Desarrollar sobre Joomla la página comercial destinada a informar a los clientes de las distintas-->
+    <!--reclamaciones,-->
+    <!--</li>-->
+    <!--<br>-->
+    <!--<li>-->
+    <!--Crear un gestor de formularios con CodeIgniter para facilitar las reclamaciones a los clientes, y a-->
+    <!--su vez facilitar en mayor medida el uso del mismo a través de una base de datos.-->
+    <!--</li>-->
+    <!--</ol>-->
+    <!--</p>-->
+    <!--<p>En todo momento se han usado desarrollos responisive basados en <a href="http://getbootstrap.com"-->
+    <!--target="_blank">Bootstrap</a> siendo-->
+    <!--accesible comodamente desde distintos dispositivos.</p>-->
+
+    <!--<p>También ha sido gestionada la inclusión de la web en el buscador de Google. Y de igual modo la-->
+    <!--integración con los servicios ofertados por <a href="http://google.es/a" target="_blank">Google Apps for-->
+    <!--Business</a>.</p>-->
+    <!--</div>-->
+    <!--<div class="col-md-4 lazy-container loaded">-->
+    <!--<img class="img-responsive" src="alternative/img/defensor.jpg" style="display: block;"></div>-->
+    <!--</div>-->
+
+    <!--<div class="row inner-page">-->
+    <!--<h3 class="col-md-offset-1" style="padding-left: 15px;">Tour Virtual Clínica Delfos</h3>-->
+
+    <!--<div class="col-md-offset-1 col-md-4 lazy-container loaded">-->
+    <!--<img class="img-responsive" src="alternative/img/delfos.jpg" data-original="img/two-phones.png"-->
+    <!--alt="Zombie ipsum" style="display: block;"></div>-->
+    <!--<div class="col-md-6">-->
+    <!--<p>-->
+    <!--<a href="http://www.hospitaldelfos.es/" target="_blank">Delfos Hospital</a> quería mostrar en su web las-->
+    <!--distintas salas del hospital, pero querían hacerlo de una forma elegante y dinámica.-->
+    <!--</p>-->
+
+    <!--<p>-->
+    <!--Por esta razón se fotografiaron las distintas salas y luego se procedió a crear un Tour Virtual en HTML-->
+    <!--5 y CSS 3 dando la posibilidad de moverse dentro de las fotografías.-->
+    <!--</p>-->
+
+    <!--<p>A continuación se muestran ejemplos del trabajo realizado.-->
+    <!--<ul>-->
+    <!--<li><a href="http://www.hospitaldelfos.es/fotos/Cardio/Cardio.html" target="_blank">Sala de Cardio</a>-->
+    <!--</li>-->
+    <!--<li><a href="http://www.hospitaldelfos.es/fotos/Restaurant/Restaurant.html" target="_blank">Comedor</a>-->
+    <!--</li>-->
+    <!--<li><a href="http://www.hospitaldelfos.es/fotos/SalaParts/SalaParts.html" target="_blank">Sala de-->
+    <!--Partos</a></li>-->
+    <!--<li><a href="http://www.hospitaldelfos.es/fotos/Hall/Hall.html" target="_blank">Hall</a></li>-->
+    <!--</ul>-->
+    <!--</p>-->
+    <!--</div>-->
+    <!--</div>-->
+</div>
+
+<hr>
+
+<div id="contact" class="page color-4">
+    <div class="inner-page">
+        <h2 class="page-headline">Contact us</h2>
+    </div>
+
+    <div class="inner-page row">
+        <div class="col-md-offset-1 col-md-5">
+            <h3>Problems, feedback or suggestions?</h3>
+
+            <div id="contact-div">
+                <form id="contact-form" method="post" action="//forms.brace.io/e3skudo@gmail.com">
+                    <input type="text" class="form-control" name="name" placeholder="Name">
+                    <input type="text" class="form-control" name="_replyto" placeholder="E-Mail address">
+                    <textarea rows="6" class="form-control" name="body"
+                              placeholder="Tell us what is on your mind"></textarea>
+
+                    <div id="contact-error-div" style="display:none;">
+                        <div class="alert alert-danger">The mail couldn't be sent, please check the fields.
+                        </div>
+                    </div>
+                    <button type="submit" id="submit" class="btn btn-primary btn-block btn-centered"
+                            data-loading-text="Sending...">Contact
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <h3>Email</h3>
+
+            <p>
+                You can contact us using the form on the left, but also you can send an email to the following address:
+            </p>
+
+            <p>
+                <a href="mailto://info@birium.com"> <i class="icon-envelope"></i>
+                    info@alternative.com
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<nav class="navbar navbar-default navbar-static-bottom" role="navigation" style="margin-bottom:0;">
+    <p class="navbar-text pull-right">© 2014 AlterNative</p>
+</nav>
+
+<!-- Bootstrap core JavaScript
+  ================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="alternative/js/jquery.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="alternative/js/alternative.js"></script>
+</body>
 </html>
