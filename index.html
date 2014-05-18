@@ -652,14 +652,14 @@ namespace ForEach {
             <h3>Getting started</h3>
 	    <p>In this tutorial we will explain you how to translate your application. First of all make sure to follow the instructions explained in the README of the <a href="https://github.com/AlexAlbala/Alter-Native">GitHub Page</a>. If you have done these steps you should:</p>
         <ul>
-	    <li>Type "alternative --help" to make sure your installation of AlterNative is correct. If you have previously installed AlterNative, run alternative-init script for initialize command line</li>
+	    <li>Type "alternative --help" to make sure your installation of AlterNative is correct. <strong>If you have previously installed AlterNative, run alternative-init script for initialize command line</strong></li>
 	    <li>Check if Lib/build/libfiles contains the library files compiled. If not, run Lib/alternative-lib-compile script</li>
 	    <li>You may want to check your installation typing: 
-		<ul>
-		    <li>alternative new test</li>
-                    <li>alternative make test</li>
-		    <li>check test/build if there are an executable here (called Blank)</li>
-		</ul></li> 
+		<pre><code>$ alternative new test
+$ alternative make test
+$ cd test/build
+$ ./Blank</code></pre>
+	  </li> 
         </ul>
         <h3>Prepare the program</h3>
 	<p>After the installation of AlterNative we will write our C# code to be translated. We propose a simple program with one class and two methods</p>
@@ -691,7 +691,8 @@ namespace Tutorial
 	<br>
 	<p>Copy and paste this code and compile it. In Windows with msbuild (or Visual Studio), in Linux with Mono compiler "mcs".</p>
         <h3>Translation and recompilation</h3>
-        <p>Once the program is compiled, run alternative: "alternative myProgram.exe myOutputFolder".</p>
+        <p>Once the program is compiled, run:</p>
+	<pre><code>$ alternative myProgram.exe CppOutput</code></pre>
 	<p>You should see in the output folder these files:
 	    <ul>
 		<li>Program.cpp</li>
@@ -700,7 +701,9 @@ namespace Tutorial
 		<li>CMakeLists.txt</li>
 	    </ul>
         </p>
-	<p>Now we will compile the output code with the command "alternative make myOutputFolder". After running this command, it should appear a folder "build" in the project folder. CD into it and run the executable. Don't worry if you notice an extremely increase of speed in the execution, you are in <strong>native world :)</strong> .</p>
+	<p>Now we will compile the output code with the command:</p>
+	<pre><code>$ alternative make CppOutput</code></pre>
+	<p>After running this command, it should appear a folder "build" in the project folder. CD into it and run the executable. Don't worry if you notice an extremely increase of speed in the execution, you are in <strong>native world :)</strong> .</p>
 
     	</div>
     </div>
