@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="shortcut icon" href="../../assets/ico/favicon.png">
 
-    <title>AlterNative - Efficient Translations</title>
+    <title>AlterNative - .NET to C++ translator</title>
 
     <!-- Bootstrap core CSS -->
     <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
@@ -24,6 +24,11 @@
     <script src="alternative/js/html5shiv.js"></script>
     <script src="alternative/js/respond.min.js"></script>
     <![endif]-->
+
+    <script src="codemirror/lib/codemirror.js"></script>
+    <link rel="stylesheet" href="codemirror/lib/codemirror.css">
+    <script src="codemirror/mode/clike/clike.js"></script>
+    <style>.CodeMirror {border: 2px inset #dee;}</style>
 </head>
 
 <body data-spy="scroll" data-target="#navbar">
@@ -49,12 +54,12 @@
                     <a href="#description">Description</a>
                 </li>
                 <li>
-                    <a href="#tutorials">Tutorials</a>
-                </li>
-                <li>
                     <a href="#examples">Examples</a>
                 </li>
                 <li>
+                    <a href="#tutorials">Tutorials</a>
+                </li>
+		<li>
                     <a href="#contact">Contact</a>
                 </li>
             </ul>
@@ -170,20 +175,98 @@
                     <small>How it works</small>
                 </h2>
             </div>
-            <p>AlterNative use AST transformations to do its magic and a set of C++ libraries that turn that AST
+            <p>AlterNative uses AST transformations to do its magic and a set of C++ libraries that turn that AST
                 translations into real compilable codes.</p>
             <img src="alternative/img/Process.png" class="img-responsive"/>
-
-            <p>With the release of AlterNative it also has been released a public set of libraries that are referenced
+        </div>
+	<div class="col-md-offset-onehalf col-md-9">
+            <div class="inner-page">
+	        <h2 class="page-headline">
+		    <small>AlterNative Library</small>
+		</h2>
+	    </div>
+	    <p>With the release of AlterNative it also has been released a public set of libraries that are referenced
                 at compile time. This libraries are the C++ implementation of the C# runtime classes. For example, the
                 C# class Console is included in this library which implements the same methods but using the C++
                 syntax.</p>
-            </p>This means that all the hard work is made by us, so you will only need to enjoy the
-            performance of C++
-            with the appearance of .NET.</p>
-        </div>
+            </p>This means that all the hard work is made by us, so you will only need to enjoy the performance of C++</p>
+	    <p> AlterNative Library can be found <a href="https://github.com/AlexAlbala/AlterNative-CXX-Lib">here</a>.</p>
+             <p>The provided library uses the following open-sourced libraries to do it's job:</p>
+            <ul>
+                <li><strong>Boost</strong></li>
+                <li><strong>Boehm gc</strong></li>
+            </ul>
+	   <p>As an example we show a demo version of the class System::Console of the library. The methods are implemented following the naming of the .NET class (<a href="http://msdn.microsoft.com/en-us/library/vstudio/system.console">System.Console</a>).</p>
+	   <textarea id="code" name="code">
+#include "Console.h"
+#include "String.h"
 
-        <div class="col-md-offset-onehalf col-md-9">
+#include <iostream>
+
+namespace System {
+
+	void Console::Write(char* txt) {
+		std::cout << txt;
+	}
+
+	void Console::Write(int i) {
+		std::cout << i;
+	}
+
+	void Console::Write(bool i) {
+		std::cout << (i ? "True" : "False");
+	}
+
+	void Console::Write(String* s) {
+		char* tmp = *s;
+		std::cout << tmp;
+	}
+
+	void Console::WriteLine(char* txt) {
+		std::cout << txt << std::endl;
+	}
+
+	void Console::WriteLine(Array<char>* c) {
+		std::cout << c->GetData() << std::endl;
+	}
+
+	void Console::WriteLine(int i) {
+		std::cout << i << std::endl;
+	}
+
+	void Console::WriteLine(bool i) {
+		std::cout << (i ? "True" : "False") << std::endl;
+	}
+
+	void Console::WriteLine(float f) {
+		std::cout << f << std::endl;
+	}
+
+	void Console::WriteLine(double d) {
+		std::cout << d << std::endl;
+	}
+
+	void Console::WriteLine(Object* o) {
+		WriteLine(o->ToString());
+	}
+
+	void Console::WriteLine(String* s) {
+		char* tmp = *s;
+		std::cout << tmp << std::endl;
+	}
+
+	String* Console::ReadLine() {
+		char* tmp = new char[256];
+		std::cin.getline (tmp,256);
+
+		String* s = new String(tmp);
+		return s;
+	}
+
+}
+	   </textarea>
+	</div>
+	<div class="col-md-offset-onehalf col-md-9">
             <div class="inner-page">
                 <h2 class="page-headline">
                     <small>Road Map</small>
@@ -274,12 +357,223 @@
 
 <hr>
 
-<div id="tutorials" class="page color-4">
+<div id="examples" class="page color-4">
     <div class="inner-page">
-        <h2 class="page-headline">Tutorials<br>
-            <small>Tutorials for Windows, Linux and Mac</small>
+        <h2 class="page-headline">Examples<br>
+            <small>Example 1. Hello World</small>
         </h2>
     </div>
+    <div class="inner-page row">
+        <div class="col-md-offset-onehalf col-md-9">
+                    <div class="caption">
+                        <h3>C# source code</h3>
+			<textarea id="cs-hello" name="cs-hello">
+using System;
+
+namespace HelloWorld
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+                Console.WriteLine("Hello World");
+        }
+    }
+}
+	                </textarea>
+                    </div>
+                </div>
+	</div>
+	<div class="inner-page row">
+
+            <div class="col-md-offset-onehalf col-sm-5">
+		    <div class="caption">
+                        <h3>C++ source code</h3>
+			<textarea id="cpp-hello" name="cpp-hello">
+#include "Program.h" 
+
+namespace HelloWorld
+{
+    void Program::Main(String* args[])
+    {
+        Console::WriteLine("Hello World");
+    }
+  
+}
+			</textarea>
+                    </div>
+            </div>
+
+            <div class="col-sm-5">
+                    <div class="caption">
+                        <h3>C++ header code</h3>
+			<textarea id="hpp-hello" name="hpp-hello">
+#pragma once
+#include <System/System.h>
+#include <System/Console.h>
+
+using namespace System;
+
+namespace HelloWorld
+{
+    class Program : public virtual Object
+    {
+        public:
+           static void Main(String* args[]);
+    };
+}
+			</textarea>
+
+                    </div>
+                </div>
+	</div>
+    </div>
+</div>
+    <div class="inner-page">
+	<h2 class="page-headline">
+	    <small>Example 2. ForEach statement</small>
+    	</h2>
+    </div>
+    <div class="inner-page row">
+        <div class="col-md-offset-onehalf col-md-9">
+                    <div class="caption">
+                        <h3>C# source code</h3>
+			<textarea id="cs-foreach" name="cs-foreach">
+using System;
+using System.Collections.Generic;
+
+namespace ForEach
+{
+    class A
+    {
+        public void f()
+        {
+            Console.WriteLine("I'm an object");
+        }
+    }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            List<float> myList = new List<float>();
+            myList.Add(1.0f);
+            myList.Add(2.0f);
+            myList.Add(3.0f);
+
+            foreach (float f in myList)
+            {
+                Console.WriteLine(f);
+            }
+
+            List<A> myAList = new List<A>();
+            myAList.Add(new A());
+            myAList.Add(new A());
+
+            foreach (A a in myAList)
+            {
+                a.f();
+            }
+        }
+    }
+}
+			</textarea>
+                    </div>
+                </div>
+	</div>
+	<div class="inner-page row">
+
+            <div class="col-md-offset-onehalf col-sm-5">
+		    <div class="caption">
+                        <h3>C++ source code</h3>
+			<textarea id="cpp-foreach" name="cpp-foreach">
+#include "Program.h"
+namespace ForEach {
+	void Program::Main(String* args[]){
+		List_T<float>* myList = new List_T<float>();
+		myList->Add((float)1.0);
+		myList->Add((float)2.0);
+		myList->Add((float)3.0);
+		FOREACH(_F, myList){
+			float f = *_F;
+			Console::WriteLine(f);
+		}
+		List_T<A>* myAList = new List_T<A>();
+		myAList->Add(new A());
+		myAList->Add(new A());
+		FOREACH(_A, myAList) {
+			A deref_a = *_A;
+			A* a = &deref_a;
+			a->f();
+		}
+	}
+}
+			</textarea>
+                    </div>
+            </div>
+
+            <div class="col-sm-5">
+                    <div class="caption">
+                        <h3>C++ header code</h3>
+			<textarea id="hpp-foreach" name="hpp-foreach">
+#pragma once
+#include <System/System.h>
+#include <System/Collections/Generic/List.h>
+#include <System/Console.h>
+#include "A.h"
+
+using namespace System::Collections::Generic;
+using namespace System;
+namespace ForEach {
+	class Program : public virtual Object
+	{
+		public:
+			static void Main(String* args[]);
+	};
+}			
+			</textarea>
+                    </div>
+                </div>
+	</div>
+
+	<div class="inner-page row">
+            <div class="col-md-offset-onehalf col-sm-5">
+		    <div class="caption">
+                        <h3>C++ source code</h3>
+			<textarea id="cpp-foreach-a" name="cpp-foreach-a">
+#include "A.h"
+namespace ForEach {
+	void A::f(){
+		Console::WriteLine(new String("I'm an object"));
+	}
+
+}
+			</textarea>
+                    </div>
+            </div>
+
+            <div class="col-sm-5">
+                    <div class="caption">
+                        <h3>C++ header code</h3>
+			<textarea id="hpp-foreach-a" name="hpp-foreach-a">
+
+#pragma once
+#include <System/System.h>
+#include <System/Console.h>
+
+using namespace System;
+namespace ForEach {
+	class A : public virtual Object
+	{
+		public:
+			void f();
+	};
+}
+			</textarea>
+                    </div>
+                </div>
+	</div>
+    </div>
+</div>
 
     <!--<div class="inner-page row">-->
     <!--<div class="col-md-offset-1 col-md-5">-->
@@ -338,10 +632,10 @@
 
 <hr>
 
-<div id="examples" class="page color-4">
+<div id="tutorials" class="page color-4">
     <div class="inner-page">
-        <h2 class="page-headline">Code Examples<br>
-            <small>Original C# and Translated C++</small>
+        <h2 class="page-headline">Tutorials<br>
+            <small>Tutorials for Windows / Mac / Linux</small>
         </h2>
     </div>
 
@@ -411,6 +705,37 @@
     <!--</div>-->
     <!--</div>-->
 </div>
+<script type="text/javascript">
+	var myTextArea = document.getElementById("code");
+	var myCodeMirror = CodeMirror.fromTextArea(myTextArea, {lineNumbers: true, readOnly: true, mode:"text/x-c++src"});
+
+	var myTextArea2 = document.getElementById("cs-hello");
+	var myCodeMirror = CodeMirror.fromTextArea(myTextArea2, {lineNumbers: true, readOnly: true, mode:"text/x-csharp"});
+
+	var myTextArea3 = document.getElementById("cpp-hello");
+	var myCodeMirror = CodeMirror.fromTextArea(myTextArea3, {lineNumbers: true, readOnly: true, mode:"text/x-c++src"});
+
+	var myTextArea4 = document.getElementById("hpp-hello");
+	var myCodeMirror = CodeMirror.fromTextArea(myTextArea4, {lineNumbers: true, readOnly: true, mode:"text/x-c++src"});
+
+	var myTextArea5 = document.getElementById("cs-foreach");
+	var myCodeMirror = CodeMirror.fromTextArea(myTextArea5, {lineNumbers: true, readOnly: true, mode:"text/x-csharp"});
+
+	var myTextArea6 = document.getElementById("cpp-foreach");
+	var myCodeMirror = CodeMirror.fromTextArea(myTextArea6, {lineNumbers: true, readOnly: true, mode:"text/x-c++src"});
+
+	var myTextArea7 = document.getElementById("hpp-foreach");
+	var myCodeMirror = CodeMirror.fromTextArea(myTextArea7, {lineNumbers: true, readOnly: true, mode:"text/x-c++src"});
+
+	var myTextArea8 = document.getElementById("cpp-foreach-a");
+	var myCodeMirror = CodeMirror.fromTextArea(myTextArea8, {lineNumbers: true, readOnly: true, mode:"text/x-c++src"});
+
+	var myTextArea9 = document.getElementById("hpp-foreach-a");
+	var myCodeMirror = CodeMirror.fromTextArea(myTextArea9, {lineNumbers: true, readOnly: true, mode:"text/x-c++src"});
+
+
+
+	</script>
 
 <hr>
 
