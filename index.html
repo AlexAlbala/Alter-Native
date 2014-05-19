@@ -769,7 +769,7 @@ AstNode CSharp.IAstVisitor<object, AstNode>.VisitAsExpression(CSharp.AsExpressio
     return EndNode(asExpression, invExpr);
 }</textarea>
 	    <br>
-	    <p>If we assume that the nodes InvocationExpression and IdentifierExpression are implemented, it is not necessary to edit the module CppOutputVisitor, because there is no a new node created, and the nodes participating in this transformation already have been implemented and will output a well-formed C++ code. You may want to check this nodes in the CppOutputVisitor only for familiarize with the code</p>
+	    <p>If we assume that the nodes InvocationExpression and IdentifierExpression are implemented, it is not necessary to edit the module CppOutputVisitor because there is no new node created, and the nodes participating in this transformation already have been implemented and will output a well-formed C++ code. You may want to check these nodes in the CppOutputVisitor only for get familiarize with the code</p>
 	    <h3>Library feature</h3>
 	    <p>Now we have to implement the method as_cast<T>(object) that we have supposed to be implemented in the library. This point is very important because is the code that makes the output source code compile. In this case the feature is simple and it is implemented with the "dynamic_cast" standard feature of C++11.</p>
 	    <br>
