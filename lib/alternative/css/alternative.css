@@ -1,0 +1,296 @@
+body {
+    min-height: 2000px;
+}
+
+.page {
+    padding-top: 20px;
+}
+
+p {
+    text-align: justify;
+}
+
+hr {
+    width: 75%;
+    margin: 30px auto;
+    border: 0;
+    border-top: 1px solid #b8dbeb;
+}
+
+#contact-form textarea, #contact-form input {
+    width: 100%;
+    padding: 5px;
+    margin: 5px 0;
+    text-indent: 10px
+}
+
+#contact-form .btn {
+    margin-top: 25px
+}
+
+.form-control:-moz-placeholder {
+    color: #999
+}
+
+.form-control::-moz-placeholder {
+    color: #999
+}
+
+.form-control:-ms-input-placeholder {
+    color: #999
+}
+
+.form-control::-webkit-input-placeholder {
+    color: #999
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    height: 49px;
+    padding: 10px 12px;
+    font-size: 17px;
+    line-height: 1.6;
+    color: #555;
+    vertical-align: middle;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s
+}
+
+.form-control:focus {
+    border-color: #66afe9;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, 0.6)
+}
+
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+    cursor: not-allowed;
+    background-color: #eee
+}
+
+textarea.form-control {
+    height: auto
+}
+
+.form-group {
+    margin-bottom: 15px
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 500;
+    line-height: 1.3
+}
+
+h1 small, h2 small, h3 small, h4 small, h5 small, h6 small, .h1 small, .h2 small, .h3 small, .h4 small, .h5 small, .h6 small {
+    font-weight: normal;
+    line-height: 1;
+    color: #999
+}
+
+* {
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    border-radius: 0 !important;
+}
+
+.btn {
+    font-size: 17px;
+    font-weight: 400;
+    color: #fff;
+    border: 0;
+    -webkit-transition: background .6s;
+    transition: background .6s
+}
+
+.inner-page {
+    padding-top: 10px;
+    max-width: 1100px;
+    margin: 0 auto
+}
+
+@media (min-width: 992px) {
+    .col-md-offset-onehalf {
+        margin-left: 12.499999995%;
+    }
+
+    .inner-page {
+        padding-top: 30px;
+        padding-bottom: 30px;
+        max-width: 1100px;
+        margin: 0 auto
+    }
+}
+
+.page-headline {
+    font-family: 'PT Sans', sans-serif;
+    font-size: 42px;
+    text-align: center
+}
+
+/* COLORS - START */
+.color-1 {
+    background: #4baad3;
+    color: #fff
+}
+
+.color-2 {
+    background: #222222;
+    color: #fff
+}
+
+.color-3 {
+    background: #ecf9ff
+}
+
+.color-3 h1, .color-3 h2, .color-3 h3, .color-3 h4, .color-3 h5, .color-3 h6 {
+    color: #000
+}
+
+.color-3 a {
+    color: #3a9ac4
+}
+
+.color-3 .btn {
+    color: #fff
+}
+
+.color-4 {
+    background: #fff;
+    color: #333
+}
+
+.color-4 h1, .color-4 h2, .color-4 h3, .color-4 h4, .color-4 h5, .color-4 h6 {
+    color: #000
+}
+
+.color-4 a {
+    color: #3083a7
+}
+
+.color-4 .btn {
+    color: #fff
+}
+
+.color-5 {
+    background: #010a0c;
+    color: #fff
+}
+
+.color-6 {
+    background: #e7e7e7;
+    color: #010a0c
+}
+
+/* COLORS - END */
+
+/* KNOW MORE*/
+.know-more h4 {
+    font-size: 26px;
+}
+
+/*
+ * Topography, yo!
+ *
+ * Apply the map background via base64 and relevant colors where we need 'em.
+ */
+
+.bs-docs-home,
+.bs-header, .bs-masthead {
+    color: #FFFFFF;
+}
+
+/*
+ * Homepage
+ *
+ * Tweaks to the custom homepage and the masthead (main jumbotron).
+ */
+
+/* Masthead (headings and download button) */
+.bs-masthead {
+    position: relative;
+    padding: 50px 0px 10px 0px;
+    text-align: center;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, .15);
+    background: #2e7bcf url(../img/header-bg.jpg) 0 0 repeat-x;
+    #background: url(alternative/img/px.png);
+}
+
+.bs-masthead2 {
+    position: relative;
+    padding: 30px 15px;
+    text-align: center;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, .15);
+    background-image: none;
+}
+
+.bs-masthead h1 {
+    font-size: 50px;
+    line-height: 1;
+    color: #fff;
+}
+
+.bs-masthead .btn-outline-inverse {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 18px 24px;
+    font-size: 24px;
+}
+
+/* Links to project-level content like the repo, Expo, etc */
+.bs-masthead-links {
+    margin-bottom: 20px;
+    padding-left: 0;
+    list-style: none;
+    text-align: center;
+}
+
+.bs-masthead-links li {
+    display: inline-block;
+    padding: 4px 8px;
+}
+
+.bs-masthead-links a {
+    color: #fff;
+}
+
+.page-headline {
+    margin: 0 10px;
+}
+
+.navbar-brand > img {
+    display: block;
+    margin-top: -13px;
+    width: 50px;
+}
+.caption > a { color: #494F55; }
+.caption > a:visited { color: #494F55; }
+.caption > a:hover { color: #494F55; text-decoration: none; }
+.caption > a:active { color: #494F55; }
+
+@media screen and (min-width: 768px) {
+    .bs-masthead {
+        text-align: left;
+        padding-top: 140px;
+        padding-bottom: 140px;
+    }
+
+    .bs-masthead h1 {
+        font-size: 100px;
+    }
+
+    .bs-masthead .lead {
+        font-size: 30px;
+    }
+
+    .bs-masthead-links {
+        padding: 0;
+        text-align: left;
+    }
+}
