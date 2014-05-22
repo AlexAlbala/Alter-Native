@@ -126,14 +126,13 @@ namespace AlterNative
             if (File.Exists(Path.Combine(directoryPath,Path.GetFileNameWithoutExtension(path) + ".pdb")) &&
                 !File.Exists(Path.Combine(directoryPath,Path.GetFileNameWithoutExtension(path) + ".mdb")))
             {
-		Utils.WriteToConsole("Executing pdb2mdb process for decompilation in mono environment");
+                Utils.WriteToConsole("Executing pdb2mdb process for decompilation in mono environment");
                 Process p = new Process();
                 p.StartInfo = new ProcessStartInfo("bash", "-c 'pdb2mdb \"" + path + "\"'");
                 p.Start();
                 p.WaitForExit();
             }
 #endif
-    Utils.WriteToConsole("ASDASD");
             //LOAD TARGET ASSEMBLY
             var resolver = new DefaultAssemblyResolver();
             resolver.AddSearchDirectory(directoryPath);
@@ -142,10 +141,7 @@ namespace AlterNative
             {
                 ReadSymbols = true,
                 AssemblyResolver = resolver
-            };
-            
-            Utils.WriteToConsole("ASDASD");
-            
+            };            
             
             AssemblyDefinition adef = AssemblyDefinition.ReadAssembly(path, readerParams);
             Utils.WriteToConsole("Loaded Assembly " + adef.Name);

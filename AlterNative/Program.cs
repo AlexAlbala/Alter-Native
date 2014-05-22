@@ -303,6 +303,7 @@ namespace AlterNative
             {
                 //LOAD TARGET ASSEMBLY
                 adef = Commands.LoadAssembly(Config.Extra[0].Replace('\\', '/'));
+                assemblyLocation = Config.Extra[0].Substring(0, Config.Extra[0].Replace('\\', '/').LastIndexOf('/')).Replace('\\', '/');
             }
 
             if (Config.Extra[0].EndsWith("dll"))
@@ -326,9 +327,6 @@ namespace AlterNative
 
             try
             {
-                Utils.WriteToConsole("ola ke ase");
-                
-                Utils.WriteToConsole("ola ke ase2");
                 DecompileAssembly(adef, outputDir, assemblyLocation);
 
                 if (System.Environment.GetEnvironmentVariable("ALTERNATIVE_CPP_LIB_PATH") != null)
