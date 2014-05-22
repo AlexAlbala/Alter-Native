@@ -133,6 +133,7 @@ namespace AlterNative
                 p.WaitForExit();
             }
 #endif
+    Utils.WriteToConsole("ASDASD");
             //LOAD TARGET ASSEMBLY
             var resolver = new DefaultAssemblyResolver();
             resolver.AddSearchDirectory(directoryPath);
@@ -142,6 +143,10 @@ namespace AlterNative
                 ReadSymbols = true,
                 AssemblyResolver = resolver
             };
+            
+            Utils.WriteToConsole("ASDASD");
+            
+            
             AssemblyDefinition adef = AssemblyDefinition.ReadAssembly(path, readerParams);
             Utils.WriteToConsole("Loaded Assembly " + adef.Name);
             return adef;

@@ -260,6 +260,7 @@ namespace AlterNative
 
         public int Run()
         {
+            String assemblyLocation = "";
             Utils.WriteToConsole("\n");
             Utils.WriteToConsole("Executing alternative command --> " + Config.Command);
 
@@ -278,6 +279,7 @@ namespace AlterNative
             if (Config.Command == "new")
             {
                 adef = Commands.NewTemplate(new DirectoryInfo(outputDir));
+                assemblyLocation = Config.AlterNativeTools + @"/Templates/Blank";
             }
             else if (Config.Command == "make")
             {
@@ -324,7 +326,9 @@ namespace AlterNative
 
             try
             {
-                String assemblyLocation = Config.Extra[0].Substring(0, Config.Extra[0].Replace('\\', '/').LastIndexOf('/')).Replace('\\', '/');
+                Utils.WriteToConsole("ola ke ase");
+                
+                Utils.WriteToConsole("ola ke ase2");
                 DecompileAssembly(adef, outputDir, assemblyLocation);
 
                 if (System.Environment.GetEnvironmentVariable("ALTERNATIVE_CPP_LIB_PATH") != null)
