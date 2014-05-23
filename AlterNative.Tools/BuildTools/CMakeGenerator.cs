@@ -43,12 +43,15 @@ namespace AlterNative.BuildTools
             {
                 Utils.WriteToConsole("Library files not found. Make sure to execute script Lib/alternative-lib-compile");
             }
-            List<string> libToLink = new List<string>();
+            else
+            {
+                List<string> libToLink = new List<string>();
 
-            foreach (FileInfo f in di.GetFiles())
-                libToLink.Add(f.FullName.Replace('\\', '/'));
+                foreach (FileInfo f in di.GetFiles())
+                    libToLink.Add(f.FullName.Replace('\\', '/'));
 
-            template.Add("LINK_LIBS", libToLink);
+                template.Add("LINK_LIBS", libToLink);
+            }
 
             string output = template.Render();
 
