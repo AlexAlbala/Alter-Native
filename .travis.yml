@@ -1,0 +1,15 @@
+language: c
+ 
+#whitelist
+branches:
+  only:
+    - master
+
+install:
+  - sudo apt-get install mono-devel mono-gmcs
+ 
+script:
+  - source ./alternative.core-compile.sh
+
+notifications:
+ email: true
