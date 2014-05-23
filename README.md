@@ -1,6 +1,12 @@
-Description of Alter-Native coming soon...
+# Alter-Native [![Build Status](https://travis-ci.org/AlexAlbala/Alter-Native.svg?branch=master)](https://travis-ci.org/AlexAlbala/Alter-Native)
 
-Included open-source libraries:
+AlterNative is a tool made by Developers for Developers. Its concept is to maximize the idea of happy-coding. It provides a tool to easy port applications from high-level languages such as .NET to native languages like C++.
+
+Most of the actual systems are C++ compatible, thus if the application is ported to this language, it can be executed in several platforms (i.e. smartphones, tablets, embedded systems and computers).
+
+AlterNative's philosophy is to provide the user with a system for taking the advantage of the .NET fast development and also take the advantage of performance of low-level languages. But also, exploit the possibility to run this native code in many systems or in other words, follow the WORA (Write Once, Run Everywhere) philosophy.
+
+### Included open-source libraries:
 
 >Mono.Cecil: MIT License  
 AvalonEdit: LGPL  
