@@ -4,6 +4,9 @@ language: c
 branches:
   only:
     - master
+    
+git:
+  submodules: false
 
 install:
   - sudo apt-get install mono-devel mono-gmcs
