@@ -13,6 +13,11 @@ install:
  
 script:
   - source ./alternative.core-compile.sh
+  - source ./alternative-init.sh
+  - alternative new test
+  - cd test
+  - [[ -f CMakeLists.txt && -f Program.cpp && -f Program.h && -f main.cpp ]]  
+  
 
 notifications:
  email: true
