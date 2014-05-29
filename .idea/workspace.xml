@@ -26,8 +26,8 @@
       <file leaf-file-name="index.html" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.595679" vertical-offset="10273" max-vertical-offset="17612">
-              <caret line="627" column="37" selection-start-line="627" selection-start-column="37" selection-end-line="627" selection-end-column="37" />
+            <state vertical-scroll-proportion="0.6589506" vertical-offset="17032" max-vertical-offset="17816">
+              <caret line="1027" column="31" selection-start-line="1027" selection-start-column="31" selection-end-line="1027" selection-end-column="31" />
               <folding />
             </state>
           </provider>
@@ -36,8 +36,8 @@
       <file leaf-file-name="alternative.css" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/alternative/css/alternative.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1641" max-vertical-offset="5185">
-              <caret line="122" column="17" selection-start-line="122" selection-start-column="5" selection-end-line="122" selection-end-column="17" />
+            <state vertical-scroll-proportion="-3.0625" vertical-offset="4596" max-vertical-offset="5270">
+              <caret line="279" column="1" selection-start-line="279" selection-start-column="1" selection-end-line="279" selection-end-column="1" />
               <folding />
             </state>
           </provider>
@@ -122,6 +122,24 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="alternative" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AlterNative3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Alter-Native" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="alternative" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="img" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -355,18 +373,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/alternative/img/logoUPC.gif">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/alternative/img/alteraid.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/alternative/css/alternative.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1641" max-vertical-offset="5185">
-          <caret line="122" column="17" selection-start-line="122" selection-start-column="5" selection-end-line="122" selection-end-column="17" />
+        <state vertical-scroll-proportion="-3.0625" vertical-offset="4596" max-vertical-offset="5270">
+          <caret line="279" column="1" selection-start-line="279" selection-start-column="1" selection-end-line="279" selection-end-column="1" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.595679" vertical-offset="10273" max-vertical-offset="17612">
-          <caret line="627" column="37" selection-start-line="627" selection-start-column="37" selection-end-line="627" selection-end-column="37" />
+        <state vertical-scroll-proportion="0.6589506" vertical-offset="17032" max-vertical-offset="17816">
+          <caret line="1027" column="31" selection-start-line="1027" selection-start-column="31" selection-end-line="1027" selection-end-column="31" />
           <folding />
         </state>
       </provider>

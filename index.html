@@ -712,220 +712,220 @@
 <hr>
 
 <div id="tutorials" class="page color-4">
-    <div class="inner-page row">
-        <h2 class="page-headline">Tutorials<br>
-            <small>My first translation</small>
-        </h2>
-        <div class="col-md-offset-onehalf col-md-9">
-            <h3>Getting started</h3>
+<div class="inner-page row">
+    <h2 class="page-headline">Tutorials<br>
+        <small>My first translation</small>
+    </h2>
+    <div class="col-md-offset-onehalf col-md-9">
+        <h3>Getting started</h3>
 
-            <p>In this tutorial we will explain you how to translate your application. First of all make sure to follow
-                the instructions explained in the README of the <a href="https://github.com/AlexAlbala/Alter-Native">GitHub
-                    Page</a>. If you have done these steps you should:</p>
-            <ul>
-                <li>Type "alternative --help" to make sure your installation of AlterNative is correct. <strong>If you
-                    have previously installed AlterNative, run alternative-init script for initialize command
-                    line</strong></li>
-                <li>Check if Lib/build/libfiles contains the library files compiled. If not, run
-                    Lib/alternative-lib-compile script
-                </li>
-                <li>You may want to check your installation typing:
+        <p>In this tutorial we will explain you how to translate your application. First of all make sure to follow
+            the instructions explained in the README of the <a href="https://github.com/AlexAlbala/Alter-Native">GitHub
+                Page</a>. If you have done these steps you should:</p>
+        <ul>
+            <li>Type "alternative --help" to make sure your installation of AlterNative is correct. <strong>If you
+                have previously installed AlterNative, run alternative-init script for initialize command
+                line</strong></li>
+            <li>Check if Lib/build/libfiles contains the library files compiled. If not, run
+                Lib/alternative-lib-compile script
+            </li>
+            <li>You may want to check your installation typing:
 		<pre><code>$ alternative new test
             $ alternative make test
             $ cd test/build
             $ ./Blank</code></pre>
-                </li>
-            </ul>
-            <h3>Prepare the program</h3>
+            </li>
+        </ul>
+        <h3>Prepare the program</h3>
 
-            <p>After the installation of AlterNative we will write our C# code to be translated. We propose a simple
-                program with one class and two methods</p>
-            <textarea id="cs-tuto" name="cs-tuto">
-                using System;
+        <p>After the installation of AlterNative we will write our C# code to be translated. We propose a simple
+            program with one class and two methods</p>
+        <textarea id="cs-tuto" name="cs-tuto">
+            using System;
 
-                namespace Tutorial
-                {
-                public class Program
-                {
-                public static void Main(string[] args)
-                {
-                Program p = new Program();
-                int result = p.Sum(5, 10);
-                p.PrintNumber(result);
-                }
+            namespace Tutorial
+            {
+            public class Program
+            {
+            public static void Main(string[] args)
+            {
+            Program p = new Program();
+            int result = p.Sum(5, 10);
+            p.PrintNumber(result);
+            }
 
-                public int Sum(int a, int b)
-                {
-                return a + b;
-                }
+            public int Sum(int a, int b)
+            {
+            return a + b;
+            }
 
-                public void PrintNumber(int number)
-                {
-                Console.WriteLine(number);
-                }
-                }
-                }</textarea>
-            <br>
+            public void PrintNumber(int number)
+            {
+            Console.WriteLine(number);
+            }
+            }
+            }</textarea>
+        <br>
 
-            <p>Copy and paste this code and compile it. In Windows with msbuild (or Visual Studio), in Linux with Mono
-                compiler "mcs".</p>
+        <p>Copy and paste this code and compile it. In Windows with msbuild (or Visual Studio), in Linux with Mono
+            compiler "mcs".</p>
 
-            <h3>Translation and recompilation</h3>
+        <h3>Translation and recompilation</h3>
 
-            <p>Once the program is compiled, run:</p>
-            <pre><code>$ alternative myProgram.exe CppOutput</code></pre>
-            <p>You should see in the output folder these files:
-            <ul>
-                <li>Program.cpp</li>
-                <li>Program.h</li>
-                <li>main.cpp</li>
-                <li>CMakeLists.txt</li>
-            </ul>
-            </p>
-            <p>Now we will compile the output code with the command:</p>
-            <pre><code>$ alternative make CppOutput</code></pre>
-            <p>After running this command, it should appear a folder "build" in the project folder. CD into it and run
-                the executable. Don't worry if you notice an extremely increase of speed in the execution, you are in
-                <strong>native world :)</strong> .</p>
+        <p>Once the program is compiled, run:</p>
+        <pre><code>$ alternative myProgram.exe CppOutput</code></pre>
+        <p>You should see in the output folder these files:
+        <ul>
+            <li>Program.cpp</li>
+            <li>Program.h</li>
+            <li>main.cpp</li>
+            <li>CMakeLists.txt</li>
+        </ul>
+        </p>
+        <p>Now we will compile the output code with the command:</p>
+        <pre><code>$ alternative make CppOutput</code></pre>
+        <p>After running this command, it should appear a folder "build" in the project folder. CD into it and run
+            the executable. Don't worry if you notice an extremely increase of speed in the execution, you are in
+            <strong>native world :)</strong> .</p>
 
-        </div>
     </div>
+</div>
 
-    <div class="inner-page row">
-        <h2 class="page-headline">
-            <small>My first translation feature</small>
-        </h2>
-        <div class="col-md-offset-onehalf col-md-9">
-            <h3>Getting started...</h3>
-            <h4>Architecture</h4>
+<div class="inner-page row">
+    <h2 class="page-headline">
+        <small>My first translation feature</small>
+    </h2>
+    <div class="col-md-offset-onehalf col-md-9">
+        <h3>Getting started...</h3>
+        <h4>Architecture</h4>
 
-            <p>Here the involved modules in this tutorial are two:</p>
-            <ul>
-                <li><strong>CSharpToCppConverterVisitor: </strong>Located in
-                    NRefactory/ICSharpCode.NRefactory.Cpp/Visitors. In this module we will develop the conversions of
-                    the tokens from .NET syntax to C++ syntax.
-                </li>
-                <li><strong>CppOutputVisitor: </strong>Located in NRefactory/ICSharpCode.NRefactory.Cpp/OutputVisitor.
-                    In this module we will implement how the tokens (already converted) are ordered and writen to the
-                    output.
-                </li>
-            </ul>
-            <p>For example, if we have to convert the statement <strong>byte[] b = new byte[10];</strong></p>
-            <ul>
-                <li><strong>CSharpToCppConverterVisitor</strong> will make these conversions
-                    <ul>
-                        <li><i>byte</i> -> <i>char</i></li>
-                        <li>Array specifier <i>[ ]</i> -> * (pointer declaration)</li>
-                        <li>And again <i>new byte[10]</i> -> <i>new char[10]</i></li>
-                    </ul>
-                </li>
-                <li><strong>CppOutputVisitor</strong> will output the tokens before in this order: <i>char* b = new
-                    char[10];</i></li>
-            </ul>
-            <h4>AST flow</h4>
+        <p>Here the involved modules in this tutorial are two:</p>
+        <ul>
+            <li><strong>CSharpToCppConverterVisitor: </strong>Located in
+                NRefactory/ICSharpCode.NRefactory.Cpp/Visitors. In this module we will develop the conversions of
+                the tokens from .NET syntax to C++ syntax.
+            </li>
+            <li><strong>CppOutputVisitor: </strong>Located in NRefactory/ICSharpCode.NRefactory.Cpp/OutputVisitor.
+                In this module we will implement how the tokens (already converted) are ordered and writen to the
+                output.
+            </li>
+        </ul>
+        <p>For example, if we have to convert the statement <strong>byte[] b = new byte[10];</strong></p>
+        <ul>
+            <li><strong>CSharpToCppConverterVisitor</strong> will make these conversions
+                <ul>
+                    <li><i>byte</i> -> <i>char</i></li>
+                    <li>Array specifier <i>[ ]</i> -> * (pointer declaration)</li>
+                    <li>And again <i>new byte[10]</i> -> <i>new char[10]</i></li>
+                </ul>
+            </li>
+            <li><strong>CppOutputVisitor</strong> will output the tokens before in this order: <i>char* b = new
+                char[10];</i></li>
+        </ul>
+        <h4>AST flow</h4>
 
-            <p>The flow of the AST transformations is processed like a tree pattern. Each node denotes a construction in
-                the source code. The major part of the nodes are composed by other nodes which represent more specific
-                code. As a simplified example, a node representing a = b + c, is a combination of:</p>
-            <ul>
-                <li>A node representing the assignation of a variable a = something.</li>
-                <li>A node representing the sum of two elements: b + c.</li>
-            </ul>
-            <h3>Identify the transformation</h3>
+        <p>The flow of the AST transformations is processed like a tree pattern. Each node denotes a construction in
+            the source code. The major part of the nodes are composed by other nodes which represent more specific
+            code. As a simplified example, a node representing a = b + c, is a combination of:</p>
+        <ul>
+            <li>A node representing the assignation of a variable a = something.</li>
+            <li>A node representing the sum of two elements: b + c.</li>
+        </ul>
+        <h3>Identify the transformation</h3>
 
-            <p>Every transformation has to be identified inside the AST tree. We have to specify which node we want to
-                translate (i.e. IfElseStatement node). In this tutorial we will see all the process of how to implement
-                a simple transformation.</p>
+        <p>Every transformation has to be identified inside the AST tree. We have to specify which node we want to
+            translate (i.e. IfElseStatement node). In this tutorial we will see all the process of how to implement
+            a simple transformation.</p>
 
-            <p>The code we will transform in this tutorial is a .NET feature, the "as" casting: <strong> Person p =
-                myObject as Person;</strong></p>
+        <p>The code we will transform in this tutorial is a .NET feature, the "as" casting: <strong> Person p =
+            myObject as Person;</strong></p>
 
-            <p>In fact, the node we will transform is "myObject as Person" which we can identify that is an "As
-                Expression" node.</p>
-            <img src="alternative/img/ast1.png" class="img-responsive"/>
+        <p>In fact, the node we will transform is "myObject as Person" which we can identify that is an "As
+            Expression" node.</p>
+        <img src="alternative/img/ast1.png" class="img-responsive"/>
 
-            <p>We have to provide a new feature in C++ that is not available in the standard library. The new feature
-                will be in charge of cast an object to another object. For maintaining the readability of the code, we
-                propose implement a feature in the AlterNative Library for providing easy "as casting" in c++, for
-                example: Person* p = <strong>as_cast&#60Person*&#62(myObject);</strong></p>
+        <p>We have to provide a new feature in C++ that is not available in the standard library. The new feature
+            will be in charge of cast an object to another object. For maintaining the readability of the code, we
+            propose implement a feature in the AlterNative Library for providing easy "as casting" in c++, for
+            example: Person* p = <strong>as_cast&#60Person*&#62(myObject);</strong></p>
 
-            <p>In other words, we have to convert an "As Expression" node into a "Call to Method Expression" node.</p>
+        <p>In other words, we have to convert an "As Expression" node into a "Call to Method Expression" node.</p>
 
-            <h3>Transform it</h3>
+        <h3>Transform it</h3>
 
-            <p>We have to locate where is processed the "As Expression" node in order to translate it to a "Call to
-                Method Expression" pointing to the method as_cast (that later we will implement in the AlterNative
-                Library). These nodes are called in the AST "AsExpression" and "InvocationExpression". We have to find
-                the method in charge of processing this node:</p>
-            <br>
-            <textarea id="cs-asexpr-1" name="cs-asexpr-1">
-                AstNode CSharp.IAstVisitor
-                <object
-                , AstNode>.VisitAsExpression(CSharp.AsExpression asExpression, object data)
-                {
+        <p>We have to locate where is processed the "As Expression" node in order to translate it to a "Call to
+            Method Expression" pointing to the method as_cast (that later we will implement in the AlterNative
+            Library). These nodes are called in the AST "AsExpression" and "InvocationExpression". We have to find
+            the method in charge of processing this node:</p>
+        <br>
+        <textarea id="cs-asexpr-1" name="cs-asexpr-1">
+            AstNode CSharp.IAstVisitor
+            <object
+            , AstNode>.VisitAsExpression(CSharp.AsExpression asExpression, object data)
+            {
 
-                //Here the node should be processed
-                throw new NotImplementedException("As Expression is not implemented");
+            //Here the node should be processed
+            throw new NotImplementedException("As Expression is not implemented");
 
-                }</textarea>
-            <br>
+            }</textarea>
+        <br>
 
-            <p>The process of our transformation is easy, we have to create an InvocationExpression node and fill it
-                with the correct elements from AsExpression node.</p>
-            <br>
-            <textarea id="cs-asexpr-2" name="cs-asexpr-2">
-                AstNode CSharp.IAstVisitor
-                <object
-                , AstNode>.VisitAsExpression(CSharp.AsExpression asExpression, object data)
-                {
-                InvocationExpression invExpr = new InvocationExpression();
-                IdentifierExpression mref = new IdentifierExpression();
-                mref.TypeArguments.Add((AstType)asExpression.Type.AcceptVisitor(this, data));
-                mref.Identifier = "as_cast";
-                invExpr.Arguments.Add((Expression)asExpression.Expression.AcceptVisitor(this, data));
-                invExpr.Target = mref;
+        <p>The process of our transformation is easy, we have to create an InvocationExpression node and fill it
+            with the correct elements from AsExpression node.</p>
+        <br>
+        <textarea id="cs-asexpr-2" name="cs-asexpr-2">
+            AstNode CSharp.IAstVisitor
+            <object
+            , AstNode>.VisitAsExpression(CSharp.AsExpression asExpression, object data)
+            {
+            InvocationExpression invExpr = new InvocationExpression();
+            IdentifierExpression mref = new IdentifierExpression();
+            mref.TypeArguments.Add((AstType)asExpression.Type.AcceptVisitor(this, data));
+            mref.Identifier = "as_cast";
+            invExpr.Arguments.Add((Expression)asExpression.Expression.AcceptVisitor(this, data));
+            invExpr.Target = mref;
 
-                return EndNode(asExpression, invExpr);
-                }</textarea>
-            <br>
+            return EndNode(asExpression, invExpr);
+            }</textarea>
+        <br>
 
-            <p>The code above is a process that we call AST transformation. These AST transformations allows AlterNative
-                to perform its work. In this tutorial, the transformation we have made can be described with this AST
-                transformation:</p>
-            <br>
+        <p>The code above is a process that we call AST transformation. These AST transformations allows AlterNative
+            to perform its work. In this tutorial, the transformation we have made can be described with this AST
+            transformation:</p>
+        <br>
 
-            <img src="alternative/img/ast2.png" class="img-responsive"/>
-            <br>
+        <img src="alternative/img/ast2.png" class="img-responsive"/>
+        <br>
 
-            <p>If we assume that the nodes InvocationExpression and IdentifierExpression are implemented, it is not
-                necessary to edit the module CppOutputVisitor because there is no new node created, and the nodes
-                participating in this transformation already have been implemented and will output a well-formed C++
-                code. You may want to check these nodes in the CppOutputVisitor only for get familiarize with the
-                code</p>
+        <p>If we assume that the nodes InvocationExpression and IdentifierExpression are implemented, it is not
+            necessary to edit the module CppOutputVisitor because there is no new node created, and the nodes
+            participating in this transformation already have been implemented and will output a well-formed C++
+            code. You may want to check these nodes in the CppOutputVisitor only for get familiarize with the
+            code</p>
 
-            <h3>Library feature</h3>
+        <h3>Library feature</h3>
 
-            <p>Now we have to implement the method as_cast
-                <T>(object) that we have supposed to be implemented in the library. This point is very important because
-                    is the code that makes the output source code compile. In this case the feature is simple and it is
-                    implemented with the "dynamic_cast" standard feature of C++11.
-            </p>
-            <br>
-            <textarea id="cpp-asexpr" name="cpp-asexpr">
-                /*
-                Method for C# feature as cast
-                */
+        <p>Now we have to implement the method as_cast
+            <T>(object) that we have supposed to be implemented in the library. This point is very important because
+                is the code that makes the output source code compile. In this case the feature is simple and it is
+                implemented with the "dynamic_cast" standard feature of C++11.
+        </p>
+        <br>
+        <textarea id="cpp-asexpr" name="cpp-asexpr">
+            /*
+            Method for C# feature as cast
+            */
 
-                template < class T, class U >
-                T as_cast(U u) {
-                return dynamic_cast< T >(u);
-                };</textarea>
-            <br>
+            template < class T, class U >
+            T as_cast(U u) {
+            return dynamic_cast< T >(u);
+            };</textarea>
+        <br>
 
-            <p>This feature supports a standard feature of C#, so we will implement it in the file System/support/asis.h
-                which will be loaded always in our programs.</p>
-        </div>
+        <p>This feature supports a standard feature of C#, so we will implement it in the file System/support/asis.h
+            which will be loaded always in our programs.</p>
     </div>
+</div>
 </div>
 <script type="text/javascript">
     var codeConsole = document.getElementById("code");
@@ -1017,6 +1017,18 @@
 </div>
 
 <nav class="navbar navbar-default navbar-static-bottom" role="navigation" style="margin-bottom:0;">
+    <p class="navbar-text">With the support of:</p>
+
+    <div class="navbar-header">
+        <a class="navbar-brand-bottom" href="http://www.alteraid.com" target="_blank"><img class="img-responsive"
+                                                                                           src="alternative/img/alteraid.png"/></a>
+    </div>
+    <p class="navbar-text"> and </p>
+
+    <div class="navbar-header">
+        <a class="navbar-brand-bottom" href="http://www.upc.edu" target="_blank"><img class="img-responsive"
+                                                                                      src="alternative/img/logoUPC.gif"/></a>
+    </div>
     <p class="navbar-text pull-right">© 2014 AlterNative</p>
 </nav>
 

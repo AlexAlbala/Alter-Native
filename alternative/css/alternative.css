@@ -273,6 +273,11 @@ h1 small, h2 small, h3 small, h4 small, h5 small, h6 small, .h1 small, .h2 small
     margin-top: -13px;
     width: 50px;
 }
+.navbar-brand-bottom > img {
+    display: block;
+    height: 30px;
+    margin-top: 10px;
+}
 .caption > a { color: #494F55; }
 .caption > a:visited { color: #494F55; }
 .caption > a:hover { color: #494F55; text-decoration: none; }
