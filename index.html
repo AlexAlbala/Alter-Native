@@ -816,6 +816,7 @@ T as_cast(U u) {
 
 	var csHello = document.getElementById("cs-hello");
 	var csHelloMirror = CodeMirror.fromTextArea(csHello, {lineNumbers: true, readOnly: true, mode:"text/x-csharp"});
+	csHelloMirror.setSize(null, "200px");	
 
 	var cppHello = document.getElementById("cpp-hello");
 	var cppHelloMirror = CodeMirror.fromTextArea(cppHello, {lineNumbers: true, readOnly: true, mode:"text/x-c++src"});
@@ -843,12 +844,15 @@ T as_cast(U u) {
 
 	var csAsExpr1 = document.getElementById("cs-asexpr-1");
 	var csAsExpr1Mirror = CodeMirror.fromTextArea(csAsExpr1, {lineNumbers: true, readOnly: true, mode:"text/x-csharp"});
-	
+	csAsExpr1Mirror.setSize(null, "150px");
+		
 	var csAsExpr2 = document.getElementById("cs-asexpr-2");
 	var csAsExpr2Mirror = CodeMirror.fromTextArea(csAsExpr2, {lineNumbers: true, readOnly: true, mode:"text/x-csharp"});
+	csAsExpr2Mirror.setSize(null, "200px");
 	
 	var cppAsExpr = document.getElementById("cpp-asexpr");
 	var cppAsExprMirror = CodeMirror.fromTextArea(cppAsExpr, {lineNumbers: true, readOnly: true, mode:"text/x-c++src"});
+	cppAsExprMirror.setSize(null, "150px");
 	</script>
 
 <hr>
