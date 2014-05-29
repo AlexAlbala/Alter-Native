@@ -15,7 +15,7 @@
 
     <!-- Custom styles for this template -->
     <link href="alternative/css/alternative.css" rel="stylesheet">
-	<link href="codemirror/theme/midnight.css" rel="stylesheet">
+    <link href="codemirror/theme/midnight.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Raleway:500' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Nunito:300' rel='stylesheet' type='text/css'>
     <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet">
@@ -29,10 +29,12 @@
     <script src="codemirror/lib/codemirror.js"></script>
     <link rel="stylesheet" href="codemirror/lib/codemirror.css">
     <script src="codemirror/mode/clike/clike.js"></script>
-	<script>
-		CodeMirror.defaults.theme="midnight";
-	</script>
-    <style>.CodeMirror {border: 2px inset #dee;}</style>
+    <script>
+        CodeMirror.defaults.theme = "midnight";
+    </script>
+    <style>.CodeMirror {
+        border: 2px inset #dee;
+    }</style>
 </head>
 
 <body data-spy="scroll" data-target="#navbar">
@@ -63,7 +65,7 @@
                 <li>
                     <a href="#tutorials">Tutorials</a>
                 </li>
-		<li>
+                <li>
                     <a href="#contact">Contact</a>
                 </li>
             </ul>
@@ -81,7 +83,8 @@
                 <h1>AlterNative</h1>
 
                 <p class="lead">
-                    Human-Like translations from .NET assemblies to C++. Experience the power and performance of native applications
+                    Human-Like translations from .NET assemblies to C++. Experience the power and performance of native
+                    applications
                     right now!
                 </p>
             </div>
@@ -94,13 +97,13 @@
     <div class="row inner-page">
         <div class="col-md-12 hidden-xs">
             <h4 class="pull-left">Experience the power of AlterNative.</h4>
-			
+
             <a href="#tutorials" class="scroll btn btn-primary pull-right"
                style="margin-top: 10px;"> <i class="icon-caret-down"></i>
                 go and learn
-            </a> 
-			
-			<a href="https://github.com/AlexAlbala/Alter-Native" class="scroll btn btn-primary pull-right"
+            </a>
+
+            <a href="https://github.com/AlexAlbala/Alter-Native" class="scroll btn btn-primary pull-right"
                style="margin-top: 10px; margin-right: 10px;"> <i class="icon-github"></i>
                 GitHub page
             </a>
@@ -109,319 +112,326 @@
 </div>
 
 <div id="description" class="page color-4">
+<div class="inner-page">
+    <h2 class="page-headline">What is AlterNative?</h2>
+</div>
+
+<div class="inner-page row">
+<div class="col-md-offset-onehalf col-md-9">
+
+    <p>
+        AlterNative is a tool made by Developers for Developers. Its concept is to maximize the idea of
+        happy-coding. It provides a tool to easy port applications from high-level languages such as .NET to
+        native languages like C++.
+    </p>
+
+    <p>
+        Most of the actual systems are C++ compatible, thus if the application is ported to this language, it
+        can be executed in several platforms (i.e. smartphones, tablets, embedded systems and computers).
+    </p>
+
+    <p>
+        AlterNative's philosophy is to provide the user with a system for taking the advantage of the .NET fast
+        development and also take the advantage of performance of low-level languages. But also, exploit the
+        possibility to run this native code in many systems or in other words, follow the WORA (Write Once, Run
+        Everywhere) philosophy.
+    </p>
+    <br>
+
+    <p>AlterNative is made with two assumptions:</p>
+    <ul>
+        <li><strong>Translatable source code:</strong> Theoretically any source code can be translated from one
+            machine to another.
+        </li>
+        <li><strong>Readability and Usability:</strong> The developer should be able to understand and modify
+            the generated code, or even replace some parts. So the translated code is really similar to the
+            original .NET code.
+        </li>
+    </ul>
+</div>
+<div class="col-md-offset-onehalf col-md-9">
     <div class="inner-page">
-        <h2 class="page-headline">What is AlterNative?</h2>
+        <h2 class="page-headline">
+            <small>Included open source libraries</small>
+        </h2>
     </div>
+    <p>AlterNative uses the following open-sourced libraries to do it's job:</p>
+    <ul>
+        <li><strong>Mono.Cecil:</strong> MIT License</li>
 
-    <div class="inner-page row">
-        <div class="col-md-offset-onehalf col-md-9">
+        <li><strong>AvalonEdit:</strong> LGPL</li>
 
-            <p>
-                AlterNative is a tool made by Developers for Developers. Its concept is to maximize the idea of
-                happy-coding. It provides a tool to easy port applications from high-level languages such as .NET to
-                native languages like C++.
-            </p>
+        <li><strong>SharpTreeView:</strong> LGPL</li>
 
-            <p>
-                Most of the actual systems are C++ compatible, thus if the application is ported to this language, it
-                can be executed in several platforms (i.e. smartphones, tablets, embedded systems and computers).
-            </p>
+        <li><strong>ILSpy:</strong> MIT License</li>
 
-            <p>
-                AlterNative's philosophy is to provide the user with a system for taking the advantage of the .NET fast
-                development and also take the advantage of performance of low-level languages. But also, exploit the
-                possibility to run this native code in many systems or in other words, follow the WORA (Write Once, Run
-                Everywhere) philosophy.
-            </p>
+        <li><strong>ICSharpCode.Decompiler:</strong> MIT License (developed as part of ILSpy)</li>
+    </ul>
+</div>
+<div class="col-md-offset-onehalf col-md-9">
+    <div class="inner-page">
+        <h2 class="page-headline">
+            <small>How it works</small>
+        </h2>
+    </div>
+    <p>AlterNative uses AST transformations to do its magic and a set of C++ libraries that turn that AST
+        translations into real compilable codes.</p>
+    <img src="alternative/img/Process.png" class="img-responsive"/>
+</div>
+<div class="col-md-offset-onehalf col-md-9">
+    <div class="inner-page">
+        <h2 class="page-headline">
+            <small>AlterNative Library</small>
+        </h2>
+    </div>
+    <p>With the release of AlterNative it also has been released a public set of libraries that are referenced
+        at compile time. This libraries are the C++ implementation of the C# runtime classes. For example, the
+        C# class Console is included in this library which implements the same methods but using the C++
+        syntax.</p>
+    </p>This means that all the hard work is made by us, so you will only need to enjoy the performance of C++</p>
+    <p> AlterNative Library can be found <a href="https://github.com/AlexAlbala/AlterNative-CXX-Lib">here</a>.</p>
+
+    <p>The provided library uses the following open-sourced libraries to do it's job:</p>
+    <ul>
+        <li><strong>Boost</strong></li>
+        <li><strong>Boehm gc</strong></li>
+    </ul>
+    <p>As an example we show a demo version of the class System::Console of the library. The methods are implemented
+        following the naming of the .NET class (<a
+                href="http://msdn.microsoft.com/en-us/library/vstudio/system.console">System.Console</a>).</p>
+    <textarea id="code" name="code">
+        #include "Console.h"
+        #include "String.h"
+
+        #include
+        <iostream>
+
+            namespace System {
+
+            void Console::Write(char* txt) {
+            std::cout << txt;
+            }
+
+            void Console::Write(int i) {
+            std::cout << i;
+            }
+
+            void Console::Write(bool i) {
+            std::cout << (i ? "True" : "False");
+            }
+
+            void Console::Write(String* s) {
+            char* tmp = *s;
+            std::cout << tmp;
+            }
+
+            void Console::WriteLine(char* txt) {
+            std::cout << txt << std::endl;
+            }
+
+            void Console::WriteLine(Array
+            <char>* c) {
+                std::cout << c->GetData() << std::endl;
+                }
+
+                void Console::WriteLine(int i) {
+                std::cout << i << std::endl;
+                }
+
+                void Console::WriteLine(bool i) {
+                std::cout << (i ? "True" : "False") << std::endl;
+                }
+
+                void Console::WriteLine(float f) {
+                std::cout << f << std::endl;
+                }
+
+                void Console::WriteLine(double d) {
+                std::cout << d << std::endl;
+                }
+
+                void Console::WriteLine(Object* o) {
+                WriteLine(o->ToString());
+                }
+
+                void Console::WriteLine(String* s) {
+                char* tmp = *s;
+                std::cout << tmp << std::endl;
+                }
+
+                String* Console::ReadLine() {
+                char* tmp = new char[256];
+                std::cin.getline (tmp,256);
+
+                String* s = new String(tmp);
+                return s;
+                }
+
+                }
+    </textarea>
+    <br>
+</div>
+<div class="inner-page">
+    <div class="col-md-offset-onehalf col-md-9">
+        <h2 class="page-headline">
+            <small>Roadmap</small>
             <br>
+        </h2>
+    </div>
+</div>
+<div class="col-md-offset-onehalf col-md-4">
+    <h3>C# features supported</h3>
+    <ul>
+        <li>
+            <strong>if</strong>, <strong>else</strong>, <strong>for</strong>, <strong>while</strong>, <strong>do
+            while</strong> statements
+        </li>
+        <li>
+            Classes, methods and variables
+        </li>
+        <li>
+            Forward declaration detection
+        </li>
+        <li>
+            Foreach statement
+        </li>
+        <li>
+            Properties
+        </li>
+        <li>
+            Exceptions
+        </li>
+        <li>
+            File / filestream
+        </li>
+        <li>
+            Explicit / implicit casting: <strong>as</strong> / <strong>is</strong> keyword
+        </li>
+        <li>
+            Arrays
+        </li>
+        <li>
+            Automatic boxing
+        </li>
+        <li>
+            Nested classes
+        </li>
+        <li>
+            Tepmlates, and explicit generic interfaces
+        </li>
+        <li>
+            Covariance (Basic level)
+        </li>
+        <li>
+            Constraints (Basic level)
+        </li>
+        <li>
+            Generics List and Dictionary
+        </li>
+        <li>
+            Delegates and events
+        </li>
+        <li>
+            Threads
+        </li>
+        <li>
+            Enums
+        </li>
+        <li>
+            Threads and Timers
+        </li>
+    </ul>
+</div>
+<div class="col-md-offset-onehalf col-md-4">
+    <h3>To be implemented</h3>
+    <ul>
+        <li>
+            Testing web-site implementation
+        </li>
+        <li>
+            Continuous integration server
+        </li>
+        <li>
+            Sockets private library implementation
+        </li>
+        <li>
+            IOSharp - Private Library bug-fixing
+        </li>
+        <li>
+            Lambda expressions
+        </li>
+        <li>
+            Introspection private library implementation
+        </li>
+        <li>
+            Serialization private library implementation
+        </li>
+        <li>
+            Example: Computer Vision algorithm
+        </li>
+        <li>
+            Example: Autopilot
+        </li>
+        <li>
+            System Resources and Environment
+        </li>
+        <li>
+            First public release
+        </li>
+    </ul>
+</div>
+<div class="col-md-offset-onehalf col-md-9 row" style="text-align: center;">
+    <div class="inner-page">
+        <h2 class="page-headline">
+            <small>Contributors</small>
+        </h2>
+    </div>
+    <div class="col-md-offset-onehalf col-sm-3">
+        <div class="thumbnail">
+            <img src="alternative/img/people/alex-albala.jpg" alt="...">
 
-            <p>AlterNative is made with two assumptions:</p>
-            <ul>
-                <li><strong>Translatable source code:</strong> Theoretically any source code can be translated from one
-                    machine to another.
-                </li>
-                <li><strong>Readability and Usability:</strong> The developer should be able to understand and modify
-                    the generated code, or even replace some parts. So the translated code is really similar to the
-                    original .NET code.
-                </li>
-            </ul>
-        </div>
-        <div class="col-md-offset-onehalf col-md-9">
-            <div class="inner-page">
-                <h2 class="page-headline">
-                    <small>Included open source libraries</small>
-                </h2>
-            </div>
-            <p>AlterNative uses the following open-sourced libraries to do it's job:</p>
-            <ul>
-                <li><strong>Mono.Cecil:</strong> MIT License</li>
+            <div class="caption">
+                <h3>Alex Albalá</h3>
 
-                <li><strong>AvalonEdit:</strong> LGPL</li>
-
-                <li><strong>SharpTreeView:</strong> LGPL</li>
-
-                <li><strong>ILSpy:</strong> MIT License</li>
-
-                <li><strong>ICSharpCode.Decompiler:</strong> MIT License (developed as part of ILSpy)</li>
-            </ul>
-        </div>
-        <div class="col-md-offset-onehalf col-md-9">
-            <div class="inner-page">
-                <h2 class="page-headline">
-                    <small>How it works</small>
-                </h2>
-            </div>
-            <p>AlterNative uses AST transformations to do its magic and a set of C++ libraries that turn that AST
-                translations into real compilable codes.</p>
-            <img src="alternative/img/Process.png" class="img-responsive"/>
-        </div>
-	<div class="col-md-offset-onehalf col-md-9">
-            <div class="inner-page">
-	        <h2 class="page-headline">
-		    <small>AlterNative Library</small>
-		</h2>
-	    </div>
-	    <p>With the release of AlterNative it also has been released a public set of libraries that are referenced
-                at compile time. This libraries are the C++ implementation of the C# runtime classes. For example, the
-                C# class Console is included in this library which implements the same methods but using the C++
-                syntax.</p>
-            </p>This means that all the hard work is made by us, so you will only need to enjoy the performance of C++</p>
-	    <p> AlterNative Library can be found <a href="https://github.com/AlexAlbala/AlterNative-CXX-Lib">here</a>.</p>
-             <p>The provided library uses the following open-sourced libraries to do it's job:</p>
-            <ul>
-                <li><strong>Boost</strong></li>
-                <li><strong>Boehm gc</strong></li>
-            </ul>
-	   <p>As an example we show a demo version of the class System::Console of the library. The methods are implemented following the naming of the .NET class (<a href="http://msdn.microsoft.com/en-us/library/vstudio/system.console">System.Console</a>).</p>
-	   <textarea id="code" name="code">
-#include "Console.h"
-#include "String.h"
-
-#include <iostream>
-
-namespace System {
-
-	void Console::Write(char* txt) {
-		std::cout << txt;
-	}
-
-	void Console::Write(int i) {
-		std::cout << i;
-	}
-
-	void Console::Write(bool i) {
-		std::cout << (i ? "True" : "False");
-	}
-
-	void Console::Write(String* s) {
-		char* tmp = *s;
-		std::cout << tmp;
-	}
-
-	void Console::WriteLine(char* txt) {
-		std::cout << txt << std::endl;
-	}
-
-	void Console::WriteLine(Array<char>* c) {
-		std::cout << c->GetData() << std::endl;
-	}
-
-	void Console::WriteLine(int i) {
-		std::cout << i << std::endl;
-	}
-
-	void Console::WriteLine(bool i) {
-		std::cout << (i ? "True" : "False") << std::endl;
-	}
-
-	void Console::WriteLine(float f) {
-		std::cout << f << std::endl;
-	}
-
-	void Console::WriteLine(double d) {
-		std::cout << d << std::endl;
-	}
-
-	void Console::WriteLine(Object* o) {
-		WriteLine(o->ToString());
-	}
-
-	void Console::WriteLine(String* s) {
-		char* tmp = *s;
-		std::cout << tmp << std::endl;
-	}
-
-	String* Console::ReadLine() {
-		char* tmp = new char[256];
-		std::cin.getline (tmp,256);
-
-		String* s = new String(tmp);
-		return s;
-	}
-
-}</textarea>
-<br>
-	</div>
-	 <div class="inner-page">
-		 <div class="col-md-offset-onehalf col-md-9">
-			<h2 class="page-headline">
-				<small>Roadmap</small>
-				<br>
-			</h2>
-		</div>
-	</div>
-	<div class="col-md-offset-onehalf col-md-4">
-		<h3>C# features supported</h3>            
-		<ul>
-			<li>
-				<strong>if</strong>, <strong>else</strong>, <strong>for</strong>, <strong>while</strong>, <strong>do while</strong> statements
-			</li>
-			<li>
-				Classes, methods and variables
-			</li>
-			<li>
-				Forward declaration detection
-			</li>
-			<li>
-				Foreach statement
-			</li>
-			<li>
-				Properties
-			</li>
-			<li>
-				Exceptions
-			</li>
-			<li>
-				File / filestream
-			</li>
-			<li>
-				Explicit / implicit casting: <strong>as</strong> / <strong>is</strong> keyword
-			</li>
-			<li>
-				Arrays
-			</li>
-			<li>
-				Automatic boxing
-			</li>
-			<li>
-				Nested classes
-			</li>
-			<li>
-				Tepmlates, and explicit generic interfaces
-			</li>
-			<li>
-				Covariance (Basic level)
-			</li>
-			<li>
-				Constraints (Basic level)
-			</li>
-			<li>
-				Generics List and Dictionary
-			</li>
-			<li>
-				Delegates and events
-			</li>
-			<li>
-				Threads
-			</li>
-			<li>
-				Enums
-			</li>
-			<li>
-				Threads and Timers
-			</li>
-		</ul>
-	</div>
-	<div class="col-md-offset-onehalf col-md-4">
-		<h3>To be implemented</h3>            
-		<ul>
-			<li>
-				Testing web-site implementation
-			</li>			
-			<li>
-				Continuous integration server
-			</li>
-			<li>
-				Sockets private library implementation
-			</li>
-			<li>
-				IOSharp - Private Library bug-fixing
-			</li>
-			<li>
-				Lambda expressions
-			</li>
-			<li>
-				Introspection private library implementation
-			</li>
-			<li>
-				Serialization private library implementation
-			</li>
-			<li>
-				Example: Computer Vision algorithm
-			</li>
-			<li>
-				Example: Autopilot
-			</li>			
-			<li>
-				System Resources and Environment
-			</li>
-			<li>
-				First public release
-			</li>
-		</ul>
-	</div>
-        <div class="col-md-offset-onehalf col-md-9 row" style="text-align: center;">
-            <div class="inner-page">
-                <h2 class="page-headline">
-                    <small>Contributors</small>
-                </h2>
-            </div>
-            <div class="col-md-offset-onehalf col-sm-3">
-                <div class="thumbnail">
-                    <img src="alternative/img/people/alex-albala.jpg" alt="...">
-
-                    <div class="caption">
-                        <h3>Alex Albalá</h3>
-
-                        <a href="https://github.com/AlexAlbala"><i class="icon-github icon-2x"></i></a>
-                        <a href="mailto:alejandro.albala@upc.edu" title="alejandro.albala@upc.edu"><i
-                                class="icon-envelope icon-2x"></i></a>
-                        <a href="https://twitter.com/Alex_Albala"><i class="icon-twitter icon-2x"></i></a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-sm-3">
-                <div class="thumbnail">
-                    <img src="alternative/img/people/juan-lopez.jpg" alt="...">
-
-                    <div class="caption">
-                        <h3>Juan López</h3>
-
-                        <a href="https://github.com/jlopezr"><i class="icon-github icon-2x"></i></a>
-                        <a href="mailto:Juan.Lopez-Rubio@upc.edu" title="Juan.Lopez-Rubio@upc.edu"><i
-                                class="icon-envelope icon-2x"></i></a>
-                        <a href="https://twitter.com/j_lopez_r"><i class="icon-twitter icon-2x"></i></a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-sm-3">
-                <div class="thumbnail">
-                    <img src="alternative/img/people/gerard-sole.jpg" alt="...">
-
-                    <div class="caption">
-                        <h3>Gerard Solé</h3>
-
-                        <a href="https://github.com/GerardSoleCa"><i class="icon-github icon-2x"></i></a>
-                        <a href="mailto:g.sole.ca@gmail.com" title="g.sole.ca@gmail.com"><i
-                                class="icon-envelope icon-2x"></i></a>
-                        <a href="https://twitter.com/GerardSoleCa"><i class="icon-twitter icon-2x"></i></a>
-                    </div>
-                </div>
+                <a href="https://github.com/AlexAlbala"><i class="icon-github icon-2x"></i></a>
+                <a href="mailto:alejandro.albala@upc.edu" title="alejandro.albala@upc.edu"><i
+                        class="icon-envelope icon-2x"></i></a>
+                <a href="https://twitter.com/Alex_Albala"><i class="icon-twitter icon-2x"></i></a>
             </div>
         </div>
     </div>
+
+    <div class="col-sm-3">
+        <div class="thumbnail">
+            <img src="alternative/img/people/juan-lopez.jpg" alt="...">
+
+            <div class="caption">
+                <h3>Juan López</h3>
+
+                <a href="https://github.com/jlopezr"><i class="icon-github icon-2x"></i></a>
+                <a href="mailto:Juan.Lopez-Rubio@upc.edu" title="Juan.Lopez-Rubio@upc.edu"><i
+                        class="icon-envelope icon-2x"></i></a>
+                <a href="https://twitter.com/j_lopez_r"><i class="icon-twitter icon-2x"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-3">
+        <div class="thumbnail">
+            <img src="alternative/img/people/gerard-sole.jpg" alt="...">
+
+            <div class="caption">
+                <h3>Gerard Solé</h3>
+
+                <a href="https://github.com/GerardSoleCa"><i class="icon-github icon-2x"></i></a>
+                <a href="mailto:g.sole.ca@gmail.com" title="g.sole.ca@gmail.com"><i
+                        class="icon-envelope icon-2x"></i></a>
+                <a href="https://twitter.com/GerardSoleCa"><i class="icon-twitter icon-2x"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
 
 </div>
 
@@ -435,226 +445,267 @@ namespace System {
     </div>
     <div class="inner-page row">
         <div class="col-md-offset-onehalf col-md-9">
-	<p>In this example we show you how is translated a simple Hello World program. The program is writed in C# and can be compiled in Windows with Visual Studio (msbuild compiler), or in Linux with the mono compiler "mcs".</p>
-	<p> The code used for this example is described in the listing below:</p>
-                    <div class="caption">
-                        <h3>C# source code</h3>
-			<textarea id="cs-hello" name="cs-hello">
-using System;
+            <p>In this example we show you how is translated a simple Hello World program. The program is writed in C#
+                and can be compiled in Windows with Visual Studio (msbuild compiler), or in Linux with the mono compiler
+                "mcs".</p>
 
-namespace HelloWorld
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            Console.WriteLine("Hello World");
-        }
-    }
-}</textarea>
-                    </div>
-                </div>
-	</div>
-	<div class="inner-page row">
-	    <div class="col-md-offset-onehalf col-md-9">
-	    <p>We run AlterNative targeting the above code compiled in the HelloWorld.exe assembly. The result obtained are the files listed below:</p>
-	    </div>
-            <div class="col-md-offset-onehalf col-sm-5">
-		    <div class="caption">
-                        <h3>C++ source code</h3>
-			<textarea id="cpp-hello" name="cpp-hello">
-#include "Program.h" 
+            <p> The code used for this example is described in the listing below:</p>
 
-namespace HelloWorld
-{
-    void Program::Main(String* args[])
-    {
-        Console::WriteLine(new String("Hello World"));
-    }
-}
-			</textarea>
-                    </div>
+            <div class="caption">
+                <h3>C# source code</h3>
+                <textarea id="cs-hello" name="cs-hello">
+                    using System;
+
+                    namespace HelloWorld
+                    {
+                    public class Program
+                    {
+                    public static void Main(string[] args)
+                    {
+                    Console.WriteLine("Hello World");
+                    }
+                    }
+                    }</textarea>
             </div>
-
-            <div class="col-sm-5">
-                    <div class="caption">
-                        <h3>C++ header code</h3>
-			<textarea id="hpp-hello" name="hpp-hello">
-#pragma once
-#include <System/System.h>
-#include <System/Console.h>
-
-using namespace System;
-
-namespace HelloWorld
-{
-    class Program : public virtual Object
-    {
-        public:
-           static void Main(String* args[]);
-    };
-}
-			</textarea>
-
-                    </div>
-                </div>
-	</div>
-	<div class="inner-page row">
-	<div class="col-md-offset-onehalf col-md-9">
-    	<p>In addition to these files, it is provided an CMakeLists.txt auto-generated by AlterNative in order to provide you with a cross-platform tool for easy compiling the code. Also will be generated a main.cpp as an entry point of the program. This main.cpp redirects to your original entry point.</p>
-    	</div>
-	</div>
-    </div>
-</div>
-    <div class="inner-page">
-	<h2 class="page-headline">
-	    <small>Example 2. ForEach statement</small>
-    	</h2>
+        </div>
     </div>
     <div class="inner-page row">
-	<div class="col-md-offset-onehalf col-md-9">
-	    <p>In this example AlterNative will translate a C# .NET feature that C++ does not support: the foreach statement (C++11 release offers a foreach support but the syntax is different from the C# syntax). The proposed code to be translated is shown in the following listing:</p>
-	</div>
         <div class="col-md-offset-onehalf col-md-9">
-                    <div class="caption">
-                        <h3>C# source code</h3>
-			<textarea id="cs-foreach" name="cs-foreach">
-using System;
-using System.Collections.Generic;
+            <p>We run AlterNative targeting the above code compiled in the HelloWorld.exe assembly. The result obtained
+                are the files listed below:</p>
+        </div>
+        <div class="col-md-offset-onehalf col-sm-5 col-md-4half">
+            <div class="caption">
+                <h3>C++ source code</h3>
+                <textarea id="cpp-hello" name="cpp-hello">
+                    #include "Program.h"
 
-namespace ForEach
-{
-    class A
-    {
-        public void f()
-        {
-            Console.WriteLine("I'm an object");
-        }
-    }
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            List<float> myList = new List<float>();
-            myList.Add(1.0f);
-            myList.Add(2.0f);
-            myList.Add(3.0f);
-
-            foreach (float f in myList)
-            {
-                Console.WriteLine(f);
-            }
-
-            List<A> myAList = new List<A>();
-            myAList.Add(new A());
-            myAList.Add(new A());
-
-            foreach (A a in myAList)
-            {
-                a.f();
-            }
-        }
-    }
-}</textarea>
-                    </div>
-                </div>
-	</div>
-	<div class="inner-page row">  
-	<div class="col-md-offset-onehalf col-md-9">
-	    <p>It is important to highlight the challenge of translate an envioronment in which all the classes are "Objects" to an environment in wihch this behaviour is different. In this example, the classes "float" and "A", in C# can be treated as Objects (i.e. int.ToString() exists). In C++ the types int, float, char... are Primitive Types and no classes, for this reason the translated code will try to workaround these drawbacks and get a compilable code at the Output.</p>
-	</div>
-
-            <div class="col-md-offset-onehalf col-sm-5">
-		    <div class="caption">
-                        <h3>C++ source code</h3>
-			<textarea id="cpp-foreach" name="cpp-foreach">
-#include "Program.h"
-namespace ForEach {
-	void Program::Main(String* args[]){
-		List_T<float>* myList = new List_T<float>();
-		myList->Add((float)1.0);
-		myList->Add((float)2.0);
-		myList->Add((float)3.0);
-		FOREACH(_F, myList){
-			float f = *_F;
-			Console::WriteLine(f);
-		}
-		List_T<A>* myAList = new List_T<A>();
-		myAList->Add(new A());
-		myAList->Add(new A());
-		FOREACH(_A, myAList) {
-			A deref_a = *_A;
-			A* a = &deref_a;
-			a->f();
-		}
-	}
-}</textarea>
-                    </div>
+                    namespace HelloWorld
+                    {
+                    void Program::Main(String* args[])
+                    {
+                    Console::WriteLine(new String("Hello World"));
+                    }
+                    }
+                </textarea>
             </div>
+        </div>
 
-            <div class="col-sm-5">
-                    <div class="caption">
-                        <h3>C++ header code</h3>
-			<textarea id="hpp-foreach" name="hpp-foreach">
-#pragma once
-#include <System/System.h>
-#include <System/Collections/Generic/List.h>
-#include <System/Console.h>
-#include "A.h"
+        <div class="col-sm-5 col-md-4half">
+            <div class="caption">
+                <h3>C++ header code</h3>
+                <textarea id="hpp-hello" name="hpp-hello">
+                    #pragma once
+                    #include
+                    <System
+                    /System.h>
+                    #include
+                    <System
+                    /Console.h>
 
-using namespace System::Collections::Generic;
-using namespace System;
-namespace ForEach {
-	class Program : public virtual Object
-	{
-		public:
-			static void Main(String* args[]);
-	};
-}</textarea>
-                    </div>
-                </div>
-	</div>
-	
-	<div class="inner-page row">
-	<div class="col-md-offset-onehalf col-md-9">
-	<p>Referencing the described above, the management of the variables in the case of the loop of "floats" is different to the case of loop of "A", being the second a pointer to an object while the first is value type.</p>
-	<p>One important key point of this example is the translation of the foreach statement. In the process of translation, AlterNative takes into account all the features the library offers. In this case, the library provides a "FOREACH" macro which internally calls the methods of end(), begin() and the internal methods of the iterators.</p>
-	<p>The following listings of code show the resulting code for the decompilation of the class A. In AlterNative each type decompiled is writen in a different file (pair of *.h and *.cpp files).</p>
-	</div>
-            <div class="col-md-offset-onehalf col-sm-5">
-		    <div class="caption">
-                        <h3>C++ source code</h3>
-			<textarea id="cpp-foreach-a" name="cpp-foreach-a">
-#include "A.h"
-namespace ForEach {
-	void A::f(){
-		Console::WriteLine(new String("I'm an object"));
-	}
+                    using namespace System;
 
-}</textarea>
-                    </div>
+                    namespace HelloWorld
+                    {
+                    class Program : public virtual Object
+                    {
+                    public:
+                    static void Main(String* args[]);
+                    };
+                    }
+                </textarea>
+
             </div>
-
-            <div class="col-sm-5">
-                    <div class="caption">
-                        <h3>C++ header code</h3>
-			<textarea id="hpp-foreach-a" name="hpp-foreach-a">
-#pragma once
-#include <System/System.h>
-#include <System/Console.h>
-
-using namespace System;
-namespace ForEach {
-	class A : public virtual Object
-	{
-		public:
-			void f();
-	};
-}</textarea>
-                    </div>
-                </div>
-	</div>
+        </div>
     </div>
+    <div class="inner-page row">
+        <div class="col-md-offset-onehalf col-md-9">
+            <p>In addition to these files, it is provided an CMakeLists.txt auto-generated by AlterNative in order to
+                provide you with a cross-platform tool for easy compiling the code. Also will be generated a main.cpp as
+                an entry point of the program. This main.cpp redirects to your original entry point.</p>
+        </div>
+    </div>
+</div>
+</div>
+<div class="inner-page">
+    <h2 class="page-headline">
+        <small>Example 2. ForEach statement</small>
+    </h2>
+</div>
+<div class="inner-page row">
+    <div class="col-md-offset-onehalf col-md-9">
+        <p>In this example AlterNative will translate a C# .NET feature that C++ does not support: the foreach statement
+            (C++11 release offers a foreach support but the syntax is different from the C# syntax). The proposed code
+            to be translated is shown in the following listing:</p>
+    </div>
+    <div class="col-md-offset-onehalf col-md-9">
+        <div class="caption">
+            <h3>C# source code</h3>
+            <textarea id="cs-foreach" name="cs-foreach">
+                using System;
+                using System.Collections.Generic;
+
+                namespace ForEach
+                {
+                class A
+                {
+                public void f()
+                {
+                Console.WriteLine("I'm an object");
+                }
+                }
+                class Program
+                {
+                static void Main(string[] args)
+                {
+                List
+                <float> myList = new List
+                    <float>();
+                        myList.Add(1.0f);
+                        myList.Add(2.0f);
+                        myList.Add(3.0f);
+
+                        foreach (float f in myList)
+                        {
+                        Console.WriteLine(f);
+                        }
+
+                        List<A> myAList = new List<A>();
+                            myAList.Add(new A());
+                            myAList.Add(new A());
+
+                            foreach (A a in myAList)
+                            {
+                            a.f();
+                            }
+                            }
+                            }
+                            }
+            </textarea>
+        </div>
+    </div>
+</div>
+<div class="inner-page row">
+    <div class="col-md-offset-onehalf col-md-9">
+        <p>It is important to highlight the challenge of translate an envioronment in which all the classes are
+            "Objects" to an environment in wihch this behaviour is different. In this example, the classes "float" and
+            "A", in C# can be treated as Objects (i.e. int.ToString() exists). In C++ the types int, float, char... are
+            Primitive Types and no classes, for this reason the translated code will try to workaround these drawbacks
+            and get a compilable code at the Output.</p>
+    </div>
+
+    <div class="col-md-offset-onehalf col-sm-5 col-md-4half">
+        <div class="caption">
+            <h3>C++ source code</h3>
+            <textarea id="cpp-foreach" name="cpp-foreach">
+                #include "Program.h"
+                namespace ForEach {
+                void Program::Main(String* args[]){
+                List_T
+                <float>* myList = new List_T
+                    <float>();
+                        myList->Add((float)1.0);
+                        myList->Add((float)2.0);
+                        myList->Add((float)3.0);
+                        FOREACH(_F, myList){
+                        float f = *_F;
+                        Console::WriteLine(f);
+                        }
+                        List_T<A>* myAList = new List_T<A>();
+                            myAList->Add(new A());
+                            myAList->Add(new A());
+                            FOREACH(_A, myAList) {
+                            A deref_a = *_A;
+                            A* a = &deref_a;
+                            a->f();
+                            }
+                            }
+                            }
+            </textarea>
+        </div>
+    </div>
+
+    <div class="col-sm-5 col-md-4half">
+        <div class="caption">
+            <h3>C++ header code</h3>
+            <textarea id="hpp-foreach" name="hpp-foreach">
+                #pragma once
+                #include
+                <System
+                /System.h>
+                #include
+                <System
+                /Collections/Generic/List.h>
+                #include
+                <System
+                /Console.h>
+                #include "A.h"
+
+                using namespace System::Collections::Generic;
+                using namespace System;
+                namespace ForEach {
+                class Program : public virtual Object
+                {
+                public:
+                static void Main(String* args[]);
+                };
+                }</textarea>
+        </div>
+    </div>
+</div>
+
+<div class="inner-page row">
+    <div class="col-md-offset-onehalf col-md-9">
+        <p>Referencing the described above, the management of the variables in the case of the loop of "floats" is
+            different to the case of loop of "A", being the second a pointer to an object while the first is value
+            type.</p>
+
+        <p>One important key point of this example is the translation of the foreach statement. In the process of
+            translation, AlterNative takes into account all the features the library offers. In this case, the library
+            provides a "FOREACH" macro which internally calls the methods of end(), begin() and the internal methods of
+            the iterators.</p>
+
+        <p>The following listings of code show the resulting code for the decompilation of the class A. In AlterNative
+            each type decompiled is writen in a different file (pair of *.h and *.cpp files).</p>
+    </div>
+    <div class="col-md-offset-onehalf col-sm-5 col-md-4half">
+        <div class="caption">
+            <h3>C++ source code</h3>
+            <textarea id="cpp-foreach-a" name="cpp-foreach-a">
+                #include "A.h"
+                namespace ForEach {
+                void A::f(){
+                Console::WriteLine(new String("I'm an object"));
+                }
+
+                }</textarea>
+        </div>
+    </div>
+
+    <div class="col-sm-5 col-md-4half">
+        <div class="caption">
+            <h3>C++ header code</h3>
+            <textarea id="hpp-foreach-a" name="hpp-foreach-a">
+                #pragma once
+                #include
+                <System
+                /System.h>
+                #include
+                <System
+                /Console.h>
+
+                using namespace System;
+                namespace ForEach {
+                class A : public virtual Object
+                {
+                public:
+                void f();
+                };
+                }</textarea>
+        </div>
+    </div>
+</div>
+</div>
 </div>
 </div>
 
@@ -665,195 +716,261 @@ namespace ForEach {
         <h2 class="page-headline">Tutorials<br>
             <small>My first translation</small>
         </h2>
-	<div class="col-md-offset-onehalf col-md-9">
+        <div class="col-md-offset-onehalf col-md-9">
             <h3>Getting started</h3>
-	    <p>In this tutorial we will explain you how to translate your application. First of all make sure to follow the instructions explained in the README of the <a href="https://github.com/AlexAlbala/Alter-Native">GitHub Page</a>. If you have done these steps you should:</p>
-        <ul>
-	    <li>Type "alternative --help" to make sure your installation of AlterNative is correct. <strong>If you have previously installed AlterNative, run alternative-init script for initialize command line</strong></li>
-	    <li>Check if Lib/build/libfiles contains the library files compiled. If not, run Lib/alternative-lib-compile script</li>
-	    <li>You may want to check your installation typing: 
+
+            <p>In this tutorial we will explain you how to translate your application. First of all make sure to follow
+                the instructions explained in the README of the <a href="https://github.com/AlexAlbala/Alter-Native">GitHub
+                    Page</a>. If you have done these steps you should:</p>
+            <ul>
+                <li>Type "alternative --help" to make sure your installation of AlterNative is correct. <strong>If you
+                    have previously installed AlterNative, run alternative-init script for initialize command
+                    line</strong></li>
+                <li>Check if Lib/build/libfiles contains the library files compiled. If not, run
+                    Lib/alternative-lib-compile script
+                </li>
+                <li>You may want to check your installation typing:
 		<pre><code>$ alternative new test
-$ alternative make test
-$ cd test/build
-$ ./Blank</code></pre>
-	  </li> 
-        </ul>
-        <h3>Prepare the program</h3>
-	<p>After the installation of AlterNative we will write our C# code to be translated. We propose a simple program with one class and two methods</p>
-	<textarea id="cs-tuto" name="cs-tuto">
-using System;
+            $ alternative make test
+            $ cd test/build
+            $ ./Blank</code></pre>
+                </li>
+            </ul>
+            <h3>Prepare the program</h3>
 
-namespace Tutorial
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            Program p = new Program();
-            int result = p.Sum(5, 10);
-            p.PrintNumber(result);
-        }
+            <p>After the installation of AlterNative we will write our C# code to be translated. We propose a simple
+                program with one class and two methods</p>
+            <textarea id="cs-tuto" name="cs-tuto">
+                using System;
 
-        public int Sum(int a, int b)
-        {
-            return a + b;
-        }
+                namespace Tutorial
+                {
+                public class Program
+                {
+                public static void Main(string[] args)
+                {
+                Program p = new Program();
+                int result = p.Sum(5, 10);
+                p.PrintNumber(result);
+                }
 
-        public void PrintNumber(int number)
-        {
-            Console.WriteLine(number);
-        }
-    }
-}</textarea>
-	<br>
-	<p>Copy and paste this code and compile it. In Windows with msbuild (or Visual Studio), in Linux with Mono compiler "mcs".</p>
-        <h3>Translation and recompilation</h3>
-        <p>Once the program is compiled, run:</p>
-	<pre><code>$ alternative myProgram.exe CppOutput</code></pre>
-	<p>You should see in the output folder these files:
-	    <ul>
-		<li>Program.cpp</li>
-		<li>Program.h</li>
-		<li>main.cpp</li>
-		<li>CMakeLists.txt</li>
-	    </ul>
-        </p>
-	<p>Now we will compile the output code with the command:</p>
-	<pre><code>$ alternative make CppOutput</code></pre>
-	<p>After running this command, it should appear a folder "build" in the project folder. CD into it and run the executable. Don't worry if you notice an extremely increase of speed in the execution, you are in <strong>native world :)</strong> .</p>
+                public int Sum(int a, int b)
+                {
+                return a + b;
+                }
 
-    	</div>
+                public void PrintNumber(int number)
+                {
+                Console.WriteLine(number);
+                }
+                }
+                }</textarea>
+            <br>
+
+            <p>Copy and paste this code and compile it. In Windows with msbuild (or Visual Studio), in Linux with Mono
+                compiler "mcs".</p>
+
+            <h3>Translation and recompilation</h3>
+
+            <p>Once the program is compiled, run:</p>
+            <pre><code>$ alternative myProgram.exe CppOutput</code></pre>
+            <p>You should see in the output folder these files:
+            <ul>
+                <li>Program.cpp</li>
+                <li>Program.h</li>
+                <li>main.cpp</li>
+                <li>CMakeLists.txt</li>
+            </ul>
+            </p>
+            <p>Now we will compile the output code with the command:</p>
+            <pre><code>$ alternative make CppOutput</code></pre>
+            <p>After running this command, it should appear a folder "build" in the project folder. CD into it and run
+                the executable. Don't worry if you notice an extremely increase of speed in the execution, you are in
+                <strong>native world :)</strong> .</p>
+
+        </div>
     </div>
 
     <div class="inner-page row">
         <h2 class="page-headline">
-	    <small>My first translation feature</small>
-	</h2>
-	<div class="col-md-offset-onehalf col-md-9">
-	    <h3>Getting started...</h3>
-	    <h4>Architecture</h4>
-	    <p>Here the involved modules in this tutorial are two:</p>
-	    <ul>
-		<li><strong>CSharpToCppConverterVisitor: </strong>Located in NRefactory/ICSharpCode.NRefactory.Cpp/Visitors. In this module we will develop the conversions of the tokens from .NET syntax to C++ syntax.</li>
-		<li><strong>CppOutputVisitor: </strong>Located in NRefactory/ICSharpCode.NRefactory.Cpp/OutputVisitor. In this module we will implement how the tokens (already converted) are ordered and writen to the output.</li>
-	    </ul>
-	    <p>For example, if we have to convert the statement <strong>byte[] b = new byte[10];</strong></p>
-	    <ul>
-		<li><strong>CSharpToCppConverterVisitor</strong> will make these conversions
-		    <ul>
-			<li><i>byte</i> -> <i>char</i></li>
-			<li>Array specifier <i>[ ]</i> -> * (pointer declaration)</li>
-			<li>And again <i>new byte[10]</i> -> <i>new char[10]</i></li>
-		    </ul></li>
-		<li><strong>CppOutputVisitor</strong> will output the tokens before in this order: <i>char* b = new char[10];</i></li> 
-	    </ul>
-	    <h4>AST flow</h4>
-	    <p>The flow of the AST transformations is processed like a tree pattern. Each node denotes a construction in the source code. The major part of the nodes are composed by other nodes which represent more specific code. As a simplified example, a node representing a = b + c, is a combination of:</p>
-	    <ul>
-		<li>A node representing the assignation of a variable a = something.</li>
-		<li>A node representing the sum of two elements: b + c.</li>
-	    </ul>
-	    <h3>Identify the transformation</h3>
-	    <p>Every transformation has to be identified inside the AST tree. We have to specify which node we want to translate (i.e. IfElseStatement node). In this tutorial we will see all the process of how to implement a simple transformation.</p>
-	    <p>The code we will transform in this tutorial is a .NET feature, the "as" casting: <strong> Person p = myObject as Person;</strong></p>
-	    <p>In fact, the node we will transform is "myObject as Person" which we can identify that is an "As Expression" node.</p>
-		<img src="alternative/img/ast1.png" class="img-responsive"/>
-	    <p>We have to provide a new feature in C++ that is not available in the standard library. The new feature will be in charge of cast an object to another object. For maintaining the readability of the code, we propose implement a feature in the AlterNative Library for providing easy "as casting" in c++, for example: Person* p = <strong>as_cast&#60Person*&#62(myObject);</strong></p>
-	    <p>In other words, we have to convert an "As Expression" node into a "Call to Method Expression" node.</p>
-	    <h3>Transform it</h3>
-	    <p>We have to locate where is processed the "As Expression" node in order to translate it to a "Call to Method Expression" pointing to the method as_cast (that later we will implement in the AlterNative Library). These nodes are called in the AST "AsExpression" and "InvocationExpression". We have to find the method in charge of processing this node:</p>
-	    <br>		
-	    <textarea id="cs-asexpr-1" name="cs-asexpr-1">
-AstNode CSharp.IAstVisitor<object, AstNode>.VisitAsExpression(CSharp.AsExpression asExpression, object data)
-{
+            <small>My first translation feature</small>
+        </h2>
+        <div class="col-md-offset-onehalf col-md-9">
+            <h3>Getting started...</h3>
+            <h4>Architecture</h4>
 
-    //Here the node should be processed
-    throw new NotImplementedException("As Expression is not implemented");
+            <p>Here the involved modules in this tutorial are two:</p>
+            <ul>
+                <li><strong>CSharpToCppConverterVisitor: </strong>Located in
+                    NRefactory/ICSharpCode.NRefactory.Cpp/Visitors. In this module we will develop the conversions of
+                    the tokens from .NET syntax to C++ syntax.
+                </li>
+                <li><strong>CppOutputVisitor: </strong>Located in NRefactory/ICSharpCode.NRefactory.Cpp/OutputVisitor.
+                    In this module we will implement how the tokens (already converted) are ordered and writen to the
+                    output.
+                </li>
+            </ul>
+            <p>For example, if we have to convert the statement <strong>byte[] b = new byte[10];</strong></p>
+            <ul>
+                <li><strong>CSharpToCppConverterVisitor</strong> will make these conversions
+                    <ul>
+                        <li><i>byte</i> -> <i>char</i></li>
+                        <li>Array specifier <i>[ ]</i> -> * (pointer declaration)</li>
+                        <li>And again <i>new byte[10]</i> -> <i>new char[10]</i></li>
+                    </ul>
+                </li>
+                <li><strong>CppOutputVisitor</strong> will output the tokens before in this order: <i>char* b = new
+                    char[10];</i></li>
+            </ul>
+            <h4>AST flow</h4>
 
-}</textarea>
-	    <br>
-	    <p>The process of our transformation is easy, we have to create an InvocationExpression node and fill it with the correct elements from AsExpression node.</p>
-	    <br>
-	    <textarea id="cs-asexpr-2" name="cs-asexpr-2">
-AstNode CSharp.IAstVisitor<object, AstNode>.VisitAsExpression(CSharp.AsExpression asExpression, object data)
-{
-    InvocationExpression invExpr = new InvocationExpression();
-    IdentifierExpression mref = new IdentifierExpression();
-    mref.TypeArguments.Add((AstType)asExpression.Type.AcceptVisitor(this, data));
-    mref.Identifier = "as_cast";
-    invExpr.Arguments.Add((Expression)asExpression.Expression.AcceptVisitor(this, data));
-    invExpr.Target = mref;
+            <p>The flow of the AST transformations is processed like a tree pattern. Each node denotes a construction in
+                the source code. The major part of the nodes are composed by other nodes which represent more specific
+                code. As a simplified example, a node representing a = b + c, is a combination of:</p>
+            <ul>
+                <li>A node representing the assignation of a variable a = something.</li>
+                <li>A node representing the sum of two elements: b + c.</li>
+            </ul>
+            <h3>Identify the transformation</h3>
 
-    return EndNode(asExpression, invExpr);
-}</textarea>
-		<br>
-		<p>The code above is a process that we call AST transformation. These AST transformations allows AlterNative to perform its work. In this tutorial, the transformation we have made can be described with this AST transformation:</p>
-	    <br>		
-	    
-		<img src="alternative/img/ast2.png" class="img-responsive"/>
-	    <br>
-	    <p>If we assume that the nodes InvocationExpression and IdentifierExpression are implemented, it is not necessary to edit the module CppOutputVisitor because there is no new node created, and the nodes participating in this transformation already have been implemented and will output a well-formed C++ code. You may want to check these nodes in the CppOutputVisitor only for get familiarize with the code</p>
-	    <h3>Library feature</h3>
-	    <p>Now we have to implement the method as_cast<T>(object) that we have supposed to be implemented in the library. This point is very important because is the code that makes the output source code compile. In this case the feature is simple and it is implemented with the "dynamic_cast" standard feature of C++11.</p>
-	    <br>
-	    <textarea id="cpp-asexpr" name="cpp-asexpr">
-/*
-Method for C# feature as cast 
-*/
+            <p>Every transformation has to be identified inside the AST tree. We have to specify which node we want to
+                translate (i.e. IfElseStatement node). In this tutorial we will see all the process of how to implement
+                a simple transformation.</p>
 
-template < class T, class U > 
-T as_cast(U u) {
-   return dynamic_cast< T >(u);
-};</textarea>
-	    <br>
-	    <p>This feature supports a standard feature of C#, so we will implement it in the file System/support/asis.h which will be loaded always in our programs.</p>
-	</div>
+            <p>The code we will transform in this tutorial is a .NET feature, the "as" casting: <strong> Person p =
+                myObject as Person;</strong></p>
+
+            <p>In fact, the node we will transform is "myObject as Person" which we can identify that is an "As
+                Expression" node.</p>
+            <img src="alternative/img/ast1.png" class="img-responsive"/>
+
+            <p>We have to provide a new feature in C++ that is not available in the standard library. The new feature
+                will be in charge of cast an object to another object. For maintaining the readability of the code, we
+                propose implement a feature in the AlterNative Library for providing easy "as casting" in c++, for
+                example: Person* p = <strong>as_cast&#60Person*&#62(myObject);</strong></p>
+
+            <p>In other words, we have to convert an "As Expression" node into a "Call to Method Expression" node.</p>
+
+            <h3>Transform it</h3>
+
+            <p>We have to locate where is processed the "As Expression" node in order to translate it to a "Call to
+                Method Expression" pointing to the method as_cast (that later we will implement in the AlterNative
+                Library). These nodes are called in the AST "AsExpression" and "InvocationExpression". We have to find
+                the method in charge of processing this node:</p>
+            <br>
+            <textarea id="cs-asexpr-1" name="cs-asexpr-1">
+                AstNode CSharp.IAstVisitor
+                <object
+                , AstNode>.VisitAsExpression(CSharp.AsExpression asExpression, object data)
+                {
+
+                //Here the node should be processed
+                throw new NotImplementedException("As Expression is not implemented");
+
+                }</textarea>
+            <br>
+
+            <p>The process of our transformation is easy, we have to create an InvocationExpression node and fill it
+                with the correct elements from AsExpression node.</p>
+            <br>
+            <textarea id="cs-asexpr-2" name="cs-asexpr-2">
+                AstNode CSharp.IAstVisitor
+                <object
+                , AstNode>.VisitAsExpression(CSharp.AsExpression asExpression, object data)
+                {
+                InvocationExpression invExpr = new InvocationExpression();
+                IdentifierExpression mref = new IdentifierExpression();
+                mref.TypeArguments.Add((AstType)asExpression.Type.AcceptVisitor(this, data));
+                mref.Identifier = "as_cast";
+                invExpr.Arguments.Add((Expression)asExpression.Expression.AcceptVisitor(this, data));
+                invExpr.Target = mref;
+
+                return EndNode(asExpression, invExpr);
+                }</textarea>
+            <br>
+
+            <p>The code above is a process that we call AST transformation. These AST transformations allows AlterNative
+                to perform its work. In this tutorial, the transformation we have made can be described with this AST
+                transformation:</p>
+            <br>
+
+            <img src="alternative/img/ast2.png" class="img-responsive"/>
+            <br>
+
+            <p>If we assume that the nodes InvocationExpression and IdentifierExpression are implemented, it is not
+                necessary to edit the module CppOutputVisitor because there is no new node created, and the nodes
+                participating in this transformation already have been implemented and will output a well-formed C++
+                code. You may want to check these nodes in the CppOutputVisitor only for get familiarize with the
+                code</p>
+
+            <h3>Library feature</h3>
+
+            <p>Now we have to implement the method as_cast
+                <T>(object) that we have supposed to be implemented in the library. This point is very important because
+                    is the code that makes the output source code compile. In this case the feature is simple and it is
+                    implemented with the "dynamic_cast" standard feature of C++11.
+            </p>
+            <br>
+            <textarea id="cpp-asexpr" name="cpp-asexpr">
+                /*
+                Method for C# feature as cast
+                */
+
+                template < class T, class U >
+                T as_cast(U u) {
+                return dynamic_cast< T >(u);
+                };</textarea>
+            <br>
+
+            <p>This feature supports a standard feature of C#, so we will implement it in the file System/support/asis.h
+                which will be loaded always in our programs.</p>
+        </div>
     </div>
 </div>
 <script type="text/javascript">
-	var codeConsole = document.getElementById("code");
-	var codeConsoleMirror = CodeMirror.fromTextArea(codeConsole, {lineNumbers: true, readOnly: true, mode:"text/x-c++src"});
+    var codeConsole = document.getElementById("code");
+    var codeConsoleMirror = CodeMirror.fromTextArea(codeConsole, {lineNumbers: true, readOnly: true, mode: "text/x-c++src"});
 
-	var csHello = document.getElementById("cs-hello");
-	var csHelloMirror = CodeMirror.fromTextArea(csHello, {lineNumbers: true, readOnly: true, mode:"text/x-csharp"});
-	csHelloMirror.setSize(null, "200px");	
+    var csHello = document.getElementById("cs-hello");
+    var csHelloMirror = CodeMirror.fromTextArea(csHello, {lineNumbers: true, readOnly: true, mode: "text/x-csharp"});
+    csHelloMirror.setSize(null, "200px");
 
-	var cppHello = document.getElementById("cpp-hello");
-	var cppHelloMirror = CodeMirror.fromTextArea(cppHello, {lineNumbers: true, readOnly: true, mode:"text/x-c++src"});
+    var cppHello = document.getElementById("cpp-hello");
+    var cppHelloMirror = CodeMirror.fromTextArea(cppHello, {lineNumbers: true, readOnly: true, mode: "text/x-c++src"});
 
-	var hppHello = document.getElementById("hpp-hello");
-	var hppHelloMirror = CodeMirror.fromTextArea(hppHello, {lineNumbers: true, readOnly: true, mode:"text/x-c++src"});
+    var hppHello = document.getElementById("hpp-hello");
+    var hppHelloMirror = CodeMirror.fromTextArea(hppHello, {lineNumbers: true, readOnly: true, mode: "text/x-c++src"});
 
-	var csForeach = document.getElementById("cs-foreach");
-	var csForeachMirror = CodeMirror.fromTextArea(csForeach, {lineNumbers: true, readOnly: true, mode:"text/x-csharp"});
+    var csForeach = document.getElementById("cs-foreach");
+    var csForeachMirror = CodeMirror.fromTextArea(csForeach, {lineNumbers: true, readOnly: true, mode: "text/x-csharp"});
 
-	var cppForeach = document.getElementById("cpp-foreach");
-	var cppForeachMirror = CodeMirror.fromTextArea(cppForeach, {lineNumbers: true, readOnly: true, mode:"text/x-c++src"});
+    var cppForeach = document.getElementById("cpp-foreach");
+    var cppForeachMirror = CodeMirror.fromTextArea(cppForeach, {lineNumbers: true, readOnly: true, mode: "text/x-c++src"});
 
-	var hppForeach = document.getElementById("hpp-foreach");
-	var hppForeachMirror = CodeMirror.fromTextArea(hppForeach, {lineNumbers: true, readOnly: true, mode:"text/x-c++src"});
+    var hppForeach = document.getElementById("hpp-foreach");
+    var hppForeachMirror = CodeMirror.fromTextArea(hppForeach, {lineNumbers: true, readOnly: true, mode: "text/x-c++src"});
 
-	var cppForeachA = document.getElementById("cpp-foreach-a");
-	var cppForeachAMirror = CodeMirror.fromTextArea(cppForeachA, {lineNumbers: true, readOnly: true, mode:"text/x-c++src"});
+    var cppForeachA = document.getElementById("cpp-foreach-a");
+    var cppForeachAMirror = CodeMirror.fromTextArea(cppForeachA, {lineNumbers: true, readOnly: true, mode: "text/x-c++src"});
 
-	var hppForeachA = document.getElementById("hpp-foreach-a");
-	var hppForeachA = CodeMirror.fromTextArea(hppForeachA, {lineNumbers: true, readOnly: true, mode:"text/x-c++src"});
+    var hppForeachA = document.getElementById("hpp-foreach-a");
+    var hppForeachA = CodeMirror.fromTextArea(hppForeachA, {lineNumbers: true, readOnly: true, mode: "text/x-c++src"});
 
-	var tutorial1 = document.getElementById("cs-tuto");
-	var tutorialCode = CodeMirror.fromTextArea(tutorial1, {lineNumbers: true, readOnly: true, mode:"text/x-csharp"});
+    var tutorial1 = document.getElementById("cs-tuto");
+    var tutorialCode = CodeMirror.fromTextArea(tutorial1, {lineNumbers: true, readOnly: true, mode: "text/x-csharp"});
 
-	var csAsExpr1 = document.getElementById("cs-asexpr-1");
-	var csAsExpr1Mirror = CodeMirror.fromTextArea(csAsExpr1, {lineNumbers: true, readOnly: true, mode:"text/x-csharp"});
-	csAsExpr1Mirror.setSize(null, "150px");
-		
-	var csAsExpr2 = document.getElementById("cs-asexpr-2");
-	var csAsExpr2Mirror = CodeMirror.fromTextArea(csAsExpr2, {lineNumbers: true, readOnly: true, mode:"text/x-csharp"});
-	csAsExpr2Mirror.setSize(null, "200px");
-	
-	var cppAsExpr = document.getElementById("cpp-asexpr");
-	var cppAsExprMirror = CodeMirror.fromTextArea(cppAsExpr, {lineNumbers: true, readOnly: true, mode:"text/x-c++src"});
-	cppAsExprMirror.setSize(null, "150px");
-	</script>
+    var csAsExpr1 = document.getElementById("cs-asexpr-1");
+    var csAsExpr1Mirror = CodeMirror.fromTextArea(csAsExpr1, {lineNumbers: true, readOnly: true, mode: "text/x-csharp"});
+    csAsExpr1Mirror.setSize(null, "150px");
+
+    var csAsExpr2 = document.getElementById("cs-asexpr-2");
+    var csAsExpr2Mirror = CodeMirror.fromTextArea(csAsExpr2, {lineNumbers: true, readOnly: true, mode: "text/x-csharp"});
+    csAsExpr2Mirror.setSize(null, "200px");
+
+    var cppAsExpr = document.getElementById("cpp-asexpr");
+    var cppAsExprMirror = CodeMirror.fromTextArea(cppAsExpr, {lineNumbers: true, readOnly: true, mode: "text/x-c++src"});
+    cppAsExprMirror.setSize(null, "150px");
+</script>
 
 <hr>
 

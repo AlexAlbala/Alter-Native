@@ -120,6 +120,10 @@ h1 small, h2 small, h3 small, h4 small, h5 small, h6 small, .h1 small, .h2 small
         margin-left: 12.499999995%;
     }
 
+    .col-md-4half{
+        width: 37.49%;
+    }
+
     .inner-page {
         padding-top: 30px;
         padding-bottom: 30px;
