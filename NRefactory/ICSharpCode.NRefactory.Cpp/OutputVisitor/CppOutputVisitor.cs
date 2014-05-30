@@ -68,22 +68,20 @@ namespace ICSharpCode.NRefactory.Cpp
             this.avoidPointers = false;
         }
 
-        private object VisitorException(Exception e, AstNode node, bool init = true)
-        {            
+        public object VisitTranslationException(TranslationException n, object data)
+        {
+            StartNode(n);
             if (enableExcepttions)
-                throw e;
+                throw n.exception;
             else
             {
-                if(init)
-                    StartNode(node);
-
-
+                string name = n.node.GetType().FullName;
                 NewLine();
-                formatter.WriteComment(CommentType.SingleLine, "ERROR: Cannot translate: " + e.ToString());
+                formatter.WriteComment(CommentType.SingleLine, "ERROR: Cannot translate: " + n.exception.ToString() + ". Node: " + name);
                 NewLine();
-                
-                return EndNode(node);
             }
+
+            return EndNode(n);
         }
 
         void StartNode(AstNode node)
@@ -299,12 +297,14 @@ namespace ICSharpCode.NRefactory.Cpp
         #region Expressions
         public object VisitAnonymousMethodExpression(AnonymousMethodExpression anonymousMethodExpression, object data)
         {
-            return this.VisitorException(new NotImplementedException("anonymousMethodExpression"), anonymousMethodExpression);
+            StartNode(anonymousMethodExpression);
+            return EndNode(anonymousMethodExpression);
         }
 
         public object VisitUndocumentedExpression(UndocumentedExpression undocumentedExpression, object data)
         {
-            return this.VisitorException(new NotImplementedException("undocumentedExpression"), undocumentedExpression);
+            StartNode(undocumentedExpression);
+            return EndNode(undocumentedExpression);
         }
 
         public object VisitArrayCreateExpression(ArrayCreateExpression arrayCreateExpression, object data)
@@ -490,7 +490,8 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitCheckedExpression(CheckedExpression checkedExpression, object data)
         {
-            return this.VisitorException(new NotImplementedException("checkedExpression"), checkedExpression);
+            StartNode(checkedExpression);
+            return EndNode(checkedExpression);
         }
 
         public object VisitConditionalExpression(ConditionalExpression conditionalExpression, object data)
@@ -515,7 +516,8 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitDefaultValueExpression(DefaultValueExpression defaultValueExpression, object data)
         {
-            return this.VisitorException(new NotImplementedException("defaultValueExpression"), defaultValueExpression);
+            StartNode(defaultValueExpression);
+            return EndNode(defaultValueExpression);
         }
 
         public object VisitDirectionExpression(DirectionExpression directionExpression, object data)
@@ -575,7 +577,8 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitLambdaExpression(LambdaExpression lambdaExpression, object data)
         {
-            return this.VisitorException(new NotImplementedException("lambdaExpression"), lambdaExpression);
+            StartNode(lambdaExpression);
+            return EndNode(lambdaExpression);
         }
 
         bool LambdaNeedsParenthesis(LambdaExpression lambdaExpression)
@@ -615,7 +618,8 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitNamedArgumentExpression(NamedArgumentExpression namedArgumentExpression, object data)
         {
-            return this.VisitorException(new NotImplementedException("namedArgumentExpression"), namedArgumentExpression);
+            StartNode(namedArgumentExpression);
+            return EndNode(namedArgumentExpression);
         }
 
         public object VisitNamedExpression(NamedExpression namedExpression, object data)
@@ -656,7 +660,8 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitAnonymousTypeCreateExpression(AnonymousTypeCreateExpression anonymousTypeCreateExpression, object data)
         {
-            return this.VisitorException(new NotImplementedException("anonymousTypeCreateExpression"), anonymousTypeCreateExpression);
+            StartNode(anonymousTypeCreateExpression);
+            return EndNode(anonymousTypeCreateExpression);
         }
 
         public object VisitParenthesizedExpression(ParenthesizedExpression parenthesizedExpression, object data)
@@ -672,7 +677,8 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitPointerReferenceExpression(PointerReferenceExpression pointerReferenceExpression, object data)
         {
-            return this.VisitorException(new NotImplementedException("pointerReferenceExpression"), pointerReferenceExpression);
+            StartNode(pointerReferenceExpression);
+            return EndNode(pointerReferenceExpression);
         }
 
         public object VisitEmptyExpression(EmptyExpression emptyExpression, object data)
@@ -907,7 +913,8 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitTypeOfExpression(TypeOfExpression typeOfExpression, object data)
         {
-            return this.VisitorException(new NotImplementedException("typeOfExpression: --> TODO: --> http://www.boost.org/doc/libs/1_55_0/doc/html/typeof/tuto.html"), typeOfExpression);
+            StartNode(typeOfExpression);
+            return EndNode(typeOfExpression);
         }
 
         public object VisitTypeReferenceExpression(TypeReferenceExpression typeReferenceExpression, object data)
@@ -938,7 +945,8 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitUncheckedExpression(UncheckedExpression uncheckedExpression, object data)
         {
-            return this.VisitorException(new NotImplementedException("uncheckedExpression"), uncheckedExpression);
+            StartNode(uncheckedExpression);
+            return EndNode(uncheckedExpression);
         }
 
         #endregion
@@ -946,52 +954,62 @@ namespace ICSharpCode.NRefactory.Cpp
         #region Query Expressions
         public object VisitQueryExpression(QueryExpression queryExpression, object data)
         {
-            return this.VisitorException(new NotImplementedException("queryExpression"), queryExpression);
+            StartNode(queryExpression);
+            return EndNode(queryExpression);
         }
 
         public object VisitQueryContinuationClause(QueryContinuationClause queryContinuationClause, object data)
         {
-            return this.VisitorException(new NotImplementedException("queryContinuationClause"), queryContinuationClause);
+            StartNode(queryContinuationClause);
+            return EndNode(queryContinuationClause);
         }
 
         public object VisitQueryFromClause(QueryFromClause queryFromClause, object data)
         {
-            return this.VisitorException(new NotImplementedException("queryFromClause"), queryFromClause);
+            StartNode(queryFromClause);
+            return EndNode(queryFromClause);
         }
 
         public object VisitQueryLetClause(QueryLetClause queryLetClause, object data)
         {
-            return this.VisitorException(new NotImplementedException("queryLetClause"), queryLetClause);
+            StartNode(queryLetClause);
+            return EndNode(queryLetClause);
         }
 
         public object VisitQueryWhereClause(QueryWhereClause queryWhereClause, object data)
         {
-            return this.VisitorException(new NotImplementedException("queryWhereClause"), queryWhereClause);
+            StartNode(queryWhereClause);
+            return EndNode(queryWhereClause);
         }
 
         public object VisitQueryJoinClause(QueryJoinClause queryJoinClause, object data)
         {
-            return this.VisitorException(new NotImplementedException("queryJoinClause"), queryJoinClause);
+            StartNode(queryJoinClause);
+            return EndNode(queryJoinClause);
         }
 
         public object VisitQueryOrderClause(QueryOrderClause queryOrderClause, object data)
         {
-            return this.VisitorException(new NotImplementedException("queryOrderClause"), queryOrderClause);
+            StartNode(queryOrderClause);
+            return EndNode(queryOrderClause);
         }
 
         public object VisitQueryOrdering(QueryOrdering queryOrdering, object data)
         {
-            return this.VisitorException(new NotImplementedException("queryOrdering"), queryOrdering);
+            StartNode(queryOrdering);
+            return EndNode(queryOrdering);
         }
 
         public object VisitQuerySelectClause(QuerySelectClause querySelectClause, object data)
         {
-            return this.VisitorException(new NotImplementedException("querySelectClause"), querySelectClause);
+            StartNode(querySelectClause);
+            return EndNode(querySelectClause);
         }
 
         public object VisitQueryGroupClause(QueryGroupClause queryGroupClause, object data)
         {
-            return this.VisitorException(new NotImplementedException("queryGroupClause"), queryGroupClause);
+            StartNode(queryGroupClause);
+            return EndNode(queryGroupClause);
         }
 
         #endregion
@@ -1995,7 +2013,8 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitExternAliasDeclaration(ExternAliasDeclaration externAliasDeclaration, object data)
         {
-            throw new NotImplementedException();
+            StartNode(externAliasDeclaration);
+            return EndNode(externAliasDeclaration);
         }
         #endregion
 
@@ -2215,17 +2234,20 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitFixedFieldDeclaration(FixedFieldDeclaration fixedFieldDeclaration, object data)
         {
-            return this.VisitorException(new NotImplementedException("fixedFieldDeclaration"), fixedFieldDeclaration);
+            StartNode(fixedFieldDeclaration);
+            return EndNode(fixedFieldDeclaration);
         }
 
         public object VisitFixedVariableInitializer(FixedVariableInitializer fixedVariableInitializer, object data)
         {
-            return this.VisitorException(new NotImplementedException("fixedVariableInitializer"), fixedVariableInitializer);
+            StartNode(fixedVariableInitializer);
+            return EndNode(fixedVariableInitializer);
         }
 
         public object VisitIndexerDeclaration(IndexerDeclaration indexerDeclaration, object data)
         {
-            return this.VisitorException(new NotImplementedException("indexerDeclaration"), indexerDeclaration);
+            StartNode(indexerDeclaration);
+            return EndNode(indexerDeclaration);
         }
 
         public object VisitMethodDeclaration(MethodDeclaration methodDeclaration, object data)
@@ -2312,7 +2334,8 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitOperatorDeclaration(OperatorDeclaration operatorDeclaration, object data)
         {
-            return this.VisitorException(new NotImplementedException("operatorDeclaration"), operatorDeclaration);
+            StartNode(operatorDeclaration);
+            return EndNode(operatorDeclaration);
         }
 
         public object VisitParameterDeclaration(ParameterDeclaration parameterDeclaration, object data)
@@ -2551,7 +2574,8 @@ namespace ICSharpCode.NRefactory.Cpp
         #region Pattern Nodes
         public object VisitPatternPlaceholder(AstNode placeholder, PatternMatching.Pattern pattern, object data)
         {
-            return this.VisitorException(new NotImplementedException("patternPlaceHolder"), placeholder);
+            StartNode(placeholder);
+            return EndNode(placeholder);
         }
 
         void VisitAnyNode(AnyNode anyNode, object data)
@@ -3071,7 +3095,8 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitCheckedStatement(CheckedStatement checkedStatement, object data)
         {
-            return this.VisitorException(new NotImplementedException("checkedStatement"), checkedStatement);
+            StartNode(checkedStatement);
+            return EndNode(checkedStatement);
         }
 
         public object VisitContinueStatement(ContinueStatement continueStatement, object data)
@@ -3182,12 +3207,14 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitGotoCaseStatement(GotoCaseStatement gotoCaseStatement, object data)
         {
-            return this.VisitorException(new NotImplementedException("gotoCaseStatement"), gotoCaseStatement);
+            StartNode(gotoCaseStatement);
+            return EndNode(gotoCaseStatement);
         }
 
         public object VisitGotoDefaultStatement(GotoDefaultStatement gotoDefaultStatement, object data)
         {
-            return this.VisitorException(new NotImplementedException("gotoDefaultStatement"), gotoDefaultStatement);
+            StartNode(gotoDefaultStatement);
+            return EndNode(gotoDefaultStatement);
         }
 
         public object VisitGotoStatement(GotoStatement gotoStatement, object data)
@@ -3469,19 +3496,22 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitYieldBreakStatement(YieldBreakStatement yieldBreakStatement, object data)
         {
-            return this.VisitorException(new NotImplementedException("yieldBreakStatement"), yieldBreakStatement);
+            StartNode(yieldBreakStatement);
+            return EndNode(yieldBreakStatement);
         }
 
         public object VisitYieldReturnStatement(YieldReturnStatement yieldReturnStatement, object data)
         {
-            return this.VisitorException(new NotImplementedException("yieldReturnStatement"), yieldReturnStatement);
+            StartNode(yieldReturnStatement);
+            return EndNode(yieldReturnStatement);
         }
 
         #endregion
 
         public object VisitMemberAccessExpression(MemberAccessExpression memberAccessExpression, object data)
         {
-            throw new NotImplementedException();
+            StartNode(memberAccessExpression);
+            return EndNode(memberAccessExpression);
         }
 
         public object VisitQualifiedType(QualifiedType qualifiedType, object data)
@@ -3510,7 +3540,8 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitInterfaceMemberSpecifier(InterfaceMemberSpecifier interfaceMemberSpecifier, object data)
         {
-            throw new NotImplementedException();
+            StartNode(interfaceMemberSpecifier);
+            return EndNode(interfaceMemberSpecifier);
         }
 
 
@@ -3750,7 +3781,8 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitDocumentationReference(DocumentationReference documentationReference, object data)
         {
-            throw new NotImplementedException();
+            StartNode(documentationReference);
+            return EndNode(documentationReference);
         }
 
         public object VisitNewLine(NewLineNode newLineNode, object data)

@@ -27,6 +27,8 @@ namespace ICSharpCode.NRefactory.Cpp
     /// </summary>
     public interface IAstVisitor<in T, out S>
     {
+        S VisitTranslationException(TranslationException translationException, T data);//*****************
+
         S VisitAnonymousMethodExpression(AnonymousMethodExpression anonymousMethodExpression, T data);
         S VisitUndocumentedExpression(UndocumentedExpression undocumentedExpression, T data);
         S VisitArrayCreateExpression(ArrayCreateExpression arrayCreateExpression, T data);

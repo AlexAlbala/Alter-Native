@@ -640,12 +640,18 @@ namespace ICSharpCode.NRefactory.Cpp
                 type.AddChild(baseType, TypeDeclaration.BaseTypeRole);
 
                 //REMOVE THE BASE TYPE BECAUSE THE NESTED TYPE WILL INHERIT FROM IT
-                currentType.BaseTypes.Remove(currentType.BaseTypes.First(x => GetTypeName(x) == GetTypeName(baseType)));
+                try
+                {
+                    currentType.BaseTypes.Remove(currentType.BaseTypes.First(x => GetTypeName(x) == GetTypeName(baseType)));
+                }
+                catch (InvalidOperationException)
+                {
+                    //The element is not present in the list
+                    //Safe to ignore this :)
+                }
 
                 //ADD METHODS
                 type.Members.AddRange(kvp.Value);
-
-
 
                 //ADD FIELD
                 HeaderFieldDeclaration fdecl = new HeaderFieldDeclaration();

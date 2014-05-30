@@ -47,14 +47,20 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitAnonymousMethodExpression(CSharp.AnonymousMethodExpression anonymousMethodExpression, object data)
         {
-            var anonMExpr = new AnonymousMethodExpression();            
-            return EndNode(anonymousMethodExpression, anonMExpr);
+            var exception = new TranslationException();
+            exception.node = anonymousMethodExpression;
+            exception.exception = new NotImplementedException();
+
+            return EndNode(anonymousMethodExpression, exception);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitUndocumentedExpression(CSharp.UndocumentedExpression undocumentedExpression, object data)
         {
-            var undocExpr = new UndocumentedExpression();
-            return EndNode(undocumentedExpression, undocExpr);
+            var exception = new TranslationException();
+            exception.node = undocumentedExpression;
+            exception.exception = new NotImplementedException();
+
+            return EndNode(undocumentedExpression, exception);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitArrayCreateExpression(CSharp.ArrayCreateExpression arrayCreateExpression, object data)
@@ -307,8 +313,11 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitCheckedExpression(CSharp.CheckedExpression checkedExpression, object data)
         {
-            var ce = new CheckedExpression();
-            return EndNode(checkedExpression, ce);
+            var exception = new TranslationException();
+            exception.node = checkedExpression;
+            exception.exception = new NotImplementedException();
+
+            return EndNode(checkedExpression, exception);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitConditionalExpression(CSharp.ConditionalExpression conditionalExpression, object data)
@@ -323,8 +332,11 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitDefaultValueExpression(CSharp.DefaultValueExpression defaultValueExpression, object data)
         {
-            var dV = new DefaultValueExpression();
-            return EndNode(defaultValueExpression, dV);
+            var exception = new TranslationException();
+            exception.node = defaultValueExpression;
+            exception.exception = new NotImplementedException();
+
+            return EndNode(defaultValueExpression, exception);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitDirectionExpression(CSharp.DirectionExpression directionExpression, object data)
@@ -505,8 +517,11 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitLambdaExpression(CSharp.LambdaExpression lambdaExpression, object data)
         {
-            var lambda = new LambdaExpression();
-            return EndNode(lambdaExpression, lambda);
+            var exception = new TranslationException();
+            exception.node = lambdaExpression;
+            exception.exception = new NotImplementedException();
+
+            return EndNode(lambdaExpression, exception);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitMemberReferenceExpression(CSharp.MemberReferenceExpression memberReferenceExpression, object data)
@@ -526,8 +541,11 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitNamedArgumentExpression(CSharp.NamedArgumentExpression namedArgumentExpression, object data)
         {
-            var nexpr = new NamedArgumentExpression();
-            return EndNode(namedArgumentExpression, nexpr);
+            var exception = new TranslationException();
+            exception.node = namedArgumentExpression;
+            exception.exception = new NotImplementedException();
+
+            return EndNode(namedArgumentExpression, exception);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitNamedExpression(CSharp.NamedExpression namedExpression, object data)
@@ -624,8 +642,11 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitAnonymousTypeCreateExpression(CSharp.AnonymousTypeCreateExpression anonymousTypeCreateExpression, object data)
         {
-            var anonymous = new AnonymousTypeCreateExpression();
-            return EndNode(anonymousTypeCreateExpression, anonymous);
+            var exception = new TranslationException();
+            exception.node = anonymousTypeCreateExpression;
+            exception.exception = new NotImplementedException();
+
+            return EndNode(anonymousTypeCreateExpression, exception);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitParenthesizedExpression(CSharp.ParenthesizedExpression parenthesizedExpression, object data)
@@ -690,8 +711,11 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitTypeOfExpression(CSharp.TypeOfExpression typeOfExpression, object data)
         {
-            var typeOf = new TypeOfExpression();
-            return EndNode(typeOfExpression, typeOf);
+            var exception = new TranslationException();
+            exception.node = typeOfExpression;
+            exception.exception = new NotImplementedException("typeOfExpression: --> TODO: --> http://www.boost.org/doc/libs/1_55_0/doc/html/typeof/tuto.html");
+
+            return EndNode(typeOfExpression, exception);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitTypeReferenceExpression(CSharp.TypeReferenceExpression typeReferenceExpression, object data)
@@ -777,8 +801,11 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitUncheckedExpression(CSharp.UncheckedExpression uncheckedExpression, object data)
         {
-            var uncheckedExpr = new UncheckedExpression();
-            return EndNode(uncheckedExpression, uncheckedExpr);
+            var exception = new TranslationException();
+            exception.node = uncheckedExpression;
+            exception.exception = new NotImplementedException();
+
+            return EndNode(uncheckedExpression, exception);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitEmptyExpression(CSharp.EmptyExpression emptyExpression, object data)
@@ -790,62 +817,92 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitQueryExpression(CSharp.QueryExpression queryExpression, object data)
         {
-            var query = new QueryExpression();
-            return EndNode(queryExpression, query);
+            var exception = new TranslationException();
+            exception.node = queryExpression;
+            exception.exception = new NotImplementedException();
+
+            return EndNode(queryExpression, exception);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitQueryContinuationClause(CSharp.QueryContinuationClause queryContinuationClause, object data)
         {
-            var query = new QueryContinuationClause();
-            return EndNode(queryContinuationClause, query);
+            var exception = new TranslationException();
+            exception.node = queryContinuationClause;
+            exception.exception = new NotImplementedException();
+
+            return EndNode(queryContinuationClause, exception);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitQueryFromClause(CSharp.QueryFromClause queryFromClause, object data)
         {
-            var query = new QueryFromClause();
-            return EndNode(queryFromClause, query);
+            var exception = new TranslationException();
+            exception.node = queryFromClause;
+            exception.exception = new NotImplementedException();
+
+            return EndNode(queryFromClause, exception);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitQueryLetClause(CSharp.QueryLetClause queryLetClause, object data)
         {
-            var query = new QueryLetClause();
-            return EndNode(queryLetClause, query);
+            var exception = new TranslationException();
+            exception.node = queryLetClause;
+            exception.exception = new NotImplementedException();
+
+            return EndNode(queryLetClause, exception);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitQueryWhereClause(CSharp.QueryWhereClause queryWhereClause, object data)
         {
-            var query = new QueryWhereClause();
-            return EndNode(queryWhereClause, query);
+            var exception = new TranslationException();
+            exception.node = queryWhereClause;
+            exception.exception = new NotImplementedException();
+
+            return EndNode(queryWhereClause, exception);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitQueryJoinClause(CSharp.QueryJoinClause queryJoinClause, object data)
         {
-            var query = new QueryJoinClause();
-            return EndNode(queryJoinClause, query);
+            var exception = new TranslationException();
+            exception.node = queryJoinClause;
+            exception.exception = new NotImplementedException();
+
+            return EndNode(queryJoinClause, exception);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitQueryOrderClause(CSharp.QueryOrderClause queryOrderClause, object data)
         {
-            var query = new QueryOrderClause();
-            return EndNode(queryOrderClause, query);
+            var exception = new TranslationException();
+            exception.node = queryOrderClause;
+            exception.exception = new NotImplementedException();
+
+            return EndNode(queryOrderClause, exception);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitQueryOrdering(CSharp.QueryOrdering queryOrdering, object data)
         {
-            var query = new QueryOrdering();
-            return EndNode(queryOrdering, query);
+            var exception = new TranslationException();
+            exception.node = queryOrdering;
+            exception.exception = new NotImplementedException();
+
+            return EndNode(queryOrdering, exception);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitQuerySelectClause(CSharp.QuerySelectClause querySelectClause, object data)
         {
-            var query = new QuerySelectClause();
-            return EndNode(querySelectClause, query);
+            var exception = new TranslationException();
+            exception.node = querySelectClause;
+            exception.exception = new NotImplementedException();
+
+            return EndNode(querySelectClause, exception);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitQueryGroupClause(CSharp.QueryGroupClause queryGroupClause, object data)
         {
-            var query = new QueryGroupClause();
-            return EndNode(queryGroupClause, query);
+            var exception = new TranslationException();
+            exception.node = queryGroupClause;
+            exception.exception = new NotImplementedException();
+
+            return EndNode(queryGroupClause, exception);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitAttribute(CSharp.Attribute attribute, object data)
@@ -1508,14 +1565,20 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitGotoCaseStatement(CSharp.GotoCaseStatement gotoCaseStatement, object data)
         {
-            var gtoCase = new GotoCaseStatement();
-            return EndNode(gotoCaseStatement, gtoCase);
+            var exception = new TranslationException();
+            exception.node = gotoCaseStatement;
+            exception.exception = new NotImplementedException();
+
+            return EndNode(gotoCaseStatement, exception);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitGotoDefaultStatement(CSharp.GotoDefaultStatement gotoDefaultStatement, object data)
         {
-            var gtoDef = new GotoDefaultStatement();
-            return EndNode(gotoDefaultStatement, gtoDef);
+            var exception = new TranslationException();
+            exception.node = gotoDefaultStatement;
+            exception.exception = new NotImplementedException();
+
+            return EndNode(gotoDefaultStatement, exception);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitGotoStatement(CSharp.GotoStatement gotoStatement, object data)
@@ -2011,8 +2074,11 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitIndexerDeclaration(CSharp.IndexerDeclaration indexerDeclaration, object data)
         {
-            var indexDecl = new IndexerDeclaration();
-            return EndNode(indexerDeclaration, indexDecl);
+            var exception = new TranslationException();
+            exception.node = indexerDeclaration;
+            exception.exception = new NotImplementedException();
+
+            return EndNode(indexerDeclaration, exception);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitMethodDeclaration(CSharp.MethodDeclaration methodDeclaration, object data)
@@ -2143,8 +2209,11 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitOperatorDeclaration(CSharp.OperatorDeclaration operatorDeclaration, object data)
         {
-            var opD = new OperatorDeclaration();
-            return EndNode(operatorDeclaration, opD);
+            var exception = new TranslationException();
+            exception.node = operatorDeclaration;
+            exception.exception = new NotImplementedException();
+
+            return EndNode(operatorDeclaration, exception);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitParameterDeclaration(CSharp.ParameterDeclaration parameterDeclaration, object data)
@@ -2239,14 +2308,20 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitFixedFieldDeclaration(CSharp.FixedFieldDeclaration fixedFieldDeclaration, object data)
         {
-            var fix = new FixedFieldDeclaration();
-            return EndNode(fixedFieldDeclaration, fix);
+            var exception = new TranslationException();
+            exception.node = fixedFieldDeclaration;
+            exception.exception = new NotImplementedException();
+
+            return EndNode(fixedFieldDeclaration, exception);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitFixedVariableInitializer(CSharp.FixedVariableInitializer fixedVariableInitializer, object data)
         {
-            var fix = new FixedVariableInitializer();
-            return EndNode(fixedVariableInitializer, fix);
+            var exception = new TranslationException();
+            exception.node = fixedVariableInitializer;
+            exception.exception = new NotImplementedException();
+
+            return EndNode(fixedVariableInitializer, exception);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitCompilationUnit(CSharp.CompilationUnit compilationUnit, object data)
@@ -2547,7 +2622,11 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitPatternPlaceholder(CSharp.AstNode placeholder, PatternMatching.Pattern pattern, object data)
         {
-            throw new NotImplementedException();
+            var exception = new TranslationException();
+            exception.node = placeholder;
+            exception.exception = new NotImplementedException("Patern placeholder");
+
+            return EndNode(placeholder, exception);
         }
 
         void ConvertNodes<T>(IEnumerable<CSharp.AstNode> nodes, Cpp.AstNodeCollection<T> result) where T : Cpp.AstNode
