@@ -74,6 +74,11 @@ namespace ICSharpCode.NRefactory.Cpp
             return st;
         }
 
+        public static implicit operator AttributedNode(TranslationException _this)
+        {
+            return _this;
+        }
+
         public override S AcceptVisitor<T, S>(IAstVisitor<T, S> visitor, T data = default(T))
         {
             return visitor.VisitTranslationException(this, data);

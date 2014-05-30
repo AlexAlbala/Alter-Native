@@ -2638,7 +2638,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 AstNode tmp = node.AcceptVisitor(this, null);
                 if (tmp != null)
                 {
-                    if (tmp is TranslationException && typeof(T).Name == "Statement")
+                    if (tmp is TranslationException && typeof(T) == typeof(Statement))
                     {
                         TranslationException te = tmp as TranslationException;
                         Statement t = te;
