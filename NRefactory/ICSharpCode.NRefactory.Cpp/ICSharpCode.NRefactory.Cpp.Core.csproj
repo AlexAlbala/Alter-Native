@@ -95,6 +95,7 @@
     <Compile Include="Ast\Statements\EndScopeStatement.cs" />
     <Compile Include="Ast\Statements\ForeachStatement.cs" />
     <Compile Include="Ast\Statements\LockStatement.cs" />
+    <Compile Include="Ast\TranslationException.cs" />
     <Compile Include="Ast\TypeMembers\ConversionConstructorDeclaration.cs" />
     <Compile Include="Ast\TypeMembers\ExternMethodDeclaration.cs" />
     <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderDelegateDeclaration.cs" />
