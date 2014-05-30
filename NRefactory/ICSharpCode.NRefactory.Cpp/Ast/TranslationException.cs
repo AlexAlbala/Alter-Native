@@ -62,7 +62,13 @@ namespace ICSharpCode.NRefactory.Cpp
             }
         }
 
-        public static explicit operator Statement(TranslationException _this)
+        /*public static implicit operator Statement(TranslationException _this)
+        {
+            Statement st = new ExpressionStatement(new TranslationException() { exception = _this.exception, node = _this.node });
+            return st;
+        }*/
+
+        public static implicit operator Statement(TranslationException _this)
         {
             Statement st = new ExpressionStatement(new TranslationException() { exception = _this.exception, node = _this.node });
             return st;

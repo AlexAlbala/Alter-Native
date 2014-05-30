@@ -1708,9 +1708,11 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitUsingStatement(CSharp.UsingStatement usingStatement, object data)
         {
-            //var stmt = new UsingStatement();
-            //return EndNode(usingStatement, stmt);
-            throw new NotImplementedException();
+            var exception = new TranslationException();
+            exception.node = usingStatement;
+            exception.exception = new NotImplementedException();
+
+            return EndNode(usingStatement, exception);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitVariableDeclarationStatement(CSharp.VariableDeclarationStatement variableDeclarationStatement, object data)
@@ -2633,9 +2635,18 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         {
             foreach (var node in nodes)
             {
-                T n = (T)node.AcceptVisitor(this, null);
-                if (n != null)
-                    result.Add(n);
+                AstNode tmp = node.AcceptVisitor(this, null);
+                if (tmp != null)
+                {
+                    if (tmp is TranslationException && typeof(T).Name == "Statement")
+                    {
+                        TranslationException te = tmp as TranslationException;
+                        Statement t = te;
+                        result.Add((T)(AstNode)t);                        
+                        continue;
+                    }
+                    result.Add((T)tmp);
+                }
             }
         }
 

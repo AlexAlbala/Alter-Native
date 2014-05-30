@@ -75,10 +75,9 @@ namespace ICSharpCode.NRefactory.Cpp
                 throw n.exception;
             else
             {
-                string name = n.node.GetType().FullName;
-                NewLine();
-                formatter.WriteComment(CommentType.SingleLine, "ERROR: Cannot translate: " + n.exception.ToString() + ". Node: " + name);
-                NewLine();
+                string name = n.node.GetType().FullName;                                
+                Comment c = new Comment("ERROR: Cannot translate: " + n.exception.ToString() + ". Node: " + name, CommentType.MultiLine);
+                c.AcceptVisitor(this, data);
             }
 
             return EndNode(n);
