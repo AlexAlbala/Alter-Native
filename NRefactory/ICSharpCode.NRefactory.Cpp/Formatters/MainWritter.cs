@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using ICSharpCode.NRefactory.Cpp.Formatters;
+using Antlr4.StringTemplate;
 
 namespace ICSharpCode.NRefactory.Cpp
 {
@@ -13,22 +14,26 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             StreamWriter writer = new StreamWriter(FileWritterManager.WorkingPath + "main.cpp");
 
-            writer.WriteLine("#include \"" + entryType + ".h\"");
-            writer.WriteLine("using namespace System;");
-            if (!String.IsNullOrEmpty(entryNamespace))
-                writer.WriteLine("using namespace " + entryNamespace + ";");
-            writer.WriteLine();
-            writer.WriteLine("int main(int argc, char *argv[])");
-            writer.WriteLine("{");
-            writer.WriteLine("\tGC::Init();");
-            writer.WriteLine("\tString *args = new String[argc];");
-            writer.WriteLine("\tfor(int i = 0; i < argc; i++)");
-            writer.WriteLine("\t\targs[i] = argv[i];");
-            writer.WriteLine();
-            writer.WriteLine("\t" + entryType + "::Main(" + (inputArgs ? "&args" : "") + ");");
-            writer.WriteLine("\tGC::Collect();");
-            writer.Write("}");
+            string txt;
+            Template template;
 
+            string altTools = Environment.GetEnvironmentVariable("ALTERNATIVE_TOOLS_PATH");
+            StreamReader sr = new StreamReader((altTools + @"\Templates\Code\main.stg").Replace('\\', '/'));
+            txt = sr.ReadToEnd();
+            template = new Template(txt);
+
+            StreamReader fs = new StreamReader(Path.Combine(altTools, "Text/notice"));
+            string notice = fs.ReadToEnd();
+
+            template.Add("NOTICE", notice);
+            template.Add("ENTRY_TYPE", entryType);
+            template.Add("ENTRY_NAMESPACE_NEEDED", !String.IsNullOrEmpty(entryNamespace));
+            template.Add("ENTRY_NAMESPACE", entryNamespace);
+            template.Add("INPUT_ARGS", inputArgs);
+
+            string output = template.Render();
+
+            writer.Write(output);
             writer.Flush();
             writer.Close();
 

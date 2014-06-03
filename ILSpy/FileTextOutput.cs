@@ -33,6 +33,11 @@ namespace ICSharpCode.ILSpy
                 output.Dispose();
             }            
             output = new StreamWriter(Path.Combine(WorkingDirectory, FileName));
+
+            string toolsPath = Environment.GetEnvironmentVariable("ALTERNATIVE_TOOLS_PATH");
+
+            StreamReader fs = new StreamReader(Path.Combine(toolsPath, "Text/notice"));
+            output.Write(fs.ReadToEnd());
         }
 
         public void Close()

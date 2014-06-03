@@ -52,6 +52,10 @@
     <DocumentationFile>..\ICSharpCode.NRefactory\bin\Release\ICSharpCode.NRefactory.Cpp.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Antlr4.StringTemplate, Version=4.0.6.9004, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\AlterNative.Tools\Antlr4.StringTemplate\Antlr4.StringTemplate.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Cecil, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Mono.Cecil\bin\net_4_0_Debug\Mono.Cecil.dll</HintPath>
