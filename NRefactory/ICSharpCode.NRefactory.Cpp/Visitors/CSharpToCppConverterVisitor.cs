@@ -118,51 +118,56 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             }
             else
             {
+
                 var left = (Expression)assignmentExpression.Left.AcceptVisitor(this, data);
                 var op = AssignmentOperatorType.Any;
 
-                if (assignmentExpression.Operator == CSharp.AssignmentOperatorType.Add || assignmentExpression.Operator == CSharp.AssignmentOperatorType.Subtract)
+                if (currentType != null)
                 {
+
+                    if (assignmentExpression.Operator == CSharp.AssignmentOperatorType.Add || assignmentExpression.Operator == CSharp.AssignmentOperatorType.Subtract)
+                    {
+                        if (left is MemberReferenceExpression)
+                        {
+                            if (Resolver.IsCustomEventCall((MemberReferenceExpression)left, currentType.Name))
+                            {
+                                MemberReferenceExpression l = left as MemberReferenceExpression;
+                                InvocationExpression m = new InvocationExpression(new MemberReferenceExpression(l.Target.Clone(),
+                                    (assignmentExpression.Operator == CSharp.AssignmentOperatorType.Add ? "add" : "remove") + l.MemberName)
+                                    , new Expression[1] { right.Clone() });
+                                return EndNode(assignmentExpression, m);
+                            }
+                        }
+                    }
+
+
+                    //Should not call to Resolver.RefactorProperty() because this is a very special case
                     if (left is MemberReferenceExpression)
                     {
-                        if (Resolver.IsCustomEventCall((MemberReferenceExpression)left, currentType.Name))
+                        MemberReferenceExpression l = left as MemberReferenceExpression;
+                        if (Resolver.IsPropertyCall(l, currentType.Name))
                         {
-                            MemberReferenceExpression l = left as MemberReferenceExpression;
-                            InvocationExpression m = new InvocationExpression(new MemberReferenceExpression(l.Target.Clone(),
-                                (assignmentExpression.Operator == CSharp.AssignmentOperatorType.Add ? "add" : "remove") + l.MemberName)
-                                , new Expression[1] { right.Clone() });
+                            //SET
+                            InvocationExpression m = new InvocationExpression(
+                                new MemberReferenceExpression(l.Target.Clone(), "set" + l.MemberName), new Expression[1] { right.Clone() });
+                            left = m;
+
                             return EndNode(assignmentExpression, m);
                         }
                     }
-                }
 
-
-                //Should not call to Resolver.RefactorProperty() because this is a very special case
-                if (left is MemberReferenceExpression)
-                {
-                    MemberReferenceExpression l = left as MemberReferenceExpression;
-                    if (Resolver.IsPropertyCall(l, currentType.Name))
+                    if (right is MemberReferenceExpression)
                     {
-                        //SET
-                        InvocationExpression m = new InvocationExpression(
-                            new MemberReferenceExpression(l.Target.Clone(), "set" + l.MemberName), new Expression[1] { right.Clone() });
-                        left = m;
+                        MemberReferenceExpression r = right as MemberReferenceExpression;
+                        if (Resolver.IsPropertyCall(r, currentType.Name))
+                        {
+                            //GET
+                            InvocationExpression m = new InvocationExpression(
+                                new MemberReferenceExpression(r.Target.Clone(), "get" + r.MemberName), new Expression[1] { new EmptyExpression() });
+                            right = m;
 
-                        return EndNode(assignmentExpression, m);
-                    }
-                }
-
-                if (right is MemberReferenceExpression)
-                {
-                    MemberReferenceExpression r = right as MemberReferenceExpression;
-                    if (Resolver.IsPropertyCall(r, currentType.Name))
-                    {
-                        //GET
-                        InvocationExpression m = new InvocationExpression(
-                            new MemberReferenceExpression(r.Target.Clone(), "get" + r.MemberName), new Expression[1] { new EmptyExpression() });
-                        right = m;
-
-                        return EndNode(assignmentExpression, m);
+                            return EndNode(assignmentExpression, m);
+                        }
                     }
                 }
 
@@ -2642,7 +2647,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     {
                         TranslationException te = tmp as TranslationException;
                         Statement t = te;
-                        result.Add((T)(AstNode)t);                        
+                        result.Add((T)(AstNode)t);
                         continue;
                     }
                     result.Add((T)tmp);

@@ -93,7 +93,7 @@ namespace ICSharpCode.NRefactory.Cpp
             Dictionary<string, ParameterDeclaration[]> delegatesInLibrary = new Dictionary<string, ParameterDeclaration[]>();
             delegatesInLibrary.Add("ThreadStart", new ParameterDeclaration[0]);
             delegatesInLibrary.Add("ParameterizedThreadStart", new ParameterDeclaration[] { new VariadicParameterDeclaration() });
-            delegatesInLibrary.Add("TimerCallback", new ParameterDeclaration[] { new ParameterDeclaration(new PtrType(new SimpleType("Object")), "state")});
+            delegatesInLibrary.Add("TimerCallback", new ParameterDeclaration[] { new ParameterDeclaration(new PtrType(new SimpleType("Object")), "state") });
 
             //Add properties types in cache for the properties in library
 
@@ -191,7 +191,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 }
             }
             //else
-              //  throw new InvalidOperationException("Must be included. It is impossible to enter this funcion before the type is included!");
+            //  throw new InvalidOperationException("Must be included. It is impossible to enter this funcion before the type is included!");
 
             fw_dcl_type2 = String.Empty;
             return false;
@@ -929,7 +929,7 @@ namespace ICSharpCode.NRefactory.Cpp
                             AstType _type = Resolver.GetType(identifierExpression.Identifier, null, currentMethod, identifierExpression.Identifier);
                             if (_type.IsBasicType || IsEnumType(GetTypeName(_type)))
                                 return false;
-                            string id = Resolver.GetTypeName(_type);                            
+                            string id = Resolver.GetTypeName(_type);
                             if (ret != id)
                             {
                                 //SPECIAL CASE: ARRAYS
@@ -1429,7 +1429,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     IdentifierExpression tmp = memberReferenceExpression.Target as IdentifierExpression;
                     ICSharpCode.Decompiler.Ast.TypeInformation ann = (ICSharpCode.Decompiler.Ast.TypeInformation)tmp.Annotation(typeof(ICSharpCode.Decompiler.Ast.TypeInformation));
                     if (ann != null)
-                        return (properties[memberReferenceExpression.MemberName].Contains(ann.InferredType.Name));                    
+                        return (properties[memberReferenceExpression.MemberName].Contains(ann.InferredType.Name));
                 }
                 else if (memberReferenceExpression.Target is TypeReferenceExpression)
                 {
@@ -1791,8 +1791,17 @@ namespace ICSharpCode.NRefactory.Cpp
                     {
                         foreach (CSharp.Expression e in t.Arguments)
                         {
-                            //TODO
-                            throw new NotImplementedException("In progress...");
+                            if (e is CSharp.AssignmentExpression)
+                            {
+                                CSharp.AssignmentExpression assign = e as CSharp.AssignmentExpression;
+                                if (assign.Left is CSharp.IdentifierExpression)
+                                {
+                                    if ((assign.Left as CSharp.IdentifierExpression).Identifier.Equals("EntryPoint"))
+                                    {
+                                        return (assign.Right as CSharp.PrimitiveExpression).Value.ToString();
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -1840,7 +1849,7 @@ namespace ICSharpCode.NRefactory.Cpp
                             SimpleType s = ptr.Target as SimpleType;
                             if (s.TypeArguments.Any())
                             {
-                                p.Type = new PtrType((AstType)s.TypeArguments.ElementAt(0).Clone());                                
+                                p.Type = new PtrType((AstType)s.TypeArguments.ElementAt(0).Clone());
                             }
                         }
                     }
