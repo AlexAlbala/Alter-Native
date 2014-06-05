@@ -950,6 +950,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             del.NameToken = (Identifier)delegateDeclaration.NameToken.AcceptVisitor(this, data);
 
 
+            Cache.AddVistedType(AstType.Null, "Delegate");
             Cache.AddDelegateType(del.Name, del.Parameters.ToArray());
             Cache.AddDelegateReturnType(del.Name, Resolver.GetTypeName(del.ReturnType));
 
@@ -2005,6 +2006,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 Cache.AddConstructorStatement(new ExpressionStatement(ie));
                 Cache.AddEventIdentifiers(eventName, Resolver.GetTypeName(eventDeclaration.ReturnType).Replace(".", "::"));
             }
+
+            Cache.AddVistedType(AstType.Null, "Event");
 
             return EndNode(eventDeclaration, evDecl);
         }

@@ -237,8 +237,6 @@ namespace ICSharpCode.NRefactory.Cpp
             if (!visitedTypes.ContainsValue(name) && !visitedTypes.ContainsKey(type))
                 visitedTypes.Add(type, name);
 
-            if (name == "Depth1")
-            { }
             AddInclude(name);
         }
 
@@ -272,8 +270,6 @@ namespace ICSharpCode.NRefactory.Cpp
         /// <param name="included">The type included</param>
         public static void AddInclude(string included)
         {
-            if (included == "Depth1")
-            { }
             string owner = "N/P";
 
             if (includes.ContainsKey(owner))

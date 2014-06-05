@@ -121,9 +121,16 @@ namespace AlterNative
 
         public static AssemblyDefinition LoadAssembly(string path)
         {
-            string directoryPath = path.Substring(0, path.Replace('\\', '/').LastIndexOf("/"));
+            string directoryPath = "";
+            
+            if(path.Replace('\\','/').Contains('/'))
+                directoryPath = path.Substring(0, path.Replace('\\', '/').LastIndexOf("/"));
+            else
+                directoryPath = Environment.CurrentDirectory;
+
+            bool existsSymbols = File.Exists(Path.Combine(directoryPath, Path.GetFileNameWithoutExtension(path) + ".pdb"));
 #if CORE		
-            if (File.Exists(Path.Combine(directoryPath,Path.GetFileNameWithoutExtension(path) + ".pdb")) &&
+            if (existsSymbols &&
                 !File.Exists(Path.Combine(directoryPath,Path.GetFileNameWithoutExtension(path) + ".mdb")))
             {
                 Utils.WriteToConsole("Executing pdb2mdb process for decompilation in mono environment");
@@ -132,6 +139,7 @@ namespace AlterNative
                 p.Start();
                 p.WaitForExit();
             }
+            existsSymbols = File.Exists(Path.Combine(directoryPath, Path.GetFileNameWithoutExtension(path) + ".mdb"));
 #endif
             //LOAD TARGET ASSEMBLY
             var resolver = new DefaultAssemblyResolver();
@@ -139,7 +147,7 @@ namespace AlterNative
 
             ReaderParameters readerParams = new ReaderParameters()
             {
-                ReadSymbols = true,
+                ReadSymbols = existsSymbols,
                 AssemblyResolver = resolver
             };            
             

@@ -18,6 +18,10 @@ namespace ICSharpCode.NRefactory.Cpp
             Template template;
 
             string altTools = Environment.GetEnvironmentVariable("ALTERNATIVE_TOOLS_PATH");
+
+            if(altTools == null)
+                altTools = Path.Combine(Environment.CurrentDirectory, (@"\..\..\..\Tools").Replace('\\','/'));
+
             StreamReader sr = new StreamReader((altTools + @"\Templates\Code\main.stg").Replace('\\', '/'));
             txt = sr.ReadToEnd();
             template = new Template(txt);

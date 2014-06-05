@@ -109,9 +109,18 @@ namespace ICSharpCode.ILSpy
 				var name = assembly.GetName();
 				uri = new Uri("pack://application:,,,/" + name.Name + ";v" + name.Version + ";component/" + icon);
 			}
-			BitmapImage image = new BitmapImage(uri);
-			image.Freeze();
-			return image;
+
+            BitmapImage image;
+            try
+            {
+                image = new BitmapImage(uri);                
+            }
+            catch
+            {
+                image = new BitmapImage();
+            }
+            image.Freeze();
+            return image;
 		}
 
 
