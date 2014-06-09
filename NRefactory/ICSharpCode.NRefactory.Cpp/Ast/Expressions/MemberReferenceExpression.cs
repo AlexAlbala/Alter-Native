@@ -34,6 +34,8 @@ namespace ICSharpCode.NRefactory.Cpp
 	/// </summary>
 	public class MemberReferenceExpression : Expression
 	{
+        public bool isValueType;
+
 		public Expression Target {
 			get { return GetChildByRole (Roles.TargetExpression); }
 			set { SetChildByRole(Roles.TargetExpression, value); }
@@ -71,7 +73,7 @@ namespace ICSharpCode.NRefactory.Cpp
 		
 		public MemberReferenceExpression ()
         {
-            //base.generateNewId();
+            isValueType = false;
 		}
 		
 		public MemberReferenceExpression (Expression target, string memberName, IEnumerable<AstType> arguments = null)

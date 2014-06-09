@@ -37,6 +37,9 @@ namespace ICSharpCode.NRefactory.Cpp
         //Type -> customEvents
         private static Dictionary<string, List<string>> customEvents = new Dictionary<string, List<string>>();
 
+        //Type -> customEvents
+        private static List<string> structs = new List<string>();
+
         //Name->Args
         private static Dictionary<string, ParameterDeclaration[]> delegatesArgs = new Dictionary<string, ParameterDeclaration[]>();
 
@@ -121,6 +124,17 @@ namespace ICSharpCode.NRefactory.Cpp
         public static void ClearExtraHeaderNode()
         {
             extraHeadernodes.Clear();
+        }
+
+        public static void AddStruct(String structName)
+        {
+            if (!structs.Contains(structName))
+                structs.Add(structName);
+        }
+
+        public static List<string> GetStructs()
+        {
+            return structs;
         }
 
         public static void AddAuxVariable(FieldDeclaration type, string identifier)

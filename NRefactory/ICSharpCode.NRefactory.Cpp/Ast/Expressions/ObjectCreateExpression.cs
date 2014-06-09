@@ -70,6 +70,7 @@ namespace ICSharpCode.NRefactory.Cpp
 		
 		public ObjectCreateExpression ()
 		{
+            isGCPtr = true;
 		}
 		
 		public ObjectCreateExpression (AstType type, IEnumerable<Expression> arguments = null)

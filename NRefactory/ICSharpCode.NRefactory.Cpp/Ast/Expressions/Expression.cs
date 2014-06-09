@@ -67,7 +67,7 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
 			public PatternPlaceholder(PatternMatching.Pattern child)
 			{
 				this.child = child;
-			}
+			}           
 			
             //public override NodeType NodeType {
             //    get { return NodeType.Pattern; }

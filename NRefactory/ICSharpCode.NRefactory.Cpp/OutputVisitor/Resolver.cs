@@ -1407,6 +1407,87 @@ namespace ICSharpCode.NRefactory.Cpp
 
         }
 
+        public static bool IsStructType(String type)
+        {
+            return Cache.GetStructs().Contains(type);
+        }
+
+        /// <summary>
+        /// Returns if a member reference expression in C# is a call over a  C# property
+        /// </summary>
+        /// <param name="memberReferenceExpression"></param>
+        /// <param name="currentTypeName"></param>
+        /// <returns></returns>
+        public static bool IsStructReference(MemberReferenceExpression memberReferenceExpression, string currentTypeName, string currentMethodName)
+        {
+            List<String> structs = Cache.GetStructs();
+            var variables = Cache.GetVariablesMethod();
+            var fields = Cache.GetFields();
+            var parameters = Cache.GetParameters();
+
+            //The member reference is a property reference ?
+
+            if (memberReferenceExpression.Target is ThisReferenceExpression)
+            {
+                //get the list of fields and iterate over it
+                foreach (KeyValuePair<string, List<FieldDeclaration>> kvp in fields)
+                {
+                    //if the field match the member name....
+                    if (kvp.Key == memberReferenceExpression.MemberName)
+                    {
+                        //Search all the variables declared in the current type and find if the type of the variable is a struct
+                        foreach (FieldDeclaration f in kvp.Value)
+                        {
+                            if (structs.Contains(GetTypeName(f.ReturnType)))
+                                return true;
+                        }
+                    }
+                }
+            }
+            else if (memberReferenceExpression.Target is IdentifierExpression)
+            {
+                string identifier = (memberReferenceExpression.Target as IdentifierExpression).Identifier;
+                if (parameters.ContainsKey(currentMethodName))
+                {
+                    foreach (ParameterDeclaration pd in parameters[currentMethodName])
+                    {
+                        if (structs.Contains(GetTypeName(pd.Type)))
+                            return true;
+                    }
+                }
+
+                if (variables.ContainsKey(currentMethodName))
+                {
+                    foreach (VariableDeclarationStatement fd in variables[currentMethodName])
+                    {
+                        foreach (VariableInitializer v in fd.Variables)
+                        {
+                            if (v.Name == identifier)
+                            {
+                                ICSharpCode.Decompiler.Ast.TypeInformation ann = (ICSharpCode.Decompiler.Ast.TypeInformation)memberReferenceExpression.Target.Annotation(typeof(ICSharpCode.Decompiler.Ast.TypeInformation));
+                                if (ann != null)
+                                {
+                                    if (structs.Contains(ann.InferredType.Name))
+                                        return true;
+                                }
+                                else
+                                {
+                                    if (structs.Contains(Resolver.GetTypeName(fd.Type)))
+                                        return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else if (memberReferenceExpression.Target is TypeReferenceExpression)
+            {
+                return false;
+            }
+
+            return false;
+        }
+
         /// <summary>
         /// Returns if a member reference expression in C# is a call over a  C# property
         /// </summary>

@@ -221,8 +221,6 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitBaseReferenceExpression(CSharp.BaseReferenceExpression baseReferenceExpression, object data)
         {
-            //return EndNode(baseReferenceExpression, new BaseReferenceExpression());
-
             AstType type = (AstType)currentType.BaseTypes.ElementAt(0).AcceptVisitor(this, data);
             return EndNode(baseReferenceExpression, new TypeReferenceExpression(type));
         }
@@ -394,7 +392,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                                 Decompiler.Ast.TypeInformation t = mref.Target.Annotations.ElementAt(i) as Decompiler.Ast.TypeInformation;
                                 if (t.InferredType.IsPrimitive)
                                 {
-                                    var _expr = new ObjectCreateExpression(new SimpleType("String"), (Expression)mref.Target.AcceptVisitor(this, data));
+                                    var _expr = new ObjectCreateExpression(new SimpleType("String"), (Expression)mref.Target.AcceptVisitor(this, data)) { isGCPtr = true };
                                     return EndNode(invocationExpression, _expr);
                                 }
                             }
@@ -533,14 +531,18 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         {
             var mref = new MemberReferenceExpression();
             mref.Target = (Expression)memberReferenceExpression.Target.AcceptVisitor(this, data);
-            mref.MemberName = memberReferenceExpression.MemberName;
+            mref.MemberName = memberReferenceExpression.MemberName;            
             ConvertNodes(memberReferenceExpression.TypeArguments, mref.TypeArguments);
 
             if (currentType != null && !Resolver.IsDirectChildOf(memberReferenceExpression, typeof(CSharp.AssignmentExpression))) //IGNORE THIS CASE BECAUSE IS SPECIAL CASE
             {
                 var res_mref = Resolver.RefactorPropety(mref, currentType.Name, "get");
+                mref.isValueType = Resolver.IsStructReference(mref, currentType.Name, currentMethod);
                 return EndNode(memberReferenceExpression, res_mref);
             }
+
+            mref.isValueType = Resolver.IsStructReference(mref, currentType.Name, currentMethod);
+
             return EndNode(memberReferenceExpression, mref);
         }
 
@@ -675,7 +677,10 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             {
                 return EndNode(primitiveExpression, new ObjectCreateExpression(
                     new SimpleType("String"),
-                    new PrimitiveExpression(primitiveExpression.Value as string)));
+                    new PrimitiveExpression(primitiveExpression.Value as string))
+                    {
+                        isGCPtr = true
+                    });
             }
 
             //if (!string.IsNullOrEmpty(primitiveExpression.Value as string) || primitiveExpression.Value is char)
@@ -950,7 +955,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             del.NameToken = (Identifier)delegateDeclaration.NameToken.AcceptVisitor(this, data);
 
 
-            Cache.AddVistedType(AstType.Null, "Delegate");
+            Cache.AddVistedType(new SimpleType("Delegate"), "Delegate");
             Cache.AddDelegateType(del.Name, del.Parameters.ToArray());
             Cache.AddDelegateReturnType(del.Name, Resolver.GetTypeName(del.ReturnType));
 
@@ -995,6 +1000,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                         type.ClassType = ClassType.Class;
                         break;
                     case CSharp.ClassType.Struct:
+                        Cache.AddStruct(typeDeclaration.Name);
                         isInterface = false;
                         type.ClassType = ClassType.Struct;
                         break;
@@ -1022,6 +1028,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
             if (typeDeclaration.BaseTypes.Any())
                 ConvertNodes(typeDeclaration.BaseTypes, type.BaseTypes);
+
+            if (typeDeclaration.ClassType == CSharp.ClassType.Struct)
+                typeDeclaration.BaseTypes.Add(new CSharp.SimpleType("ValueType"));
 
             type.Name = typeDeclaration.Name;
             if (typeDeclaration.TypeParameters.Any())
@@ -1777,7 +1786,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 if (vinit.Initializer is ArrayCreateExpression)
                 {
                     //var obj = new ObjectCreateExpression((AstType)t.Clone());
-                    var obj = new ObjectCreateExpression(vds.Type is PtrType ? (AstType)(vds.Type as PtrType).Target.Clone() : (AstType)vds.Type.Clone());
+                    var obj = new ObjectCreateExpression(vds.Type is PtrType ? (AstType)(vds.Type as PtrType).Target.Clone() : (AstType)vds.Type.Clone()) { isGCPtr = true };
                     foreach (var n in (vinit.Initializer as ArrayCreateExpression).Arguments)
                     {
                         obj.Arguments.Add(n.Clone());
@@ -2006,8 +2015,6 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 Cache.AddConstructorStatement(new ExpressionStatement(ie));
                 Cache.AddEventIdentifiers(eventName, Resolver.GetTypeName(eventDeclaration.ReturnType).Replace(".", "::"));
             }
-
-            Cache.AddVistedType(AstType.Null, "Event");
 
             return EndNode(eventDeclaration, evDecl);
         }
@@ -2403,7 +2410,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 if (simpleType.Role == CSharp.Roles.TypeArgument || simpleType.Role == CSharp.Roles.TypeParameter)
                     return EndNode(simpleType, type);
 
-                if (Resolver.IsEnumType(Resolver.GetTypeName(simpleType)))
+                if (Resolver.IsEnumType(Resolver.GetTypeName(simpleType)) || Resolver.IsStructType(Resolver.GetTypeName(simpleType)))
                     return EndNode(simpleType, type);
 
                 var ptrType = new PtrType(type);

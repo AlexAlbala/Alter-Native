@@ -75,7 +75,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 throw n.exception;
             else
             {
-                string name = n.node.GetType().FullName;                                
+                string name = n.node.GetType().FullName;
                 Comment c = new Comment("ERROR: Cannot translate: " + n.exception.ToString() + ". Node: " + name, CommentType.MultiLine);
                 c.AcceptVisitor(this, data);
             }
@@ -607,7 +607,14 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             else
             {
-                WriteToken("->", MemberReferenceExpression.Roles.Dot);
+                if (memberReferenceExpression.isValueType)
+                {
+                    WriteToken(".", MemberReferenceExpression.Roles.Dot);
+                }
+                else
+                {
+                    WriteToken("->", MemberReferenceExpression.Roles.Dot);
+                }
             }
 
             WriteIdentifier(memberReferenceExpression.MemberName);
@@ -642,7 +649,10 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitObjectCreateExpression(ObjectCreateExpression objectCreateExpression, object data)
         {
             StartNode(objectCreateExpression);
-            WriteKeyword("new");
+
+            if (objectCreateExpression.isGCPtr)
+                WriteKeyword("new");
+
             objectCreateExpression.Type.AcceptVisitor(this, data);
             bool useParenthesis = objectCreateExpression.Arguments.Any() || objectCreateExpression.Initializer.IsNull;
             // also use parenthesis if there is an '(' token
