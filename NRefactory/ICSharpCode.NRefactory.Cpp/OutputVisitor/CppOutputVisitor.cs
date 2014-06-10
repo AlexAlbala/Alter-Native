@@ -12,6 +12,7 @@ using ICSharpCode.NRefactory.Cpp.Ast;
 using Attribute = ICSharpCode.NRefactory.Cpp.Ast.Attribute;
 using ICSharpCode.NRefactory.Cpp.Formatters;
 using AlterNative.Tools;
+using Antlr4.StringTemplate;
 
 namespace ICSharpCode.NRefactory.Cpp
 {
@@ -1724,19 +1725,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
         private void WriteTypeBaseTypes(TypeDeclaration typeDeclaration)
         {
-            if (typeDeclaration.ClassType == ClassType.Enum)
-            {
-                //Remove the inheritance from object !
-                typeDeclaration.BaseTypes.Remove(typeDeclaration.BaseTypes.ElementAt(typeDeclaration.BaseTypes.Count - 1));
-                if (typeDeclaration.BaseTypes.Any())
-                {
-                    Space();
-                    WriteToken(":", TypeDeclaration.ColonRole);
-                    Space();
-                    WriteCommaSeparatedList(typeDeclaration.BaseTypes);
-                }
-            }
-            else
+            if (typeDeclaration.BaseTypes.Any())
             {
                 Space();
                 WriteToken(":", TypeDeclaration.ColonRole);
@@ -1802,6 +1791,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     n.AcceptVisitor(this, data);
 
             }
+            
             CloseBrace(braceStyle);//END OF TYPE
             Semicolon();
             CloseNamespaceBraces();

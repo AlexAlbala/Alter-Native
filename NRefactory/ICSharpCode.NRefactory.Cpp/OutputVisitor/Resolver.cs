@@ -1407,16 +1407,55 @@ namespace ICSharpCode.NRefactory.Cpp
 
         }
 
+        public static void AddDefaultConstructor(TypeDeclaration type, List<Statement> extraStatements = null)
+        {
+            ConstructorDeclaration result = new ConstructorDeclaration();
+            result.ModifierTokens.Add(new CppModifierToken(TextLocation.Empty, Modifiers.Public));
+            result.Body = new BlockStatement();
+
+            if (extraStatements != null)
+            {
+                foreach (Statement st in extraStatements)
+                    result.Body.AddChild((Statement)st.Clone(), BlockStatement.StatementRole);
+                
+            }            
+            result.Name = type.Name;
+
+            type.AddChild(result, TypeDeclaration.MemberRole);
+
+            HeaderConstructorDeclaration hc = new HeaderConstructorDeclaration();
+            Resolver.GetHeaderNode(result, hc);
+            type.HeaderNodes.Add(hc);
+        }
+
+        public static void AddToStringMethod(TypeDeclaration type)
+        {
+            var toStr = new MethodDeclaration();
+            toStr.Name = "ToString";
+            toStr.ReturnType = new PtrType(new SimpleType("String"));
+            toStr.ModifierTokens.Add(new CppModifierToken(TextLocation.Empty, Modifiers.Public));
+            toStr.Body = new BlockStatement();
+            toStr.Body.Add(new ReturnStatement(new ObjectCreateExpression(new SimpleType("String"), new List<Expression>() { new IdentifierExpression("CURRENT_TYPE") }) { isGCPtr = true }));
+            //toStr.Body.Add(new ReturnStatement(new PrimitiveExpression(type.Name)));
+            type.Members.Add(toStr);
+
+            var n = new HeaderMethodDeclaration();
+            Resolver.GetHeaderNode(toStr, n);
+            if (n != null)
+                type.HeaderNodes.Add(n);
+        }
+
         public static bool IsStructType(String type)
         {
             return Cache.GetStructs().Contains(type);
         }
 
         /// <summary>
-        /// Returns if a member reference expression in C# is a call over a  C# property
+        /// Returns if a member reference expression in C# is a call over a struct
         /// </summary>
         /// <param name="memberReferenceExpression"></param>
         /// <param name="currentTypeName"></param>
+        /// <param name="currentMethodName"></param>
         /// <returns></returns>
         public static bool IsStructReference(MemberReferenceExpression memberReferenceExpression, string currentTypeName, string currentMethodName)
         {
@@ -1464,25 +1503,23 @@ namespace ICSharpCode.NRefactory.Cpp
                         {
                             if (v.Name == identifier)
                             {
-                                ICSharpCode.Decompiler.Ast.TypeInformation ann = (ICSharpCode.Decompiler.Ast.TypeInformation)memberReferenceExpression.Target.Annotation(typeof(ICSharpCode.Decompiler.Ast.TypeInformation));
-                                if (ann != null)
-                                {
-                                    if (structs.Contains(ann.InferredType.Name))
-                                        return true;
-                                }
-                                else
-                                {
-                                    if (structs.Contains(Resolver.GetTypeName(fd.Type)))
-                                        return true;
-                                }
+                                if (structs.Contains(Resolver.GetTypeName(fd.Type)))
+                                    return true;
                             }
                         }
                     }
                 }
             }
-            else if (memberReferenceExpression.Target is TypeReferenceExpression)
+            /*else if (memberReferenceExpression.Target is TypeReferenceExpression)
             {
                 return false;
+            }*/
+
+            ICSharpCode.Decompiler.Ast.TypeInformation ann = (ICSharpCode.Decompiler.Ast.TypeInformation)memberReferenceExpression.Target.Annotation(typeof(ICSharpCode.Decompiler.Ast.TypeInformation));
+            if (ann != null)
+            {
+                if (structs.Contains(ann.InferredType.Name))
+                    return true;
             }
 
             return false;

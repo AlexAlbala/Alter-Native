@@ -81,6 +81,7 @@ namespace ICSharpCode.NRefactory.Cpp
 					AddChild (arg, Roles.Argument);
 				}
 			}
+            isGCPtr = true;
 		}
 		
 		public ObjectCreateExpression (AstType type, params Expression[] arguments) : this (type, (IEnumerable<Expression>)arguments)

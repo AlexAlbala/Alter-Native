@@ -89,9 +89,8 @@ namespace RegressionTest
 
             if (exitCode == 0) res.cmakeCode = res.msbuildCode = 0;
             else if (exitCode == -1) res.cmakeCode = 1;
-            else if (exitCode == -2) res.msbuildCode = 1; res.cmakeCode = 0;
+            else if (exitCode == -2) { res.msbuildCode = 1; res.cmakeCode = 0; }
 
-            res.cmakeCode = (short)runCmake.ExitCode;
             Utils.DebugMessage("Exit Code: " + res.cmakeCode);
         }
 
@@ -101,7 +100,7 @@ namespace RegressionTest
             //Run original app
             Process orig = new Process();
 
-            if(Utils.IsWinPlatform())
+            if (Utils.IsWinPlatform())
                 orig.StartInfo = new ProcessStartInfo(di.FullName + @"/NETbin/" + di.Name.Split('.')[1] + ".exe");
             else
                 orig.StartInfo = new ProcessStartInfo("mono", di.FullName + @"/NETbin/" + di.Name.Split('.')[1] + ".exe");

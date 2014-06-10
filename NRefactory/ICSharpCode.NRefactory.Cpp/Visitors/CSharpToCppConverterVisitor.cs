@@ -335,11 +335,18 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitDefaultValueExpression(CSharp.DefaultValueExpression defaultValueExpression, object data)
         {
-            var exception = new TranslationException();
-            exception.node = defaultValueExpression;
-            exception.exception = new NotImplementedException();
+            var dve = new DefaultValueExpression((AstType)defaultValueExpression.Type.AcceptVisitor(this, data));
 
-            return EndNode(defaultValueExpression, exception);
+            if (Resolver.IsDirectChildOf(defaultValueExpression, typeof(CSharp.VariableInitializer)))
+            {
+                var oc = new ObjectCreateExpression((AstType)dve.Type.Clone())
+                {
+                    isGCPtr = !Resolver.IsStructType(Resolver.GetTypeName(dve.Type))
+                };
+                return EndNode(defaultValueExpression, oc);
+            }
+
+            return EndNode(defaultValueExpression, dve);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitDirectionExpression(CSharp.DirectionExpression directionExpression, object data)
@@ -531,7 +538,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         {
             var mref = new MemberReferenceExpression();
             mref.Target = (Expression)memberReferenceExpression.Target.AcceptVisitor(this, data);
-            mref.MemberName = memberReferenceExpression.MemberName;            
+            mref.MemberName = memberReferenceExpression.MemberName;
             ConvertNodes(memberReferenceExpression.TypeArguments, mref.TypeArguments);
 
             if (currentType != null && !Resolver.IsDirectChildOf(memberReferenceExpression, typeof(CSharp.AssignmentExpression))) //IGNORE THIS CASE BECAUSE IS SPECIAL CASE
@@ -541,7 +548,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 return EndNode(memberReferenceExpression, res_mref);
             }
 
-            mref.isValueType = Resolver.IsStructReference(mref, currentType.Name, currentMethod);
+            if (currentType != null)
+                mref.isValueType = Resolver.IsStructReference(mref, currentType.Name, currentMethod);
 
             return EndNode(memberReferenceExpression, mref);
         }
@@ -1030,13 +1038,13 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 ConvertNodes(typeDeclaration.BaseTypes, type.BaseTypes);
 
             if (typeDeclaration.ClassType == CSharp.ClassType.Struct)
-                typeDeclaration.BaseTypes.Add(new CSharp.SimpleType("ValueType"));
+                type.BaseTypes.Clear();
 
             type.Name = typeDeclaration.Name;
             if (typeDeclaration.TypeParameters.Any())
                 type.Name += "_T";
 
-            types.Push(type);
+            types.Push(type);          
 
             for (int i = 0; i < typeDeclaration.Members.Count; i++)
             {
@@ -1118,6 +1126,43 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 type.HeaderNodes.Add(n);
             }
 
+
+            //TODO: Here or above the foreach loop ?
+            if (type.ClassType == ClassType.Struct)
+            {
+                bool needsDefaultConstructor = true;
+                bool needsToStringDeclaration = true;
+
+                foreach (var node in type.Members)
+                {
+                    if (node is ConstructorDeclaration)
+                    {
+                        if (!(node as ConstructorDeclaration).Parameters.Any())
+                        {
+                            needsDefaultConstructor = false;
+                        }
+                    }
+                    if (node is MethodDeclaration)
+                    {
+                        if ((node as MethodDeclaration).Name == "ToString")
+                        {
+                            needsToStringDeclaration = false;
+                        }
+                    }
+
+                }
+
+                if (needsDefaultConstructor)
+                {
+                    Resolver.AddDefaultConstructor(type);                    
+                }
+
+                if (needsToStringDeclaration)
+                {
+                    Resolver.AddToStringMethod(type);                   
+                }
+            }
+
             //ConvertNodes(typeDeclaration.Members, type.Members);
             types.Pop();
 
@@ -1155,20 +1200,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 }
                 else //CONSTRUCTOR DOES NOT EXIST
                 {
-                    ConstructorDeclaration result = new ConstructorDeclaration();
-                    result.ModifierTokens.Add(new CppModifierToken(TextLocation.Empty, Modifiers.Public));
-                    BlockStatement blck = new BlockStatement();
-                    foreach (Statement st in Cache.GetConstructorStatements())
-                        blck.AddChild((Statement)st.Clone(), BlockStatement.StatementRole);
-                    result.Body = blck;
-                    Cache.ClearConstructorStatements();
-                    result.Name = type.Name;
-
-                    type.AddChild(result, TypeDeclaration.MemberRole);
-
-                    HeaderConstructorDeclaration hc = new HeaderConstructorDeclaration();
-                    Resolver.GetHeaderNode(result, hc);
-                    type.HeaderNodes.Add(hc);
+                    Resolver.AddDefaultConstructor(type, Cache.GetConstructorStatements());
+                    Cache.ClearConstructorStatements();                    
                 }
             }
 
@@ -1180,10 +1213,16 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             Resolver.ProcessIncludes(type.Name);
 
             //HERE SHOULD BE BaseType or InheritedType or something similar
-            AstType objectType = new SimpleType("Object");
-            //AstType gcType = new SimpleType("gc_cleanup");
-            type.AddChild(objectType, TypeDeclaration.BaseTypeRole);
-            //type.AddChild(gcType, TypeDeclaration.BaseTypeRole);
+            if (type.ClassType == ClassType.Struct)
+            {
+                AstType objectType = new SimpleType("ValueType");
+                type.AddChild(objectType, TypeDeclaration.BaseTypeRole);
+            }
+            else if (type.ClassType != ClassType.Enum)
+            {
+                AstType objectType = new SimpleType("Object");
+                type.AddChild(objectType, TypeDeclaration.BaseTypeRole);
+            }
 
             //Fill the nested types
             Resolver.GetExplicitInterfaceTypes(type);
@@ -1301,7 +1340,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     Expression argument = new IdentifierExpression(typePar.Name);
                     tmp_args.Add(argument);
                 }
-                InvocationExpression _ic = new InvocationExpression(new IdentifierExpression("IsBasic"), tmp_args);
+                InvocationExpression _ic = new InvocationExpression(new IdentifierExpression("IsValueType"), tmp_args);
                 ExpressionType _exprT = new ExpressionType(_ic);
 
                 //ENTRY POINT
