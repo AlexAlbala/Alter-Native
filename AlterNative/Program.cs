@@ -271,7 +271,7 @@ namespace AlterNative
             else
             {
                 Config.AlterNativeTools = System.Environment.GetEnvironmentVariable("ALTERNATIVE_TOOLS_PATH");
-            }            
+            }
 
             string outputDir = Utils.InitOutputPath(Config.OutputPath);
 
@@ -303,7 +303,14 @@ namespace AlterNative
             {
                 //LOAD TARGET ASSEMBLY
                 adef = Commands.LoadAssembly(Config.Extra[0].Replace('\\', '/'));
-                assemblyLocation = Config.Extra[0].Substring(0, Config.Extra[0].Replace('\\', '/').LastIndexOf('/')).Replace('\\', '/');
+
+                string fullPath = "";
+                if (Config.Extra[0].Replace('\\', '/').Contains('/'))
+                    fullPath = Config.Extra[0].Substring(0, Config.Extra[0].Replace('\\', '/').LastIndexOf("/"));
+                else
+                    fullPath = Path.Combine(Environment.CurrentDirectory, Config.Extra[0]);
+
+                assemblyLocation = Config.Extra[0].Substring(0, fullPath.LastIndexOf('/'));
             }
 
             if (Config.Extra[0].EndsWith("dll"))
