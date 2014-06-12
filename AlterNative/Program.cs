@@ -310,7 +310,7 @@ namespace AlterNative
                 else
                     fullPath = Path.Combine(Environment.CurrentDirectory, Config.Extra[0]);
 
-                assemblyLocation = Config.Extra[0].Substring(0, fullPath.LastIndexOf('/'));
+                assemblyLocation = fullPath.Substring(0, fullPath.LastIndexOf('/'));
             }
 
             if (Config.Extra[0].EndsWith("dll"))
