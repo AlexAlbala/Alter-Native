@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AlterNative;
 using Mono.Cecil;
 
 namespace ICSharpCode.NRefactory.Cpp
@@ -52,11 +53,8 @@ namespace ICSharpCode.NRefactory.Cpp
         //Name->Type
         private static Dictionary<string, string> eventIdentifiers = new Dictionary<string, string>();
 
-
-
-
         //PINVOKE AND DLLIMPORTS*********************************************************
-        private static Dictionary<string, List<ExternMethodDeclaration>> dllImports = new Dictionary<string, List<ExternMethodDeclaration>>();        
+        private static Dictionary<string, List<ExternMethodDeclaration>> dllImports = new Dictionary<string, List<ExternMethodDeclaration>>();
 
         #region RESOLVER
 
@@ -79,6 +77,13 @@ namespace ICSharpCode.NRefactory.Cpp
                 dllImports[name].Add(method);
             else
                 dllImports.Add(name, new List<ExternMethodDeclaration>() { method });
+
+            //TODO: I think this is a ÑAPA !
+            if (Config.AdditionalLibraries == null)
+                Config.AdditionalLibraries = new List<string>();
+
+            if(!Config.AdditionalLibraries.Contains(method.Library))
+                Config.AdditionalLibraries.Add(method.Library);
         }
 
         public static Dictionary<String, List<ExternMethodDeclaration>> GetDllImport()

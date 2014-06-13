@@ -1017,7 +1017,6 @@ namespace ICSharpCode.NRefactory.Cpp
         public static bool IsTypeArgument(AstType type)
         {
             return Cache.GetTemplateTypes().FirstOrDefault(x => x == GetTypeName(type)) != null;
-
         }
 
         /// <summary>
@@ -1285,6 +1284,23 @@ namespace ICSharpCode.NRefactory.Cpp
             return result;
         }
 
+        public static List<string> GetExtraDLLs()
+        {
+            List<string> result = new List<string>();
+
+            foreach (KeyValuePair<String, List<ExternMethodDeclaration>> kvp in Cache.GetDllImport())
+            {
+                foreach (ExternMethodDeclaration e in kvp.Value)
+                {
+                    if (!result.Contains(e.Library))
+                        result.Add(e.Library);
+                }
+            }
+
+            return result;
+        }
+
+
         /// <summary>
         /// Converts template types to Object type (useful for inline methods and template specialization types)
         /// </summary>
@@ -1417,8 +1433,8 @@ namespace ICSharpCode.NRefactory.Cpp
             {
                 foreach (Statement st in extraStatements)
                     result.Body.AddChild((Statement)st.Clone(), BlockStatement.StatementRole);
-                
-            }            
+
+            }
             result.Name = type.Name;
 
             type.AddChild(result, TypeDeclaration.MemberRole);

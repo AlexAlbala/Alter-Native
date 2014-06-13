@@ -351,11 +351,7 @@ namespace AlterNative
                 // Commands.CopyLibFiles(new DirectoryInfo(outputDir));
                 //TRIM END .EXE : BUG If The name is File.exe, trim end ".exe" returns Fil !!!!
                 string name = adef.MainModule.Name.Substring(0, adef.MainModule.Name.Length - 4);
-
-                if (Config.Release)
-                    CMakeGenerator.GenerateCMakeLists(name + "Proj", name, outputDir, FileWritterManager.GetSourceFiles(), true);
-                else
-                    CMakeGenerator.GenerateCMakeLists(name + "Proj", name, outputDir, FileWritterManager.GetSourceFiles());
+                CMakeGenerator.GenerateCMakeLists(name + "Proj", name, outputDir, FileWritterManager.GetSourceFiles(), Config.Release);
 
 #if !CORE
                 Console.ForegroundColor = ConsoleColor.Green;

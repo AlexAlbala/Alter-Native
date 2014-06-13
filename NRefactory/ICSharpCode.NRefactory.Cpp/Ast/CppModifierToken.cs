@@ -110,6 +110,8 @@ namespace ICSharpCode.NRefactory.Cpp
 				case Modifiers.Any:
 					// even though it's used for pattern matching only, 'any' needs to be in this list to be usable in the AST
 					return "any";
+                case Modifiers.None:
+                    return "";
 				default:
 					throw new NotSupportedException("Invalid value for Modifiers");
 			}

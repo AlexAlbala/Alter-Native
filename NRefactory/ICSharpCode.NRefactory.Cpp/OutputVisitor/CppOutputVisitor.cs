@@ -1791,7 +1791,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     n.AcceptVisitor(this, data);
 
             }
-            
+
             CloseBrace(braceStyle);//END OF TYPE
             Semicolon();
             CloseNamespaceBraces();
@@ -2819,7 +2819,9 @@ namespace ICSharpCode.NRefactory.Cpp
                     if (isFirst)
                     {
                         isFirst = false;
-                        WriteToken(":", CppModifierToken.Roles.Colon);
+                        if (modifier.Modifier != Modifiers.None)
+                            WriteToken(":", CppModifierToken.Roles.Colon);
+
                         NewLine();
                     }
                 }
@@ -3861,6 +3863,7 @@ namespace ICSharpCode.NRefactory.Cpp
             StartNode(headerDelegateDeclaration);
 
             WriteAttributes(headerDelegateDeclaration.Attributes);
+
             WriteAccesorModifier(headerDelegateDeclaration.ModifierTokens);
 
             formatter.Indent();

@@ -955,7 +955,14 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitDelegateDeclaration(CSharp.DelegateDeclaration delegateDeclaration, object data)
         {
             DelegateDeclaration del = new DelegateDeclaration();
+
             ConvertNodes(delegateDeclaration.ModifierTokens, del.ModifierTokens);
+
+            if (currentType == null)
+            {
+                RemoveAccessorModifiers(del.ModifierTokens);
+            }
+
             ConvertNodes(delegateDeclaration.Parameters, del.Parameters);
             ConvertNodes(delegateDeclaration.TypeParameters, del.TypeParameters);
 
@@ -969,6 +976,20 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
             return EndNode(delegateDeclaration, del);
 
+        }
+
+        private void RemoveAccessorModifiers(AstNodeCollection<CppModifierToken> modifiers)
+        {
+            for (int i = 0; i < modifiers.Count; i++)
+            {
+                CppModifierToken cpm = modifiers.ElementAt(i);
+                if (cpm.Modifier == Modifiers.Private || cpm.Modifier == Modifiers.Public
+                    || cpm.Modifier == Modifiers.Internal || cpm.Modifier == Modifiers.Protected)
+                {                    
+                    modifiers.InsertBefore(cpm, new CppModifierToken(TextLocation.Empty, Modifiers.None));
+                    modifiers.Remove(cpm);
+                }
+            }
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitNamespaceDeclaration(CSharp.NamespaceDeclaration namespaceDeclaration, object data)
@@ -1044,7 +1065,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             if (typeDeclaration.TypeParameters.Any())
                 type.Name += "_T";
 
-            types.Push(type);          
+            types.Push(type);
 
             for (int i = 0; i < typeDeclaration.Members.Count; i++)
             {
@@ -1154,12 +1175,12 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
                 if (needsDefaultConstructor)
                 {
-                    Resolver.AddDefaultConstructor(type);                    
+                    Resolver.AddDefaultConstructor(type);
                 }
 
                 if (needsToStringDeclaration)
                 {
-                    Resolver.AddToStringMethod(type);                   
+                    Resolver.AddToStringMethod(type);
                 }
             }
 
@@ -1201,7 +1222,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 else //CONSTRUCTOR DOES NOT EXIST
                 {
                     Resolver.AddDefaultConstructor(type, Cache.GetConstructorStatements());
-                    Cache.ClearConstructorStatements();                    
+                    Cache.ClearConstructorStatements();
                 }
             }
 
