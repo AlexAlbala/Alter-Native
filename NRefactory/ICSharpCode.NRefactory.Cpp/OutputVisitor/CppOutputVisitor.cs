@@ -2246,6 +2246,8 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitIndexerDeclaration(IndexerDeclaration indexerDeclaration, object data)
         {
             StartNode(indexerDeclaration);
+            indexerDeclaration.Getter.AcceptVisitor(this, data);
+            indexerDeclaration.Setter.AcceptVisitor(this, data);
             return EndNode(indexerDeclaration);
         }
 
@@ -2334,6 +2336,26 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitOperatorDeclaration(OperatorDeclaration operatorDeclaration, object data)
         {
             StartNode(operatorDeclaration);
+            WriteAttributes(operatorDeclaration.Attributes);
+            //WriteModifiers(operatorDeclaration.ModifierTokens);
+
+            operatorDeclaration.ReturnType.AcceptVisitor(this, data);
+
+            Space();
+            WriteKeyword("operator",OperatorDeclaration.OperatorKeywordRole);
+            Space();
+            if (operatorDeclaration.OperatorType == OperatorType.Explicit
+                || operatorDeclaration.OperatorType == OperatorType.Implicit)
+            {
+                operatorDeclaration.ReturnType.AcceptVisitor(this, data);
+            }
+            else
+            {
+                WriteToken(OperatorDeclaration.GetToken(operatorDeclaration.OperatorType), OperatorDeclaration.OperatorTypeRole);
+            }
+            Space(policy.SpaceBeforeMethodDeclarationParentheses);
+            WriteCommaSeparatedListInParenthesis(operatorDeclaration.Parameters, policy.SpaceWithinMethodDeclarationParentheses);
+            WriteMethodBody(operatorDeclaration.Body);
             return EndNode(operatorDeclaration);
         }
 

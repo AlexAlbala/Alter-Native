@@ -88,7 +88,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             InvocationExpression invExpr = new InvocationExpression();
             IdentifierExpression mref = new IdentifierExpression();
             mref.TypeArguments.Add((AstType)asExpression.Type.AcceptVisitor(this, data));
-            mref.Identifier = "as_cast";
+            mref.Identifier = Constants.AsCast;
             invExpr.Arguments.Add((Expression)asExpression.Expression.AcceptVisitor(this, data));
             invExpr.Target = mref;
 
@@ -113,7 +113,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     arguments.Add(e.Clone());
 
                 arguments.Add(right.Clone());
-                InvocationExpression inve = new InvocationExpression(new MemberReferenceExpression((Expression)ie.Target.Clone(), "SetData"), arguments);
+                InvocationExpression inve = new InvocationExpression(new MemberReferenceExpression((Expression)ie.Target.Clone(), Constants.IndexerSetter), arguments);
                 return EndNode(assignmentExpression, inve);
             }
             else
@@ -370,14 +370,27 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitIndexerExpression(CSharp.IndexerExpression indexerExpression, object data)
         {
             //Check if the identifier is a pointer type: if it is a pointer, we have to de-reference it to apply an indexer operator: data[i]; NO!!! ------ (*data)[i]; YES !!
-            bool needsDeref = Resolver.NeedsDereference(indexerExpression, currentType.Name, currentMethod);
+            /*bool needsDeref = Resolver.NeedsDereference(indexerExpression, currentType.Name, currentMethod);
 
             var expr = new IndexerExpression((Expression)indexerExpression.Target.AcceptVisitor(this, data));
             ConvertNodes(indexerExpression.Arguments, expr.Arguments);
             if (needsDeref)
                 expr.Target = new PointerExpression((Expression)expr.Target.Clone());
 
-            return EndNode(indexerExpression, expr);
+            return EndNode(indexerExpression, expr);*/
+
+            IndexerExpression ie = new IndexerExpression();
+            ie.Target = (Expression)indexerExpression.Target.AcceptVisitor(this, data);
+            ConvertNodes(indexerExpression.Arguments, ie.Arguments);
+
+
+            List<Expression> arguments = new List<Expression>();
+
+            foreach (Expression e in ie.Arguments)
+                arguments.Add(e.Clone());
+
+            InvocationExpression inve = new InvocationExpression(new MemberReferenceExpression((Expression)ie.Target.Clone(), Constants.IndexerGetter), arguments);
+            return EndNode(indexerExpression, inve);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitInvocationExpression(CSharp.InvocationExpression invocationExpression, object data)
@@ -385,7 +398,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             if (invocationExpression.Target is CSharp.MemberReferenceExpression)
             {
                 var mref = invocationExpression.Target as CSharp.MemberReferenceExpression;
-                if (mref.MemberName == "ToString")
+                if (mref.MemberName == Constants.ToStringMethodName)
                 {
                     //TODO: Only if the invocationExpression.Target returns a basic type !!!
                     //TODO: The type is extracted from the annotations.
@@ -518,7 +531,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             InvocationExpression invExpr = new InvocationExpression();
             IdentifierExpression mref = new IdentifierExpression();
             mref.TypeArguments.Add((AstType)isExpression.Type.AcceptVisitor(this, data));
-            mref.Identifier = "is_inst_of";
+            mref.Identifier = Constants.IsInstanceOf;
             invExpr.Arguments.Add((Expression)isExpression.Expression.AcceptVisitor(this, data));
             invExpr.Target = mref;
 
@@ -985,7 +998,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 CppModifierToken cpm = modifiers.ElementAt(i);
                 if (cpm.Modifier == Modifiers.Private || cpm.Modifier == Modifiers.Public
                     || cpm.Modifier == Modifiers.Internal || cpm.Modifier == Modifiers.Protected)
-                {                    
+                {
                     modifiers.InsertBefore(cpm, new CppModifierToken(TextLocation.Empty, Modifiers.None));
                     modifiers.Remove(cpm);
                 }
@@ -1097,6 +1110,22 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
                         tmp = new HeaderMethodDeclaration();
                         Resolver.GetHeaderNode(prop.Setter, tmp);
+                        if (tmp != null)
+                            type.HeaderNodes.Add(tmp);
+
+                        type.Members.Add((AttributedNode)n);
+                        continue;
+                    }
+                    else if (n is IndexerDeclaration)
+                    {
+                        IndexerDeclaration indexer = n as IndexerDeclaration;
+                        tmp = new HeaderMethodDeclaration();
+                        Resolver.GetHeaderNode(indexer.Setter, tmp);
+                        if (tmp != null)
+                            type.HeaderNodes.Add(tmp);
+
+                        tmp = new HeaderMethodDeclaration();
+                        Resolver.GetHeaderNode(indexer.Getter, tmp);
                         if (tmp != null)
                             type.HeaderNodes.Add(tmp);
 
@@ -1990,6 +2019,42 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 method.ReturnType = new CSharp.PrimitiveType("void"); //I'm not sure...
 
             }
+            else if (accessor.Parent is CSharp.IndexerDeclaration)
+            {
+                CSharp.IndexerDeclaration indexer = (accessor.Parent as CSharp.IndexerDeclaration);
+                CSharp.AstType returnType = (CSharp.AstType)indexer.ReturnType;
+
+                if (acc == "set")
+                {
+                    method.NameToken = CSharp.Identifier.Create(Constants.IndexerSetter);
+                    method.Body = (CSharp.BlockStatement)accessor.Body.Clone();
+
+                    method.ReturnType = new CSharp.PrimitiveType("void");
+
+                    foreach (CSharp.ParameterDeclaration p in indexer.Parameters)
+                        method.AddChild((CSharp.ParameterDeclaration)p.Clone(), CSharp.Roles.Parameter);
+
+                    CSharp.ParameterDeclaration pd = new CSharp.ParameterDeclaration(returnType.Clone(), "value");
+                    method.AddChild(pd, CSharp.Roles.Parameter);
+
+
+                    CSharp.BlockStatement blck = (CSharp.BlockStatement)indexer.Setter.Body.Clone();
+                    method.Body = blck;
+                }
+                if (acc == "get")
+                {
+                    method.NameToken = CSharp.Identifier.Create(Constants.IndexerGetter);
+                    method.Body = (CSharp.BlockStatement)accessor.Body.Clone();
+
+                    method.ReturnType = returnType.Clone();
+
+                    foreach (CSharp.ParameterDeclaration p in indexer.Parameters)
+                        method.AddChild((CSharp.ParameterDeclaration)p.Clone(), CSharp.Roles.Parameter);
+
+                    CSharp.BlockStatement blck = (CSharp.BlockStatement)indexer.Getter.Body.Clone();
+                    method.Body = blck;
+                }
+            }
 
             //End method declaration
 
@@ -2151,11 +2216,13 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitIndexerDeclaration(CSharp.IndexerDeclaration indexerDeclaration, object data)
         {
-            var exception = new TranslationException();
-            exception.node = indexerDeclaration;
-            exception.exception = new NotImplementedException();
+            IndexerDeclaration ide = new IndexerDeclaration();
 
-            return EndNode(indexerDeclaration, exception);
+            ide.ReturnType = (AstType)indexerDeclaration.ReturnType.AcceptVisitor(this, data);
+            ide.Setter = (MethodDeclaration)indexerDeclaration.Setter.AcceptVisitor(this, data);
+            ide.Getter = (MethodDeclaration)indexerDeclaration.Getter.AcceptVisitor(this, data);
+
+            return EndNode(indexerDeclaration, ide);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitMethodDeclaration(CSharp.MethodDeclaration methodDeclaration, object data)
@@ -2286,11 +2353,13 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitOperatorDeclaration(CSharp.OperatorDeclaration operatorDeclaration, object data)
         {
-            var exception = new TranslationException();
-            exception.node = operatorDeclaration;
-            exception.exception = new NotImplementedException();
-
-            return EndNode(operatorDeclaration, exception);
+            OperatorDeclaration op = new OperatorDeclaration();
+            op.ReturnType = (AstType)operatorDeclaration.ReturnType.AcceptVisitor(this, data);
+            op.OperatorType = (OperatorType)operatorDeclaration.OperatorType;
+            op.Body = (BlockStatement)operatorDeclaration.Body.AcceptVisitor(this, data);
+            ConvertNodes(operatorDeclaration.Parameters, op.Parameters);
+            ConvertNodes(operatorDeclaration.ModifierTokens, op.ModifierTokens);
+            return EndNode(operatorDeclaration, op);
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitParameterDeclaration(CSharp.ParameterDeclaration parameterDeclaration, object data)
@@ -2519,7 +2588,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 {
                     if (!(currentMethod == "Main" && Resolver.IsChildOf(composedType, typeof(CSharp.ParameterDeclaration))))
                     {
-                        SimpleType type = new SimpleType("Array");
+                        SimpleType type = new SimpleType(Constants.ArrayType);
                         AstType args = (AstType)composedType.BaseType.AcceptVisitor(this, data);
                         type.TypeArguments.Add((args is PtrType) ? (AstType)(args as PtrType).Target.Clone() : (AstType)args.Clone());
                         return EndNode(composedType, new PtrType(type));

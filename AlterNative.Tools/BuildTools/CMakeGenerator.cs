@@ -50,8 +50,11 @@ namespace AlterNative.BuildTools
                 foreach (FileInfo f in di.GetFiles())
                     libToLink.Add(f.FullName.Replace('\\', '/'));
 
-                if (Config.AdditionalLibraries.Any())
-                    libToLink.AddRange(Config.AdditionalLibraries);
+                if (Config.AdditionalLibraries != null)
+                {
+                    if (Config.AdditionalLibraries.Any())
+                        libToLink.AddRange(Config.AdditionalLibraries);
+                }
 
                 template.Add("LINK_LIBS", libToLink);
             }

@@ -41,6 +41,7 @@ namespace ICSharpCode.NRefactory.Cpp
 		Decrement = Mono.CSharp.Operator.OpType.Decrement,
 		True = Mono.CSharp.Operator.OpType.True,
 		False = Mono.CSharp.Operator.OpType.False,
+        Indexer,
 
 		// Unary and Binary operators
 		Addition = Mono.CSharp.Operator.OpType.Addition,
@@ -72,6 +73,28 @@ namespace ICSharpCode.NRefactory.Cpp
 	
 	public class OperatorDeclaration : AttributedNode
 	{
+        public new static readonly OperatorDeclaration Null = new NullOperatorDeclaration();
+        sealed class NullOperatorDeclaration : OperatorDeclaration
+        {
+            public override bool IsNull
+            {
+                get
+                {
+                    return true;
+                }
+            }
+
+            public override S AcceptVisitor<T, S>(IAstVisitor<T, S> visitor, T data = default(T))
+            {
+                return default(S);
+            }
+
+            protected internal override bool DoMatch(AstNode other, PatternMatching.Match match)
+            {
+                return other == null || other.IsNull;
+            }
+        }
+
 		public static readonly Role<CppTokenNode> OperatorTypeRole = new Role<CppTokenNode> ("OperatorType", CppTokenNode.Null);
 		public static readonly Role<CppTokenNode> OperatorKeywordRole = Roles.Keyword;
 		

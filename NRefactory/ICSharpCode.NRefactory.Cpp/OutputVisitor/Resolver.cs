@@ -868,6 +868,10 @@ namespace ICSharpCode.NRefactory.Cpp
                 if (IsChildOf(node, typeof(CSharp.BoxExpression)) || IsChildOf(node, typeof(CSharp.UnBoxExpression)))
                     return false;
 
+                //IF IS CHILD OF BINARY OPERATOR, WE SHOULD DEREFERENCE FOR TRIGGERING THE OPERATORS
+                if(IsDirectChildOf(node, typeof(CSharp.BinaryOperatorExpression)))
+                    return IsPointer(identifierExpression.Identifier, currentType, currentMethod, null);
+
                 if (IsChildOf(node, typeof(CSharp.VariableInitializer)))
                 {
                     //TODO: IS CHILD OF INVOCATION EXPRESSION, SO, THE IDENTIFIEREXPRESSION IS A PARAMETER, 

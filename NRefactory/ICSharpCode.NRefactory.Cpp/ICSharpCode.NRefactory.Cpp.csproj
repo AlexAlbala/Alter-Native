@@ -221,6 +221,7 @@
     <Compile Include="Formatters\FileWritterOutputFormatter.cs" />
     <Compile Include="Formatters\IOutputFormatter.cs" />
     <Compile Include="OutputVisitor\Cache.cs" />
+    <Compile Include="OutputVisitor\Constants.cs" />
     <Compile Include="OutputVisitor\CppOutputVisitor.cs" />
     <Compile Include="OutputVisitor\Resolver.cs" />
     <Compile Include="Formatters\TextWriterOutputFormatter.cs" />
