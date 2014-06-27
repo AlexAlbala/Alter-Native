@@ -564,6 +564,53 @@ namespace ICSharpCode.NRefactory.Cpp
 
         }
 
+        public static void RefactorAllIdentifiers(AstNode node, string identifier, Expression newIdentifier)
+        {
+            for (int i = 0; i < node.Children.Count(); i++)
+            {
+                AstNode n = node.Children.ElementAt(i);
+                if (n is IdentifierExpression)
+                {
+                    IdentifierExpression id = n as IdentifierExpression;
+                    if (id.Identifier.Equals(identifier))
+                    {
+                        n.ReplaceWith(newIdentifier);
+                    }
+                }
+                else
+                {
+                    RefactorAllIdentifiers(n, identifier, newIdentifier);
+                }
+            }
+        }
+
+        public static void DereferenceMembers(AstNode node, string identifier)
+        {
+            for (int i = 0; i < node.Children.Count(); i++)
+            {
+                AstNode n = node.Children.ElementAt(i);
+                if (n is MemberReferenceExpression)
+                {
+                    MemberReferenceExpression member = n as MemberReferenceExpression;
+
+                    if (member.Target is IdentifierExpression)
+                    {
+                        IdentifierExpression id = member.Target as IdentifierExpression;
+                        if (id.Identifier.Equals(identifier))
+                            member.isValueType = true;
+                    }
+                    else
+                    {
+                        DereferenceMembers(member.Target, identifier);
+                    }
+                }
+                else
+                {
+                    DereferenceMembers(n, identifier);
+                }
+            }
+        }
+
         /// <summary>
         /// Builds and adds the needed nested types in a current type representing explicit interfaces
         /// </summary>
@@ -869,8 +916,28 @@ namespace ICSharpCode.NRefactory.Cpp
                     return false;
 
                 //IF IS CHILD OF BINARY OPERATOR, WE SHOULD DEREFERENCE FOR TRIGGERING THE OPERATORS
-                if(IsDirectChildOf(node, typeof(CSharp.BinaryOperatorExpression)))
+                if (IsDirectChildOf(node, typeof(CSharp.BinaryOperatorExpression)))
                     return IsPointer(identifierExpression.Identifier, currentType, currentMethod, null);
+
+                if (IsChildOf(node, typeof(CSharp.AssignmentExpression)))
+                {
+                    CSharp.AssignmentExpression asexpr = (CSharp.AssignmentExpression)Resolver.GetParentOf(node, typeof(CSharp.AssignmentExpression));
+
+                    if (asexpr.Operator != CSharp.AssignmentOperatorType.Assign)
+                    {                
+                        //avoid cases like myObj.myField += "Hello" --> to be *myObj.myField += *new String()
+                        if (asexpr.Left is CSharp.MemberReferenceExpression)
+                        {
+                            CSharp.MemberReferenceExpression iexpTar = asexpr.Left as CSharp.MemberReferenceExpression;
+                            if (iexpTar.Target is CSharp.IdentifierExpression)
+                            {
+                                var id = iexpTar.Target as CSharp.IdentifierExpression;
+                                return Resolver.IsPointer(iexpTar.MemberName, id.Identifier, null, null);
+                            }
+                        }
+                        return IsPointer(identifierExpression.Identifier, currentType, currentMethod, null);
+                    }
+                }
 
                 if (IsChildOf(node, typeof(CSharp.VariableInitializer)))
                 {

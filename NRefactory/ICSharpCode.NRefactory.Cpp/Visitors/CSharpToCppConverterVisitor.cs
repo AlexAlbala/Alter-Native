@@ -65,13 +65,29 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitArrayCreateExpression(CSharp.ArrayCreateExpression arrayCreateExpression, object data)
         {
-            var expr = new ArrayCreateExpression()
+            int numDimensions = 0;
+            bool multiDimensional = false;
+            numDimensions = arrayCreateExpression.Arguments.Count;
+            foreach (CSharp.ArraySpecifier asp in arrayCreateExpression.AdditionalArraySpecifiers)
             {
-                Type = (AstType)arrayCreateExpression.Type.AcceptVisitor(this, data),
+                multiDimensional |= (asp.Dimensions > 1);
+                numDimensions += asp.Dimensions;
+            }
+
+            //Create Array Type
+            SimpleType s = new SimpleType(numDimensions > 1 ? Constants.ArrayNDType : Constants.ArrayType);
+            AstType arrayType = (AstType)arrayCreateExpression.Type.AcceptVisitor(this, data);
+            s.TypeArguments.Add((arrayType is PtrType) ? (AstType)(arrayType as PtrType).Target.Clone() : (AstType)arrayType.Clone());
+
+            if (multiDimensional)
+                s.TypeArguments.Add(new ExpressionType(new PrimitiveExpression(numDimensions)));
+
+            var expr = new ObjectCreateExpression()
+            {
+                Type = (AstType)s,
                 Initializer = (ArrayInitializerExpression)arrayCreateExpression.Initializer.AcceptVisitor(this, data)
             };
             ConvertNodes(arrayCreateExpression.Arguments, expr.Arguments);
-            ConvertNodes(arrayCreateExpression.AdditionalArraySpecifiers, expr.AdditionalArraySpecifiers);
 
             return EndNode(arrayCreateExpression, expr);
         }
@@ -112,7 +128,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 foreach (Expression e in ie.Arguments)
                     arguments.Add(e.Clone());
 
-                arguments.Add(right.Clone());
+                arguments.Add(right.Clone());               
+
+
                 InvocationExpression inve = new InvocationExpression(new MemberReferenceExpression((Expression)ie.Target.Clone(), Constants.IndexerSetter), arguments);
                 return EndNode(assignmentExpression, inve);
             }
@@ -136,6 +154,19 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                                     (assignmentExpression.Operator == CSharp.AssignmentOperatorType.Add ? "add" : "remove") + l.MemberName)
                                     , new Expression[1] { right.Clone() });
                                 return EndNode(assignmentExpression, m);
+                            }
+                        }
+                    }
+
+                    //OPERATORS !!! if we have for example String s; and s += "Hello"; --> will be translated to *s += new String("Hello"), 
+                    //the variable "s" will be dereferenced in IdentifierExpression stage, but at this point, we have to dereference the expression "new String"
+                    if (!(right is DelegateCreateExpression))//Avoid delegates and events, 
+                    {
+                        if (assignmentExpression.Operator != CSharp.AssignmentOperatorType.Assign)
+                        {
+                            if (right is ObjectCreateExpression)
+                            {
+                                right = new PointerExpression((Expression)right.Clone());
                             }
                         }
                     }
@@ -1148,6 +1179,13 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                         type.Members.Add((AttributedNode)n);
                         continue;
                     }
+                    else if (n is OperatorDeclaration)
+                    {
+                        //Operators always are declared in header files
+                        type.Members.Remove((AttributedNode)n);
+                        type.HeaderNodes.Add(n);
+                        continue;
+                    }
                     else if (n is MethodDeclaration)
                         tmp = new HeaderMethodDeclaration();
                     else if (n is FieldDeclaration)
@@ -1829,7 +1867,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             {
                 if ((variableDeclarationStatement.Type as CSharp.ComposedType).ArraySpecifiers.Any())
                 {
-                    if (variableDeclarationStatement.Variables.Count == 1)
+                    if (variableDeclarationStatement.Variables.Count >= 1)
                     {
                         CSharp.VariableInitializer v = variableDeclarationStatement.Variables.ElementAt(0);
                         //We must check the array for any of the expression that can return values (objet creations, array creations, invocations)
@@ -2026,10 +2064,13 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
                 if (acc == "set")
                 {
+                    foreach (CSharp.CSharpModifierToken cmt in indexer.ModifierTokens)
+                        method.AddChild<CSharp.CSharpModifierToken>((CSharp.CSharpModifierToken)cmt.Clone(), CSharp.MethodDeclaration.ModifierRole);
+
                     method.NameToken = CSharp.Identifier.Create(Constants.IndexerSetter);
                     method.Body = (CSharp.BlockStatement)accessor.Body.Clone();
 
-                    method.ReturnType = new CSharp.PrimitiveType("void");
+                    method.ReturnType = new CSharp.PrimitiveType("void");                    
 
                     foreach (CSharp.ParameterDeclaration p in indexer.Parameters)
                         method.AddChild((CSharp.ParameterDeclaration)p.Clone(), CSharp.Roles.Parameter);
@@ -2037,12 +2078,14 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     CSharp.ParameterDeclaration pd = new CSharp.ParameterDeclaration(returnType.Clone(), "value");
                     method.AddChild(pd, CSharp.Roles.Parameter);
 
-
                     CSharp.BlockStatement blck = (CSharp.BlockStatement)indexer.Setter.Body.Clone();
                     method.Body = blck;
                 }
                 if (acc == "get")
                 {
+                    foreach (CSharp.CSharpModifierToken cmt in indexer.ModifierTokens)
+                        method.AddChild<CSharp.CSharpModifierToken>((CSharp.CSharpModifierToken)cmt.Clone(), CSharp.MethodDeclaration.ModifierRole);
+
                     method.NameToken = CSharp.Identifier.Create(Constants.IndexerGetter);
                     method.Body = (CSharp.BlockStatement)accessor.Body.Clone();
 
@@ -2357,8 +2400,28 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             op.ReturnType = (AstType)operatorDeclaration.ReturnType.AcceptVisitor(this, data);
             op.OperatorType = (OperatorType)operatorDeclaration.OperatorType;
             op.Body = (BlockStatement)operatorDeclaration.Body.AcceptVisitor(this, data);
+
+            //Transform parameters
+            //Binary operators in C++ only have one paremeter (instead of the two of C#) from operator+(param1, param2) we have to convert to operator+(param2) and param goes to "this"
+
+            CSharp.ParameterDeclaration first = operatorDeclaration.Parameters.ElementAt(0);
+            operatorDeclaration.Parameters.Remove(first);
+
             ConvertNodes(operatorDeclaration.Parameters, op.Parameters);
             ConvertNodes(operatorDeclaration.ModifierTokens, op.ModifierTokens);
+
+            for (int i = 0; i < op.ModifierTokens.Count(); i++)
+            {
+                CppModifierToken modiferToken = op.ModifierTokens.ElementAt(i);
+                if (modiferToken.Modifier == Modifiers.Static)
+                    op.ModifierTokens.Remove(modiferToken);
+            }
+
+            Resolver.RefactorAllIdentifiers(op, first.Name, new ThisReferenceExpression());
+
+            foreach (ParameterDeclaration pd in op.Parameters)
+                Resolver.DereferenceMembers(op, pd.Name);
+
             return EndNode(operatorDeclaration, op);
         }
 
@@ -2513,6 +2576,11 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 if (simpleType.Annotations.Count() > 0)
                     Cache.AddSymbol(id, simpleType.Annotations.ElementAt(0) as TypeReference);
 
+
+                //The parameters in a (Binary) operator declaration, are value parameters !!
+                if (Resolver.IsChildOf(simpleType, typeof(CSharp.OperatorDeclaration)) && Resolver.IsDirectChildOf(simpleType, typeof(CSharp.ParameterDeclaration)) && simpleType.Role == CSharp.Roles.Type)
+                    return EndNode(simpleType, type);
+
                 //For protection
                 if (currentType == null)
                 {
@@ -2584,17 +2652,25 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             //If there is ArraySpecifier, get it and return the simpleType or primitiveType
             if (composedType.ArraySpecifiers.Any())
             {
-                if (composedType.ArraySpecifiers.Count == 1)
+                if (!(currentMethod == "Main" && Resolver.IsChildOf(composedType, typeof(CSharp.ParameterDeclaration))))
                 {
-                    if (!(currentMethod == "Main" && Resolver.IsChildOf(composedType, typeof(CSharp.ParameterDeclaration))))
+                    bool multiDimensional = composedType.ArraySpecifiers.Count > 1;
+                    int numDimensions = 0;
+                    foreach (CSharp.ArraySpecifier spec in composedType.ArraySpecifiers)
                     {
-                        SimpleType type = new SimpleType(Constants.ArrayType);
-                        AstType args = (AstType)composedType.BaseType.AcceptVisitor(this, data);
-                        type.TypeArguments.Add((args is PtrType) ? (AstType)(args as PtrType).Target.Clone() : (AstType)args.Clone());
-                        return EndNode(composedType, new PtrType(type));
+                        multiDimensional |= (spec.Dimensions > 1);
+                        numDimensions += spec.Dimensions;
                     }
-                }
 
+                    SimpleType type = new SimpleType(multiDimensional ? Constants.ArrayNDType : Constants.ArrayType);
+                    AstType args = (AstType)composedType.BaseType.AcceptVisitor(this, data);
+                    type.TypeArguments.Add((args is PtrType) ? (AstType)(args as PtrType).Target.Clone() : (AstType)args.Clone());
+
+                    if (multiDimensional)
+                        type.TypeArguments.Add(new ExpressionType(new PrimitiveExpression(numDimensions)));
+
+                    return EndNode(composedType, new PtrType(type));
+                }
                 Cache.AddRangeArraySpecifiers(composedType.ArraySpecifiers);
             }
 

@@ -2337,7 +2337,7 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             StartNode(operatorDeclaration);
             WriteAttributes(operatorDeclaration.Attributes);
-            //WriteModifiers(operatorDeclaration.ModifierTokens);
+            WriteAccesorModifier(operatorDeclaration.ModifierTokens);
 
             operatorDeclaration.ReturnType.AcceptVisitor(this, data);
 
@@ -3611,9 +3611,14 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitPointerExpression(PointerExpression pointerExpression, object data)
         {
-            StartNode(pointerExpression);
+            StartNode(pointerExpression);            
             WriteToken("*", PointerExpression.AsteriskRole);
+
+            if (!(pointerExpression.Target is IdentifierExpression))
+                LPar();
             pointerExpression.Target.AcceptVisitor(this, data);
+            if (!(pointerExpression.Target is IdentifierExpression))
+                RPar();
             return EndNode(pointerExpression);
         }
 
