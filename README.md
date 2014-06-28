@@ -111,7 +111,7 @@ On Linux
 
 	+ Install the necessary tools to run AlterNative. 
 
-			sudo apt-get install libboost-dev cmake build-essential
+			sudo apt-get install libboost-all-dev cmake build-essential
 
 * If you check your software version, you should have:
 
