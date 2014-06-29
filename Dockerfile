@@ -13,4 +13,6 @@ WORKDIR /Alter-Native
 RUN cd /Alter-Native
 RUN git pull && git submodule init Lib && git submodule update
 ADD DockerInitScript.sh /Alter-Native/
+ADD DockerAlternative.sh /Alter-Native/
 RUN sh ./DockerInitScript.sh
+CMD sh DockerAlternative.sh
