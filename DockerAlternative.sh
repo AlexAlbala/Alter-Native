@@ -26,12 +26,23 @@ function init
 
 function decompile
 {
+   echo "Decompiling assembly " $1
    cd /executables
-   echo $1
-   alternative $1 ./output/
+   alternative $1 $1/output/
+}
+
+function compile
+{
+   echo "Compiling assembly " $1
+   cd /executables/$1/output/
+   mkdir build
+   cd build
+   cmake ..
+   make
 }
 
 
-echo "Starting decompilation"
+echo "Starting AlterNative Container Command"
 init
 decompile $1
+compile $1

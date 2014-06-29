@@ -12,8 +12,8 @@ ENV BOOST_INCLUDEDIR /usr/include
 WORKDIR /Alter-Native
 RUN cd /Alter-Native
 RUN git pull && git submodule init Lib && git submodule update
-ADD DockerInitScript.sh /Alter-Native/
-ADD DockerAlternative.sh /Alter-Native/
+#ADD DockerInitScript.sh /Alter-Native/
+#ADD DockerAlternative.sh /Alter-Native/
 RUN sh ./DockerInitScript.sh
 RUN chmod +x DockerAlternative.sh
 VOLUME ["/executables"]
