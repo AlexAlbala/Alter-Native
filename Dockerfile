@@ -1,5 +1,7 @@
-# A basic AlterNative server.
-FROM ubuntu:14.04
+############################################################
+# Dockerfile to build AlterNative container images
+# Based on Ubuntu 14.04
+############################################################
 
 MAINTAINER Gerard Solé: 0.1
 
