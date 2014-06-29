@@ -12,6 +12,5 @@ ENV BOOST_INCLUDEDIR /usr/include
 WORKDIR /Alter-Native
 RUN cd /Alter-Native
 RUN git pull && git submodule init Lib && git submodule update
-CMD echo "Hello To AlterNative container!"
 ADD DockerInitScript.sh /Alter-Native/
-CMD sh ./DockerInitScript.sh
+RUN sh ./DockerInitScript.sh
