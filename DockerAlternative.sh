@@ -1,21 +1,37 @@
-#!/bin/sh
+#!/bin/bash
 
-# ALTERNATIVE_PATH
-export ALTERNATIVE_HOME=`pwd`
+function init
+{
 
-# ALTERNATIVE_BIN_PATH
-export ALTERNATIVE_BIN_PATH=$ALTERNATIVE_HOME/AlterNative.Core.bin/bin/Debug
+   # ALTERNATIVE_PATH
+   export ALTERNATIVE_HOME=`pwd`
 
-# ALTERNATIVE_BIN_PATH
-export ALTERNATIVE_BIN=$ALTERNATIVE_HOME/AlterNative.Core.bin/bin/Debug/AlterNative.Core.exe
+   # ALTERNATIVE_BIN_PATH
+   export ALTERNATIVE_BIN_PATH=$ALTERNATIVE_HOME/AlterNative.Core.bin/bin/Debug
 
-# CPP_LIB_PATH
-export ALTERNATIVE_CPP_LIB_PATH=$ALTERNATIVE_HOME/Lib
+   # ALTERNATIVE_BIN_PATH
+   export ALTERNATIVE_BIN=$ALTERNATIVE_HOME/AlterNative.Core.bin/bin/Debug/AlterNative.Core.exe
 
-# ALTERNATIVE_TOOLS
-export ALTERNATIVE_TOOLS_PATH=$ALTERNATIVE_HOME/Tools
+   # CPP_LIB_PATH
+   export ALTERNATIVE_CPP_LIB_PATH=$ALTERNATIVE_HOME/Lib
 
-# Shell Scripts
-export PATH=$PATH:$ALTERNATIVE_HOME/Tools/ShellScripts
+   # ALTERNATIVE_TOOLS
+   export ALTERNATIVE_TOOLS_PATH=$ALTERNATIVE_HOME/Tools
 
-chmod +x $ALTERNATIVE_HOME/Tools/ShellScripts/alternative
+   # Shell Scripts
+   export PATH=$PATH:$ALTERNATIVE_HOME/Tools/ShellScripts
+
+   chmod +x $ALTERNATIVE_HOME/Tools/ShellScripts/alternative
+}
+
+function decompile
+{
+   cd /executables
+   echo $1
+   alternative $1 ./output/
+}
+
+
+echo "Starting decompilation"
+init
+decompile $1

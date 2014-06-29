@@ -15,4 +15,7 @@ RUN git pull && git submodule init Lib && git submodule update
 ADD DockerInitScript.sh /Alter-Native/
 ADD DockerAlternative.sh /Alter-Native/
 RUN sh ./DockerInitScript.sh
-CMD sh DockerAlternative.sh
+RUN chmod +x DockerAlternative.sh
+VOLUME ["/executables"]
+ENTRYPOINT ["./DockerAlternative.sh"]
+CMD ["Blank.exe"]
