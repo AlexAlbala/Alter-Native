@@ -11,4 +11,4 @@ WORKDIR ~/Alter-Native
 CMD git pull
 CMD git submodule init
 CMD git submodule update
-CMD source ./install.shd
+CMD source ./install.sh
