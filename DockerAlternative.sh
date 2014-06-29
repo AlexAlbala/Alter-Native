@@ -28,21 +28,19 @@ function decompile
 {
    echo "Decompiling assembly " $1
    cd /executables
-   alternative $1 $1/output/
+   alternative $1 $1-output/
 }
 
 function compile
 {
    echo "Compiling assembly " $1
-   cd /executables/$1/output/
-   mkdir build
-   cd build
-   cmake ..
-   make
+   cd /executables
+   alternative make $1-output/
 }
 
 
 echo "Starting AlterNative Container Command"
+echo "Usage: docker.io run -v /executables:/executables -i -t alternative BINARYNAME"
 init
 decompile $1
 compile $1
