@@ -1,4 +1,4 @@
-# A basic AlterNative server. To use either add or bind mount content under /var/www
+# A basic AlterNative server.
 FROM ubuntu:14.04
 
 MAINTAINER Gerard Solé: 0.1
@@ -8,4 +8,4 @@ RUN cd /
 RUN git clone https://github.com/AlexAlbala/Alter-Native.git
 ENV BOOST_INCLUDEDIR /usr/include
 WORKDIR /Alter-Native
-CMD git pull && git submodule init && git submodule update && source ./install.sh
+CMD echo "Hello To AlterNative container!" && git pull && git submodule init && git submodule update && source ./install.sh
