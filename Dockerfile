@@ -3,7 +3,7 @@ FROM ubuntu:14.04
 
 MAINTAINER Gerard Solé: 0.1
 
-RUN apt-get update && apt-get install -y mono-runtime mono-xbuild cmake libboost-all-dev git
+RUN apt-get update && apt-get install -y mono-complete cmake libboost-all-dev git
 RUN cd ~/
 RUN git clone https://github.com/AlexAlbala/Alter-Native.git
 WORKDIR ~/Alter-Native
