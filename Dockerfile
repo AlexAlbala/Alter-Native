@@ -10,4 +10,4 @@ RUN cd /
 RUN git clone https://github.com/AlexAlbala/Alter-Native.git
 ENV BOOST_INCLUDEDIR /usr/include
 WORKDIR /Alter-Native
-CMD echo "Hello To AlterNative container!" && git pull && git submodule init && git submodule update && source ./install.sh
+CMD echo "Hello To AlterNative container!" && git pull && git submodule init Lib && git submodule update && source ./install.sh
