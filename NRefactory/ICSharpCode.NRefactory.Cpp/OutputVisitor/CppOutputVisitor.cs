@@ -2142,7 +2142,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
             foreach (VariableInitializer vi in headerEventDeclaration.Variables)
             {
-                WriteKeyword("EVENT");
+                WriteKeyword(Constants.EventDeclaration);
                 LPar();
                 //eventDeclaration.ReturnType.AcceptVisitor(this, data);//NOP                
                 //vi.AcceptVisitor(this, data);
@@ -3571,9 +3571,14 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitComposedIdentifier(ComposedIdentifier composedIdentifier, object data)
         {
             StartNode(composedIdentifier);
+
+            for (int i = 0; i < composedIdentifier.PointerRank; i++)
+                WriteToken("*", ComposedIdentifier.PointerRole);
+
             composedIdentifier.BaseIdentifier.AcceptVisitor(this, data);
             foreach (ArraySpecifier aspec in composedIdentifier.ArraySpecifiers)
                 aspec.AcceptVisitor(this, data);
+
             return EndNode(composedIdentifier);
         }
 
@@ -3584,7 +3589,7 @@ namespace ICSharpCode.NRefactory.Cpp
             {
                 //TODO: Move it to C#2CPP OUTPUT VISITOR
                 //TODO: MMM REVISE
-                InvocationExpression ic = new InvocationExpression(new IdentifierExpression("TypeDecl"), new IdentifierExpression(Resolver.GetTypeName((AstType)ptrType.Clone())));
+                InvocationExpression ic = new InvocationExpression(new IdentifierExpression(Constants.TypeTraitDeclaration), new IdentifierExpression(Resolver.GetTypeName((AstType)ptrType.Clone())));
                 ExpressionType exprt = new ExpressionType(ic);
                 exprt.AcceptVisitor(this, data);
             }
@@ -3867,7 +3872,7 @@ namespace ICSharpCode.NRefactory.Cpp
             LPar();
 
             //Check if the target is a function or a method (now always is supposed to be a function)
-            WriteKeyword("DELEGATE_FUNC");
+            WriteKeyword(Constants.DelegateFunction);
             WriteCommaSeparatedListInParenthesis(delegateCreateExpression.Arguments, policy.SpaceWithinMethodCallParentheses);
             delegateCreateExpression.Initializer.AcceptVisitor(this, data);
             RPar();
@@ -3878,7 +3883,7 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitDelegateInvokeExpression(DelegateInvokeExpression delegateInvokeExpression, object data)
         {
             StartNode(delegateInvokeExpression);
-            WriteKeyword("DELEGATE_INVOKE");
+            WriteKeyword(Constants.DelegateInvoke);
             Space(policy.SpaceBeforeMethodCallParentheses);
             WriteCommaSeparatedListInParenthesis(delegateInvokeExpression.Arguments, policy.SpaceWithinMethodCallParentheses);
             return EndNode(delegateInvokeExpression);
@@ -3894,7 +3899,7 @@ namespace ICSharpCode.NRefactory.Cpp
             WriteAccesorModifier(headerDelegateDeclaration.ModifierTokens);
 
             formatter.Indent();
-            WriteIdentifier("DELEGATE");
+            WriteIdentifier(Constants.DelegateDeclaration);
             LPar();
             headerDelegateDeclaration.ReturnType.AcceptVisitor(this, data);
 
@@ -3930,7 +3935,7 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitEventFireExpression(EventFireExpression eventFireExpression, object data)
         {
             StartNode(eventFireExpression);
-            WriteKeyword("EVENT_FIRE");
+            WriteKeyword(Constants.EventFire);
             Space(policy.SpaceBeforeMethodCallParentheses);
             WriteCommaSeparatedListInParenthesis(eventFireExpression.Arguments, policy.SpaceWithinMethodCallParentheses);
             return EndNode(eventFireExpression);
@@ -3941,7 +3946,7 @@ namespace ICSharpCode.NRefactory.Cpp
         {
             StartNode(externMethodDeclaration);
             formatter.WriteComment(CommentType.SingleLine, "Extern method of: Library: " + externMethodDeclaration.Library + " | method: " + externMethodDeclaration.EntryPoint + " | alias: " + externMethodDeclaration.Name);
-            WriteKeyword("extern \"C\"");
+            WriteKeyword(Constants.ExternC);
             externMethodDeclaration.ReturnType.AcceptVisitor(this, data);
             Space();
             WriteIdentifier(externMethodDeclaration.EntryPoint);

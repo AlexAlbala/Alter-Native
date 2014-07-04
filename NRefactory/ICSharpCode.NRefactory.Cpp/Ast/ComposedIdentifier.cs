@@ -9,12 +9,37 @@ namespace ICSharpCode.NRefactory.Cpp
     public class ComposedIdentifier : Identifier
     {
         public static readonly Role<ArraySpecifier> ArraySpecifierRole = new Role<ArraySpecifier>("ArraySpecifier");
+        public static readonly Role<CppTokenNode> PointerRole = new Role<CppTokenNode>("PointerRole");
 
         public ComposedIdentifier(string name, TextLocation location) : base(name, location) { }
 
         public AstNodeCollection<ArraySpecifier> ArraySpecifiers
         {
             get { return GetChildrenByRole(ArraySpecifierRole); }
+        }
+
+        public int PointerRank
+        {
+            get
+            {
+                return GetChildrenByRole(PointerRole).Count;
+            }
+            set
+            {
+                if (value < 0)
+                    throw new ArgumentOutOfRangeException();
+                int d = this.PointerRank;
+                while (d > value)
+                {
+                    GetChildByRole(PointerRole).Remove();
+                    d--;
+                }
+                while (d < value)
+                {
+                    InsertChildBefore(GetChildByRole(PointerRole), new CppTokenNode(TextLocation.Empty, 1), PointerRole);
+                    d++;
+                }
+            }
         }
 
         public Identifier BaseIdentifier

@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- Temperature values are expressed in Kelvin-->
+<RTDPSettings>
+  <GlobalSettings>
+    <sendHotspotAlarm>True</sendHotspotAlarm>
+    <doSegmentation>True</doSegmentation>
+    <doGeolocation>True</doGeolocation>
+    <doImageFusion>True</doImageFusion>
+  </GlobalSettings>
+  <TerrainModelSettings>
+    <demPrecision>medium</demPrecision>
+    <localGeoidHeight>48.43</localGeoidHeight>
+  </TerrainModelSettings>
+  <SegmentationSettings>
+    <hotspotThreshold>330</hotspotThreshold>
+  </SegmentationSettings>
+  <GeolocationSettings>
+    <geolocateIRimage>False</geolocateIRimage>
+    <geolocateVIimage>False</geolocateVIimage>
+    <geolocateHotspots>True</geolocateHotspots>
+    <zeroUavPitchRoll>False</zeroUavPitchRoll>
+    <zeroCamPanRoll>False</zeroCamPanRoll>
+    <zeroCamDistance>False</zeroCamDistance>
+    <zeroGpsDistance>False</zeroGpsDistance>
+    <maxIterations>10</maxIterations>
+  </GeolocationSettings>
+  <FusionSettings>
+    <fusionMode>mark</fusionMode><!-- mark, merge, both -->
+  </FusionSettings>
+  <IrImageSettings>
+    <irGradient>rainbow</irGradient><!-- rainbow, orange, gray -->
+    <irScaleMode>camera</irScaleMode><!-- camera, data, user -->
+    <irScaleMin>273.15</irScaleMin><!-- only for user mode -->
+    <irScaleMax>393.15</irScaleMax><!-- only for user mode -->
+  </IrImageSettings>
+</RTDPSettings>

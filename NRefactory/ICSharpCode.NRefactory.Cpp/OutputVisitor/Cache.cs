@@ -16,9 +16,19 @@ namespace ICSharpCode.NRefactory.Cpp
         private static Dictionary<string, List<string>> properties = new Dictionary<string, List<string>>();
         private static Dictionary<string, FieldDeclaration> auxVariables = new Dictionary<string, FieldDeclaration>();
         private static List<Ast.Statement> addedConstructorStatements = new List<Ast.Statement>();
+
+        //Caching elements
         private static Dictionary<string, List<FieldDeclaration>> fields = new Dictionary<string, List<FieldDeclaration>>();
-        private static Dictionary<string, List<VariableDeclarationStatement>> variablesMethod = new Dictionary<string, List<VariableDeclarationStatement>>();
+        private static Dictionary<string, List<VariableDeclarationStatement>> variables = new Dictionary<string, List<VariableDeclarationStatement>>();
         private static Dictionary<string, List<ParameterDeclaration>> parameters = new Dictionary<string, List<ParameterDeclaration>>();
+
+        //Caching unsafe elements
+        private static Dictionary<string, List<CSharp.FieldDeclaration>> unsafeFields = new Dictionary<string, List<CSharp.FieldDeclaration>>();
+        private static Dictionary<string, List<CSharp.VariableDeclarationStatement>> unsafeVariables = new Dictionary<string, List<CSharp.VariableDeclarationStatement>>();
+        private static Dictionary<string, List<CSharp.ParameterDeclaration>> unsafeParameters = new Dictionary<string, List<CSharp.ParameterDeclaration>>();
+        private static Dictionary<string, List<CSharp.FixedStatement>> unsafeFixedStatements = new Dictionary<string, List<CSharp.FixedStatement>>();
+
+        //Type elements
         private static List<IncludeDeclaration> includeDeclaration = new List<IncludeDeclaration>();
         private static List<String> removedIncludes = new List<String>();
         private static Dictionary<Ast.AstType, List<MethodDeclaration>> privateImplementations = new Dictionary<Ast.AstType, List<MethodDeclaration>>();
@@ -32,6 +42,7 @@ namespace ICSharpCode.NRefactory.Cpp
         private static Dictionary<string, TypeReference> symbols = new Dictionary<string, TypeReference>();
         private static Dictionary<string, List<string>> includes = new Dictionary<string, List<string>>();
         private static List<string> templateTypes = new List<string>();
+        private static Dictionary<string, List<string>> valueTypes = new Dictionary<string, List<string>>();//namespace -> type
 
         //DELEGATES & EVENTS
 
@@ -82,7 +93,7 @@ namespace ICSharpCode.NRefactory.Cpp
             if (Config.AdditionalLibraries == null)
                 Config.AdditionalLibraries = new List<string>();
 
-            if(!Config.AdditionalLibraries.Contains(method.Library))
+            if (!Config.AdditionalLibraries.Contains(method.Library))
                 Config.AdditionalLibraries.Add(method.Library);
         }
 
@@ -140,6 +151,22 @@ namespace ICSharpCode.NRefactory.Cpp
         public static List<string> GetStructs()
         {
             return structs;
+        }
+
+        public static void AddValueType(string namespaceName, string type)
+        {
+            if (!valueTypes.ContainsKey(namespaceName))
+            {
+                valueTypes.Add(namespaceName, new List<string>());
+            }
+
+            if (!valueTypes[namespaceName].Contains(type))
+                valueTypes[namespaceName].Add(type);
+        }
+
+        public static Dictionary<string, List<string>> GetValueTypes()
+        {
+            return valueTypes;
         }
 
         public static void AddAuxVariable(FieldDeclaration type, string identifier)
@@ -298,7 +325,7 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             else
             {
-                includes.Add(owner, new List<string>(){"Sysetm"});
+                includes.Add(owner, new List<string>() { "Sysetm" });
                 includes[owner].Add(included);
             }
         }
@@ -390,6 +417,101 @@ namespace ICSharpCode.NRefactory.Cpp
             return fields;
         }
 
+        public static void AddMethodVariableDeclaration(string methodName, VariableDeclarationStatement field)
+        {
+            if (!variables.ContainsKey(methodName))
+            {
+                variables.Add(methodName, new List<VariableDeclarationStatement>() { field });
+                return;
+            }
+            else
+            {
+                if (!variables[methodName].Contains(field))
+                    variables[methodName].Add(field);
+            }
+        }
+
+        public static void AddUnsafeParameterDeclaration(string methodName, CSharp.ParameterDeclaration parameter)
+        {
+            if (!unsafeParameters.ContainsKey(methodName))
+            {
+                unsafeParameters.Add(methodName, new List<CSharp.ParameterDeclaration>() { parameter });
+                return;
+            }
+            else
+            {
+                if (!unsafeParameters[methodName].Contains(parameter))
+                    unsafeParameters[methodName].Add(parameter);
+            }
+        }
+
+        public static Dictionary<string, List<CSharp.ParameterDeclaration>> GetUnsafeParameters()
+        {
+            return unsafeParameters;
+        }
+
+        public static void AddUnsafeFixedStatement(string methodName, CSharp.FixedStatement fixedStmt)
+        {
+            if (!unsafeFixedStatements.ContainsKey(methodName))
+            {
+                unsafeFixedStatements.Add(methodName, new List<CSharp.FixedStatement>() { fixedStmt });
+                return;
+            }
+            else
+            {
+                if (!unsafeFixedStatements[methodName].Contains(fixedStmt))
+                    unsafeFixedStatements[methodName].Add(fixedStmt);
+            }
+        }
+
+        public static Dictionary<string, List<CSharp.FixedStatement>> GetUnsafeFixedStatements()
+        {
+            return unsafeFixedStatements;
+        }
+
+        public static Dictionary<string, List<VariableDeclarationStatement>> GetVariablesMethod()
+        {
+            return variables;
+        }
+
+        public static void AddUnsafeField(string type, CSharp.FieldDeclaration field)
+        {
+            if (!unsafeFields.ContainsKey(type))
+            {
+                unsafeFields.Add(type, new List<CSharp.FieldDeclaration>() { field });
+                return;
+            }
+            else
+            {
+                if (!unsafeFields[type].Contains(field))
+                    unsafeFields[type].Add(field);
+            }
+        }
+
+        public static Dictionary<string, List<CSharp.FieldDeclaration>> GetUnsafeFields()
+        {
+            return unsafeFields;
+        }
+
+        public static void AddUnsafeVariable(string methodName, CSharp.VariableDeclarationStatement field)
+        {
+            if (!unsafeVariables.ContainsKey(methodName))
+            {
+                unsafeVariables.Add(methodName, new List<CSharp.VariableDeclarationStatement>() { field });
+                return;
+            }
+            else
+            {
+                if (!unsafeVariables[methodName].Contains(field))
+                    unsafeVariables[methodName].Add(field);
+            }
+        }
+
+        public static Dictionary<string, List<CSharp.VariableDeclarationStatement>> GetUnsafeVariables()
+        {
+            return unsafeVariables;
+        }
+
         public static void AddParameterDeclaration(string methodName, ParameterDeclaration parameter)
         {
             if (!parameters.ContainsKey(methodName))
@@ -409,29 +531,10 @@ namespace ICSharpCode.NRefactory.Cpp
             return parameters;
         }
 
-        public static void AddMethodVariableDeclaration(string methodName, VariableDeclarationStatement field)
-        {
-            if (!variablesMethod.ContainsKey(methodName))
-            {
-                variablesMethod.Add(methodName, new List<VariableDeclarationStatement>() { field });
-                return;
-            }
-            else
-            {
-                if (!variablesMethod[methodName].Contains(field))
-                    variablesMethod[methodName].Add(field);
-            }
-        }
-
         public static void ClearParametersAndFieldsDeclarations()
         {
             parameters.Clear();
-            variablesMethod.Clear();
-        }
-
-        public static Dictionary<string, List<VariableDeclarationStatement>> GetVariablesMethod()
-        {
-            return variablesMethod;
+            variables.Clear();
         }
 
         public static void AddProperty(string propertyName, string typeName)

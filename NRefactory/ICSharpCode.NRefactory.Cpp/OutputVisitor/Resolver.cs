@@ -86,17 +86,13 @@ namespace ICSharpCode.NRefactory.Cpp
             //*************************************************************//
 
 
-
-
             //Add delegate types in cache for the delegates in library
-
             Dictionary<string, ParameterDeclaration[]> delegatesInLibrary = new Dictionary<string, ParameterDeclaration[]>();
             delegatesInLibrary.Add("ThreadStart", new ParameterDeclaration[0]);
             delegatesInLibrary.Add("ParameterizedThreadStart", new ParameterDeclaration[] { new VariadicParameterDeclaration() });
             delegatesInLibrary.Add("TimerCallback", new ParameterDeclaration[] { new ParameterDeclaration(new PtrType(new SimpleType("Object")), "state") });
 
             //Add properties types in cache for the properties in library
-
             Dictionary<string, string> propertiesInLibrary = new Dictionary<string, string>();
             propertiesInLibrary.Add("Now", "DateTime");
             propertiesInLibrary.Add("Day", "DateTime");
@@ -110,11 +106,24 @@ namespace ICSharpCode.NRefactory.Cpp
             propertiesInLibrary.Add("Count", "Dictioanry");
             propertiesInLibrary.Add("Length", "String");
 
+            Dictionary<string, string> valueTypesInLibrary = new Dictionary<string, string>();
+            valueTypesInLibrary.Add("System", "IntPtr");
+
+            //TODO.....
+            List<string> predefinedRemoveIncludes = new List<string>();
+            predefinedRemoveIncludes.Add("IntPtr");
+
+            foreach (string s in predefinedRemoveIncludes)
+                RemoveInclude(s);
+
             foreach (KeyValuePair<string, ParameterDeclaration[]> kvp in delegatesInLibrary)
                 Cache.AddDelegateType(kvp.Key, kvp.Value);
 
             foreach (KeyValuePair<string, string> kvp in propertiesInLibrary)
                 Cache.AddProperty(kvp.Key, kvp.Value);
+
+            foreach (KeyValuePair<string, string> kvp in valueTypesInLibrary)
+                Cache.AddValueType(kvp.Key, kvp.Value);
 
             Cache.InitLibrary(libraryMap);
         }
@@ -161,6 +170,42 @@ namespace ICSharpCode.NRefactory.Cpp
         public static void RemoveInclude(string typeName)
         {
             Cache.RemoveIncldue(typeName);
+        }
+
+        public static string InferNamespace(CSharp.AstType type)
+        {
+            if (type.Annotations.Any())
+            {
+                foreach (Object obj in type.Annotations)
+                {
+                    if (obj is TypeDefinition)
+                    {
+                        var typeDef = obj as TypeDefinition;
+                        return typeDef.Namespace;
+                    }
+                    else if (obj is MemberReference)
+                    {
+                        var member = obj as MemberReference;
+                        return member.FullName.Substring(0, member.FullName.Length - member.FullName.LastIndexOf('.') - 1);
+                    }
+                }
+            }
+            return String.Empty;
+        }
+
+        public static bool IsValueType(string currentNamespace, string type)
+        {
+            var valueTypes = Cache.GetValueTypes();
+
+            foreach (KeyValuePair<string, List<string>> kvp in valueTypes)
+            {
+                if (kvp.Key == currentNamespace)
+                {
+                    return kvp.Value.Contains(type);
+                }
+            }
+
+            return false;
         }
 
 
@@ -263,6 +308,80 @@ namespace ICSharpCode.NRefactory.Cpp
             return false;
         }
 
+
+        /// <summary>
+        /// Returns if an identifier is an unsafe expression. This method checks if the identifier (declared in a method parameter, method variable, or class field) is an unsasfe pointer variable.
+        /// The method will search the identifier depending of the filled parameters or the null parameters
+        /// CurrentType + currentFieldVarialbe
+        /// CurrentMethod + CurrentParameter
+        /// CurrentMethod + CurrentField_Variable
+        /// </summary>
+        /// <param name="currentType">The current type name</param>
+        /// <param name="currentField_Variable">The variable or field that is being checked</param>
+        /// <param name="currentMethod">The current method</param>
+        /// <param name="currentParameter">The parameter that is being checked</param>currentType
+        /// <returns></returns>
+        public static bool IsUnsafe(string currentField_Variable, string currentType, string currentMethod, string currentParameter)
+        {
+            if (currentType != null)
+            {
+                if (currentType.EndsWith("_T")) currentType = currentType.Substring(0, currentType.Length - 2);
+            }
+
+            if (currentField_Variable != null && currentType != null)
+            {
+                Dictionary<string, List<CSharp.FieldDeclaration>> fields = Cache.GetUnsafeFields();
+                if (fields.ContainsKey(currentType))
+                {
+                    foreach (CSharp.FieldDeclaration fd in fields[currentType])
+                    {
+                        var col = fd.Variables;
+                        if (!col.FirstOrNullObject(x => x.Name == currentField_Variable).IsNull)
+                            return true;
+                    }
+                }
+            }
+
+            if (currentMethod != null && currentParameter != null)
+            {
+                Dictionary<string, List<CSharp.ParameterDeclaration>> parameters = Cache.GetUnsafeParameters();
+                if (parameters.ContainsKey(currentMethod))
+                {
+                    foreach (CSharp.ParameterDeclaration pd in parameters[currentMethod])
+                    {
+                        if (pd.Name == currentParameter)
+                            return true;
+                    }
+                }
+            }
+
+            if (currentMethod != null && currentField_Variable != null)
+            {
+                Dictionary<string, List<CSharp.VariableDeclarationStatement>> variablesMethod = Cache.GetUnsafeVariables();
+                if (variablesMethod.ContainsKey(currentMethod))
+                {
+                    foreach (CSharp.VariableDeclarationStatement fd in variablesMethod[currentMethod])
+                    {
+                        var col = fd.Variables;
+                        if (!col.FirstOrNullObject(x => x.Name.Equals(currentField_Variable)).IsNull)
+                            return true;
+                    }
+                }
+
+                Dictionary<string, List<CSharp.FixedStatement>> fixedStatements = Cache.GetUnsafeFixedStatements();
+                if (fixedStatements.ContainsKey(currentMethod))
+                {
+                    foreach (CSharp.FixedStatement fd in fixedStatements[currentMethod])
+                    {
+                        var col = fd.Variables;
+                        if (!col.FirstOrNullObject(x => x.Name == currentField_Variable).IsNull)
+                            return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         /// <summary>
         /// Tries to combine all of the provided parameters to extract the AstType class of an object with the identifier specified (Extracts the type of Field or variable, or parameters)
         /// </summary>
@@ -305,7 +424,6 @@ namespace ICSharpCode.NRefactory.Cpp
             if (currentMethod != null && currentField_Variable != null)
             {
                 Dictionary<string, List<VariableDeclarationStatement>> variablesMethod = Cache.GetVariablesMethod();
-                Dictionary<string, List<ParameterDeclaration>> parameters = Cache.GetParameters();
                 if (variablesMethod.ContainsKey(currentMethod))
                 {
                     foreach (VariableDeclarationStatement fd in variablesMethod[currentMethod])
@@ -319,14 +437,18 @@ namespace ICSharpCode.NRefactory.Cpp
                     }
                 }
 
-                //if (parameters.ContainsKey(currentMethod))
-                //{
-                //    foreach (ParameterDeclaration pd in parameters[currentMethod])
-                //    {
-                //        if (pd.Name == currentField_Variable)
-                //            return pd.Type;
-                //    }
-                //}
+                /*Dictionary<string, List<CSharp.FixedStatement>> fixedStatements = Cache.GetUnsafeFixedStatements();
+                if (fixedStatements.ContainsKey(currentMethod))
+                {
+                    foreach (CSharp.FixedStatement fd in fixedStatements[currentMethod])
+                    {
+                        foreach (CSharp.VariableInitializer vi in fd.Variables)
+                        {
+                            if (vi.Name == currentField_Variable)
+                                return fd.Type;
+                        }
+                    }
+                }*/
             }
             return AstType.Null;
         }
@@ -574,7 +696,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     IdentifierExpression id = n as IdentifierExpression;
                     if (id.Identifier.Equals(identifier))
                     {
-                        n.ReplaceWith(newIdentifier);
+                        n.ReplaceWith(newIdentifier.Clone());
                     }
                 }
                 else
@@ -894,6 +1016,11 @@ namespace ICSharpCode.NRefactory.Cpp
                 headerNode = null;
         }
 
+        public static bool NeedsDereference(string currentField_Variable, string currentType, string currentMethod, string currentParameter)
+        {
+            return (IsPointer(currentField_Variable, currentType, currentMethod, currentParameter) && !IsUnsafe(currentField_Variable, currentType, currentMethod, currentParameter));
+        }
+
         /// <summary>
         /// Returns if a node (i.e expression, identifier...) needs a dereference
         /// </summary>
@@ -917,14 +1044,14 @@ namespace ICSharpCode.NRefactory.Cpp
 
                 //IF IS CHILD OF BINARY OPERATOR, WE SHOULD DEREFERENCE FOR TRIGGERING THE OPERATORS
                 if (IsDirectChildOf(node, typeof(CSharp.BinaryOperatorExpression)))
-                    return IsPointer(identifierExpression.Identifier, currentType, currentMethod, null);
+                    return NeedsDereference(identifierExpression.Identifier, currentType, currentMethod, null);
 
                 if (IsChildOf(node, typeof(CSharp.AssignmentExpression)))
                 {
                     CSharp.AssignmentExpression asexpr = (CSharp.AssignmentExpression)Resolver.GetParentOf(node, typeof(CSharp.AssignmentExpression));
 
                     if (asexpr.Operator != CSharp.AssignmentOperatorType.Assign)
-                    {                
+                    {
                         //avoid cases like myObj.myField += "Hello" --> to be *myObj.myField += *new String()
                         if (asexpr.Left is CSharp.MemberReferenceExpression)
                         {
@@ -932,10 +1059,11 @@ namespace ICSharpCode.NRefactory.Cpp
                             if (iexpTar.Target is CSharp.IdentifierExpression)
                             {
                                 var id = iexpTar.Target as CSharp.IdentifierExpression;
-                                return Resolver.IsPointer(iexpTar.MemberName, id.Identifier, null, null);
+                                return Resolver.NeedsDereference(iexpTar.MemberName, id.Identifier, null, null);
                             }
                         }
-                        return IsPointer(identifierExpression.Identifier, currentType, currentMethod, null);
+
+                        return NeedsDereference(identifierExpression.Identifier, currentType, currentMethod, null);
                     }
                 }
 
@@ -989,8 +1117,10 @@ namespace ICSharpCode.NRefactory.Cpp
                                         return false;
                                 };
 
-                                return !((fdecl.ReturnType is CSharp.PrimitiveType && id == "Object") ||
-                                    (ret == "Object" && Resolver.GetType(identifierExpression.Identifier, currentType, null, null).IsBasicType));
+                                /*return !((fdecl.ReturnType is CSharp.PrimitiveType && id == "Object") ||
+                                    (ret == "Object" && Resolver.GetType(identifierExpression.Identifier, currentType, null, null).IsBasicType));*/
+
+                                return NeedsDereference(identifierExpression.Identifier, currentType, null, null);
                             }
                         }
                         else if (IsChildOf(node, typeof(CSharp.VariableDeclarationStatement)))
@@ -1011,8 +1141,33 @@ namespace ICSharpCode.NRefactory.Cpp
                                         return false;
                                 }
 
-                                return !((vdecl.Type is CSharp.PrimitiveType && id == "Object") ||
-                                    (ret == "Object" && Resolver.GetType(identifierExpression.Identifier, null, currentMethod, null).IsBasicType));
+                                /*return !((vdecl.Type is CSharp.PrimitiveType && id == "Object") ||
+                                    (ret == "Object" && Resolver.GetType(identifierExpression.Identifier, null, currentMethod, null).IsBasicType));*/
+                                return NeedsDereference(identifierExpression.Identifier, null, currentMethod, identifierExpression.Identifier);
+                            }
+                        }
+                        else if (IsChildOf(node, typeof(CSharp.FixedStatement)))
+                        {
+                            var vdecl = (CSharp.FixedStatement)GetParentOf(node, typeof(CSharp.FixedStatement));
+                            string ret = Resolver.GetTypeName(vdecl.Type);
+                            AstType _type = Resolver.GetType(identifierExpression.Identifier, null, currentMethod, identifierExpression.Identifier);
+                            if (_type.IsBasicType || IsEnumType(GetTypeName(_type)))
+                                return false;
+                            string id = Resolver.GetTypeName(_type);
+                            if (ret != id)
+                            {
+                                //SPECIAL CASE: ARRAYS
+                                if (vdecl.Type is CSharp.ComposedType)
+                                {
+                                    CSharp.ComposedType ct = vdecl.Type as CSharp.ComposedType;
+                                    if (ct.ArraySpecifiers.Any() && id.Equals("Array"))
+                                        return false;
+                                }
+
+                                /*return !((vdecl.Type is CSharp.PrimitiveType && id == "Object") ||
+                                    (ret == "Object" && Resolver.GetType(identifierExpression.Identifier, null, currentMethod, null).IsBasicType));*/
+
+                                return NeedsDereference(identifierExpression.Identifier, null, currentMethod, identifierExpression.Identifier);
                             }
                         }
                         else if (IsChildOf(node, typeof(CSharp.ParameterDeclaration)))
@@ -1033,8 +1188,9 @@ namespace ICSharpCode.NRefactory.Cpp
                                         return false;
                                 }
 
-                                return !((pdecl.Type is CSharp.PrimitiveType && id == "Object") ||
-                                    (ret == "Object" && Resolver.GetType(identifierExpression.Identifier, null, currentMethod, pdecl.Name).IsBasicType));
+                                /*return !((pdecl.Type is CSharp.PrimitiveType && id == "Object") ||
+                                    (ret == "Object" && Resolver.GetType(identifierExpression.Identifier, null, currentMethod, pdecl.Name).IsBasicType) ));*/
+                                return NeedsDereference(identifierExpression.Identifier, null, currentMethod, pdecl.Name);
                             }
                         }
                         return false;
@@ -1053,17 +1209,17 @@ namespace ICSharpCode.NRefactory.Cpp
                     var iexpTar = indexerExpression.Target as CSharp.MemberReferenceExpression;
                     if (iexpTar.Target is CSharp.ThisReferenceExpression)
                     {
-                        return Resolver.IsPointer(iexpTar.MemberName, currentType, null, null);
+                        return Resolver.NeedsDereference(iexpTar.MemberName, currentType, null, null);
                     }
                     else if (iexpTar.Target is CSharp.IdentifierExpression)
                     {
                         var id = iexpTar.Target as CSharp.IdentifierExpression;
-                        return Resolver.IsPointer(iexpTar.MemberName, id.Identifier, null, null);
+                        return Resolver.NeedsDereference(iexpTar.MemberName, id.Identifier, null, null);
                     }
                     else if (iexpTar.Target is CSharp.TypeReferenceExpression)
                     {
                         var id = iexpTar.Target as CSharp.TypeReferenceExpression;
-                        return Resolver.IsPointer(iexpTar.MemberName, Resolver.GetTypeName(id.Type), null, null);
+                        return Resolver.NeedsDereference(iexpTar.MemberName, Resolver.GetTypeName(id.Type), null, null);
                     }
                     else
                         return false;
@@ -1071,7 +1227,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 else if (indexerExpression.Target is CSharp.IdentifierExpression)
                 {
                     var iexpTar = indexerExpression.Target as CSharp.IdentifierExpression;
-                    return Resolver.IsPointer(iexpTar.Identifier, null, currentMethod, iexpTar.Identifier);
+                    return Resolver.NeedsDereference(iexpTar.Identifier, null, currentMethod, iexpTar.Identifier);
                 }
                 else
                     return false;

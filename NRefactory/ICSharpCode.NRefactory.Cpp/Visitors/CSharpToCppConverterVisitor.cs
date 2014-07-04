@@ -128,8 +128,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 foreach (Expression e in ie.Arguments)
                     arguments.Add(e.Clone());
 
-                arguments.Add(right.Clone());               
-
+                arguments.Add(right.Clone());
 
                 InvocationExpression inve = new InvocationExpression(new MemberReferenceExpression((Expression)ie.Target.Clone(), Constants.IndexerSetter), arguments);
                 return EndNode(assignmentExpression, inve);
@@ -783,6 +782,11 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitTypeReferenceExpression(CSharp.TypeReferenceExpression typeReferenceExpression, object data)
         {
             var expr = new TypeReferenceExpression((AstType)typeReferenceExpression.Type.AcceptVisitor(this, data));
+            if (expr.Type.IsBasicType)
+            {
+                string name = Resolver.GetTypeName(expr.Type);
+                expr.Type = new SimpleType(char.ToUpper(name[0]) + name.Substring(1));//From int::Parse to Int::Parse
+            }
             return EndNode(typeReferenceExpression, expr);
         }
 
@@ -849,11 +853,13 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 //        Operator = UnaryOperatorType.AddressOf
                 //    };
                 //    break;
-                //case ICSharpCode.NRefactory.CSharp.UnaryOperatorType.Dereference:
-                //    expr = new InvocationExpression();
-                //    ((InvocationExpression)expr).Target = new IdentifierExpression() { Identifier = "__Dereference" };
-                //    ((InvocationExpression)expr).Arguments.Add((Expression)unaryOperatorExpression.Expression.AcceptVisitor(this, data));
-                //    break;
+                case ICSharpCode.NRefactory.CSharp.UnaryOperatorType.Dereference:
+                    expr = new UnaryOperatorExpression()
+                   {
+                       Expression = (Expression)unaryOperatorExpression.Expression.AcceptVisitor(this, data),
+                       Operator = UnaryOperatorType.Dereference
+                   };
+                    break;
                 default:
                     throw new Exception("Invalid value for UnaryOperatorType");
             }
@@ -1014,7 +1020,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             del.NameToken = (Identifier)delegateDeclaration.NameToken.AcceptVisitor(this, data);
 
 
-            Cache.AddVistedType(new SimpleType("Delegate"), "Delegate");
+            Cache.AddVistedType(new SimpleType(Constants.DelegateType), Constants.DelegateType);
             Cache.AddDelegateType(del.Name, del.Parameters.ToArray());
             Cache.AddDelegateReturnType(del.Name, Resolver.GetTypeName(del.ReturnType));
 
@@ -1649,6 +1655,23 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             fstmt.EmbeddedStatement = (Statement)fixedStatement.EmbeddedStatement.AcceptVisitor(this, data);
             ConvertNodes(fixedStatement.Variables, fstmt.Variables);
 
+            if (fstmt.Variables.Count > 1 && fstmt.Type is PtrType)
+            {
+                for (int i = 1; i < fstmt.Variables.Count; i++ )
+                {
+                    VariableInitializer vi = fstmt.Variables.ElementAt(i);
+                    ComposedIdentifier ci = new ComposedIdentifier(vi.Name, TextLocation.Empty);
+                    ci.PointerRank = (fixedStatement.Type as CSharp.ComposedType).PointerRank;
+                    ci.BaseIdentifier = (Identifier)vi.NameToken.Clone();
+
+                    foreach (CSharp.ArraySpecifier aspec in (fixedStatement.Type as CSharp.ComposedType).ArraySpecifiers)
+                    {
+                        ci.ArraySpecifiers.Add((ArraySpecifier)aspec.AcceptVisitor(this, data));
+                    }
+                    vi.NameToken = ci;
+                }
+            }
+
             return EndNode(fixedStatement, fstmt);
         }
 
@@ -2070,7 +2093,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     method.NameToken = CSharp.Identifier.Create(Constants.IndexerSetter);
                     method.Body = (CSharp.BlockStatement)accessor.Body.Clone();
 
-                    method.ReturnType = new CSharp.PrimitiveType("void");                    
+                    method.ReturnType = new CSharp.PrimitiveType("void");
 
                     foreach (CSharp.ParameterDeclaration p in indexer.Parameters)
                         method.AddChild((CSharp.ParameterDeclaration)p.Clone(), CSharp.Roles.Parameter);
@@ -2166,7 +2189,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitEventDeclaration(CSharp.EventDeclaration eventDeclaration, object data)
         {
             //However the type visited is not Event, we will need the library Event
-            Cache.AddVistedType(new SimpleType("Event"), "Event");
+            Cache.AddVistedType(new SimpleType(Constants.EventType), Constants.EventType);
             EventDeclaration evDecl = new EventDeclaration();
             ConvertNodes(eventDeclaration.ModifierTokens, evDecl.ModifierTokens);
             ConvertNodes(eventDeclaration.Attributes, evDecl.Attributes);
@@ -2177,7 +2200,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             {
                 String eventName = vi.Name;
                 InvocationExpression ie = new InvocationExpression();
-                ie.Target = new IdentifierExpression("EVENT_INIT");
+                ie.Target = new IdentifierExpression(Constants.EventInit);
                 ie.Arguments.Add(new IdentifierExpression(Resolver.GetTypeName(eventDeclaration.ReturnType).Replace(".", "::")));
                 ie.Arguments.Add(new IdentifierExpression(eventName));
                 Cache.AddConstructorStatement(new ExpressionStatement(ie));
@@ -2295,7 +2318,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
                 if (Resolver.IsTypeArgument(res.ReturnType))
                 {
-                    InvocationExpression ic = new InvocationExpression(new IdentifierExpression("TypeDecl"), new IdentifierExpression(Resolver.GetTypeName(res.ReturnType)));
+                    InvocationExpression ic = new InvocationExpression(new IdentifierExpression(Constants.TypeTraitDeclaration), new IdentifierExpression(Resolver.GetTypeName(res.ReturnType)));
                     res.ReturnType = new ExpressionType(ic);
                 }
 
@@ -2507,8 +2530,6 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
             vi.Initializer = (Expression)variableInitializer.Initializer.AcceptVisitor(this, data);
 
-            //vi.Initializer = Resolver.RefactorPropety(vi.Initializer, currentType.Name, "get");          
-
             vi.Name = variableInitializer.Name;
             vi.NameToken = (Identifier)variableInitializer.NameToken.AcceptVisitor(this, data);
 
@@ -2610,6 +2631,10 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 if (Resolver.IsEnumType(Resolver.GetTypeName(simpleType)) || Resolver.IsStructType(Resolver.GetTypeName(simpleType)))
                     return EndNode(simpleType, type);
 
+                if (Resolver.IsValueType(Resolver.InferNamespace(simpleType), Resolver.GetTypeName(simpleType)))
+                    return EndNode(simpleType, type);
+
+
                 var ptrType = new PtrType(type);
                 return EndNode(simpleType, ptrType);
             }
@@ -2681,7 +2706,45 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 ctype.HasNullableSpecifier = composedType.HasNullableSpecifier;
                 return EndNode(composedType, ctype);
             }
-            return composedType.BaseType.AcceptVisitor(this, data);
+
+
+            AstType retType = (AstType)composedType.BaseType.AcceptVisitor(this, data);
+
+            bool isUnsafeType = false; ;
+            for (int i = 0; i < composedType.PointerRank; i++)
+            {
+                isUnsafeType = true;
+                retType = new PtrType(retType);
+            }
+
+            if (isUnsafeType)
+            {
+                if (Resolver.IsChildOf(composedType, typeof(CSharp.VariableDeclarationStatement)))
+                {
+                    var node = Resolver.GetParentOf(composedType, typeof(CSharp.VariableDeclarationStatement));
+                    Cache.AddUnsafeVariable(currentMethod, (CSharp.VariableDeclarationStatement)node);
+                }
+
+                if (Resolver.IsChildOf(composedType, typeof(CSharp.FieldDeclaration)))
+                {
+                    var node = Resolver.GetParentOf(composedType, typeof(CSharp.FieldDeclaration));
+                    Cache.AddUnsafeField(currentType.Name, (CSharp.FieldDeclaration)node);
+                }
+
+                if (Resolver.IsChildOf(composedType, typeof(CSharp.ParameterDeclaration)))
+                {
+                    var node = Resolver.GetParentOf(composedType, typeof(CSharp.ParameterDeclaration));
+                    Cache.AddUnsafeParameterDeclaration(currentMethod, (CSharp.ParameterDeclaration)node);
+                }
+
+                if (Resolver.IsChildOf(composedType, typeof(CSharp.FixedStatement)))
+                {
+                    var node = Resolver.GetParentOf(composedType, typeof(CSharp.FixedStatement));
+                    Cache.AddUnsafeFixedStatement(currentMethod, (CSharp.FixedStatement)node);
+                }
+            }
+            
+            return retType;
         }
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitArraySpecifier(CSharp.ArraySpecifier arraySpecifier, object data)

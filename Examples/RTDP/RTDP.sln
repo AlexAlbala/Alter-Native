@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RTDP", "RTDP\RTDP.csproj", "{51FEFB6D-FFCB-421C-85D7-718230665DE7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USAL", "USAL\USAL.csproj", "{616819DA-937F-4F79-BF8A-EB5676D9E17B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemManager", "DEM\DemManager.csproj", "{D42762E4-51B2-4B10-8C8C-D7B76C2B9AAA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{51FEFB6D-FFCB-421C-85D7-718230665DE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51FEFB6D-FFCB-421C-85D7-718230665DE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51FEFB6D-FFCB-421C-85D7-718230665DE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51FEFB6D-FFCB-421C-85D7-718230665DE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{616819DA-937F-4F79-BF8A-EB5676D9E17B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{616819DA-937F-4F79-BF8A-EB5676D9E17B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{616819DA-937F-4F79-BF8A-EB5676D9E17B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{616819DA-937F-4F79-BF8A-EB5676D9E17B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D42762E4-51B2-4B10-8C8C-D7B76C2B9AAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D42762E4-51B2-4B10-8C8C-D7B76C2B9AAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D42762E4-51B2-4B10-8C8C-D7B76C2B9AAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D42762E4-51B2-4B10-8C8C-D7B76C2B9AAA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

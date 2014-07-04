@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{51FEFB6D-FFCB-421C-85D7-718230665DE7}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RTDP</RootNamespace>
+    <AssemblyName>RTDP</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Core\HotSpotAlarm.cs" />
+    <Compile Include="Metadata\CameraDelay.cs" />
+    <Compile Include="Geolocation\CAMFrame.cs" />
+    <Compile Include="Fusion\FusionSettings.cs" />
+    <Compile Include="Geolocation\GeolocationSettings.cs" />
+    <Compile Include="Images\GeorefInfo.cs" />
+    <Compile Include="DesignProperties\GPSProperties.cs" />
+    <Compile Include="Images\IrImageSettings.cs" />
+    <Compile Include="Geolocation\LNEDFrame.cs" />
+    <Compile Include="Geolocation\Geolocation.cs" />
+    <Compile Include="Images\FPFImage.cs" />
+    <Compile Include="Fusion\Fusion.cs" />
+    <Compile Include="Segmentation\HotSpot.cs" />
+    <Compile Include="Fusion\IrViMapper.cs" />
+    <Compile Include="Metadata\Metadata.cs" />
+    <Compile Include="Images\RGB.cs" />
+    <Compile Include="Core\RTDP.cs" />
+    <Compile Include="Images\RTDPImage.cs" />
+    <Compile Include="Core\RTDPSettings.cs" />
+    <Compile Include="Segmentation\SegmentationSettings.cs" />
+    <Compile Include="Geolocation\TerrainModelSettings.cs" />
+    <Compile Include="DesignProperties\UASProperties.cs" />
+    <Compile Include="Images\ViImage.cs" />
+    <Compile Include="RTDPService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Segmentation\Segmentation.cs" />
+    <Compile Include="Metadata\Telemetry.cs" />
+    <Compile Include="DesignProperties\CAMProperties.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="XMLConfig\UASProperties.xml" />
+    <Content Include="XMLConfig\RTDPSettings.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DEM\DemManager.csproj">
+      <Project>{d42762e4-51b2-4b10-8c8c-d7b76c2b9aaa}</Project>
+      <Name>DemManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\USAL\USAL.csproj">
+      <Project>{616819DA-937F-4F79-BF8A-EB5676D9E17B}</Project>
+      <Name>USAL</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>copy $(TargetFileName) "$(SolutionDir)Marea"</PostBuildEvent>
+  </PropertyGroup>
+</Project>

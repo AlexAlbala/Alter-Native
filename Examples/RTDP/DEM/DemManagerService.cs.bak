@@ -1,0 +1,210 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Reflection;
+using System.Threading;
+using log4net;
+using Marea;
+using USAL;
+
+namespace DemManager
+{
+    public class DemManagerService : IService
+    {
+        private static readonly log4net.ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private IServiceContainer container;
+        private List<USAL.Waypoint> usalFPList;
+        private List<USAL.Waypoint> usalAuxList;
+        private List<Point> FPList;
+        private List<Point> conflicts;
+        private bool end = false;
+        private bool ok = false;
+        private Features f;
+        private WgsPoint bottomLeft;
+        private WgsPoint topRight;
+
+        public bool Start(IServiceContainer container)
+        {
+            log.Info("Dem Manager Service started");
+            FPList = new List<Point>();
+            conflicts = new List<Point>();
+            f = new Features();
+            container.SubscribeEvent("ECEPL.WPGenerated", this);
+            container.RegisterService(this);
+            this.container = container;            
+            return true;
+        }
+
+        public bool Stop(IServiceContainer container)
+        {
+            //DONE Unregister a service should unsubscribe its events.
+            end = true;
+            container.UnregisterService(this);
+            log.Info("Flight Plan Manager service stopped");
+            return true;
+        }
+
+        public void VariableChanged(string id, object value)
+        {
+        }
+
+        public void EventFired(String id, object value)
+        {
+            switch (id)
+            {
+                case "ECEPL.WPGenerated":
+                    usalFPList = container.CallFunction<List<USAL.Waypoint>>("ECEPL.GetAllWaypoints", this, null);
+                    foreach (USAL.Waypoint wp in usalFPList)
+                        FPList.Add(convertUsalPosToWgsPoint(wp));
+                    ok = true;
+                    break;
+            }
+        }
+        public object FunctionCall(String id, object[] parameters)
+        {
+            switch (id)
+            {
+                case "ECEPL.ValidateFP":
+                    if (ok)
+                    {
+                        conflicts = new List<Point>();
+                        f.validateFP(FPList, Dem.Precision.medium, out conflicts);
+                        usalAuxList = new List<USAL.Waypoint>();
+                        foreach (WgsPoint wp in conflicts)
+                            usalAuxList.Add(convertWgsPointToUsalPos(wp));
+                        return usalAuxList;
+                    }
+                    else
+                    {
+                        log.Warn("FPManager has not generated the flight plan waypoints yet");
+                        return null;
+                    }
+                case "MaxAltitudeArea":
+                    bottomLeft = this.convertUsalPosToWgsPoint((USAL.Waypoint)parameters[0]);
+                    topRight = this.convertUsalPosToWgsPoint((USAL.Waypoint)parameters[1]);
+                    WgsPoint p = f.maxElevationPoint(bottomLeft, topRight, Dem.Precision.medium).toWgs();
+                    return this.convertWgsPointToUsalPos(p);
+
+                case "AreHigherThan":
+                    bottomLeft = this.convertUsalPosToWgsPoint((USAL.Waypoint)parameters[0]);
+                    topRight = this.convertUsalPosToWgsPoint((USAL.Waypoint)parameters[1]);
+                    double altitude = (double)parameters[2];
+                    List<Point> pList = f.areHigherThan(bottomLeft, topRight, Dem.Precision.medium, altitude);
+                    usalAuxList = new List<USAL.Waypoint>();
+                    foreach (Point wp in pList)
+                        usalAuxList.Add(convertWgsPointToUsalPos(wp.toWgs()));
+                    return usalAuxList;
+                case "ECEPL.ValidateLOS":
+                    if (ok)
+                    {
+                        conflicts = new List<Point>();
+                        WgsPoint gndStation = this.convertUsalPosToWgsPoint((USAL.Waypoint)parameters[0]);
+                        f.validateLOS(gndStation, FPList, Dem.Precision.medium, out conflicts);
+                        usalAuxList = new List<USAL.Waypoint>();
+                        foreach (WgsPoint wp in conflicts)
+                            usalAuxList.Add(convertWgsPointToUsalPos(wp));
+                        return usalAuxList;
+                    }
+                    else
+                    {
+                        log.Warn("FPManager has not generated the flight plan waypoints yet");
+                        return null;
+                    }
+                case "ValidateSegment":
+                    conflicts = new List<Point>();
+                    WgsPoint pStart = this.convertUsalPosToWgsPoint((USAL.Waypoint)parameters[0]);
+                    WgsPoint pEnd = this.convertUsalPosToWgsPoint((USAL.Waypoint)parameters[1]);
+                    f.validateSegment(pStart, pEnd, Dem.Precision.medium, out conflicts);
+                    usalAuxList = new List<USAL.Waypoint>();
+                    foreach (WgsPoint wp in conflicts)
+                        usalAuxList.Add(convertWgsPointToUsalPos(wp));
+                    return usalAuxList;
+                case "GetAltitude":
+                    WgsPoint pWgs = this.convertUsalPosToWgsPoint((USAL.Waypoint)parameters[0]);
+                    return f.getAltitude(pWgs, Dem.Precision.low);
+            }
+            return null;
+        }
+        public ServiceDescription GetDescription()
+        {
+            ServiceDescription s = new ServiceDescription();
+            s.Name = "DEM Manager Service";
+            s.Description = "This service provides a set of DEM support functions.";
+
+            s.Functions = new FunctionDescription[6];
+            
+            s.Functions[0] = new FunctionDescription();
+            s.Functions[0].Name = "ECEPL.ValidateFP";
+            s.Functions[0].parameters = new ParameterDescription[1];
+            s.Functions[0].parameters[0] = new ParameterDescription();
+            s.Functions[0].parameters[0].Name = "null";
+            s.Functions[0].ReturnType = "List<USAL.Waypoint>";
+           
+            s.Functions[1] = new FunctionDescription();
+            s.Functions[1].Name = "MaxAltitudeArea";
+            s.Functions[1].parameters = new ParameterDescription[2];
+            s.Functions[1].parameters[0] = new ParameterDescription();
+            s.Functions[1].parameters[0].Name = "bottomLeft";
+            s.Functions[1].parameters[0].Type = "USAL.Waypoint";
+            s.Functions[1].parameters[1] = new ParameterDescription();
+            s.Functions[1].parameters[1].Name = "topRight";
+            s.Functions[1].parameters[1].Type = "USAL.Waypoint";
+            s.Functions[1].ReturnType = "USAL.Position";
+
+            s.Functions[2] = new FunctionDescription();
+            s.Functions[2].Name = "AreHigherThan";
+            s.Functions[2].parameters = new ParameterDescription[2];
+            s.Functions[2].parameters[0] = new ParameterDescription();
+            s.Functions[2].parameters[0].Name = "bottomLeft";
+            s.Functions[2].parameters[0].Type = "USAL.Waypoint";
+            s.Functions[2].parameters[1] = new ParameterDescription();
+            s.Functions[2].parameters[1].Name = "topRight";
+            s.Functions[2].parameters[1].Type = "USAL.Waypoint";
+            s.Functions[2].ReturnType = "List<USAL.Waypoint>";
+
+            s.Functions[3] = new FunctionDescription();
+            s.Functions[3].Name = "ECEPL.ValidateLOS";
+            s.Functions[3].parameters = new ParameterDescription[1];
+            s.Functions[3].parameters[0] = new ParameterDescription();
+            s.Functions[3].parameters[0].Name = "gndStation";
+            s.Functions[3].parameters[0].Type = "USAL.Waypoint";
+            s.Functions[3].ReturnType = "List<USAL.Waypoint>";
+
+            s.Functions[4] = new FunctionDescription();
+            s.Functions[4].Name = "ValidateSegment";
+            s.Functions[4].parameters = new ParameterDescription[2];
+            s.Functions[4].parameters[0] = new ParameterDescription();
+            s.Functions[4].parameters[0].Name = "start";
+            s.Functions[4].parameters[0].Type = "USAL.Waypoint";
+            s.Functions[4].parameters[1] = new ParameterDescription();
+            s.Functions[4].parameters[1].Name = "end";
+            s.Functions[4].parameters[1].Type = "USAL.Waypoint";
+            s.Functions[4].ReturnType = "List<USAL.Waypoint>";
+
+            s.Functions[5] = new FunctionDescription();
+            s.Functions[5].Name = "GetAltitude";
+            s.Functions[5].parameters = new ParameterDescription[1];
+            s.Functions[5].parameters[0] = new ParameterDescription();
+            s.Functions[5].parameters[0].Name = "point";
+            s.Functions[5].parameters[0].Type = "USAL.Waypoint";
+            s.Functions[5].ReturnType = "double";
+            return s;
+        }
+
+        private WgsPoint convertUsalPosToWgsPoint(USAL.Waypoint usal_wp)
+        {
+            return new WgsPoint(usal_wp.latitude * 180 / Math.PI, usal_wp.longitude * 180 / Math.PI, usal_wp.altitude);
+        }
+
+        private USAL.Waypoint convertWgsPointToUsalPos(WgsPoint wp)
+        {
+            USAL.Waypoint aux = new Waypoint();
+            aux.altitude = (float)wp.getAltitude();
+            aux.longitude = wp.getLongitude() * Math.PI / 180.0;
+            aux.latitude = wp.getLatitude() * Math.PI / 180.0;
+            return aux; 
+        }
+                
+
+    }
+}
