@@ -43,6 +43,7 @@ On Windows
 			bootstrap.bat
 			b2.exe --prefix=<INSTALLATION_DIR> --toolset=msvc-11.0
 	+ Have a coffee or two :)
+	+ Probably you shohuld set the environment variable BOOST_INCLUDEDIR pointing to the installation directory in order to enable cmake to find the libraries. Check this variable if cmake is not working
 * For use the c++11 features you will need the compiler v120 CTP of November 2012
 	+ http://www.microsoft.com/en-us/download/details.aspx?id=35515
 	+ The new released v120 CTP November 2013 for visual Studio 2013 does not work properly
