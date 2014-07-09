@@ -569,6 +569,11 @@ namespace ICSharpCode.NRefactory.Cpp
                 QualifiedType qt = type as QualifiedType;
                 return qt.Name;
             }
+            else if (type is ReferenceType)
+            {
+                ReferenceType rt = type as ReferenceType;
+                return GetTypeName(rt.Target);
+            }
             else if (type == AstType.Null)
                 return String.Empty;
             else if (type is PrimitiveType)
