@@ -18,7 +18,7 @@
 	url = https://github.com/AlexAlbala/AlterNative-CXX-Lib.git
 [submodule "AlterNative.Core/Tests"]
 	path = AlterNative.Core/Tests
-	url = https://github.com/AlexAlbala/AlterNative-Tests.git
+	url = git@github.com:AlexAlbala/AlterNative-Tests.git
 [submodule "AlterNative.Core/Tools/Android/Boost-for-Android"]
 	path = AlterNative.Core/Tools/Android/Boost-for-Android
 	url = https://github.com/MysticTreeGames/Boost-for-Android
