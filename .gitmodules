@@ -13,6 +13,3 @@
 [submodule "Tests"]
 	path = Tests
 	url = git@github.com:AlexAlbala/AlterNative-Tests.git
-[submodule "AlterNative.Core/Lib"]
-	path = AlterNative.Core/Lib
-	url = https://github.com/AlexAlbala/AlterNative-CXX-Lib.git
