@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # ALTERNATIVE_PATH
 export ALTERNATIVE_HOME=`pwd`
