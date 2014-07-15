@@ -304,13 +304,21 @@ namespace AlterNative
                 //LOAD TARGET ASSEMBLY
                 adef = Commands.LoadAssembly(Config.Extra[0].Replace('\\', '/'));
 
-                string fullPath = "";
+                /*string fullPath = "";
                 if (Config.Extra[0].Replace('\\', '/').Contains('/'))
                     fullPath = Config.Extra[0].Substring(0, Config.Extra[0].Replace('\\', '/').LastIndexOf("/"));
                 else
                     fullPath = Path.Combine(Environment.CurrentDirectory, Config.Extra[0]);
 
-                assemblyLocation = fullPath.Substring(0, fullPath.LastIndexOf('/'));
+                assemblyLocation = fullPath.Substring(0, fullPath.LastIndexOf('/'));*/
+
+                //Hakan648 - fixed: Length cannot be less than zero.
+                bool isTargetInADir = Config.Extra[0].Contains('\\');
+
+                if (isTargetInADir)
+                    assemblyLocation = Path.GetDirectoryName(Config.Extra[0]);
+                else
+                    assemblyLocation = Environment.CurrentDirectory;
             }
 
             if (Config.Extra[0].EndsWith("dll"))

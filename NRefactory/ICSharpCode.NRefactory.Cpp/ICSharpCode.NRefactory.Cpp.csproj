@@ -109,6 +109,7 @@
     <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderDestructorDeclaration.cs" />
     <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderEventDeclaration.cs" />
     <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderFieldDeclaration.cs" />
+    <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderMacroExpression.cs" />
     <Compile Include="Ast\TypeMembers\HeaderNodes\HeaderMethodDeclaration.cs" />
     <Compile Include="Ast\TypeMembers\VariadicParameterDeclaration.cs" />
     <Compile Include="Ast\TypeName\AstType.cs" />

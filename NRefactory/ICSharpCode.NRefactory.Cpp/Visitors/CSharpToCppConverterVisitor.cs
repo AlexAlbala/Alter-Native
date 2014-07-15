@@ -23,7 +23,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
     public class CSharpToCppConverterVisitor : CSharp.IAstVisitor<object, Cpp.AstNode>
     {
-        //Auxiliar list to change the array specifiers from one branch to another 
+        //Auxiliar list to change the array specifiers from one branch to another
         private CSharp.TypeDeclaration currentType;
         private string currentMethod;
         private bool isInterface;
@@ -257,9 +257,20 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitBinaryOperatorExpression(CSharp.BinaryOperatorExpression binaryOperatorExpression, object data)
         {
+            bool dereferenceLeft = Resolver.NeedsDereference(binaryOperatorExpression.Left, currentType.Name, currentMethod);
+            bool dereferenceRight = Resolver.NeedsDereference(binaryOperatorExpression.Right, currentType.Name, currentMethod);
+
             var left = (Expression)binaryOperatorExpression.Left.AcceptVisitor(this, data);
             var op = BinaryOperatorType.Any;
             var right = (Expression)binaryOperatorExpression.Right.AcceptVisitor(this, data);
+
+
+            //TODO: Maybe we can check in all the ObjectExpressions, and not here...
+            if (dereferenceRight && !(binaryOperatorExpression.Right is CSharp.IdentifierExpression))
+                right = new PointerExpression(right.Clone());
+
+            if (dereferenceLeft && !(binaryOperatorExpression.Left is CSharp.IdentifierExpression))
+                left = new PointerExpression(left.Clone());
 
             switch (binaryOperatorExpression.Operator)
             {
@@ -1657,7 +1668,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
             if (fstmt.Variables.Count > 1 && fstmt.Type is PtrType)
             {
-                for (int i = 1; i < fstmt.Variables.Count; i++ )
+                for (int i = 1; i < fstmt.Variables.Count; i++)
                 {
                     VariableInitializer vi = fstmt.Variables.ElementAt(i);
                     ComposedIdentifier ci = new ComposedIdentifier(vi.Name, TextLocation.Empty);
@@ -1790,8 +1801,40 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitSwitchStatement(CSharp.SwitchStatement switchStatement, object data)
         {
             var _switch = new SwitchStatement();
-            _switch.Expression = (Expression)switchStatement.Expression.AcceptVisitor(this, data);
+            _switch.Expression = (Expression)switchStatement.Expression.AcceptVisitor(this, data);            
             ConvertNodes(switchStatement.SwitchSections, _switch.SwitchSections);
+
+            if (Resolver.IsStringSwitch(_switch))
+            {
+
+                string switchIdentifier = Resolver.RefactorStringSwitchStatement(_switch);
+
+                //ADD HEADER NODE
+                //STRING_SWITCH(mySwitch, 3, case1, case2, case3);
+
+                HeaderMacroExpression hm = new HeaderMacroExpression();
+
+
+                hm.Target = new IdentifierExpression(Constants.SwitchStringMacro);
+
+                List<Expression> parameters = new List<Expression>();
+
+                parameters.Add(new IdentifierExpression(switchIdentifier));
+
+                int numLabels = 0;
+                foreach (CSharp.SwitchSection ss in switchStatement.SwitchSections)
+                {
+                    numLabels += ss.CaseLabels.Count;
+                    foreach (CSharp.CaseLabel cl in ss.CaseLabels)
+                        parameters.Add(new IdentifierExpression((cl.Expression as CSharp.PrimitiveExpression).Value.ToString()));
+                }
+
+                parameters.Insert(1, new PrimitiveExpression(numLabels));
+                hm.Arguments.AddRange(parameters);
+
+                Cache.AddExtraHeaderNode(hm);
+            }
+            
             return EndNode(switchStatement, _switch);
         }
 
@@ -2743,7 +2786,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     Cache.AddUnsafeFixedStatement(currentMethod, (CSharp.FixedStatement)node);
                 }
             }
-            
+
             return retType;
         }
 

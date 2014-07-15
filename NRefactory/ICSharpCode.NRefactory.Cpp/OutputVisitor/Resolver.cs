@@ -208,6 +208,44 @@ namespace ICSharpCode.NRefactory.Cpp
             return false;
         }
 
+        public static bool IsStringSwitch(SwitchStatement switchStatement)
+        {
+            foreach (SwitchSection section in switchStatement.SwitchSections)
+            {
+                foreach (CaseLabel caseLabel in section.CaseLabels)
+                {
+                    if (caseLabel.Expression is ObjectCreateExpression)
+                    {
+                        ObjectCreateExpression pexpr = (caseLabel.Expression as ObjectCreateExpression);
+                        if (GetTypeName(pexpr.Type) == "String")
+                            return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public static String RefactorStringSwitchStatement(SwitchStatement switchStatement)
+        {
+            string switchName = ("s" + switchStatement.GetHashCode());
+            var invocation = new InvocationExpression(new MemberReferenceExpression(
+                new IdentifierExpression(switchName), Constants.ParseStringSwitch) { isValueType = true }, new List<Expression>() { switchStatement.Expression.Clone() });
+            switchStatement.Expression = invocation;
+
+            foreach (SwitchSection section in switchStatement.SwitchSections)
+            {
+                foreach (CaseLabel caseLabel in section.CaseLabels)
+                {
+                    ObjectCreateExpression pexpr = (caseLabel.Expression as ObjectCreateExpression);
+                    PrimitiveExpression primitive = pexpr.Arguments.ElementAt(0) as PrimitiveExpression;
+
+                    caseLabel.Expression = new MemberReferenceExpression(new TypeReferenceExpression(new SimpleType(switchName + "_labels")), (string)primitive.Value);
+                }
+            }
+
+            return switchName;
+        }
+
 
         /// <summary>
         /// Returns if a forward declaration is needed between two types
@@ -1035,11 +1073,13 @@ namespace ICSharpCode.NRefactory.Cpp
         /// <returns></returns>
         public static bool NeedsDereference(CSharp.AstNode node, string currentType, string currentMethod)
         {
+
+
             //This method can be implemented in a more optimized way, but I prefer distinguish all the cases for control better the process
             if (node is CSharp.IdentifierExpression)
             {
                 var identifierExpression = node as CSharp.IdentifierExpression;
-                //We must check if the return type is different to the original type, if that is, it is necessar or maybe a cast, or maybe there is an operator. In both cases the identifier must be de-referenced:
+                //We must check if the return type is different to the original type, if that is, it is necessary or maybe a cast, or maybe there is an operator. In both cases the identifier must be de-referenced:
                 //From IA* a = c; we must obtain IA* a = *c;
                 //TODO: MAYBE we should add a cast for security ?
 
@@ -1049,7 +1089,14 @@ namespace ICSharpCode.NRefactory.Cpp
 
                 //IF IS CHILD OF BINARY OPERATOR, WE SHOULD DEREFERENCE FOR TRIGGERING THE OPERATORS
                 if (IsDirectChildOf(node, typeof(CSharp.BinaryOperatorExpression)))
-                    return NeedsDereference(identifierExpression.Identifier, currentType, currentMethod, null);
+                {
+                    //Check if is an expression like if(s == null) --> cannot translate to (*s == null)
+                    var bin = (CSharp.BinaryOperatorExpression)GetParentOf(node, typeof(CSharp.BinaryOperatorExpression));
+                    if (bin.Left is CSharp.NullReferenceExpression || bin.Right is CSharp.NullReferenceExpression)
+                        return false;
+
+                    return NeedsDereference(identifierExpression.Identifier, currentType, currentMethod, identifierExpression.Identifier);
+                }
 
                 if (IsChildOf(node, typeof(CSharp.AssignmentExpression)))
                 {
@@ -1200,7 +1247,7 @@ namespace ICSharpCode.NRefactory.Cpp
                         }
                         return false;
                     }
-                }
+                }                
                 else//! IS CHILD OF VARIABLEINITIALIZER
                 {
                     return false;
@@ -1236,6 +1283,21 @@ namespace ICSharpCode.NRefactory.Cpp
                 }
                 else
                     return false;
+            }
+            else if (node is CSharp.ObjectCreateExpression)
+            {
+                if (IsDirectChildOf(node, typeof(CSharp.BinaryOperatorExpression))) 
+                    return true;
+
+                return false;
+            }
+            else if (node is CSharp.PrimitiveExpression)
+            {
+                if ((node as CSharp.PrimitiveExpression).Value is String)
+                    if (IsDirectChildOf(node, typeof(CSharp.BinaryOperatorExpression)))
+                        return true;
+
+                return false;
             }
             else //! IS IDENTIFIEREXPRESSION
                 return false;

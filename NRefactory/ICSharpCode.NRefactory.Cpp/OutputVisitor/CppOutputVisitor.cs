@@ -2342,7 +2342,7 @@ namespace ICSharpCode.NRefactory.Cpp
             operatorDeclaration.ReturnType.AcceptVisitor(this, data);
 
             Space();
-            WriteKeyword("operator",OperatorDeclaration.OperatorKeywordRole);
+            WriteKeyword("operator", OperatorDeclaration.OperatorKeywordRole);
             Space();
             if (operatorDeclaration.OperatorType == OperatorType.Explicit
                 || operatorDeclaration.OperatorType == OperatorType.Implicit)
@@ -3314,14 +3314,10 @@ namespace ICSharpCode.NRefactory.Cpp
             Space(policy.SpacesWithinSwitchParentheses);
             RPar();
             OpenBrace(policy.StatementBraceStyle);
-            if (!policy.IndentSwitchBody)
-                formatter.Unindent();
 
             foreach (var section in switchStatement.SwitchSections)
                 section.AcceptVisitor(this, data);
 
-            if (!policy.IndentSwitchBody)
-                formatter.Indent();
             CloseBrace(policy.StatementBraceStyle);
             NewLine();
             return EndNode(switchStatement);
@@ -3482,12 +3478,12 @@ namespace ICSharpCode.NRefactory.Cpp
         public object VisitUsingNamespaceStatement(UsingNamespaceStatement usingStatement, object data)
         {
             throw new NotImplementedException();
-            StartNode(usingStatement);
+            /*StartNode(usingStatement);
             WriteKeyword("using");
             WriteKeyword("namespace");
 
             usingStatement.ResourceAcquisition.AcceptVisitor(this, data);
-            return EndNode(usingStatement);
+            return EndNode(usingStatement);*/
         }
 
         public object VisitVariableDeclarationStatement(VariableDeclarationStatement variableDeclarationStatement, object data)
@@ -3616,7 +3612,7 @@ namespace ICSharpCode.NRefactory.Cpp
 
         public object VisitPointerExpression(PointerExpression pointerExpression, object data)
         {
-            StartNode(pointerExpression);            
+            StartNode(pointerExpression);
             WriteToken("*", PointerExpression.AsteriskRole);
 
             if (!(pointerExpression.Target is IdentifierExpression))
@@ -3983,6 +3979,24 @@ namespace ICSharpCode.NRefactory.Cpp
             referenceType.Target.AcceptVisitor(this, data);
             WriteToken("&", ReferenceType.AddressRole);
             return EndNode(referenceType);
+        }
+
+
+        public object VisitHeaderMacroExpression(HeaderMacroExpression headerMacroExpression, object data)
+        {
+            StartNode(headerMacroExpression);
+            WriteAccesorModifier(headerMacroExpression.ModifierTokens);
+            formatter.Indent();
+            headerMacroExpression.Target.AcceptVisitor(this, data);
+            Space(policy.SpaceBeforeMethodCallParentheses);
+
+            if (headerMacroExpression.Arguments.Any())
+                WriteCommaSeparatedListInParenthesis(headerMacroExpression.Arguments, policy.SpaceWithinMethodCallParentheses);
+
+            Semicolon();
+            formatter.Unindent();
+            NewLine();
+            return EndNode(headerMacroExpression);
         }
     }
 }

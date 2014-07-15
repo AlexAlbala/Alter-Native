@@ -154,6 +154,7 @@ namespace ICSharpCode.NRefactory.Cpp
         S VisitMethodDeclaration(MethodDeclaration methodDeclaration, T data);
         S VisitExternMethodDeclaration(ExternMethodDeclaration externMethodDeclaration, T data);//**************
         S VisitHeaderMethodDeclaration(HeaderMethodDeclaration headerMethodDeclaration, T data);//***************
+        S VisitHeaderMacroExpression(HeaderMacroExpression headerMacroExpression, T data);//******************
         S VisitHeaderAbstractMethodDeclaration(HeaderAbstractMethodDeclaration headerAbstractMethodDeclaration, T data);//***************
         S VisitOperatorDeclaration(OperatorDeclaration operatorDeclaration, T data);
         S VisitConversionConstructorDeclaration(ConversionConstructorDeclaration conversionConstructorDeclaration, T data);//************
