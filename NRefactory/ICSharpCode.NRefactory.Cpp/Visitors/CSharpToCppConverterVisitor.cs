@@ -257,8 +257,13 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitBinaryOperatorExpression(CSharp.BinaryOperatorExpression binaryOperatorExpression, object data)
         {
-            bool dereferenceLeft = Resolver.NeedsDereference(binaryOperatorExpression.Left, currentType.Name, currentMethod);
-            bool dereferenceRight = Resolver.NeedsDereference(binaryOperatorExpression.Right, currentType.Name, currentMethod);
+            bool dereferenceLeft = false;
+            bool dereferenceRight = false;
+            if (currentType != null)
+            {
+                dereferenceLeft = Resolver.NeedsDereference(binaryOperatorExpression.Left, currentType.Name, currentMethod);
+                dereferenceRight = Resolver.NeedsDereference(binaryOperatorExpression.Right, currentType.Name, currentMethod);
+            }
 
             var left = (Expression)binaryOperatorExpression.Left.AcceptVisitor(this, data);
             var op = BinaryOperatorType.Any;
