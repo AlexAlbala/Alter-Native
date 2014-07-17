@@ -102,6 +102,66 @@ namespace AlterNative
             return exitCode;
         }
 
+        public static void CompileNetCode(DirectoryInfo di)
+        {
+            string cscPath = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
+            cscPath += @"csc.exe";
+
+            Process p = new Process();
+            string pargs = "";
+            foreach (FileInfo f in di.GetFiles())
+            {
+                pargs += f.FullName;
+                pargs += "";
+            }
+#if CORE
+            p.StartInfo = new ProcessStartInfo(cscPath, args);
+#else
+            p.StartInfo = new ProcessStartInfo("csc", pargs);
+#endif
+            p.StartInfo.CreateNoWindow = true;
+            p.StartInfo.UseShellExecute = false;
+
+            if (Config.Verbose)
+            {
+                p.StartInfo.RedirectStandardOutput = true;
+                p.OutputDataReceived += (sender, args) => Utils.WriteToConsole(args.Data);
+            }
+
+            p.Start();
+            if (Config.Verbose)
+                p.BeginOutputReadLine();
+
+            p.WaitForExit();
+        }
+
+        public static void CompileNetCode(FileInfo fi)
+        {
+            string cscPath = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
+            cscPath += @"csc.exe";
+
+            Process p = new Process();
+#if CORE
+            p.StartInfo = new ProcessStartInfo(cscPath, fi.FullName);
+#else
+            p.StartInfo = new ProcessStartInfo("csc", fi.FullName);
+#endif
+            p.StartInfo.CreateNoWindow = true;
+            p.StartInfo.UseShellExecute = false;
+
+            if (Config.Verbose)
+            {
+                p.StartInfo.RedirectStandardOutput = true;
+                p.OutputDataReceived += (sender, args) => Utils.WriteToConsole(args.Data);
+            }
+
+            p.Start();
+            if (Config.Verbose)
+                p.BeginOutputReadLine();
+
+            p.WaitForExit();
+        }
+
         public static AssemblyDefinition NewTemplate(DirectoryInfo output)
         {
             Utils.WriteToConsole("Creating blank template...");

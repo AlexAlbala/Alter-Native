@@ -141,7 +141,7 @@ namespace AlterNative
 
             if (Config.Extra.Count == 0)
             {
-                Console.Write("alternative: ");
+                Utils.WriteToConsole("alternative: ");
                 Utils.WriteToConsole("Command not specified.");
                 Utils.WriteToConsole("Try `alternative --help' for more information.");
                 return -1;
@@ -167,7 +167,7 @@ namespace AlterNative
                     }
                     else
                     {
-                        Console.Write("alternative: ");
+                        Utils.WriteToConsole("alternative: ");
                         Utils.WriteToConsole("Command 'translate' requires 2 parameters.");
                         Utils.WriteToConsole("Try `alternative --help' for more information.");
                         return -1;
@@ -181,7 +181,7 @@ namespace AlterNative
                     }
                     else
                     {
-                        Console.Write("alternative: ");
+                        Utils.WriteToConsole("alternative: ");
                         Utils.WriteToConsole("Command 'new' requires 1 parameter.");
                         Utils.WriteToConsole("Try `alternative --help' for more information.");
                         return -1;
@@ -195,7 +195,7 @@ namespace AlterNative
                     }
                     else
                     {
-                        Console.Write("alternative: ");
+                        Utils.WriteToConsole("alternative: ");
                         Utils.WriteToConsole("Command 'make' requires 1 parameter.");
                         Utils.WriteToConsole("Try `alternative --help' for more information.");
                         return -1;
@@ -286,12 +286,6 @@ namespace AlterNative
                 int cmakeCode;
                 DirectoryInfo buildDir = Commands.RunCMake(new DirectoryInfo(outputDir), out cmakeCode);
                 int compileCode = Commands.Compile(buildDir);
-
-
-                ConsoleColor current = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.Green;
-                Utils.WriteToConsole("alternative make done");
-                Console.ForegroundColor = current;
                 if (cmakeCode == 0 && compileCode == 0)
                     return 0;
                 else if (cmakeCode == 0 && compileCode != 0)
@@ -303,14 +297,6 @@ namespace AlterNative
             {
                 //LOAD TARGET ASSEMBLY
                 adef = Commands.LoadAssembly(Config.Extra[0].Replace('\\', '/'));
-
-                /*string fullPath = "";
-                if (Config.Extra[0].Replace('\\', '/').Contains('/'))
-                    fullPath = Config.Extra[0].Substring(0, Config.Extra[0].Replace('\\', '/').LastIndexOf("/"));
-                else
-                    fullPath = Path.Combine(Environment.CurrentDirectory, Config.Extra[0]);
-
-                assemblyLocation = fullPath.Substring(0, fullPath.LastIndexOf('/'));*/
 
                 //Hakan648 - fixed: Length cannot be less than zero.
                 bool isTargetInADir = Config.Extra[0].Contains('\\');
@@ -329,6 +315,17 @@ namespace AlterNative
             {
                 Config.targetType = TargetType.Executable;
             }
+            //else if (Config.Extra[0].EndsWith("cs"))
+            //{
+            //    Commands.CompileNetCode(new FileInfo(Config.Extra[0]));
+            //    Config.targetType = TargetType.DynamicLinkLibrary;
+            //}
+            //else
+            //{
+            //    DirectoryInfo di = new DirectoryInfo(Config.Extra[0]);
+            //    if (di.Exists)
+            //        Commands.CompileNetCode(di);
+            //}
 
             if (!Directory.Exists(outputDir))
             {
@@ -360,14 +357,7 @@ namespace AlterNative
                 //TRIM END .EXE : BUG If The name is File.exe, trim end ".exe" returns Fil !!!!
                 string name = adef.MainModule.Name.Substring(0, adef.MainModule.Name.Length - 4);
                 CMakeGenerator.GenerateCMakeLists(name + "Proj", name, outputDir, FileWritterManager.GetSourceFiles(), Config.Release);
-
-#if !CORE
-                Console.ForegroundColor = ConsoleColor.Green;
-#endif
-                Utils.WriteToConsole("Done");
-#if !CORE
-                Console.ResetColor();
-#endif
+                
                 return 0;
             }
             catch (Exception e)
