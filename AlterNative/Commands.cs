@@ -115,7 +115,7 @@ namespace AlterNative
                 pargs += "";
             }
 #if CORE
-            p.StartInfo = new ProcessStartInfo(cscPath, args);
+            p.StartInfo = new ProcessStartInfo(cscPath, pargs);
 #else
             p.StartInfo = new ProcessStartInfo("csc", pargs);
 #endif
