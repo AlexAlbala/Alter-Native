@@ -1,0 +1,26 @@
+<map id="GC_new_hblk" name="GC_new_hblk">
+<area shape="rect" id="node2" href="$allchblk_8c.html#ab758d030b4c890f46ec207ffbadd0967" title="GC_allochblk" alt="" coords="174,284,273,311"/>
+<area shape="rect" id="node20" href="$gc__priv_8h.html#ad83b8023011c333edd39adb21458dbd4" title="GC_set_hdr_marks" alt="" coords="156,360,291,387"/>
+<area shape="rect" id="node21" href="$new__hblk_8c.html#a1ffa0ee76105d4c9830de21c04dd5332" title="GC_build_fl" alt="" coords="179,436,267,463"/>
+<area shape="rect" id="node3" href="$allchblk_8c.html#abd87fec812664ad342311f194dff9a25" title="GC_hblk_fl_from_blocks" alt="" coords="963,335,1125,362"/>
+<area shape="rect" id="node4" href="$allchblk_8c.html#ae8d1ab0705e104d5a63e052cb3408720" title="GC_allochblk_nth" alt="" coords="371,234,495,260"/>
+<area shape="rect" id="node17" href="$alloc_8c.html#acd4e74215cc34d11e02482518139ea4e" title="GC_should_collect" alt="" coords="367,284,498,311"/>
+<area shape="rect" id="node19" href="$allchblk_8c.html#a6e7f26fe6d27dcb9ff9c549f2127402f" title="GC_enough_large_bytes_left" alt="" coords="339,335,527,362"/>
+<area shape="rect" id="node5" href="$blacklst_8c.html#a09379695f0068b1fc486723c246b5652" title="GC_is_black_listed" alt="" coords="584,31,719,58"/>
+<area shape="rect" id="node6" href="$headers_8c.html#a35a484969203faacc72e0504354ebdb9" title="GC_install_header" alt="" coords="779,183,907,210"/>
+<area shape="rect" id="node7" href="$allchblk_8c.html#a23cfb9bd6a246d089d8e040900236a19" title="GC_split_block" alt="" coords="596,436,707,463"/>
+<area shape="rect" id="node11" href="$allchblk_8c.html#a5bc299add24d3a93820d76f9fbeabaab" title="GC_remove_from_fl" alt="" coords="776,335,911,362"/>
+<area shape="rect" id="node12" href="$gc_2include_2gc_8h.html#a7e0f997409f0b1753e44b648fcd6fc39" title="void" alt="" coords="629,132,673,159"/>
+<area shape="rect" id="node13" href="$allchblk_8c.html#a2aef92dec05ab3efdcffd5800bb48098" title="GC_get_first_part" alt="" coords="590,335,713,362"/>
+<area shape="rect" id="node14" href="$headers_8c.html#aa829f37cb720b11a17c086a06701b49b" title="GC_install_counts" alt="" coords="587,183,715,210"/>
+<area shape="rect" id="node15" href="$headers_8c.html#a098f4fb08a9258fd53bad08d3e374845" title="GC_remove_counts" alt="" coords="584,234,719,260"/>
+<area shape="rect" id="node16" href="$gc__priv_8h.html#ac4f8d20ee0d59bc2cab4984343affea6" title="GC_remove_protection" alt="" coords="575,284,728,311"/>
+<area shape="rect" id="node8" href="$allchblk_8c.html#a35c81a7ba38ff83261e14688fa5f2093" title="GC_add_to_fl" alt="" coords="793,386,893,412"/>
+<area shape="rect" id="node9" href="$allchblk_8c.html#aec8e6e0a99e26eaf364c4b13c3d1e2bd" title="GC_free_block_ending_at" alt="" coords="959,386,1129,412"/>
+<area shape="rect" id="node10" href="$headers_8c.html#a966794470a9e8bcabc77c40e39d18ff0" title="GC_prev_block" alt="" coords="1177,386,1287,412"/>
+<area shape="rect" id="node18" href="$alloc_8c.html#a787e55a8f7a41f3e2b912feffded1927" title="GC_adj_bytes_allocd" alt="" coords="579,487,724,514"/>
+<area shape="rect" id="node22" href="$new__hblk_8c.html#a52bfedf4087bebcf9eddfab0c60258e7" title="GC_build_fl_clear2" alt="" coords="367,386,498,412"/>
+<area shape="rect" id="node23" href="$new__hblk_8c.html#a752ce1cb692361c45b97188efc803bea" title="GC_build_fl2" alt="" coords="385,436,480,463"/>
+<area shape="rect" id="node24" href="$new__hblk_8c.html#a52276cdaca19542c38b2c1238e13c8d4" title="GC_build_fl_clear4" alt="" coords="367,487,498,514"/>
+<area shape="rect" id="node25" href="$new__hblk_8c.html#a25b9fb64601057195e1ad9fb435ec46e" title="GC_build_fl4" alt="" coords="385,538,480,564"/>
+</map>

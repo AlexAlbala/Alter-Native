@@ -1,0 +1,9 @@
+<map id="AO_compare_double_and_swap_double_emulation" name="AO_compare_double_and_swap_double_emulation">
+<area shape="rect" id="node2" href="$acquire__release__volatile_8h.html#a38908e49c95fafba077fbeb130f0d930" title="AO_load_acquire" alt="" coords="227,5,348,32"/>
+<area shape="rect" id="node3" href="$atomic__ops_8c.html#a917e124262f5e2e7ba0eef1edcf9defc" title="lock" alt="" coords="264,56,311,83"/>
+<area shape="rect" id="node7" href="$atomic__ops_8c.html#a30aa55f5b9634de427bd68c2b862af23" title="unlock" alt="" coords="257,107,317,133"/>
+<area shape="rect" id="node8" href="$acquire__release__volatile_8h.html#a5a48a48680fe8ac93029366b77457181" title="AO_store_release" alt="" coords="224,157,351,184"/>
+<area shape="rect" id="node4" href="$gcc_2powerpc_8h.html#a0af1bdd53473eb43906a057efe883f6d" title="AO_test_and_set_acquire" alt="" coords="399,56,571,83"/>
+<area shape="rect" id="node5" href="$gcc_2powerpc_8h.html#a8ec1c2583e26c57a7b4d17f239fa41e8" title="AO_test_and_set" alt="" coords="619,31,741,57"/>
+<area shape="rect" id="node6" href="$gcc_2powerpc_8h.html#a75a6574066b34ce697dcc012ec0e7128" title="AO_lwsync" alt="" coords="636,81,724,108"/>
+</map>

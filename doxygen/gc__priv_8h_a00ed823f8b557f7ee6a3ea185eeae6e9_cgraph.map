@@ -1,0 +1,18 @@
+<map id="GC_continue_reclaim" name="GC_continue_reclaim">
+<area shape="rect" id="node2" href="$reclaim_8c.html#a713b42be146628271b9fceb7e768ded4" title="GC_reclaim_small_nonempty\l_block" alt="" coords="200,150,392,191"/>
+<area shape="rect" id="node3" href="$reclaim_8c.html#a0bf4ca5537f7291287c78c2b67194525" title="GC_reclaim_check" alt="" coords="443,107,575,133"/>
+<area shape="rect" id="node12" href="$reclaim_8c.html#a1cd641bd689b35751eeffdf2cab254fa" title="GC_reclaim_generic" alt="" coords="440,208,579,235"/>
+<area shape="rect" id="node4" href="$reclaim_8c.html#afccf6e87c1d8bdbe9ea41221a3dc78ad" title="GC_add_leaked" alt="" coords="646,81,761,108"/>
+<area shape="rect" id="node5" href="$dbg__mlc_8c.html#a4985b7b1cc5846b5fc372ada1a410071" title="GC_check_leaked" alt="" coords="828,56,956,83"/>
+<area shape="rect" id="node8" href="$gc__priv_8h.html#a00ea68d1c7f466442a29bfd963b12f86" title="GC_set_mark_bit" alt="" coords="1030,107,1153,133"/>
+<area shape="rect" id="node6" href="$dbg__mlc_8c.html#a1e8d4ec327bfee97d5936431e51c3ef6" title="GC_has_other_debug_info" alt="" coords="1004,5,1179,32"/>
+<area shape="rect" id="node9" href="$dbg__mlc_8c.html#a25d9083b1d677389672528b7e55c0ce6" title="GC_add_smashed" alt="" coords="1027,56,1156,83"/>
+<area shape="rect" id="node7" href="$gc_2include_2gc_8h.html#a499ad7765a60a7307ef93fddda6201a9" title="GC_size" alt="" coords="1245,5,1317,32"/>
+<area shape="rect" id="node10" href="$gc__priv_8h.html#acd61070bde5ffc7ab1df410140aa4514" title="GC_is_marked" alt="" coords="1227,56,1335,83"/>
+<area shape="rect" id="node11" href="$gc_2include_2gc_8h.html#a8b93cd0c8d9c312bbdf0e679d10b680a" title="GC_base" alt="" coords="1243,107,1319,133"/>
+<area shape="rect" id="node13" href="$headers_8c.html#a82a38fd3345ecdd1ab8e84422ed16022" title="GC_find_header" alt="" coords="835,183,949,209"/>
+<area shape="rect" id="node14" href="$gc__priv_8h.html#ac4f8d20ee0d59bc2cab4984343affea6" title="GC_remove_protection" alt="" coords="627,183,780,209"/>
+<area shape="rect" id="node15" href="$reclaim_8c.html#aabd87ab113c340acadee4ebda9405a7b" title="GC_reclaim_clear" alt="" coords="641,233,766,260"/>
+<area shape="rect" id="node16" href="$reclaim_8c.html#a570e9a28a7e0dfd2a73251c63228d781" title="GC_reclaim_uninit" alt="" coords="639,284,767,311"/>
+<area shape="rect" id="node17" href="$gc__priv_8h.html#ad83b8023011c333edd39adb21458dbd4" title="GC_set_hdr_marks" alt="" coords="636,335,771,361"/>
+</map>

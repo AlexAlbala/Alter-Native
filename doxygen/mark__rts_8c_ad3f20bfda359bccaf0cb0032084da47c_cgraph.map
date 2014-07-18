@@ -1,0 +1,14 @@
+<map id="GC_push_regs_and_stack" name="GC_push_regs_and_stack">
+<area shape="rect" id="node2" href="$gc__priv_8h.html#a5a1c34f689b8cac916d04dc425bcd9c9" title="GC_with_callee_saves\l_pushed" alt="" coords="233,49,385,90"/>
+<area shape="rect" id="node5" href="$mark__rts_8c.html#ac2454a4aadfafe9dfb753e57ca30620c" title="GC_push_current_stack" alt="" coords="228,136,391,163"/>
+<area shape="rect" id="node3" href="$gc_2include_2gc_8h.html#a7e0f997409f0b1753e44b648fcd6fc39" title="void" alt="" coords="499,5,543,32"/>
+<area shape="rect" id="node4" href="$gc_2include_2gc_8h.html#a233015def2a1752a7feb7c81d34f89e6" title="GC_noop1" alt="" coords="479,56,562,83"/>
+<area shape="rect" id="node6" href="$gc__priv_8h.html#a8277a30b7d817358a9efd8a451e3c2b8" title="GC_push_all_eager" alt="" coords="885,111,1020,137"/>
+<area shape="rect" id="node7" href="$mark__rts_8c.html#a63ad3c8487c6bdefff474f15bb986e81" title="GC_approx_sp" alt="" coords="467,157,575,184"/>
+<area shape="rect" id="node8" href="$mark__rts_8c.html#a9af4fc16cb85c8464638e00ee93b50b9" title="GC_push_all_stack_part\l_eager_sections" alt="" coords="439,209,603,250"/>
+<area shape="rect" id="node9" href="$mark__rts_8c.html#a5bb550ee3a78d00156d6baac756bb244" title="GC_push_all_stack_partially\l_eager" alt="" coords="651,195,837,237"/>
+<area shape="rect" id="node10" href="$gc__priv_8h.html#a3ff4a0804ef33fd7475e417db3ecbd3e" title="GC_push_all_stack" alt="" coords="885,175,1020,201"/>
+<area shape="rect" id="node13" href="$gc__priv_8h.html#a7e939c9ffe2b7978971e028805099002" title="GC_push_all" alt="" coords="905,225,1001,252"/>
+<area shape="rect" id="node11" href="$mark_8c.html#ad2f00cd8cc52fff7f15194e65dc1745c" title="GC_push_all_eager" alt="" coords="1068,149,1203,176"/>
+<area shape="rect" id="node12" href="$mark_8c.html#aa44943ee934cbd0fc066356360a77e63" title="GC_push_all" alt="" coords="1087,200,1183,227"/>
+</map>

@@ -1,0 +1,17 @@
+<map id="AO_lwsync" name="AO_lwsync">
+<area shape="rect" id="node2" href="$gcc_2powerpc_8h.html#a7b4e8216189c3f4e7f7418e5c2a98b0f" title="AO_store_release" alt="" coords="171,27,298,54"/>
+<area shape="rect" id="node3" href="$gcc_2powerpc_8h.html#a0af1bdd53473eb43906a057efe883f6d" title="AO_test_and_set_acquire" alt="" coords="149,78,321,105"/>
+<area shape="rect" id="node8" href="$gcc_2powerpc_8h.html#abd4f99ea301b67851c8a6a1dc61e97c1" title="AO_test_and_set_release" alt="" coords="149,129,321,155"/>
+<area shape="rect" id="node9" href="$gcc_2powerpc_8h.html#a9f485bd63ce5c6a017ec241906e2f651" title="AO_test_and_set_full" alt="" coords="161,179,308,206"/>
+<area shape="rect" id="node10" href="$gcc_2powerpc_8h.html#a81fc146600046fb8ee9ce4339f078e2e" title="AO_compare_and_swap\l_acquire" alt="" coords="153,231,316,272"/>
+<area shape="rect" id="node11" href="$gcc_2powerpc_8h.html#ae39d774429bea0d5c3b604bbb820a4ea" title="AO_compare_and_swap\l_release" alt="" coords="153,296,316,337"/>
+<area shape="rect" id="node12" href="$gcc_2powerpc_8h.html#a634397de6de764015b30cdff3ff00b06" title="AO_compare_and_swap_full" alt="" coords="141,362,328,389"/>
+<area shape="rect" id="node13" href="$gcc_2powerpc_8h.html#a5c9e99c843f97a3706a23a6b453e39dd" title="AO_fetch_and_add_acquire" alt="" coords="144,413,325,439"/>
+<area shape="rect" id="node14" href="$gcc_2powerpc_8h.html#a0d6acfb6d483cd1641c5d01df6b9d3ff" title="AO_fetch_and_add_release" alt="" coords="144,463,325,490"/>
+<area shape="rect" id="node15" href="$gcc_2powerpc_8h.html#abdc9c4590fde7e5847593f6a9c250d7f" title="AO_fetch_and_add_full" alt="" coords="157,514,312,541"/>
+<area shape="rect" id="node16" href="$ibmc_2powerpc_8h.html#afd982c8bbaa60d3294cc30f92f170847" title="AO_load_acquire" alt="" coords="174,565,295,591"/>
+<area shape="rect" id="node4" href="$atomic__ops_8c.html#a917e124262f5e2e7ba0eef1edcf9defc" title="lock" alt="" coords="376,78,423,105"/>
+<area shape="rect" id="node5" href="$atomic__ops_8c.html#a094738a02b8a59f19b2d54987b9f667b" title="AO_compare_and_swap\l_emulation" alt="" coords="475,5,637,47"/>
+<area shape="rect" id="node6" href="$atomic__ops_8c.html#ac6fb4f6252feec901b044d2e8c59e6f7" title="AO_compare_double_and\l_swap_double_emulation" alt="" coords="471,71,641,112"/>
+<area shape="rect" id="node7" href="$atomic__ops_8c.html#a615316c80d5bf0e0fb172d6c7d4133a5" title="AO_store_full_emulation" alt="" coords="475,137,637,163"/>
+</map>

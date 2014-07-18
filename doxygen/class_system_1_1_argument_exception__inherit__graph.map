@@ -1,0 +1,9 @@
+<map id="System::ArgumentException" name="System::ArgumentException">
+<area shape="rect" id="node8" href="$class_system_1_1_argument_null_exception.html" title="System::ArgumentNullException" alt="" coords="5,461,216,487"/>
+<area shape="rect" id="node9" href="$class_system_1_1_argument_out_of_range_exception.html" title="System::ArgumentOutOfRange\lException" alt="" coords="240,453,443,495"/>
+<area shape="rect" id="node2" href="$class_system_1_1_system_exception.html" title="System::SystemException" alt="" coords="136,304,315,331"/>
+<area shape="rect" id="node3" href="$class_system_1_1_exception.html" title="System::Exception" alt="" coords="159,229,292,256"/>
+<area shape="rect" id="node4" href="$class_system_1_1_object.html" title="System::Object" alt="" coords="109,155,222,181"/>
+<area shape="rect" id="node5" href="$classgc__cleanup.html" title="gc_cleanup" alt="" coords="121,80,209,107"/>
+<area shape="rect" id="node6" href="$classgc.html" title="gc" alt="" coords="146,5,185,32"/>
+</map>

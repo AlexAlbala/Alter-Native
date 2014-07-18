@@ -1,0 +1,37 @@
+<map id="C:/Users/Alex/AlterNative&#45;CXX&#45;Lib/src/public/System/Console.cpp" name="C:/Users/Alex/AlterNative&#45;CXX&#45;Lib/src/public/System/Console.cpp">
+<area shape="rect" id="node2" href="$_console_8h.html" title="Console.h" alt="" coords="360,109,440,136"/>
+<area shape="rect" id="node9" href="$_string_8h.html" title="String.h" alt="" coords="419,259,485,285"/>
+<area shape="rect" id="node3" href="$_object_8h.html" title="Object.h" alt="" coords="205,184,275,211"/>
+<area shape="rect" id="node4" href="$gc__cpp_8h.html" title="../gc/include/gc_cpp.h" alt="" coords="13,811,163,837"/>
+<area shape="rect" id="node5" href="$gc_2include_2gc_8h.html" title="gc.h" alt="" coords="122,885,169,912"/>
+<area shape="rect" id="node6" href="$gc__version_8h.html" title="gc_version.h" alt="" coords="169,960,263,987"/>
+<area shape="rect" id="node7" href="$gc__config__macros_8h.html" title="gc_config_macros.h" alt="" coords="5,960,144,987"/>
+<area shape="rect" id="node12" href="$_system_2gc_8h.html" title="GC.h" alt="" coords="175,736,227,763"/>
+<area shape="rect" id="node13" href="$support_8h.html" title="support.h" alt="" coords="1287,736,1363,763"/>
+<area shape="rect" id="node37" href="$_array_8h.html" title="Array.h" alt="" coords="600,341,664,367"/>
+<area shape="rect" id="node14" href="$general_8h.html" title="support/general.h" alt="" coords="972,811,1095,837"/>
+<area shape="rect" id="node15" href="$memory_8h.html" title="support/memory.h" alt="" coords="1119,811,1246,837"/>
+<area shape="rect" id="node16" href="$support_2_array_8h.html" title="support/array.h" alt="" coords="1271,811,1380,837"/>
+<area shape="rect" id="node17" href="$delegates_8h.html" title="support/delegates.h" alt="" coords="1567,811,1703,837"/>
+<area shape="rect" id="node18" href="$support_2events_8h.html" title="support/events.h" alt="" coords="1727,811,1844,837"/>
+<area shape="rect" id="node19" href="$loops_8h.html" title="support/loops.h" alt="" coords="1869,811,1979,837"/>
+<area shape="rect" id="node20" href="$_type_traits_8h.html" title="support/typeTraits.h" alt="" coords="1405,811,1542,837"/>
+<area shape="rect" id="node24" href="$valuetypes_8h.html" title="../valuetypes.h" alt="" coords="1732,960,1839,987"/>
+<area shape="rect" id="node27" href="$asis_8h.html" title="support/asis.h" alt="" coords="2055,811,2159,837"/>
+<area shape="rect" id="node28" href="$switch_8h.html" title="support/switch.h" alt="" coords="2183,811,2300,837"/>
+<area shape="rect" id="node29" href="$boxing_8h.html" title="support/boxing.h" alt="" coords="2325,811,2443,837"/>
+<area shape="rect" id="node31" href="$lock_8h.html" title="support/lock.h" alt="" coords="343,811,447,837"/>
+<area shape="rect" id="node33" href="$exceptions_8h.html" title="support/exceptions.h" alt="" coords="471,811,614,837"/>
+<area shape="rect" id="node35" href="$constraints_8h.html" title="support/constraints.h" alt="" coords="639,811,783,837"/>
+<area shape="rect" id="node36" href="$stringtraits_8h.html" title="support/stringtraits.h" alt="" coords="807,811,948,837"/>
+<area shape="rect" id="node22" href="$_type_refs_8h.html" title="internal/TypeRefs.h" alt="" coords="1327,885,1460,912"/>
+<area shape="rect" id="node23" href="$internal_2_type_traits_8h.html" title="internal/TypeTraits.h" alt="" coords="1484,885,1623,912"/>
+<area shape="rect" id="node25" href="$_convert_8h.html" title="System/Convert.h" alt="" coords="1663,1035,1788,1061"/>
+<area shape="rect" id="node30" href="$internal_2boxing_8h.html" title="internal/Boxing.h" alt="" coords="2325,885,2443,912"/>
+<area shape="rect" id="node39" href="$_generic_2_iterator_c_x_x_8h.html" title="Collections/Generic\l/IteratorCXX.h" alt="" coords="619,423,754,464"/>
+<area shape="rect" id="node42" href="$_generic_2_i_enumerator_c_x_x_8h.html" title="IEnumeratorCXX.h" alt="" coords="622,512,749,539"/>
+<area shape="rect" id="node43" href="$_i_enumerator_c_x_x_8h.html" title="../IEnumeratorCXX.h" alt="" coords="619,587,757,613"/>
+<area shape="rect" id="node44" href="$_system_8h.html" title="../System.h" alt="" coords="485,661,576,688"/>
+<area shape="rect" id="node45" href="$predefs_8h.html" title="predefs.h" alt="" coords="493,736,568,763"/>
+<area shape="rect" id="node46" href="$_exception_8h.html" title="Exception.h" alt="" coords="268,736,359,763"/>
+</map>

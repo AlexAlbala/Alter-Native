@@ -1,0 +1,27 @@
+var reclaim_8c =
+[
+    [ "Print_stats", "struct_print__stats.html", "struct_print__stats" ],
+    [ "MAX_LEAKED", "reclaim_8c.html#ac426f170a7ca6fe0003fbae6208efb53", null ],
+    [ "GC_add_leaked", "reclaim_8c.html#afccf6e87c1d8bdbe9ea41221a3dc78ad", null ],
+    [ "GC_block_empty", "reclaim_8c.html#a492e5047848f1c2ee71297f76085b687", null ],
+    [ "GC_block_nearly_full", "reclaim_8c.html#af026f6b9910679586f5492b505fbf407", null ],
+    [ "GC_clear_fl_links", "reclaim_8c.html#a8dd938713e06c8a0434bb0063e4fe1ff", null ],
+    [ "GC_continue_reclaim", "reclaim_8c.html#a00ed823f8b557f7ee6a3ea185eeae6e9", null ],
+    [ "GC_n_set_marks", "reclaim_8c.html#a012baa28ff13c5b078a1bae6f5deef15", null ],
+    [ "GC_print_all_errors", "reclaim_8c.html#a9153adf9cf216b060c3ca8e2e69529db", null ],
+    [ "GC_print_block_descr", "reclaim_8c.html#a9297a134058236aeaca27eb63f1b3451", null ],
+    [ "GC_print_block_list", "reclaim_8c.html#a6af7c1476de5320028607f6ded366465", null ],
+    [ "GC_print_free_list", "reclaim_8c.html#ac78d4e7a2013b4d4da5fb2b792f31ee4", null ],
+    [ "GC_reclaim_all", "reclaim_8c.html#a07f36a322f6a08a42590b6b6933836c1", null ],
+    [ "GC_reclaim_block", "reclaim_8c.html#a7721e31790b860809f5b25aef40ac673", null ],
+    [ "GC_reclaim_check", "reclaim_8c.html#a0bf4ca5537f7291287c78c2b67194525", null ],
+    [ "GC_reclaim_clear", "reclaim_8c.html#aabd87ab113c340acadee4ebda9405a7b", null ],
+    [ "GC_reclaim_generic", "reclaim_8c.html#a1cd641bd689b35751eeffdf2cab254fa", null ],
+    [ "GC_reclaim_small_nonempty_block", "reclaim_8c.html#a713b42be146628271b9fceb7e768ded4", null ],
+    [ "GC_reclaim_uninit", "reclaim_8c.html#a570e9a28a7e0dfd2a73251c63228d781", null ],
+    [ "GC_start_reclaim", "reclaim_8c.html#a3666aa541ecf7bdfc4fe66ce4f5df4f6", null ],
+    [ "GC_bytes_found", "reclaim_8c.html#aa9cb58367bd690023eff4dd257389ac7", null ],
+    [ "GC_have_errors", "reclaim_8c.html#a8d4ca829a37f96492f0a79b2ed07303c", null ],
+    [ "GC_leaked", "reclaim_8c.html#a700d3a635ce3beaa4a475045bcdb34f5", null ],
+    [ "GC_n_leaked", "reclaim_8c.html#aca2401d6ad7a78d3dbdb9ac98eeb0d2e", null ]
+];

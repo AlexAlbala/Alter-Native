@@ -1,0 +1,4 @@
+<map id="GC_invoke_finalizers" name="GC_invoke_finalizers">
+<area shape="rect" id="node2" href="$javaxfc_8h.html#a652fee6be5e9011d3b1a86941584170c" title="GC_finalize_all" alt="" coords="212,5,320,32"/>
+<area shape="rect" id="node3" href="$gc__priv_8h.html#a9a3b9b6bd4f97511d12a93222ab61049" title="GC_notify_or_invoke\l_finalizers" alt="" coords="196,57,336,98"/>
+</map>

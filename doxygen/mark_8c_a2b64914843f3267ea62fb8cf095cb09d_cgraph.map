@@ -1,0 +1,9 @@
+<map id="GC_push_next_marked_dirty" name="GC_push_next_marked_dirty">
+<area shape="rect" id="node2" href="$headers_8c.html#a6e4b2c04b60a205269287bedeae8753c" title="GC_next_used_block" alt="" coords="220,5,367,32"/>
+<area shape="rect" id="node3" href="$headers_8c.html#a82a38fd3345ecdd1ab8e84422ed16022" title="GC_find_header" alt="" coords="236,56,351,83"/>
+<area shape="rect" id="node4" href="$gc__priv_8h.html#a264450f85d80ec512403907ebcee15e3" title="GC_page_was_changed" alt="" coords="212,107,375,133"/>
+<area shape="rect" id="node5" href="$mark_8c.html#ad3dbd3d31eb43d2ad442e22d523fd716" title="GC_block_was_dirty" alt="" coords="223,157,364,184"/>
+<area shape="rect" id="node7" href="$mark_8c.html#a3f6c642633cbcf2c4960bbb02a6b305c" title="GC_push_marked" alt="" coords="230,208,357,235"/>
+<area shape="rect" id="node6" href="$gc__priv_8h.html#a6fa44797f4bbb69a231f72a3255960fe" title="GC_page_was_dirty" alt="" coords="423,157,561,184"/>
+<area shape="rect" id="node8" href="$gc__priv_8h.html#a492e5047848f1c2ee71297f76085b687" title="GC_block_empty" alt="" coords="431,208,553,235"/>
+</map>

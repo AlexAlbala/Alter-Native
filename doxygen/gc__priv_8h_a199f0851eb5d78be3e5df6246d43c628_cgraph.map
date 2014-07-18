@@ -1,0 +1,11 @@
+<map id="GC_freehblk" name="GC_freehblk">
+<area shape="rect" id="node2" href="$headers_8c.html#a098f4fb08a9258fd53bad08d3e374845" title="GC_remove_counts" alt="" coords="147,5,281,32"/>
+<area shape="rect" id="node3" href="$gc__priv_8h.html#ada843fec7ffa10957a47951e0691f73b" title="GC_log_printf" alt="" coords="164,56,264,83"/>
+<area shape="rect" id="node4" href="$allchblk_8c.html#aec8e6e0a99e26eaf364c4b13c3d1e2bd" title="GC_free_block_ending_at" alt="" coords="329,120,500,147"/>
+<area shape="rect" id="node6" href="$allchblk_8c.html#a5bc299add24d3a93820d76f9fbeabaab" title="GC_remove_from_fl" alt="" coords="147,208,281,235"/>
+<area shape="rect" id="node8" href="$headers_8c.html#af99f6969929f3aed2dc598fb67d5217f" title="GC_remove_header" alt="" coords="147,259,281,285"/>
+<area shape="rect" id="node10" href="$allchblk_8c.html#a35c81a7ba38ff83261e14688fa5f2093" title="GC_add_to_fl" alt="" coords="164,157,264,184"/>
+<area shape="rect" id="node5" href="$headers_8c.html#a966794470a9e8bcabc77c40e39d18ff0" title="GC_prev_block" alt="" coords="548,120,657,147"/>
+<area shape="rect" id="node7" href="$allchblk_8c.html#abd87fec812664ad342311f194dff9a25" title="GC_hblk_fl_from_blocks" alt="" coords="333,196,496,223"/>
+<area shape="rect" id="node9" href="$headers_8c.html#acb62b3cd844b66e1e7d63f23d7394e40" title="free_hdr" alt="" coords="381,259,449,285"/>
+</map>

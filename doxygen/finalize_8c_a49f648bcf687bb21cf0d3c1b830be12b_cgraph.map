@@ -1,0 +1,4 @@
+<map id="GC_enqueue_all_finalizers" name="GC_enqueue_all_finalizers">
+<area shape="rect" id="node2" href="$finalize_8c.html#a0f6ead3396dca092aed89d3d008aeaf8" title="GC_normal_finalize\l_mark_proc" alt="" coords="228,5,363,47"/>
+<area shape="rect" id="node3" href="$gc__priv_8h.html#a00ea68d1c7f466442a29bfd963b12f86" title="GC_set_mark_bit" alt="" coords="234,71,357,98"/>
+</map>

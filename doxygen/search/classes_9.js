@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['idisposable',['IDisposable',['../class_system_1_1_i_disposable.html',1,'System']]],
+  ['ienumerable',['IEnumerable',['../class_system_1_1_collections_1_1_i_enumerable.html',1,'System::Collections']]],
+  ['ienumerable_5ft',['IEnumerable_T',['../class_system_1_1_collections_1_1_generic_1_1_i_enumerable___t.html',1,'System::Collections::Generic']]],
+  ['ienumerator',['IEnumerator',['../class_system_1_1_collections_1_1_i_enumerator.html',1,'System::Collections']]],
+  ['ienumerator_5ft',['IEnumerator_T',['../class_system_1_1_collections_1_1_generic_1_1_i_enumerator___t.html',1,'System::Collections::Generic']]],
+  ['int',['Int',['../struct_system_1_1_int.html',1,'System']]],
+  ['int32',['Int32',['../struct_system_1_1_int32.html',1,'System']]],
+  ['intptr',['IntPtr',['../struct_system_1_1_int_ptr.html',1,'System']]],
+  ['invalidoperationexception',['InvalidOperationException',['../class_system_1_1_invalid_operation_exception.html',1,'System']]],
+  ['isfundamentaltype',['IsFundamentalType',['../struct_____internal_____1_1_is_fundamental_type.html',1,'__Internal__']]],
+  ['isfundamentaltype_3c_20char_20_3e',['IsFundamentalType&lt; char &gt;',['../struct_____internal_____1_1_is_fundamental_type_3_01char_01_4.html',1,'__Internal__']]],
+  ['isfundamentaltype_3c_20float_20_3e',['IsFundamentalType&lt; float &gt;',['../struct_____internal_____1_1_is_fundamental_type_3_01float_01_4.html',1,'__Internal__']]],
+  ['isfundamentaltype_3c_20int_20_3e',['IsFundamentalType&lt; int &gt;',['../struct_____internal_____1_1_is_fundamental_type_3_01int_01_4.html',1,'__Internal__']]],
+  ['isfundamentaltype_3c_20long_20_3e',['IsFundamentalType&lt; long &gt;',['../struct_____internal_____1_1_is_fundamental_type_3_01long_01_4.html',1,'__Internal__']]],
+  ['isfundamentaltype_3c_20short_20_3e',['IsFundamentalType&lt; short &gt;',['../struct_____internal_____1_1_is_fundamental_type_3_01short_01_4.html',1,'__Internal__']]],
+  ['isfundamentaltype_3c_20unsigned_20int_20_3e',['IsFundamentalType&lt; unsigned int &gt;',['../struct_____internal_____1_1_is_fundamental_type_3_01unsigned_01int_01_4.html',1,'__Internal__']]],
+  ['isfundamentaltype_3c_20unsigned_20long_20_3e',['IsFundamentalType&lt; unsigned long &gt;',['../struct_____internal_____1_1_is_fundamental_type_3_01unsigned_01long_01_4.html',1,'__Internal__']]],
+  ['isfundamentaltype_3c_20unsigned_20short_20_3e',['IsFundamentalType&lt; unsigned short &gt;',['../struct_____internal_____1_1_is_fundamental_type_3_01unsigned_01short_01_4.html',1,'__Internal__']]],
+  ['isfundamentaltype_3c_20void_20_3e',['IsFundamentalType&lt; void &gt;',['../struct_____internal_____1_1_is_fundamental_type_3_01void_01_4.html',1,'__Internal__']]],
+  ['isstructtype',['IsStructType',['../struct_____internal_____1_1_is_struct_type.html',1,'__Internal__']]],
+  ['isstructtype_3c_20system_3a_3aobject_20_3e',['IsStructType&lt; System::Object &gt;',['../struct_____internal_____1_1_is_struct_type_3_01_system_1_1_object_01_4.html',1,'__Internal__']]],
+  ['isvoidtype',['IsVoidType',['../struct_____internal_____1_1_is_void_type.html',1,'__Internal__']]],
+  ['isvoidtype_3c_20void_20_3e',['IsVoidType&lt; void &gt;',['../struct_____internal_____1_1_is_void_type_3_01void_01_4.html',1,'__Internal__']]],
+  ['iteratorcxx',['iteratorcxx',['../class_system_1_1_collections_1_1_generic_1_1iteratorcxx.html',1,'System::Collections::Generic']]],
+  ['iteratorcxx',['iteratorcxx',['../class_system_1_1_collections_1_1iteratorcxx.html',1,'System::Collections']]]
+];

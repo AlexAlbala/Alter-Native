@@ -1,0 +1,6 @@
+<map id="GC_clear_stack" name="GC_clear_stack">
+<area shape="rect" id="node2" href="$gc__priv_8h.html#a63ad3c8487c6bdefff474f15bb986e81" title="GC_approx_sp" alt="" coords="189,5,297,32"/>
+<area shape="rect" id="node3" href="$misc_8c.html#ac3e2d1701d7231796a986870576b8b9c" title="GC_clear_stack_inner" alt="" coords="168,56,319,83"/>
+<area shape="rect" id="node4" href="$gc_2include_2gc_8h.html#a7e0f997409f0b1753e44b648fcd6fc39" title="void" alt="" coords="386,31,430,57"/>
+<area shape="rect" id="node5" href="$gc_2include_2gc_8h.html#a233015def2a1752a7feb7c81d34f89e6" title="GC_noop1" alt="" coords="367,81,449,108"/>
+</map>

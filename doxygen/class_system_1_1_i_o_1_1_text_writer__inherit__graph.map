@@ -1,0 +1,7 @@
+<map id="System::IO::TextWriter" name="System::IO::TextWriter">
+<area shape="rect" id="node6" href="$class_system_1_1_i_o_1_1_stream_writer.html" title="System::IO::StreamWriter" alt="" coords="5,379,179,405"/>
+<area shape="rect" id="node2" href="$class_system_1_1_i_disposable.html" title="System::IDisposable" alt="" coords="21,229,163,256"/>
+<area shape="rect" id="node3" href="$class_system_1_1_object.html" title="System::Object" alt="" coords="35,155,149,181"/>
+<area shape="rect" id="node4" href="$classgc__cleanup.html" title="gc_cleanup" alt="" coords="48,80,136,107"/>
+<area shape="rect" id="node5" href="$classgc.html" title="gc" alt="" coords="73,5,111,32"/>
+</map>

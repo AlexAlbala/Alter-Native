@@ -1,0 +1,27 @@
+<map id="GC_get_first_part" name="GC_get_first_part">
+<area shape="rect" id="node2" href="$allchblk_8c.html#ae8d1ab0705e104d5a63e052cb3408720" title="GC_allochblk_nth" alt="" coords="176,55,300,81"/>
+<area shape="rect" id="node3" href="$gc__priv_8h.html#ab92a6e9143a2acfde03b7c170a85f1a1" title="GC_allochblk" alt="" coords="348,55,447,81"/>
+<area shape="rect" id="node4" href="$malloc_8c.html#a758db4d9bd590df7e5109b1f445ca78b" title="GC_alloc_large" alt="" coords="495,143,605,169"/>
+<area shape="rect" id="node23" href="$mallocx_8c.html#a9fe588b11aefcb234477af209301a04e" title="GC_generic_malloc_many" alt="" coords="1279,29,1453,56"/>
+<area shape="rect" id="node25" href="$new__hblk_8c.html#ac55c4f53018e43cb0b64231889ae41ac" title="GC_new_hblk" alt="" coords="499,55,601,81"/>
+<area shape="rect" id="node5" href="$malloc_8c.html#add822b71ebb231a3401ff6970d29a95a" title="GC_alloc_large_and\l_clear" alt="" coords="653,106,792,147"/>
+<area shape="rect" id="node8" href="$malloc_8c.html#aeae930ec6d86c2b5361bb45d7a4ad67a" title="GC_generic_malloc" alt="" coords="1077,172,1211,199"/>
+<area shape="rect" id="node18" href="$mallocx_8c.html#a1aca8865d5b7f9b235a7efe3a3d84dcf" title="GC_generic_malloc_ignore\l_off_page" alt="" coords="1277,277,1455,318"/>
+<area shape="rect" id="node6" href="$malloc_8c.html#aaf1ed9de3698d4fdb54f7f73b2dd253e" title="GC_generic_malloc_inner" alt="" coords="840,63,1011,89"/>
+<area shape="rect" id="node7" href="$malloc_8c.html#abe43a78928b4a084553d8f70b899cae5" title="GC_generic_malloc_inner\l_ignore_off_page" alt="" coords="1059,106,1229,147"/>
+<area shape="rect" id="node9" href="$malloc_8c.html#aca96f3389aad827aec8c14b4f8706f39" title="GC_malloc_uncollectable" alt="" coords="1281,172,1451,199"/>
+<area shape="rect" id="node15" href="$mallocx_8c.html#af87015145a2e4485b04b2bccd333e223" title="GC_generic_or_special\l_malloc" alt="" coords="1516,57,1672,98"/>
+<area shape="rect" id="node10" href="$gc_2include_2gc_8h.html#afa8870eede24b2a80b4ade9232d2dbe8" title="GC_debug_malloc_uncollectable" alt="" coords="1733,183,1944,209"/>
+<area shape="rect" id="node13" href="$classsingle__client__traceable__alloc__template.html#a0e0fc2ccede260fcacf348082fa81680" title="single_client_traceable\l_alloc_template::allocate" alt="" coords="1511,122,1677,163"/>
+<area shape="rect" id="node14" href="$classtraceable__alloc__template.html#ac2c07fc218733476be8ca4ac0e41f505" title="traceable_alloc_template\l::allocate" alt="" coords="1511,187,1677,229"/>
+<area shape="rect" id="node11" href="$gc_2include_2gc_8h.html#ac0fc85cd6aabd28cd9483c12d4e8514f" title="GC_debug_realloc" alt="" coords="1992,165,2120,192"/>
+<area shape="rect" id="node12" href="$gc_2include_2gc_8h.html#a25ca94661cc879ab9b03068a785e6d0e" title="GC_debug_realloc_replacement" alt="" coords="2168,165,2375,192"/>
+<area shape="rect" id="node16" href="$mallocx_8c.html#af58fe77f2f791173c8e662093baef8ab" title="GC_realloc" alt="" coords="1795,81,1882,108"/>
+<area shape="rect" id="node17" href="$_amiga_o_s_8c.html#a7c1ecf244dbbc680b785e85392d3c2b6" title="GC_amiga_realloc" alt="" coords="1992,81,2120,108"/>
+<area shape="rect" id="node19" href="$mallocx_8c.html#a391f3554951a363ebd200b77326cff87" title="GC_malloc_ignore_off_page" alt="" coords="1503,373,1685,400"/>
+<area shape="rect" id="node21" href="$mallocx_8c.html#a85544ba328320419441daab4ab59c517" title="GC_malloc_atomic_ignore\l_off_page" alt="" coords="1507,305,1681,346"/>
+<area shape="rect" id="node20" href="$gc_2include_2gc_8h.html#af71b92497ed39a4a8588e28519b64d7a" title="GC_debug_malloc_ignore\l_off_page" alt="" coords="1753,367,1924,409"/>
+<area shape="rect" id="node22" href="$gc_2include_2gc_8h.html#aed8ecdf800e8a876666322c1ca84c2f9" title="GC_debug_malloc_atomic\l_ignore_off_page" alt="" coords="1751,302,1926,343"/>
+<area shape="rect" id="node24" href="$mallocx_8c.html#a2fb541cd7a9b708e06d628fd608a3aac" title="GC_malloc_many" alt="" coords="1531,5,1657,32"/>
+<area shape="rect" id="node26" href="$gc__priv_8h.html#a42091079fb5139a3446c4b4afebc542c" title="GC_allocobj" alt="" coords="677,55,769,81"/>
+</map>

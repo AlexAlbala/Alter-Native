@@ -1,0 +1,27 @@
+var hpc_2ia64_8h =
+[
+    [ "AO_HAVE_char_compare_and_swap_acquire", "hpc_2ia64_8h.html#ab67b15bb08ff2fbfc858acdaaf0b3531", null ],
+    [ "AO_HAVE_char_compare_and_swap_release", "hpc_2ia64_8h.html#aa59d946c04e8c5b744322414b106947b", null ],
+    [ "AO_HAVE_compare_and_swap_acquire", "hpc_2ia64_8h.html#ad0b08bc254deecdcba5a4f3366432cf3", null ],
+    [ "AO_HAVE_compare_and_swap_release", "hpc_2ia64_8h.html#ad85c7af2ae0a778eba77a7762a358819", null ],
+    [ "AO_HAVE_fetch_and_add1_acquire", "hpc_2ia64_8h.html#ab444fdcbfaf48cb88292b89180cd6d2b", null ],
+    [ "AO_HAVE_fetch_and_add1_release", "hpc_2ia64_8h.html#abe5616e4ca4293fbddf3ab80049febae", null ],
+    [ "AO_HAVE_fetch_and_sub1_acquire", "hpc_2ia64_8h.html#a48eb192a6005c2c102a3154a2320850c", null ],
+    [ "AO_HAVE_fetch_and_sub1_release", "hpc_2ia64_8h.html#a059afe6ddfb01b0cc90e3e86e201de71", null ],
+    [ "AO_HAVE_nop_full", "hpc_2ia64_8h.html#a3904dc699d6a6d6e771a93aa66aeb805", null ],
+    [ "AO_HAVE_short_compare_and_swap_acquire", "hpc_2ia64_8h.html#a9104195dbb035d047e6968e1202d3d63", null ],
+    [ "AO_HAVE_short_compare_and_swap_release", "hpc_2ia64_8h.html#abca62133116ab240da7a8539018016e1", null ],
+    [ "AO_T_FASIZE", "hpc_2ia64_8h.html#a5e238eba4f717cb1d735b8dcfae2cfba", null ],
+    [ "AO_T_SIZE", "hpc_2ia64_8h.html#ac499690a7d9506e8bd5800154814b78a", null ],
+    [ "AO_char_compare_and_swap_acquire", "hpc_2ia64_8h.html#adfddc3e21d1b14f528dd1259f501f8c6", null ],
+    [ "AO_char_compare_and_swap_release", "hpc_2ia64_8h.html#abfcca8311ee6e37e2b81abaa4aae2905", null ],
+    [ "AO_compare_and_swap_acquire", "hpc_2ia64_8h.html#a81fc146600046fb8ee9ce4339f078e2e", null ],
+    [ "AO_compare_and_swap_release", "hpc_2ia64_8h.html#ae39d774429bea0d5c3b604bbb820a4ea", null ],
+    [ "AO_fetch_and_add1_acquire", "hpc_2ia64_8h.html#a9c6806c9bb5426fdd4d2f6dbd3b57cce", null ],
+    [ "AO_fetch_and_add1_release", "hpc_2ia64_8h.html#ad5935c5ab6aeedf0844925daf9c3d8d6", null ],
+    [ "AO_fetch_and_sub1_acquire", "hpc_2ia64_8h.html#abdd50f1fd3145d33ad3d7bf2ddaebada", null ],
+    [ "AO_fetch_and_sub1_release", "hpc_2ia64_8h.html#a83570074a985dd54bcc3004366bbfaae", null ],
+    [ "AO_nop_full", "hpc_2ia64_8h.html#afe3a6778eacc82252ba138fc9a157b04", null ],
+    [ "AO_short_compare_and_swap_acquire", "hpc_2ia64_8h.html#a4297eec9f9ebc8d4813bf52d25e3f561", null ],
+    [ "AO_short_compare_and_swap_release", "hpc_2ia64_8h.html#a46abe9aff985d4ba1d5c5af55f572625", null ]
+];

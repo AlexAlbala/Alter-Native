@@ -1,0 +1,6 @@
+<map id="GC_round_up" name="GC_round_up">
+<area shape="rect" id="node2" href="$classsingle__client__gc__alloc__template.html#a597cd2f18047fc53027b02c50e4e5324" title="single_client_gc_alloc\l_template::allocate" alt="" coords="178,5,327,47"/>
+<area shape="rect" id="node3" href="$classsingle__client__gc__alloc__template.html#a350b81ce5c23b1968fb1bf478fcb115c" title="single_client_gc_alloc\l_template::ptr_free_allocate" alt="" coords="161,71,344,112"/>
+<area shape="rect" id="node4" href="$classsingle__client__gc__alloc__template.html#adbba55a2253fe5d61689c7c8b1ea1525" title="single_client_gc_alloc\l_template::deallocate" alt="" coords="178,136,327,177"/>
+<area shape="rect" id="node5" href="$classsingle__client__gc__alloc__template.html#a4785a44f4302e7a3a415767d997b4c40" title="single_client_gc_alloc\l_template::ptr_free_deallocate" alt="" coords="155,201,351,243"/>
+</map>

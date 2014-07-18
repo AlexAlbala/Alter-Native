@@ -1,0 +1,21 @@
+<map id="GC_alloc_reclaim_list" name="GC_alloc_reclaim_list">
+<area shape="rect" id="node2" href="$malloc_8c.html#aaf1ed9de3698d4fdb54f7f73b2dd253e" title="GC_generic_malloc_inner" alt="" coords="201,238,372,265"/>
+<area shape="rect" id="node3" href="$malloc_8c.html#abe43a78928b4a084553d8f70b899cae5" title="GC_generic_malloc_inner\l_ignore_off_page" alt="" coords="420,172,591,214"/>
+<area shape="rect" id="node4" href="$malloc_8c.html#aeae930ec6d86c2b5361bb45d7a4ad67a" title="GC_generic_malloc" alt="" coords="438,238,573,265"/>
+<area shape="rect" id="node19" href="$mallocx_8c.html#a9fe588b11aefcb234477af209301a04e" title="GC_generic_malloc_many" alt="" coords="640,297,815,324"/>
+<area shape="rect" id="node5" href="$malloc_8c.html#aca96f3389aad827aec8c14b4f8706f39" title="GC_malloc_uncollectable" alt="" coords="643,114,812,141"/>
+<area shape="rect" id="node11" href="$mallocx_8c.html#af87015145a2e4485b04b2bccd333e223" title="GC_generic_or_special\l_malloc" alt="" coords="877,172,1033,214"/>
+<area shape="rect" id="node14" href="$mallocx_8c.html#a1aca8865d5b7f9b235a7efe3a3d84dcf" title="GC_generic_malloc_ignore\l_off_page" alt="" coords="639,231,816,272"/>
+<area shape="rect" id="node6" href="$gc_2include_2gc_8h.html#afa8870eede24b2a80b4ade9232d2dbe8" title="GC_debug_malloc_uncollectable" alt="" coords="1095,8,1305,34"/>
+<area shape="rect" id="node9" href="$classsingle__client__traceable__alloc__template.html#a0e0fc2ccede260fcacf348082fa81680" title="single_client_traceable\l_alloc_template::allocate" alt="" coords="872,42,1039,83"/>
+<area shape="rect" id="node10" href="$classtraceable__alloc__template.html#ac2c07fc218733476be8ca4ac0e41f505" title="traceable_alloc_template\l::allocate" alt="" coords="872,107,1039,148"/>
+<area shape="rect" id="node7" href="$gc_2include_2gc_8h.html#ac0fc85cd6aabd28cd9483c12d4e8514f" title="GC_debug_realloc" alt="" coords="1353,41,1481,68"/>
+<area shape="rect" id="node8" href="$gc_2include_2gc_8h.html#a25ca94661cc879ab9b03068a785e6d0e" title="GC_debug_realloc_replacement" alt="" coords="1529,41,1736,68"/>
+<area shape="rect" id="node12" href="$mallocx_8c.html#af58fe77f2f791173c8e662093baef8ab" title="GC_realloc" alt="" coords="1157,109,1243,136"/>
+<area shape="rect" id="node13" href="$_amiga_o_s_8c.html#a7c1ecf244dbbc680b785e85392d3c2b6" title="GC_amiga_realloc" alt="" coords="1353,109,1481,136"/>
+<area shape="rect" id="node15" href="$mallocx_8c.html#a391f3554951a363ebd200b77326cff87" title="GC_malloc_ignore_off_page" alt="" coords="864,238,1047,265"/>
+<area shape="rect" id="node17" href="$mallocx_8c.html#a85544ba328320419441daab4ab59c517" title="GC_malloc_atomic_ignore\l_off_page" alt="" coords="868,290,1043,331"/>
+<area shape="rect" id="node16" href="$gc_2include_2gc_8h.html#af71b92497ed39a4a8588e28519b64d7a" title="GC_debug_malloc_ignore\l_off_page" alt="" coords="1115,227,1285,268"/>
+<area shape="rect" id="node18" href="$gc_2include_2gc_8h.html#aed8ecdf800e8a876666322c1ca84c2f9" title="GC_debug_malloc_atomic\l_ignore_off_page" alt="" coords="1113,292,1287,334"/>
+<area shape="rect" id="node20" href="$mallocx_8c.html#a2fb541cd7a9b708e06d628fd608a3aac" title="GC_malloc_many" alt="" coords="893,356,1018,382"/>
+</map>

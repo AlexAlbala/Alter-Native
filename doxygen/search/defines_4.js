@@ -1,0 +1,19 @@
+var searchData=
+[
+  ['dataend',['DATAEND',['../gcconfig_8h.html#a08efeb5fc7c58ce13ccb1eb5b62c41ad',1,'gcconfig.h']]],
+  ['dcl_5flock_5fstate',['DCL_LOCK_STATE',['../gc__locks_8h.html#a162da961886f54869d0c990653e13136',1,'gc_locks.h']]],
+  ['debug_5fbytes',['DEBUG_BYTES',['../dbg__mlc_8h.html#a6337a59b6a92080b4315e682688eb4a7',1,'dbg_mlc.h']]],
+  ['declare_5fhdr_5fcache',['DECLARE_HDR_CACHE',['../gc__hdrs_8h.html#a662517c85784c7b6ded5075f4a857bce',1,'gc_hdrs.h']]],
+  ['default_5fvdb',['DEFAULT_VDB',['../gcconfig_8h.html#a1f329f71f3c5e924d503198a7ee9251c',1,'gcconfig.h']]],
+  ['degrade_5frate',['DEGRADE_RATE',['../misc_8c.html#a2ebf0fec2073ca6ec4fe39f02e040770',1,'misc.c']]],
+  ['delegate',['DELEGATE',['../delegates_8h.html#a751e6598b3c22a4ed8218e798fe982cc',1,'delegates.h']]],
+  ['delegate_5ffunc',['DELEGATE_FUNC',['../delegates_8h.html#aafd5f6d1888acfa9fef0bb9b610b698a',1,'delegates.h']]],
+  ['delegate_5fmethod',['DELEGATE_METHOD',['../delegates_8h.html#a83db69f6b6bb7b9e06fd4de1d5098cbb',1,'delegates.h']]],
+  ['disable_5fcancel',['DISABLE_CANCEL',['../gc__priv_8h.html#ac3118d0d85274bdc7e6f083c13364c76',1,'gc_priv.h']]],
+  ['divhblksz',['divHBLKSZ',['../gc__priv_8h.html#a35166caefedd5ca1c2f8aebcfe2b701d',1,'gc_priv.h']]],
+  ['divwordsz',['divWORDSZ',['../gc__priv_8h.html#aa548922e191e01bed3d6b47702102b57',1,'gc_priv.h']]],
+  ['dl_5fhidden_5flink',['dl_hidden_link',['../finalize_8c.html#a222c1ce4a514fab2e388cfe025b6541d',1,'finalize.c']]],
+  ['dl_5fnext',['dl_next',['../finalize_8c.html#a4e05d76b34e2ec5c2d6d44fe6800b3f8',1,'finalize.c']]],
+  ['dl_5fset_5fnext',['dl_set_next',['../finalize_8c.html#a02b1c5e4c27b26eb4552454579b351b8',1,'finalize.c']]],
+  ['dll_5farray',['DLL_Array',['../_type_traits_8h.html#ac9d2d646c98cdc8563526d88842c3e52',1,'typeTraits.h']]]
+];

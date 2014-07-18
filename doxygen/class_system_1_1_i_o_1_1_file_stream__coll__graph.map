@@ -1,0 +1,11 @@
+<map id="System::IO::FileStream" name="System::IO::FileStream">
+<area shape="rect" id="node2" href="$class_system_1_1_i_o_1_1_stream.html" title="System::IO::Stream" alt="" coords="5,360,144,387"/>
+<area shape="rect" id="node3" href="$class_system_1_1_i_disposable.html" title="System::IDisposable" alt="" coords="126,233,269,260"/>
+<area shape="rect" id="node8" href="$class_system_1_1_i_o_1_1_text_writer.html" title="System::IO::TextWriter" alt="" coords="119,309,275,336"/>
+<area shape="rect" id="node10" href="$class_system_1_1_i_o_1_1_text_reader.html" title="System::IO::TextReader" alt="" coords="308,309,471,336"/>
+<area shape="rect" id="node4" href="$class_system_1_1_object.html" title="System::Object" alt="" coords="141,157,254,184"/>
+<area shape="rect" id="node5" href="$classgc__cleanup.html" title="gc_cleanup" alt="" coords="153,81,241,108"/>
+<area shape="rect" id="node6" href="$classgc.html" title="gc" alt="" coords="178,5,217,32"/>
+<area shape="rect" id="node7" href="$class_system_1_1_i_o_1_1_stream_writer.html" title="System::IO::StreamWriter" alt="" coords="111,411,284,437"/>
+<area shape="rect" id="node9" href="$class_system_1_1_i_o_1_1_stream_reader.html" title="System::IO::StreamReader" alt="" coords="308,411,487,437"/>
+</map>

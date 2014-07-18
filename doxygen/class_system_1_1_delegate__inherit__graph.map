@@ -1,0 +1,11 @@
+<map id="System::Delegate" name="System::Delegate">
+<area shape="rect" id="node5" href="$class_system_1_1_____internal_____1_1___delegate.html" title="System::__Internal\l__::_Delegate\&lt; A, B...\&gt;" alt="" coords="571,5,731,47"/>
+<area shape="rect" id="node6" href="$class_system_1_1_____internal_____1_1___delegate.html" title="System::__Internal\l__::_Delegate\&lt; A, B \&gt;" alt="" coords="575,71,727,112"/>
+<area shape="rect" id="node7" href="$class_system_1_1_____internal_____1_1___delegate_3_01void_00_01_arguments_8_8_8_4.html" title="System::__Internal\l__::_Delegate\&lt; void,\l Arguments...\&gt;" alt="" coords="581,137,721,193"/>
+<area shape="rect" id="node8" href="$class_system_1_1_threading_1_1_parameterized_thread_start.html" title="System::Threading::\lParameterizedThreadStart" alt="" coords="564,217,737,259"/>
+<area shape="rect" id="node9" href="$class_system_1_1_threading_1_1_thread_start.html" title="System::Threading::\lThreadStart" alt="" coords="581,283,720,324"/>
+<area shape="rect" id="node10" href="$class_system_1_1_threading_1_1_timer_callback.html" title="System::Threading::\lTimerCallback" alt="" coords="581,348,720,389"/>
+<area shape="rect" id="node2" href="$class_system_1_1_object.html" title="System::Object" alt="" coords="228,189,341,215"/>
+<area shape="rect" id="node3" href="$classgc__cleanup.html" title="gc_cleanup" alt="" coords="92,189,180,215"/>
+<area shape="rect" id="node4" href="$classgc.html" title="gc" alt="" coords="5,189,44,215"/>
+</map>

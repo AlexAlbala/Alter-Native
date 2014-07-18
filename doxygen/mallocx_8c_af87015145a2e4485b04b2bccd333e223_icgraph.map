@@ -1,0 +1,6 @@
+<map id="GC_generic_or_special_malloc" name="GC_generic_or_special_malloc">
+<area shape="rect" id="node2" href="$mallocx_8c.html#af58fe77f2f791173c8e662093baef8ab" title="GC_realloc" alt="" coords="209,31,296,57"/>
+<area shape="rect" id="node3" href="$gc_2include_2gc_8h.html#ac0fc85cd6aabd28cd9483c12d4e8514f" title="GC_debug_realloc" alt="" coords="344,5,472,32"/>
+<area shape="rect" id="node5" href="$_amiga_o_s_8c.html#a7c1ecf244dbbc680b785e85392d3c2b6" title="GC_amiga_realloc" alt="" coords="344,56,472,83"/>
+<area shape="rect" id="node4" href="$gc_2include_2gc_8h.html#a25ca94661cc879ab9b03068a785e6d0e" title="GC_debug_realloc_replacement" alt="" coords="520,5,727,32"/>
+</map>

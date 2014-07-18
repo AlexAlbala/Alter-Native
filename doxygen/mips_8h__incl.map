@@ -1,0 +1,11 @@
+<map id="C:/Users/Alex/AlterNative&#45;CXX&#45;Lib/src/public/gc/libatomic_ops/src/atomic_ops/sysdeps/gcc/mips.h" name="C:/Users/Alex/AlterNative&#45;CXX&#45;Lib/src/public/gc/libatomic_ops/src/atomic_ops/sysdeps/gcc/mips.h">
+<area shape="rect" id="node2" href="$all__aligned__atomic__load__store_8h.html" title="../all_aligned_atomic\l_load_store.h" alt="" coords="275,124,417,165"/>
+<area shape="rect" id="node7" href="$acquire__release__volatile_8h.html" title="../acquire_release\l_volatile.h" alt="" coords="441,124,566,165"/>
+<area shape="rect" id="node8" href="$test__and__set__t__is__ao__t_8h.html" title="../test_and_set_t_is\l_ao_t.h" alt="" coords="591,124,728,165"/>
+<area shape="rect" id="node9" href="$standard__ao__double__t_8h.html" title="../standard_ao_double_t.h" alt="" coords="752,131,924,158"/>
+<area shape="rect" id="node10" href="$ao__t__is__int_8h.html" title="../ao_t_is_int.h" alt="" coords="948,131,1056,158"/>
+<area shape="rect" id="node3" href="$aligned__atomic__load__store_8h.html" title="aligned_atomic_load\l_store.h" alt="" coords="5,213,145,255"/>
+<area shape="rect" id="node4" href="$char__atomic__load__store_8h.html" title="char_atomic_load_store.h" alt="" coords="170,221,341,247"/>
+<area shape="rect" id="node5" href="$short__aligned__atomic__load__store_8h.html" title="short_aligned_atomic\l_load_store.h" alt="" coords="365,213,511,255"/>
+<area shape="rect" id="node6" href="$int__aligned__atomic__load__store_8h.html" title="int_aligned_atomic\l_load_store.h" alt="" coords="535,213,666,255"/>
+</map>

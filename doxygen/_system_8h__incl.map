@@ -1,0 +1,35 @@
+<map id="C:/Users/Alex/AlterNative&#45;CXX&#45;Lib/src/public/System/System.h" name="C:/Users/Alex/AlterNative&#45;CXX&#45;Lib/src/public/System/System.h">
+<area shape="rect" id="node2" href="$predefs_8h.html" title="predefs.h" alt="" coords="617,109,691,136"/>
+<area shape="rect" id="node3" href="$_object_8h.html" title="Object.h" alt="" coords="845,184,916,211"/>
+<area shape="rect" id="node9" href="$_string_8h.html" title="String.h" alt="" coords="1023,259,1090,285"/>
+<area shape="rect" id="node12" href="$_system_2gc_8h.html" title="GC.h" alt="" coords="753,341,805,367"/>
+<area shape="rect" id="node13" href="$support_8h.html" title="support.h" alt="" coords="1172,341,1248,367"/>
+<area shape="rect" id="node37" href="$_array_8h.html" title="Array.h" alt="" coords="2351,341,2415,367"/>
+<area shape="rect" id="node44" href="$_exception_8h.html" title="Exception.h" alt="" coords="957,109,1047,136"/>
+<area shape="rect" id="node4" href="$gc__cpp_8h.html" title="../gc/include/gc_cpp.h" alt="" coords="5,430,156,457"/>
+<area shape="rect" id="node5" href="$gc_2include_2gc_8h.html" title="gc.h" alt="" coords="135,512,181,539"/>
+<area shape="rect" id="node6" href="$gc__version_8h.html" title="gc_version.h" alt="" coords="92,587,187,613"/>
+<area shape="rect" id="node7" href="$gc__config__macros_8h.html" title="gc_config_macros.h" alt="" coords="211,587,350,613"/>
+<area shape="rect" id="node14" href="$general_8h.html" title="support/general.h" alt="" coords="1923,430,2046,457"/>
+<area shape="rect" id="node15" href="$memory_8h.html" title="support/memory.h" alt="" coords="2071,430,2197,457"/>
+<area shape="rect" id="node16" href="$support_2_array_8h.html" title="support/array.h" alt="" coords="2222,430,2331,457"/>
+<area shape="rect" id="node17" href="$delegates_8h.html" title="support/delegates.h" alt="" coords="231,430,367,457"/>
+<area shape="rect" id="node18" href="$support_2events_8h.html" title="support/events.h" alt="" coords="391,430,509,457"/>
+<area shape="rect" id="node19" href="$loops_8h.html" title="support/loops.h" alt="" coords="533,430,644,457"/>
+<area shape="rect" id="node20" href="$_type_traits_8h.html" title="support/typeTraits.h" alt="" coords="668,430,805,457"/>
+<area shape="rect" id="node24" href="$valuetypes_8h.html" title="../valuetypes.h" alt="" coords="609,587,715,613"/>
+<area shape="rect" id="node27" href="$asis_8h.html" title="support/asis.h" alt="" coords="881,430,985,457"/>
+<area shape="rect" id="node28" href="$switch_8h.html" title="support/switch.h" alt="" coords="1009,430,1126,457"/>
+<area shape="rect" id="node29" href="$boxing_8h.html" title="support/boxing.h" alt="" coords="1151,430,1269,457"/>
+<area shape="rect" id="node31" href="$lock_8h.html" title="support/lock.h" alt="" coords="1294,430,1398,457"/>
+<area shape="rect" id="node33" href="$exceptions_8h.html" title="support/exceptions.h" alt="" coords="1423,430,1565,457"/>
+<area shape="rect" id="node35" href="$constraints_8h.html" title="support/constraints.h" alt="" coords="1590,430,1734,457"/>
+<area shape="rect" id="node36" href="$stringtraits_8h.html" title="support/stringtraits.h" alt="" coords="1758,430,1899,457"/>
+<area shape="rect" id="node22" href="$_type_refs_8h.html" title="internal/TypeRefs.h" alt="" coords="673,512,806,539"/>
+<area shape="rect" id="node23" href="$internal_2_type_traits_8h.html" title="internal/TypeTraits.h" alt="" coords="403,512,542,539"/>
+<area shape="rect" id="node25" href="$_convert_8h.html" title="System/Convert.h" alt="" coords="609,661,734,688"/>
+<area shape="rect" id="node30" href="$internal_2boxing_8h.html" title="internal/Boxing.h" alt="" coords="1124,512,1243,539"/>
+<area shape="rect" id="node39" href="$_generic_2_iterator_c_x_x_8h.html" title="Collections/Generic\l/IteratorCXX.h" alt="" coords="2487,423,2621,464"/>
+<area shape="rect" id="node42" href="$_generic_2_i_enumerator_c_x_x_8h.html" title="IEnumeratorCXX.h" alt="" coords="2596,512,2723,539"/>
+<area shape="rect" id="node43" href="$_i_enumerator_c_x_x_8h.html" title="../IEnumeratorCXX.h" alt="" coords="2641,587,2779,613"/>
+</map>

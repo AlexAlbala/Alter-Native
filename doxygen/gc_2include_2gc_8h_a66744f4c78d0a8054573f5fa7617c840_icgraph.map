@@ -1,0 +1,9 @@
+<map id="GC_malloc_atomic_uncollectable" name="GC_malloc_atomic_uncollectable">
+<area shape="rect" id="node2" href="$classsingle__client__traceable__alloc__template.html#aaad7e7cb0bf794272ca4fce34e37471f" title="single_client_traceable\l_alloc_template::ptr_free\l_allocate" alt="" coords="269,5,433,61"/>
+<area shape="rect" id="node3" href="$classtraceable__alloc__template.html#aefbd4d3cc73a0adaa8675c699909c241" title="traceable_alloc_template\l::ptr_free_allocate" alt="" coords="268,86,435,127"/>
+<area shape="rect" id="node4" href="$mallocx_8c.html#af87015145a2e4485b04b2bccd333e223" title="GC_generic_or_special\l_malloc" alt="" coords="273,151,429,193"/>
+<area shape="rect" id="node5" href="$mallocx_8c.html#af58fe77f2f791173c8e662093baef8ab" title="GC_realloc" alt="" coords="483,159,569,185"/>
+<area shape="rect" id="node6" href="$gc_2include_2gc_8h.html#ac0fc85cd6aabd28cd9483c12d4e8514f" title="GC_debug_realloc" alt="" coords="617,133,745,160"/>
+<area shape="rect" id="node8" href="$_amiga_o_s_8c.html#a7c1ecf244dbbc680b785e85392d3c2b6" title="GC_amiga_realloc" alt="" coords="617,184,745,211"/>
+<area shape="rect" id="node7" href="$gc_2include_2gc_8h.html#a25ca94661cc879ab9b03068a785e6d0e" title="GC_debug_realloc_replacement" alt="" coords="793,133,1000,160"/>
+</map>

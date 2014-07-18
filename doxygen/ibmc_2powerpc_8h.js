@@ -1,0 +1,25 @@
+var ibmc_2powerpc_8h =
+[
+    [ "AO_HAVE_compare_and_swap_acquire", "ibmc_2powerpc_8h.html#ad0b08bc254deecdcba5a4f3366432cf3", null ],
+    [ "AO_HAVE_compare_and_swap_full", "ibmc_2powerpc_8h.html#a98ec53065c0dfd18bc1013c500da377c", null ],
+    [ "AO_HAVE_compare_and_swap_release", "ibmc_2powerpc_8h.html#ad85c7af2ae0a778eba77a7762a358819", null ],
+    [ "AO_HAVE_load_acquire", "ibmc_2powerpc_8h.html#a29328d5664268a40645ea9d2f82c8bef", null ],
+    [ "AO_HAVE_nop_read", "ibmc_2powerpc_8h.html#a5e899b880760568b4da25ec2d6011cbd", null ],
+    [ "AO_HAVE_nop_write", "ibmc_2powerpc_8h.html#a7c6d0c7c0585da4d8cd259df2423b82f", null ],
+    [ "AO_HAVE_store_release", "ibmc_2powerpc_8h.html#a58f98c6b42d593762336829dcf86d058", null ],
+    [ "AO_HAVE_test_and_set_acquire", "ibmc_2powerpc_8h.html#addf7856c1f3a120a04ad68e843b23de4", null ],
+    [ "AO_HAVE_test_and_set_full", "ibmc_2powerpc_8h.html#ad5f311a090d1e6e1bb35a6e68ee35fad", null ],
+    [ "AO_HAVE_test_and_set_release", "ibmc_2powerpc_8h.html#a27cd35e8e9c1987a362a8610811e1c40", null ],
+    [ "AO_nop_read", "ibmc_2powerpc_8h.html#a3a367b9626ced22d98eb45e958a21aad", null ],
+    [ "AO_nop_write", "ibmc_2powerpc_8h.html#aa6b9cf57e4373ade9ce01d28a58ad21d", null ],
+    [ "AO_compare_and_swap_acquire", "ibmc_2powerpc_8h.html#a81fc146600046fb8ee9ce4339f078e2e", null ],
+    [ "AO_compare_and_swap_full", "ibmc_2powerpc_8h.html#a634397de6de764015b30cdff3ff00b06", null ],
+    [ "AO_compare_and_swap_release", "ibmc_2powerpc_8h.html#ae39d774429bea0d5c3b604bbb820a4ea", null ],
+    [ "AO_load_acquire", "ibmc_2powerpc_8h.html#afd982c8bbaa60d3294cc30f92f170847", null ],
+    [ "AO_lwsync", "ibmc_2powerpc_8h.html#a5febfde98faf0a03093897ef864a9589", null ],
+    [ "AO_store_release", "ibmc_2powerpc_8h.html#a7b4e8216189c3f4e7f7418e5c2a98b0f", null ],
+    [ "AO_sync", "ibmc_2powerpc_8h.html#a55511d2b128569ea7799bd4abb0988a5", null ],
+    [ "AO_test_and_set_acquire", "ibmc_2powerpc_8h.html#a0af1bdd53473eb43906a057efe883f6d", null ],
+    [ "AO_test_and_set_full", "ibmc_2powerpc_8h.html#a9f485bd63ce5c6a017ec241906e2f651", null ],
+    [ "AO_test_and_set_release", "ibmc_2powerpc_8h.html#abd4f99ea301b67851c8a6a1dc61e97c1", null ]
+];

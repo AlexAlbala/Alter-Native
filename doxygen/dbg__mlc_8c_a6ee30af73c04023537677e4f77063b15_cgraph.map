@@ -1,0 +1,7 @@
+<map id="GC_check_heap_block" name="GC_check_heap_block">
+<area shape="rect" id="node2" href="$dbg__mlc_8c.html#ad714e5613bb976a1ed8ecd23f05f8b8b" title="GC_check_annotated_obj" alt="" coords="209,5,380,32"/>
+<area shape="rect" id="node4" href="$dbg__mlc_8c.html#a25d9083b1d677389672528b7e55c0ce6" title="GC_add_smashed" alt="" coords="230,56,359,83"/>
+<area shape="rect" id="node3" href="$gc_2include_2gc_8h.html#a499ad7765a60a7307ef93fddda6201a9" title="GC_size" alt="" coords="446,5,518,32"/>
+<area shape="rect" id="node5" href="$gc__priv_8h.html#acd61070bde5ffc7ab1df410140aa4514" title="GC_is_marked" alt="" coords="428,56,536,83"/>
+<area shape="rect" id="node6" href="$gc_2include_2gc_8h.html#a8b93cd0c8d9c312bbdf0e679d10b680a" title="GC_base" alt="" coords="444,107,520,133"/>
+</map>

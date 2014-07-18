@@ -1,0 +1,6 @@
+<map id="GC_make_array_descriptor" name="GC_make_array_descriptor">
+<area shape="rect" id="node2" href="$typd__mlc_8c.html#a1c6e863e6c2c4b7ffb74e9ceca9e1102" title="GC_double_descr" alt="" coords="274,5,399,32"/>
+<area shape="rect" id="node3" href="$gc_2include_2gc_8h.html#af9585a385389c29d2a3643de45e17572" title="GC_malloc_atomic" alt="" coords="271,56,403,83"/>
+<area shape="rect" id="node4" href="$typd__mlc_8c.html#a0053865e1a02c9b0e8e3b875a0d5fabc" title="GC_make_sequence_descriptor" alt="" coords="233,107,440,133"/>
+<area shape="rect" id="node5" href="$gc_2include_2gc_8h.html#acdf040af35f59696a2d0ee945aac622f" title="GC_malloc" alt="" coords="488,107,575,133"/>
+</map>

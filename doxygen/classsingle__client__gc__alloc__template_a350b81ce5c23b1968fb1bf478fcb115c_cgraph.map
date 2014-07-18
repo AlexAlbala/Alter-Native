@@ -1,0 +1,9 @@
+<map id="single_client_gc_alloc_template::ptr_free_allocate" name="single_client_gc_alloc_template::ptr_free_allocate">
+<area shape="rect" id="node2" href="$new__gc__alloc_8h.html#a86d32d5224cc43e5f07d560dfc0386dc" title="GC_round_up" alt="" coords="262,5,363,32"/>
+<area shape="rect" id="node3" href="$gc_2include_2gc_8h.html#af9585a385389c29d2a3643de45e17572" title="GC_malloc_atomic" alt="" coords="247,56,379,83"/>
+<area shape="rect" id="node4" href="$class_g_c__aux__template.html#a9967245b7be70fb1f494927119574843" title="GC_aux_template::GC\l_out_of_line_malloc" alt="" coords="236,107,389,149"/>
+<area shape="rect" id="node8" href="$new__gc__alloc_8h.html#a8cc53b4a6fe8e3b94b8de510a0a10131" title="GC_obj_link" alt="" coords="267,173,359,200"/>
+<area shape="rect" id="node5" href="$new__gc__alloc_8h.html#ab84b0e49f07fa2499f63dc9ed44a7c8f" title="GC_incr_bytes_allocd" alt="" coords="451,64,600,91"/>
+<area shape="rect" id="node6" href="$new__gc__alloc_8h.html#a24d35a8a50ff5f06502db7862fba6763" title="GC_incr_bytes_freed" alt="" coords="454,115,597,141"/>
+<area shape="rect" id="node7" href="$new__gc__alloc_8h.html#abb7d7bbf78f62bce7196c696707f332e" title="GC_generic_malloc_words\l_small" alt="" coords="437,166,613,207"/>
+</map>

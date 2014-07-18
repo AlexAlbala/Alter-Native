@@ -1,0 +1,6 @@
+<map id="System::IO::FileStream::Dispose" name="System::IO::FileStream::Dispose">
+<area shape="rect" id="node2" href="$class_system_1_1_i_o_1_1_stream_writer.html#a00e9a7d2a9fe27988af57f2fe77ccb00" title="System::IO::StreamWriter\l::Close" alt="" coords="215,5,388,47"/>
+<area shape="rect" id="node3" href="$class_system_1_1_i_o_1_1_stream_reader.html#a694da4d177a63ebd2ec58a8e4c619bfd" title="System::IO::StreamReader\l::Close" alt="" coords="212,71,391,112"/>
+<area shape="rect" id="node4" href="$class_system_1_1_i_o_1_1_stream.html#a6131e0c9a8e81aafc966cc8d68843b51" title="System::IO::Stream\l::Dispose" alt="" coords="232,136,371,177"/>
+<area shape="rect" id="node5" href="$class_system_1_1_i_o_1_1_stream.html#a99324e1923e2dbd3701b65ce0f4ce6d9" title="System::IO::Stream\l::Close" alt="" coords="439,136,577,177"/>
+</map>

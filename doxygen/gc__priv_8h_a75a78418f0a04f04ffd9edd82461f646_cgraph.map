@@ -1,0 +1,5 @@
+<map id="GC_add_roots_inner" name="GC_add_roots_inner">
+<area shape="rect" id="node2" href="$mark__rts_8c.html#a166f9eedf05e6a8ae085531de987fe55" title="GC_roots_present" alt="" coords="197,5,324,32"/>
+<area shape="rect" id="node4" href="$mark__rts_8c.html#a913ff2ba648517e531505c48cc472417" title="add_roots_to_index" alt="" coords="193,56,328,83"/>
+<area shape="rect" id="node3" href="$mark__rts_8c.html#af55202af345ad2b61027053c4a79d010" title="rt_hash" alt="" coords="376,31,441,57"/>
+</map>

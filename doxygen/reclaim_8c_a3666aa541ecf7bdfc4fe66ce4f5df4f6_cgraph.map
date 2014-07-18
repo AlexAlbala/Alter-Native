@@ -1,0 +1,34 @@
+<map id="GC_start_reclaim" name="GC_start_reclaim">
+<area shape="rect" id="node2" href="$reclaim_8c.html#a8dd938713e06c8a0434bb0063e4fe1ff" title="GC_clear_fl_links" alt="" coords="196,64,319,91"/>
+<area shape="rect" id="node3" href="$headers_8c.html#a48a8aa76f61165c1116bb7a3a52d9ac5" title="GC_apply_to_all_blocks" alt="" coords="176,115,339,141"/>
+<area shape="rect" id="node4" href="$reclaim_8c.html#a7721e31790b860809f5b25aef40ac673" title="GC_reclaim_block" alt="" coords="193,241,321,268"/>
+<area shape="rect" id="node33" href="$reclaim_8c.html#a07f36a322f6a08a42590b6b6933836c1" title="GC_reclaim_all" alt="" coords="202,165,313,192"/>
+<area shape="rect" id="node5" href="$reclaim_8c.html#afccf6e87c1d8bdbe9ea41221a3dc78ad" title="GC_add_leaked" alt="" coords="841,263,956,289"/>
+<area shape="rect" id="node13" href="$allchblk_8c.html#a2c41d1fbfff96311052f54041d5c659a" title="GC_freehblk" alt="" coords="436,391,529,417"/>
+<area shape="rect" id="node23" href="$reclaim_8c.html#a492e5047848f1c2ee71297f76085b687" title="GC_block_empty" alt="" coords="421,441,544,468"/>
+<area shape="rect" id="node24" href="$reclaim_8c.html#a713b42be146628271b9fceb7e768ded4" title="GC_reclaim_small_nonempty\l_block" alt="" coords="387,99,579,141"/>
+<area shape="rect" id="node32" href="$reclaim_8c.html#af026f6b9910679586f5492b505fbf407" title="GC_block_nearly_full" alt="" coords="411,216,555,243"/>
+<area shape="rect" id="node6" href="$dbg__mlc_8c.html#a4985b7b1cc5846b5fc372ada1a410071" title="GC_check_leaked" alt="" coords="1032,299,1160,325"/>
+<area shape="rect" id="node9" href="$gc__priv_8h.html#a00ea68d1c7f466442a29bfd963b12f86" title="GC_set_mark_bit" alt="" coords="1234,248,1357,275"/>
+<area shape="rect" id="node7" href="$dbg__mlc_8c.html#a1e8d4ec327bfee97d5936431e51c3ef6" title="GC_has_other_debug_info" alt="" coords="1208,349,1383,376"/>
+<area shape="rect" id="node10" href="$dbg__mlc_8c.html#a25d9083b1d677389672528b7e55c0ce6" title="GC_add_smashed" alt="" coords="1231,299,1360,325"/>
+<area shape="rect" id="node8" href="$gc_2include_2gc_8h.html#a499ad7765a60a7307ef93fddda6201a9" title="GC_size" alt="" coords="1449,349,1521,376"/>
+<area shape="rect" id="node11" href="$gc__priv_8h.html#acd61070bde5ffc7ab1df410140aa4514" title="GC_is_marked" alt="" coords="1431,248,1539,275"/>
+<area shape="rect" id="node12" href="$gc_2include_2gc_8h.html#a8b93cd0c8d9c312bbdf0e679d10b680a" title="GC_base" alt="" coords="1447,299,1523,325"/>
+<area shape="rect" id="node14" href="$headers_8c.html#a098f4fb08a9258fd53bad08d3e374845" title="GC_remove_counts" alt="" coords="629,467,763,493"/>
+<area shape="rect" id="node15" href="$gc__priv_8h.html#ada843fec7ffa10957a47951e0691f73b" title="GC_log_printf" alt="" coords="646,315,746,341"/>
+<area shape="rect" id="node16" href="$allchblk_8c.html#aec8e6e0a99e26eaf364c4b13c3d1e2bd" title="GC_free_block_ending_at" alt="" coords="813,492,984,519"/>
+<area shape="rect" id="node18" href="$allchblk_8c.html#a5bc299add24d3a93820d76f9fbeabaab" title="GC_remove_from_fl" alt="" coords="629,365,763,392"/>
+<area shape="rect" id="node20" href="$headers_8c.html#af99f6969929f3aed2dc598fb67d5217f" title="GC_remove_header" alt="" coords="629,568,763,595"/>
+<area shape="rect" id="node22" href="$allchblk_8c.html#a35c81a7ba38ff83261e14688fa5f2093" title="GC_add_to_fl" alt="" coords="646,416,746,443"/>
+<area shape="rect" id="node17" href="$headers_8c.html#a966794470a9e8bcabc77c40e39d18ff0" title="GC_prev_block" alt="" coords="1041,492,1151,519"/>
+<area shape="rect" id="node19" href="$allchblk_8c.html#abd87fec812664ad342311f194dff9a25" title="GC_hblk_fl_from_blocks" alt="" coords="817,391,980,417"/>
+<area shape="rect" id="node21" href="$headers_8c.html#acb62b3cd844b66e1e7d63f23d7394e40" title="free_hdr" alt="" coords="865,568,933,595"/>
+<area shape="rect" id="node25" href="$reclaim_8c.html#a0bf4ca5537f7291287c78c2b67194525" title="GC_reclaim_check" alt="" coords="630,183,762,209"/>
+<area shape="rect" id="node26" href="$reclaim_8c.html#a1cd641bd689b35751eeffdf2cab254fa" title="GC_reclaim_generic" alt="" coords="627,107,765,133"/>
+<area shape="rect" id="node27" href="$headers_8c.html#a82a38fd3345ecdd1ab8e84422ed16022" title="GC_find_header" alt="" coords="1039,172,1153,199"/>
+<area shape="rect" id="node28" href="$gc__priv_8h.html#ac4f8d20ee0d59bc2cab4984343affea6" title="GC_remove_protection" alt="" coords="822,5,975,32"/>
+<area shape="rect" id="node29" href="$reclaim_8c.html#aabd87ab113c340acadee4ebda9405a7b" title="GC_reclaim_clear" alt="" coords="836,208,961,235"/>
+<area shape="rect" id="node30" href="$reclaim_8c.html#a570e9a28a7e0dfd2a73251c63228d781" title="GC_reclaim_uninit" alt="" coords="835,56,963,83"/>
+<area shape="rect" id="node31" href="$gc__priv_8h.html#ad83b8023011c333edd39adb21458dbd4" title="GC_set_hdr_marks" alt="" coords="831,107,966,133"/>
+</map>

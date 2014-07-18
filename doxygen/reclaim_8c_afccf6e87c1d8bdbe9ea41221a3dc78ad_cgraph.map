@@ -1,0 +1,9 @@
+<map id="GC_add_leaked" name="GC_add_leaked">
+<area shape="rect" id="node2" href="$dbg__mlc_8c.html#a4985b7b1cc5846b5fc372ada1a410071" title="GC_check_leaked" alt="" coords="168,56,296,83"/>
+<area shape="rect" id="node5" href="$gc__priv_8h.html#a00ea68d1c7f466442a29bfd963b12f86" title="GC_set_mark_bit" alt="" coords="370,107,493,133"/>
+<area shape="rect" id="node3" href="$dbg__mlc_8c.html#a1e8d4ec327bfee97d5936431e51c3ef6" title="GC_has_other_debug_info" alt="" coords="344,5,519,32"/>
+<area shape="rect" id="node6" href="$dbg__mlc_8c.html#a25d9083b1d677389672528b7e55c0ce6" title="GC_add_smashed" alt="" coords="367,56,496,83"/>
+<area shape="rect" id="node4" href="$gc_2include_2gc_8h.html#a499ad7765a60a7307ef93fddda6201a9" title="GC_size" alt="" coords="585,5,657,32"/>
+<area shape="rect" id="node7" href="$gc__priv_8h.html#acd61070bde5ffc7ab1df410140aa4514" title="GC_is_marked" alt="" coords="567,56,675,83"/>
+<area shape="rect" id="node8" href="$gc_2include_2gc_8h.html#a8b93cd0c8d9c312bbdf0e679d10b680a" title="GC_base" alt="" coords="583,107,659,133"/>
+</map>

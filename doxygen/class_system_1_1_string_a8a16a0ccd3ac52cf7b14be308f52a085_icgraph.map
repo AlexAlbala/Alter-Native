@@ -1,0 +1,9 @@
+<map id="System::String::String" name="System::String::String">
+<area shape="rect" id="node2" href="$class_system_1_1_string.html#ad509bf2020b646abc25126fefb2742f1" title="System::String::operator=" alt="" coords="204,5,376,32"/>
+<area shape="rect" id="node3" href="$class_system_1_1_string.html#a9d0a5fb9f76133ac1667f95752972eda" title="System::String::Concat" alt="" coords="211,56,369,83"/>
+<area shape="rect" id="node5" href="$class_system_1_1_string.html#a20a427a9746acf985184adf225e8b932" title="System::String::ToLower" alt="" coords="207,107,373,133"/>
+<area shape="rect" id="node6" href="$class_system_1_1_string.html#a44cd991b12a9c03ee46728d61edc2345" title="System::String::ToUpper" alt="" coords="207,157,373,184"/>
+<area shape="rect" id="node7" href="$class_system_1_1_string.html#a0208e54edf6c6d4a34278aa1ddcdbfcd" title="System::String::Substring" alt="" coords="204,208,376,235"/>
+<area shape="rect" id="node8" href="$class_system_1_1_string.html#a15391ee2f208165bcbfbc9238f675a53" title="System::String::operator+" alt="" coords="204,259,376,285"/>
+<area shape="rect" id="node4" href="$class_system_1_1_string.html#ae0287bf5706d6b204479fd2435237692" title="System::String::Concat" alt="" coords="424,56,583,83"/>
+</map>

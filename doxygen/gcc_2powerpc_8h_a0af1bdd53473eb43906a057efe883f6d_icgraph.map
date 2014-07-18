@@ -1,0 +1,6 @@
+<map id="AO_test_and_set_acquire" name="AO_test_and_set_acquire">
+<area shape="rect" id="node2" href="$atomic__ops_8c.html#a917e124262f5e2e7ba0eef1edcf9defc" title="lock" alt="" coords="225,78,272,105"/>
+<area shape="rect" id="node3" href="$atomic__ops_8c.html#a094738a02b8a59f19b2d54987b9f667b" title="AO_compare_and_swap\l_emulation" alt="" coords="324,5,487,47"/>
+<area shape="rect" id="node4" href="$atomic__ops_8c.html#ac6fb4f6252feec901b044d2e8c59e6f7" title="AO_compare_double_and\l_swap_double_emulation" alt="" coords="320,71,491,112"/>
+<area shape="rect" id="node5" href="$atomic__ops_8c.html#a615316c80d5bf0e0fb172d6c7d4133a5" title="AO_store_full_emulation" alt="" coords="324,137,487,163"/>
+</map>

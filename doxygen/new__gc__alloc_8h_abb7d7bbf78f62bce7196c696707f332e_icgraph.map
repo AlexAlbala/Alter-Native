@@ -1,0 +1,7 @@
+<map id="GC_generic_malloc_words_small" name="GC_generic_malloc_words_small">
+<area shape="rect" id="node2" href="$class_g_c__aux__template.html#a9967245b7be70fb1f494927119574843" title="GC_aux_template::GC\l_out_of_line_malloc" alt="" coords="229,104,383,145"/>
+<area shape="rect" id="node3" href="$classsingle__client__gc__alloc__template.html#a597cd2f18047fc53027b02c50e4e5324" title="single_client_gc_alloc\l_template::allocate" alt="" coords="447,5,597,47"/>
+<area shape="rect" id="node4" href="$classsingle__client__gc__alloc__template.html#a350b81ce5c23b1968fb1bf478fcb115c" title="single_client_gc_alloc\l_template::ptr_free_allocate" alt="" coords="431,71,613,112"/>
+<area shape="rect" id="node5" href="$classsingle__client__traceable__alloc__template.html#a0e0fc2ccede260fcacf348082fa81680" title="single_client_traceable\l_alloc_template::allocate" alt="" coords="439,136,605,177"/>
+<area shape="rect" id="node6" href="$classsingle__client__traceable__alloc__template.html#aaad7e7cb0bf794272ca4fce34e37471f" title="single_client_traceable\l_alloc_template::ptr_free\l_allocate" alt="" coords="440,202,604,258"/>
+</map>

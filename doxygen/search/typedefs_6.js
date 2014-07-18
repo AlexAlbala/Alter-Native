@@ -1,0 +1,24 @@
+var searchData=
+[
+  ['gc_5falloc',['gc_alloc',['../new__gc__alloc_8h.html#a2b535e0412a2f0dad97f6f5e7b6b4aca',1,'new_gc_alloc.h']]],
+  ['gc_5faux',['GC_aux',['../new__gc__alloc_8h.html#a9a38badbb1c0f4af4141ccad60141543',1,'new_gc_alloc.h']]],
+  ['gc_5fbitmap',['GC_bitmap',['../gc__typed_8h.html#ae8f5f7c7dadd8d4af087a3e3675c820b',1,'gc_typed.h']]],
+  ['gc_5fbool',['GC_bool',['../gc__priv_8h.html#ae568a9cec5d3f9b21f1a00154e4c587e',1,'gc_priv.h']]],
+  ['gc_5fdescr',['GC_descr',['../gc__typed_8h.html#adad3c710737c3744436c20270cc5a42e',1,'gc_typed.h']]],
+  ['gc_5fdescribe_5ftype_5ffn',['GC_describe_type_fn',['../gc__mark_8h.html#a7ae39a97d9efc5bfef64119cdcf24b86',1,'gc_mark.h']]],
+  ['gc_5ffinalization_5fproc',['GC_finalization_proc',['../gc_2include_2gc_8h.html#a7c932866758cf3cddd8f900365b0d6b1',1,'gc.h']]],
+  ['gc_5ffinalizer_5fnotifier_5fproc',['GC_finalizer_notifier_proc',['../gc_2include_2gc_8h.html#ac205df15787596b122ea31097314d429',1,'gc.h']]],
+  ['gc_5ffn_5ftype',['GC_fn_type',['../gc_2include_2gc_8h.html#aca39fcc3bd4c99a5a0d560b5e913c61d',1,'gc.h']]],
+  ['gc_5fhas_5fstatic_5froots_5ffunc',['GC_has_static_roots_func',['../gc_2include_2gc_8h.html#a0307ee3b5df52bdc086be6f9b499ad1c',1,'gc.h']]],
+  ['gc_5fhidden_5fpointer',['GC_hidden_pointer',['../gc_2include_2gc_8h.html#a55b664c2ac1ee3e86a09695e8d224a9b',1,'gc.h']]],
+  ['gc_5fmark_5fproc',['GC_mark_proc',['../gc__mark_8h.html#aebd3d40be6c4a85ffea9ca7e1d1be3b6',1,'gc_mark.h']]],
+  ['gc_5foom_5ffunc',['GC_oom_func',['../gc_2include_2gc_8h.html#a8e98e4bbb146886002bbbe70c023af70',1,'gc.h']]],
+  ['gc_5fptr',['GC_PTR',['../gc_2include_2gc_8h.html#a6bed79acc1c166e614fa9e329c15683e',1,'gc.h']]],
+  ['gc_5fsigned_5fword',['GC_signed_word',['../gc_2include_2gc_8h.html#af0ae670615991b7562cf2953ef7dd3d1',1,'gc.h']]],
+  ['gc_5fstack_5fbase_5ffunc',['GC_stack_base_func',['../gc_2include_2gc_8h.html#a4219d3a659bd9eae3fa568818ee3eb15',1,'gc.h']]],
+  ['gc_5fstart_5fcallback_5fproc',['GC_start_callback_proc',['../gc__mark_8h.html#ab5c53fd3daa2d7b5c59e073bd24370d1',1,'gc_mark.h']]],
+  ['gc_5fstop_5ffunc',['GC_stop_func',['../gc_2include_2gc_8h.html#af6b5ea727dc11a6ffd80e3f8649fe20d',1,'gc.h']]],
+  ['gc_5fwarn_5fproc',['GC_warn_proc',['../gc_2include_2gc_8h.html#a1f01451d673b02b32d3470229d36f06a',1,'gc.h']]],
+  ['gc_5fword',['GC_word',['../gc_2include_2gc_8h.html#ac7cb0b9e546fd96f126713bcffee4d23',1,'gc.h']]],
+  ['gccleanupfunc',['GCCleanUpFunc',['../gc__cpp_8h.html#ac40a7ba697f54d875ad35b68d2241a22',1,'gc_cpp.h']]]
+];

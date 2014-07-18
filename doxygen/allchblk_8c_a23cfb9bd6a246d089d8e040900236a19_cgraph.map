@@ -1,0 +1,6 @@
+<map id="GC_split_block" name="GC_split_block">
+<area shape="rect" id="node2" href="$allchblk_8c.html#a35c81a7ba38ff83261e14688fa5f2093" title="GC_add_to_fl" alt="" coords="164,31,264,57"/>
+<area shape="rect" id="node3" href="$allchblk_8c.html#abd87fec812664ad342311f194dff9a25" title="GC_hblk_fl_from_blocks" alt="" coords="316,5,479,32"/>
+<area shape="rect" id="node4" href="$allchblk_8c.html#aec8e6e0a99e26eaf364c4b13c3d1e2bd" title="GC_free_block_ending_at" alt="" coords="312,56,483,83"/>
+<area shape="rect" id="node5" href="$headers_8c.html#a966794470a9e8bcabc77c40e39d18ff0" title="GC_prev_block" alt="" coords="531,56,640,83"/>
+</map>

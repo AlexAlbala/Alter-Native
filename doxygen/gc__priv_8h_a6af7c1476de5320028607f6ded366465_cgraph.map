@@ -1,0 +1,6 @@
+<map id="GC_print_block_list" name="GC_print_block_list">
+<area shape="rect" id="node2" href="$gc__priv_8h.html#af88bfca208f01c5a5b986b6875d279c5" title="GC_printf" alt="" coords="422,5,498,32"/>
+<area shape="rect" id="node3" href="$headers_8c.html#a48a8aa76f61165c1116bb7a3a52d9ac5" title="GC_apply_to_all_blocks" alt="" coords="188,31,351,57"/>
+<area shape="rect" id="node4" href="$reclaim_8c.html#a9297a134058236aeaca27eb63f1b3451" title="GC_print_block_descr" alt="" coords="194,81,345,108"/>
+<area shape="rect" id="node5" href="$reclaim_8c.html#a012baa28ff13c5b078a1bae6f5deef15" title="GC_n_set_marks" alt="" coords="399,81,521,108"/>
+</map>

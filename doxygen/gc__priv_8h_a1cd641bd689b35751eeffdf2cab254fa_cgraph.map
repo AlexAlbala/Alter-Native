@@ -1,0 +1,7 @@
+<map id="GC_reclaim_generic" name="GC_reclaim_generic">
+<area shape="rect" id="node2" href="$headers_8c.html#a82a38fd3345ecdd1ab8e84422ed16022" title="GC_find_header" alt="" coords="393,28,508,55"/>
+<area shape="rect" id="node3" href="$gc__priv_8h.html#ac4f8d20ee0d59bc2cab4984343affea6" title="GC_remove_protection" alt="" coords="192,28,345,55"/>
+<area shape="rect" id="node4" href="$reclaim_8c.html#aabd87ab113c340acadee4ebda9405a7b" title="GC_reclaim_clear" alt="" coords="206,79,331,105"/>
+<area shape="rect" id="node5" href="$reclaim_8c.html#a570e9a28a7e0dfd2a73251c63228d781" title="GC_reclaim_uninit" alt="" coords="205,129,333,156"/>
+<area shape="rect" id="node6" href="$gc__priv_8h.html#ad83b8023011c333edd39adb21458dbd4" title="GC_set_hdr_marks" alt="" coords="201,180,336,207"/>
+</map>

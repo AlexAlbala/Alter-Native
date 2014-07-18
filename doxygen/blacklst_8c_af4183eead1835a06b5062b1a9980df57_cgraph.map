@@ -1,0 +1,7 @@
+<map id="GC_bl_init" name="GC_bl_init">
+<area shape="rect" id="node2" href="$blacklst_8c.html#aa959cb7ecd954c5ce71a307a95e917b0" title="GC_bl_init_no_interiors" alt="" coords="136,67,292,93"/>
+<area shape="rect" id="node3" href="$headers_8c.html#ad4012dbe01b6c85c8c21b76e5d42b460" title="GC_scratch_alloc" alt="" coords="340,29,465,56"/>
+<area shape="rect" id="node5" href="$gc__priv_8h.html#a515817b1cc28538efe42e953361e6cb1" title="GC_err_printf" alt="" coords="353,105,452,132"/>
+<area shape="rect" id="node6" href="$blacklst_8c.html#abffd8217465e2a2af662066fae2c46b3" title="GC_clear_bl" alt="" coords="356,156,449,183"/>
+<area shape="rect" id="node4" href="$gc__priv_8h.html#ada843fec7ffa10957a47951e0691f73b" title="GC_log_printf" alt="" coords="513,29,613,56"/>
+</map>

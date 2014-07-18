@@ -1,0 +1,6 @@
+<map id="GC_descr_obj_size" name="GC_descr_obj_size">
+<area shape="rect" id="node2" href="$typd__mlc_8c.html#a3d86df973c1694df1e112d29dd95740d" title="GC_push_complex_descriptor" alt="" coords="188,5,384,32"/>
+<area shape="rect" id="node3" href="$typd__mlc_8c.html#a5293131aab0b8231b72527a15e8877ac" title="GC_array_mark_proc" alt="" coords="432,5,577,32"/>
+<area shape="rect" id="node4" href="$typd__mlc_8c.html#a9dd4e2547a0f0f403327f5cbbf794347" title="GC_init_explicit_typing" alt="" coords="625,5,780,32"/>
+<area shape="rect" id="node5" href="$typd__mlc_8c.html#aba95a7b9ed865bcbe571120892fdd195" title="GC_make_descriptor" alt="" coords="828,5,972,32"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="GC_print_type" name="GC_print_type">
+<area shape="rect" id="node2" href="$headers_8c.html#a82a38fd3345ecdd1ab8e84422ed16022" title="GC_find_header" alt="" coords="159,5,273,32"/>
+<area shape="rect" id="node3" href="$gc__priv_8h.html#acd61070bde5ffc7ab1df410140aa4514" title="GC_is_marked" alt="" coords="162,56,270,83"/>
+<area shape="rect" id="node4" href="$gc_2include_2gc_8h.html#a8b93cd0c8d9c312bbdf0e679d10b680a" title="GC_base" alt="" coords="178,107,254,133"/>
+<area shape="rect" id="node5" href="$gc__priv_8h.html#a8e5675e534d5ef436fc241c816c52962" title="GC_err_puts" alt="" coords="169,157,263,184"/>
+<area shape="rect" id="node6" href="$gc__priv_8h.html#a515817b1cc28538efe42e953361e6cb1" title="GC_err_printf" alt="" coords="167,208,265,235"/>
+</map>

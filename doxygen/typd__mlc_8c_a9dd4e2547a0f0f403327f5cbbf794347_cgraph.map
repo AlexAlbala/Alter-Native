@@ -1,0 +1,11 @@
+<map id="GC_init_explicit_typing" name="GC_init_explicit_typing">
+<area shape="rect" id="node2" href="$gc__mark_8h.html#a691385ebac25e337628c9308c8ffb30a" title="GC_new_free_list_inner" alt="" coords="208,5,367,32"/>
+<area shape="rect" id="node3" href="$gc__mark_8h.html#acb18b5bd7bebbbc05f8f6db2e77007b7" title="GC_new_kind_inner" alt="" coords="219,56,356,83"/>
+<area shape="rect" id="node4" href="$gc__mark_8h.html#aea470eb62ae34275b2a41fd0b826414c" title="GC_new_proc_inner" alt="" coords="218,107,357,133"/>
+<area shape="rect" id="node5" href="$typd__mlc_8c.html#a4964de0cd8229d2fb7e786860527a071" title="GC_typed_mark_proc" alt="" coords="213,157,361,184"/>
+<area shape="rect" id="node8" href="$typd__mlc_8c.html#a5293131aab0b8231b72527a15e8877ac" title="GC_array_mark_proc" alt="" coords="215,209,360,236"/>
+<area shape="rect" id="node6" href="$gc__pmark_8h.html#ac7235e2e6e7dee5b8d82acb48bbf7c47" title="GC_signal_mark_stack\l_overflow" alt="" coords="434,147,591,189"/>
+<area shape="rect" id="node7" href="$gc__priv_8h.html#ada843fec7ffa10957a47951e0691f73b" title="GC_log_printf" alt="" coords="676,155,776,181"/>
+<area shape="rect" id="node9" href="$typd__mlc_8c.html#a3d86df973c1694df1e112d29dd95740d" title="GC_push_complex_descriptor" alt="" coords="415,213,611,240"/>
+<area shape="rect" id="node10" href="$typd__mlc_8c.html#a9e011c64e4cc1de3fd198ee7d9cf89ec" title="GC_descr_obj_size" alt="" coords="659,213,793,240"/>
+</map>

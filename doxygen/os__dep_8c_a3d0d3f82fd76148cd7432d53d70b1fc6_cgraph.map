@@ -1,0 +1,8 @@
+<map id="GC_register_data_segments" name="GC_register_data_segments">
+<area shape="rect" id="node2" href="$_amiga_o_s_8c.html#a35e299c1577a51c6b5fb803620d0f7b5" title="GC_register_data_segments" alt="" coords="240,5,427,32"/>
+<area shape="rect" id="node3" href="$gc__priv_8h.html#a75a78418f0a04f04ffd9edd82461f646" title="GC_add_roots_inner" alt="" coords="263,56,403,83"/>
+<area shape="rect" id="node7" href="$_mac_o_s_8c.html#af3dd996f80ff94bbc89627aebac1d163" title="GC_MacGetDataStart" alt="" coords="259,107,408,133"/>
+<area shape="rect" id="node4" href="$mark__rts_8c.html#a166f9eedf05e6a8ae085531de987fe55" title="GC_roots_present" alt="" coords="479,31,605,57"/>
+<area shape="rect" id="node6" href="$mark__rts_8c.html#a913ff2ba648517e531505c48cc472417" title="add_roots_to_index" alt="" coords="475,81,609,108"/>
+<area shape="rect" id="node5" href="$mark__rts_8c.html#af55202af345ad2b61027053c4a79d010" title="rt_hash" alt="" coords="657,56,723,83"/>
+</map>

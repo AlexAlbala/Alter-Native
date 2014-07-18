@@ -1,0 +1,4 @@
+<map id="GC_selective_alloc" name="GC_selective_alloc">
+<area shape="rect" id="node2" href="$classgc__allocator.html#a70d8cd16fac31196f8d94148781f3636" title="gc_allocator::allocate" alt="" coords="185,5,331,32"/>
+<area shape="rect" id="node3" href="$classgc__allocator__ignore__off__page.html#ac485377e2f9a5380e5e8e24e8ff7775e" title="gc_allocator_ignore\l_off_page::allocate" alt="" coords="191,57,325,98"/>
+</map>

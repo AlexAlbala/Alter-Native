@@ -1,0 +1,5 @@
+<map id="GC_register_finalizer_ignore_self" name="GC_register_finalizer_ignore_self">
+<area shape="rect" id="node2" href="$gc_2include_2gc_8h.html#a384543f1009cd85349d8e15095484cfc" title="GC_debug_register_finalizer\l_ignore_self" alt="" coords="196,5,380,47"/>
+<area shape="rect" id="node3" href="$classgc__cleanup.html#afb3b5e57dc7248638d294ca848bcc6da" title="gc_cleanup::~gc_cleanup" alt="" coords="203,71,373,98"/>
+<area shape="rect" id="node4" href="$classgc__cleanup.html#aef0c8fe44e3ea2c2f731ab11f717741a" title="gc_cleanup::gc_cleanup" alt="" coords="207,122,369,149"/>
+</map>

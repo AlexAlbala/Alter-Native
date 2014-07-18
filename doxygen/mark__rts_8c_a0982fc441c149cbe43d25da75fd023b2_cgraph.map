@@ -1,0 +1,6 @@
+<map id="GC_remove_roots_inner" name="GC_remove_roots_inner">
+<area shape="rect" id="node2" href="$mark__rts_8c.html#a784131a4f2172475aa51dcbc681a4c15" title="GC_remove_root_at_pos" alt="" coords="213,5,377,32"/>
+<area shape="rect" id="node3" href="$mark__rts_8c.html#abcdf1d53059790a320d654520049cf63" title="GC_rebuild_root_index" alt="" coords="219,56,372,83"/>
+<area shape="rect" id="node4" href="$mark__rts_8c.html#a913ff2ba648517e531505c48cc472417" title="add_roots_to_index" alt="" coords="425,56,560,83"/>
+<area shape="rect" id="node5" href="$mark__rts_8c.html#af55202af345ad2b61027053c4a79d010" title="rt_hash" alt="" coords="608,56,673,83"/>
+</map>

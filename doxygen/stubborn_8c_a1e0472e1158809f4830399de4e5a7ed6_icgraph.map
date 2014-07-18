@@ -1,0 +1,7 @@
+<map id="GC_malloc_stubborn" name="GC_malloc_stubborn">
+<area shape="rect" id="node2" href="$mallocx_8c.html#af87015145a2e4485b04b2bccd333e223" title="GC_generic_or_special\l_malloc" alt="" coords="196,23,352,65"/>
+<area shape="rect" id="node3" href="$mallocx_8c.html#af58fe77f2f791173c8e662093baef8ab" title="GC_realloc" alt="" coords="400,31,487,57"/>
+<area shape="rect" id="node4" href="$gc_2include_2gc_8h.html#ac0fc85cd6aabd28cd9483c12d4e8514f" title="GC_debug_realloc" alt="" coords="535,5,663,32"/>
+<area shape="rect" id="node6" href="$_amiga_o_s_8c.html#a7c1ecf244dbbc680b785e85392d3c2b6" title="GC_amiga_realloc" alt="" coords="535,56,663,83"/>
+<area shape="rect" id="node5" href="$gc_2include_2gc_8h.html#a25ca94661cc879ab9b03068a785e6d0e" title="GC_debug_realloc_replacement" alt="" coords="711,5,917,32"/>
+</map>

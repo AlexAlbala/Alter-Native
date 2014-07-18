@@ -1,0 +1,17 @@
+<map id="single_client_traceable_alloc_template::ptr_free_deallocate" name="single_client_traceable_alloc_template::ptr_free_deallocate">
+<area shape="rect" id="node2" href="$new__gc__alloc_8h.html#aa6d2ed10a15d01396dd5dd7c15960555" title="GC_round_up_uncollectable" alt="" coords="217,31,401,57"/>
+<area shape="rect" id="node3" href="$gc_2include_2gc_8h.html#aef11fb85e24d9cdb7da9ef9df26d45b3" title="GC_free" alt="" coords="275,81,344,108"/>
+<area shape="rect" id="node16" href="$new__gc__alloc_8h.html#a8cc53b4a6fe8e3b94b8de510a0a10131" title="GC_obj_link" alt="" coords="263,132,355,159"/>
+<area shape="rect" id="node4" href="$gc__priv_8h.html#a515817b1cc28538efe42e953361e6cb1" title="GC_err_printf" alt="" coords="449,31,548,57"/>
+<area shape="rect" id="node5" href="$gc_2include_2gc_8h.html#a8b93cd0c8d9c312bbdf0e679d10b680a" title="GC_base" alt="" coords="461,81,537,108"/>
+<area shape="rect" id="node6" href="$allchblk_8c.html#a2c41d1fbfff96311052f54041d5c659a" title="GC_freehblk" alt="" coords="452,132,545,159"/>
+<area shape="rect" id="node7" href="$headers_8c.html#a098f4fb08a9258fd53bad08d3e374845" title="GC_remove_counts" alt="" coords="596,5,731,32"/>
+<area shape="rect" id="node8" href="$gc__priv_8h.html#ada843fec7ffa10957a47951e0691f73b" title="GC_log_printf" alt="" coords="613,56,713,83"/>
+<area shape="rect" id="node9" href="$allchblk_8c.html#aec8e6e0a99e26eaf364c4b13c3d1e2bd" title="GC_free_block_ending_at" alt="" coords="779,120,949,147"/>
+<area shape="rect" id="node11" href="$allchblk_8c.html#a5bc299add24d3a93820d76f9fbeabaab" title="GC_remove_from_fl" alt="" coords="596,208,731,235"/>
+<area shape="rect" id="node13" href="$headers_8c.html#af99f6969929f3aed2dc598fb67d5217f" title="GC_remove_header" alt="" coords="596,259,731,285"/>
+<area shape="rect" id="node15" href="$allchblk_8c.html#a35c81a7ba38ff83261e14688fa5f2093" title="GC_add_to_fl" alt="" coords="613,157,713,184"/>
+<area shape="rect" id="node10" href="$headers_8c.html#a966794470a9e8bcabc77c40e39d18ff0" title="GC_prev_block" alt="" coords="997,120,1107,147"/>
+<area shape="rect" id="node12" href="$allchblk_8c.html#abd87fec812664ad342311f194dff9a25" title="GC_hblk_fl_from_blocks" alt="" coords="783,196,945,223"/>
+<area shape="rect" id="node14" href="$headers_8c.html#acb62b3cd844b66e1e7d63f23d7394e40" title="free_hdr" alt="" coords="830,259,898,285"/>
+</map>

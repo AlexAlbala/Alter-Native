@@ -1,0 +1,5 @@
+<map id="AO_fetch_and_add" name="AO_fetch_and_add">
+<area shape="rect" id="node2" href="$gcc_2powerpc_8h.html#a5c9e99c843f97a3706a23a6b453e39dd" title="AO_fetch_and_add_acquire" alt="" coords="185,5,367,32"/>
+<area shape="rect" id="node3" href="$gcc_2powerpc_8h.html#a0d6acfb6d483cd1641c5d01df6b9d3ff" title="AO_fetch_and_add_release" alt="" coords="185,56,367,83"/>
+<area shape="rect" id="node4" href="$gcc_2powerpc_8h.html#abdc9c4590fde7e5847593f6a9c250d7f" title="AO_fetch_and_add_full" alt="" coords="199,107,353,133"/>
+</map>

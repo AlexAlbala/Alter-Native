@@ -1,0 +1,22 @@
+<map id="GC_check_annotated_obj" name="GC_check_annotated_obj">
+<area shape="rect" id="node2" href="$gc_2include_2gc_8h.html#ad830840174f5bcdfa0c49e2d6f8c47fd" title="GC_debug_free" alt="" coords="448,469,559,495"/>
+<area shape="rect" id="node5" href="$dbg__mlc_8c.html#a6ee30af73c04023537677e4f77063b15" title="GC_check_heap_block" alt="" coords="224,418,380,445"/>
+<area shape="rect" id="node3" href="$gc_2include_2gc_8h.html#ac0fc85cd6aabd28cd9483c12d4e8514f" title="GC_debug_realloc" alt="" coords="1356,303,1484,330"/>
+<area shape="rect" id="node4" href="$gc_2include_2gc_8h.html#a25ca94661cc879ab9b03068a785e6d0e" title="GC_debug_realloc_replacement" alt="" coords="1560,303,1767,330"/>
+<area shape="rect" id="node6" href="$dbg__mlc_8c.html#ac422a24ebb4519fa334d8ebadd453d75" title="GC_check_heap_proc" alt="" coords="428,375,579,402"/>
+<area shape="rect" id="node7" href="$gc__priv_8h.html#ab70f3f41d0e9255fe75f75bd0db97f97" title="GC_start_debugging" alt="" coords="627,354,767,381"/>
+<area shape="rect" id="node8" href="$gc_2include_2gc_8h.html#aa693f895fbe543be023d56030bf14852" title="GC_debug_malloc" alt="" coords="856,202,984,229"/>
+<area shape="rect" id="node16" href="$gc_2include_2gc_8h.html#af71b92497ed39a4a8588e28519b64d7a" title="GC_debug_malloc_ignore\l_off_page" alt="" coords="835,431,1005,472"/>
+<area shape="rect" id="node17" href="$gc_2include_2gc_8h.html#aed8ecdf800e8a876666322c1ca84c2f9" title="GC_debug_malloc_atomic\l_ignore_off_page" alt="" coords="833,263,1007,304"/>
+<area shape="rect" id="node18" href="$gc_2include_2gc_8h.html#a10876567af69963e64191b64757fbfb1" title="GC_debug_malloc_atomic" alt="" coords="833,379,1007,406"/>
+<area shape="rect" id="node21" href="$gc_2include_2gc_8h.html#afa8870eede24b2a80b4ade9232d2dbe8" title="GC_debug_malloc_uncollectable" alt="" coords="815,329,1025,355"/>
+<area shape="rect" id="node9" href="$gc_2include_2gc_8h.html#a0700c4016428f9c46adc777d45b13e92" title="GC_debug_malloc_stubborn" alt="" coords="1084,253,1269,279"/>
+<area shape="rect" id="node10" href="$dbg__mlc_8c.html#a0d909b267b7ff2bdf81d95a1d81e508e" title="GC_make_closure" alt="" coords="1112,101,1241,127"/>
+<area shape="rect" id="node15" href="$gc_2include_2gc_8h.html#aa5f1355dde86bafcb4610f5b5e1ede70" title="GC_debug_malloc_replacement" alt="" coords="1073,151,1280,178"/>
+<area shape="rect" id="node11" href="$gc_2include_2gc_8h.html#a5760294c548394034af973eeed4ab7d3" title="GC_debug_register_finalizer" alt="" coords="1328,71,1512,98"/>
+<area shape="rect" id="node12" href="$gc_2include_2gc_8h.html#a3882e78b31bf438b629f8169927c47d4" title="GC_debug_register_finalizer\l_no_order" alt="" coords="1328,123,1512,164"/>
+<area shape="rect" id="node13" href="$gc_2include_2gc_8h.html#a6b28fd527ccdc58c082c8bdeafcaca1d" title="GC_debug_register_finalizer\l_unreachable" alt="" coords="1328,188,1512,229"/>
+<area shape="rect" id="node14" href="$gc_2include_2gc_8h.html#a384543f1009cd85349d8e15095484cfc" title="GC_debug_register_finalizer\l_ignore_self" alt="" coords="1328,5,1512,47"/>
+<area shape="rect" id="node19" href="$gc_2include_2gc_8h.html#a68b7723e57f73b3f40621371809cccfb" title="GC_debug_strdup" alt="" coords="1113,455,1240,482"/>
+<area shape="rect" id="node20" href="$gc_2include_2gc_8h.html#a8d31f6d91985017aa8d42384e2431ab0" title="GC_debug_strndup" alt="" coords="1110,405,1243,431"/>
+</map>

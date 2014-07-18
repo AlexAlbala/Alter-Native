@@ -1,0 +1,10 @@
+var searchData=
+[
+  ['indexof',['IndexOf',['../class_system_1_1_collections_1_1_generic_1_1_list___t.html#a871bdb330daa072494be42dbbd84bfcd',1,'System::Collections::Generic::List_T::IndexOf()'],['../class_system_1_1_string.html#aedb9d4a6c4107a4908f283696442ce8b',1,'System::String::IndexOf()']]],
+  ['init',['Init',['../class_system_1_1_g_c.html#ab3baf243b75b3daca1972f46a7c364f3',1,'System::GC']]],
+  ['intptr',['IntPtr',['../struct_system_1_1_int_ptr.html#a3a3d9e7483d60b5a85093440b082df8e',1,'System::IntPtr::IntPtr(int *other)'],['../struct_system_1_1_int_ptr.html#a28db041ca5c36c7ab0f9bf6f50975008',1,'System::IntPtr::IntPtr(int other)']]],
+  ['invalidoperationexception',['InvalidOperationException',['../class_system_1_1_invalid_operation_exception.html#ad37f36bd246d18e44c41e12b50123d7f',1,'System::InvalidOperationException::InvalidOperationException()'],['../class_system_1_1_invalid_operation_exception.html#af038e4d0b6f0a7facf38f225cf83aa42',1,'System::InvalidOperationException::InvalidOperationException(String *message)']]],
+  ['invoke',['Invoke',['../class_system_1_1_____internal_____1_1___delegate_3_01void_00_01_arguments_8_8_8_4.html#ad244c88eb3efff6410bffcee558e28d7',1,'System::__Internal__::_Delegate&lt; void, Arguments...&gt;']]],
+  ['is_5finst_5fof',['is_inst_of',['../asis_8h.html#ae694a71085a7ff821b94b05a111689e5',1,'asis.h']]],
+  ['iteratorcxx',['iteratorcxx',['../class_system_1_1_collections_1_1_generic_1_1iteratorcxx.html#ab2320809eecc60d27dd46544b651e534',1,'System::Collections::Generic::iteratorcxx::iteratorcxx(IEnumerator_T&lt; T &gt; *_it)'],['../class_system_1_1_collections_1_1_generic_1_1iteratorcxx.html#a200fde6a15c96e46b9dde2d6ac72be00',1,'System::Collections::Generic::iteratorcxx::iteratorcxx(int n)'],['../class_system_1_1_collections_1_1iteratorcxx.html#a96346841ee07abdc91950e1a827bd6be',1,'System::Collections::iteratorcxx::iteratorcxx(IEnumerator *_it)'],['../class_system_1_1_collections_1_1iteratorcxx.html#ac22d5997a6bdbd5ed04ab680443f158e',1,'System::Collections::iteratorcxx::iteratorcxx(int n)']]]
+];

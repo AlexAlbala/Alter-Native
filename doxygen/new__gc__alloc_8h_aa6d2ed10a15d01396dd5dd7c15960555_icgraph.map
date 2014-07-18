@@ -1,0 +1,6 @@
+<map id="GC_round_up_uncollectable" name="GC_round_up_uncollectable">
+<area shape="rect" id="node2" href="$classsingle__client__traceable__alloc__template.html#a0e0fc2ccede260fcacf348082fa81680" title="single_client_traceable\l_alloc_template::allocate" alt="" coords="244,5,411,47"/>
+<area shape="rect" id="node3" href="$classsingle__client__traceable__alloc__template.html#aaad7e7cb0bf794272ca4fce34e37471f" title="single_client_traceable\l_alloc_template::ptr_free\l_allocate" alt="" coords="245,71,409,127"/>
+<area shape="rect" id="node4" href="$classsingle__client__traceable__alloc__template.html#a19ff7fcb3b5454f2daf102977b6a3aba" title="single_client_traceable\l_alloc_template::deallocate" alt="" coords="237,152,417,193"/>
+<area shape="rect" id="node5" href="$classsingle__client__traceable__alloc__template.html#a63473fb4d1f664d99f711b4feef4187c" title="single_client_traceable\l_alloc_template::ptr_free\l_deallocate" alt="" coords="245,218,409,274"/>
+</map>

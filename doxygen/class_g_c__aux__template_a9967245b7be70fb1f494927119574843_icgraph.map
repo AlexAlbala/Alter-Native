@@ -1,0 +1,6 @@
+<map id="GC_aux_template::GC_out_of_line_malloc" name="GC_aux_template::GC_out_of_line_malloc">
+<area shape="rect" id="node2" href="$classsingle__client__gc__alloc__template.html#a597cd2f18047fc53027b02c50e4e5324" title="single_client_gc_alloc\l_template::allocate" alt="" coords="223,5,373,47"/>
+<area shape="rect" id="node3" href="$classsingle__client__gc__alloc__template.html#a350b81ce5c23b1968fb1bf478fcb115c" title="single_client_gc_alloc\l_template::ptr_free_allocate" alt="" coords="207,71,389,112"/>
+<area shape="rect" id="node4" href="$classsingle__client__traceable__alloc__template.html#a0e0fc2ccede260fcacf348082fa81680" title="single_client_traceable\l_alloc_template::allocate" alt="" coords="215,136,381,177"/>
+<area shape="rect" id="node5" href="$classsingle__client__traceable__alloc__template.html#aaad7e7cb0bf794272ca4fce34e37471f" title="single_client_traceable\l_alloc_template::ptr_free\l_allocate" alt="" coords="216,202,380,258"/>
+</map>

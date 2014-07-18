@@ -1,0 +1,5 @@
+<map id="lock" name="lock">
+<area shape="rect" id="node2" href="$gcc_2powerpc_8h.html#a0af1bdd53473eb43906a057efe883f6d" title="AO_test_and_set_acquire" alt="" coords="100,31,272,57"/>
+<area shape="rect" id="node3" href="$gcc_2powerpc_8h.html#a8ec1c2583e26c57a7b4d17f239fa41e8" title="AO_test_and_set" alt="" coords="320,5,443,32"/>
+<area shape="rect" id="node4" href="$gcc_2powerpc_8h.html#a75a6574066b34ce697dcc012ec0e7128" title="AO_lwsync" alt="" coords="337,56,425,83"/>
+</map>

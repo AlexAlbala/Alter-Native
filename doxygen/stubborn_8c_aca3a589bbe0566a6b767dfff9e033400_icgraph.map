@@ -1,0 +1,6 @@
+<map id="GC_change_stubborn" name="GC_change_stubborn">
+<area shape="rect" id="node2" href="$mallocx_8c.html#af58fe77f2f791173c8e662093baef8ab" title="GC_realloc" alt="" coords="200,31,287,57"/>
+<area shape="rect" id="node3" href="$gc_2include_2gc_8h.html#ac0fc85cd6aabd28cd9483c12d4e8514f" title="GC_debug_realloc" alt="" coords="335,5,463,32"/>
+<area shape="rect" id="node5" href="$_amiga_o_s_8c.html#a7c1ecf244dbbc680b785e85392d3c2b6" title="GC_amiga_realloc" alt="" coords="335,56,463,83"/>
+<area shape="rect" id="node4" href="$gc_2include_2gc_8h.html#a25ca94661cc879ab9b03068a785e6d0e" title="GC_debug_realloc_replacement" alt="" coords="511,5,717,32"/>
+</map>

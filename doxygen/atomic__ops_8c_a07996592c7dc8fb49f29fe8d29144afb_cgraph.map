@@ -1,0 +1,5 @@
+<map id="AO_pause" name="AO_pause">
+<area shape="rect" id="node2" href="$atomic__ops_8c.html#a09e2ddbcd138c78edfa9f6e966784474" title="AO_spin" alt="" coords="136,31,208,57"/>
+<area shape="rect" id="node3" href="$aligned__atomic__load__store_8h.html#abce409d4af805946c529de695e85b54f" title="AO_load" alt="" coords="259,5,331,32"/>
+<area shape="rect" id="node4" href="$aligned__atomic__load__store_8h.html#a909024cfd17bfc0687e923fc5d592ecf" title="AO_store" alt="" coords="256,56,333,83"/>
+</map>

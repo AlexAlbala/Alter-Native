@@ -1,0 +1,10 @@
+<map id="GC_finalize" name="GC_finalize">
+<area shape="rect" id="node2" href="$gc__priv_8h.html#acd61070bde5ffc7ab1df410140aa4514" title="GC_is_marked" alt="" coords="179,5,287,32"/>
+<area shape="rect" id="node3" href="$gc__priv_8h.html#a4d0ed5cef038b24519a7db8378ae4ab0" title="GC_clear_mark_bit" alt="" coords="166,56,299,83"/>
+<area shape="rect" id="node4" href="$gc_2include_2gc_8h.html#a499ad7765a60a7307ef93fddda6201a9" title="GC_size" alt="" coords="197,107,269,133"/>
+<area shape="rect" id="node5" href="$gc__priv_8h.html#a00ea68d1c7f466442a29bfd963b12f86" title="GC_set_mark_bit" alt="" coords="171,157,294,184"/>
+<area shape="rect" id="node6" href="$gc_2include_2gc_8h.html#a8b93cd0c8d9c312bbdf0e679d10b680a" title="GC_base" alt="" coords="195,208,271,235"/>
+<area shape="rect" id="node7" href="$finalize_8c.html#a37c8892ae3f22b4c5330e874b0ffce9e" title="GC_null_finalize_mark_proc" alt="" coords="141,259,324,285"/>
+<area shape="rect" id="node8" href="$finalize_8c.html#a0f6ead3396dca092aed89d3d008aeaf8" title="GC_normal_finalize\l_mark_proc" alt="" coords="372,331,507,373"/>
+<area shape="rect" id="node9" href="$finalize_8c.html#a6e9ff8cd62098d2d13b6009f350a9df9" title="GC_unreachable_finalize\l_mark_proc" alt="" coords="150,361,315,402"/>
+</map>

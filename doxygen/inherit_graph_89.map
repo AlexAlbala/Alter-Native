@@ -1,0 +1,58 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node2" href="$class_system_1_1_exception.html" title="System::Exception" alt="" coords="421,137,555,164"/>
+<area shape="rect" id="node3" href="$class_system_1_1_system_exception.html" title="System::SystemException" alt="" coords="635,129,813,156"/>
+<area shape="rect" id="node4" href="$class_system_1_1_argument_exception.html" title="System::ArgumentException" alt="" coords="880,64,1069,91"/>
+<area shape="rect" id="node7" href="$class_system_1_1_invalid_operation_exception.html" title="System::InvalidOperation\lException" alt="" coords="891,115,1058,157"/>
+<area shape="rect" id="node9" href="$class_system_1_1_not_implemented_exception.html" title="System::NotImplementedException" alt="" coords="861,181,1088,208"/>
+<area shape="rect" id="node5" href="$class_system_1_1_argument_null_exception.html" title="System::ArgumentNullException" alt="" coords="1143,5,1354,32"/>
+<area shape="rect" id="node6" href="$class_system_1_1_argument_out_of_range_exception.html" title="System::ArgumentOutOfRange\lException" alt="" coords="1147,57,1350,98"/>
+<area shape="rect" id="node8" href="$class_system_1_1_object_disposed_exception.html" title="System::ObjectDisposedException" alt="" coords="1136,123,1361,149"/>
+<area shape="rect" id="node10" href="$classgc.html" title="gc" alt="" coords="5,733,44,760"/>
+<area shape="rect" id="node11" href="$classgc__cleanup.html" title="gc_cleanup" alt="" coords="92,733,180,760"/>
+<area shape="rect" id="node12" href="$class_system_1_1_object.html" title="System::Object" alt="" coords="228,733,341,760"/>
+<area shape="rect" id="node13" href="$class_system_1_1_____internal_____1_1_array___t___base.html" title="System::__Internal\l__::Array_T_Base\&lt; Object * \&gt;" alt="" coords="389,755,587,797"/>
+<area shape="rect" id="node15" href="$class_system_1_1_____internal_____1_1____box__t__base.html" title="System::__Internal\l__::__box_t_base\&lt; T \&gt;" alt="" coords="410,821,566,862"/>
+<area shape="rect" id="node20" href="$class_system_1_1_____internal_____1_1_array___t___base.html" title="System::__Internal\l__::Array_T_Base\&lt; T \&gt;" alt="" coords="409,886,567,927"/>
+<area shape="rect" id="node22" href="$class_system_1_1_collections_1_1_generic_1_1_dictionary___t.html" title="System::Collections\l::Generic::Dictionary\l_T\&lt; KeyT, ValueT \&gt;" alt="" coords="417,203,559,259"/>
+<area shape="rect" id="node23" href="$class_system_1_1_collections_1_1_i_enumerable.html" title="System::Collections\l::IEnumerable" alt="" coords="419,951,557,993"/>
+<area shape="rect" id="node26" href="$class_system_1_1_collections_1_1_i_enumerator.html" title="System::Collections\l::IEnumerator" alt="" coords="419,1017,557,1058"/>
+<area shape="rect" id="node29" href="$class_system_1_1_console.html" title="System::Console" alt="" coords="427,1083,549,1109"/>
+<area shape="rect" id="node30" href="$class_system_1_1_date_time.html" title="System::DateTime" alt="" coords="423,1133,553,1160"/>
+<area shape="rect" id="node31" href="$class_system_1_1_delegate.html" title="System::Delegate" alt="" coords="425,1184,551,1211"/>
+<area shape="rect" id="node38" href="$class_system_1_1_event.html" title="System::Event" alt="" coords="435,1235,541,1261"/>
+<area shape="rect" id="node40" href="$class_system_1_1_g_c.html" title="System::GC" alt="" coords="441,1285,535,1312"/>
+<area shape="rect" id="node41" href="$class_system_1_1_i_disposable.html" title="System::IDisposable" alt="" coords="417,283,559,309"/>
+<area shape="rect" id="node49" href="$class_system_1_1_i_o_1_1_file.html" title="System::IO::File" alt="" coords="429,333,547,360"/>
+<area shape="rect" id="node50" href="$class_system_1_1_math.html" title="System::Math" alt="" coords="436,384,540,411"/>
+<area shape="rect" id="node51" href="$class_system_1_1_random.html" title="System::Random" alt="" coords="427,435,549,461"/>
+<area shape="rect" id="node52" href="$class_system_1_1_string.html" title="System::String" alt="" coords="433,1336,543,1363"/>
+<area shape="rect" id="node53" href="$class_system_1_1_text_1_1_encoding.html" title="System::Text::Encoding" alt="" coords="407,485,569,512"/>
+<area shape="rect" id="node54" href="$class_system_1_1_text_1_1_string_builder.html" title="System::Text::StringBuilder" alt="" coords="397,536,579,563"/>
+<area shape="rect" id="node55" href="$class_system_1_1_text_1_1_u_t_f8_encoding.html" title="System::Text::UTF8Encoding" alt="" coords="391,587,585,613"/>
+<area shape="rect" id="node56" href="$class_system_1_1_threading_1_1_thread.html" title="System::Threading::\lThread" alt="" coords="419,638,557,679"/>
+<area shape="rect" id="node57" href="$class_system_1_1_time_span.html" title="System::TimeSpan" alt="" coords="421,704,555,731"/>
+<area shape="rect" id="node14" href="$class_system_1_1_____internal_____1_1_array_3_01_t_00_01false_01_4.html" title="System::__Internal\l__::Array\&lt; T, false \&gt;" alt="" coords="653,498,795,539"/>
+<area shape="rect" id="node16" href="$class_system_1_1_____internal_____1_1____box__t_3_01_t_00_01false_00_01false_00_01false_01_4.html" title="System::__Internal\l__::__box_t\&lt; T, false,\l false, false \&gt;" alt="" coords="650,564,798,620"/>
+<area shape="rect" id="node17" href="$class_system_1_1_____internal_____1_1____box__t_3_01_t_00_01false_00_01false_00_01true_01_4.html" title="System::__Internal\l__::__box_t\&lt; T, false,\l false, true \&gt;" alt="" coords="650,644,798,700"/>
+<area shape="rect" id="node18" href="$class_system_1_1_____internal_____1_1____box__t_3_01_t_00_01false_00_01true_00_01false_01_4.html" title="System::__Internal\l__::__box_t\&lt; T, false,\l true, false \&gt;" alt="" coords="650,724,798,780"/>
+<area shape="rect" id="node19" href="$class_system_1_1_____internal_____1_1____box__t_3_01_t_00_01true_00_01false_00_01false_01_4.html" title="System::__Internal\l__::__box_t\&lt; T, true,\l false, false \&gt;" alt="" coords="653,804,795,860"/>
+<area shape="rect" id="node21" href="$class_system_1_1_____internal_____1_1_array_3_01_t_00_01true_01_4.html" title="System::__Internal\l__::Array\&lt; T, true \&gt;" alt="" coords="656,885,792,926"/>
+<area shape="rect" id="node24" href="$class_system_1_1_collections_1_1_generic_1_1_i_enumerable___t.html" title="System::Collections\l::Generic::IEnumerable\l_T\&lt; T \&gt;" alt="" coords="647,951,801,1007"/>
+<area shape="rect" id="node25" href="$class_system_1_1_collections_1_1_generic_1_1_list___t.html" title="System::Collections\l::Generic::List_T\&lt; T \&gt;" alt="" coords="900,958,1049,999"/>
+<area shape="rect" id="node27" href="$class_system_1_1_collections_1_1_generic_1_1_i_enumerator___t.html" title="System::Collections\l::Generic::IEnumerator\l_T\&lt; T \&gt;" alt="" coords="647,1031,801,1087"/>
+<area shape="rect" id="node28" href="$class_system_1_1_collections_1_1_generic_1_1_list_enumerator___t.html" title="System::Collections\l::Generic::ListEnumerator\l_T\&lt; T \&gt;" alt="" coords="889,1031,1060,1087"/>
+<area shape="rect" id="node32" href="$class_system_1_1_____internal_____1_1___delegate.html" title="System::__Internal\l__::_Delegate\&lt; A, B...\&gt;" alt="" coords="644,1242,804,1283"/>
+<area shape="rect" id="node33" href="$class_system_1_1_____internal_____1_1___delegate.html" title="System::__Internal\l__::_Delegate\&lt; A, B \&gt;" alt="" coords="648,1307,800,1349"/>
+<area shape="rect" id="node34" href="$class_system_1_1_____internal_____1_1___delegate_3_01void_00_01_arguments_8_8_8_4.html" title="System::__Internal\l__::_Delegate\&lt; void,\l Arguments...\&gt;" alt="" coords="654,1373,794,1429"/>
+<area shape="rect" id="node35" href="$class_system_1_1_threading_1_1_parameterized_thread_start.html" title="System::Threading::\lParameterizedThreadStart" alt="" coords="637,1454,811,1495"/>
+<area shape="rect" id="node36" href="$class_system_1_1_threading_1_1_thread_start.html" title="System::Threading::\lThreadStart" alt="" coords="655,1111,793,1153"/>
+<area shape="rect" id="node37" href="$class_system_1_1_threading_1_1_timer_callback.html" title="System::Threading::\lTimerCallback" alt="" coords="655,1177,793,1218"/>
+<area shape="rect" id="node39" href="$class_system_1_1_____internal_____1_1__event.html" title="System::__Internal\l__::_event\&lt; A, B \&gt;" alt="" coords="659,1519,789,1561"/>
+<area shape="rect" id="node42" href="$class_system_1_1_i_o_1_1_stream.html" title="System::IO::Stream" alt="" coords="655,232,793,259"/>
+<area shape="rect" id="node44" href="$class_system_1_1_i_o_1_1_text_reader.html" title="System::IO::TextReader" alt="" coords="643,283,805,309"/>
+<area shape="rect" id="node46" href="$class_system_1_1_i_o_1_1_text_writer.html" title="System::IO::TextWriter" alt="" coords="646,333,802,360"/>
+<area shape="rect" id="node48" href="$class_system_1_1_threading_1_1_timer.html" title="System::Threading::\lTimer" alt="" coords="655,385,793,426"/>
+<area shape="rect" id="node43" href="$class_system_1_1_i_o_1_1_file_stream.html" title="System::IO::FileStream" alt="" coords="895,232,1054,259"/>
+<area shape="rect" id="node45" href="$class_system_1_1_i_o_1_1_stream_reader.html" title="System::IO::StreamReader" alt="" coords="885,283,1064,309"/>
+<area shape="rect" id="node47" href="$class_system_1_1_i_o_1_1_stream_writer.html" title="System::IO::StreamWriter" alt="" coords="888,333,1061,360"/>
+</map>

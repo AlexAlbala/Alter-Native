@@ -1,0 +1,6 @@
+<map id="GC_debug_malloc_atomic" name="GC_debug_malloc_atomic">
+<area shape="rect" id="node2" href="$gc_2include_2gc_8h.html#a68b7723e57f73b3f40621371809cccfb" title="GC_debug_strdup" alt="" coords="231,5,358,32"/>
+<area shape="rect" id="node3" href="$gc_2include_2gc_8h.html#a8d31f6d91985017aa8d42384e2431ab0" title="GC_debug_strndup" alt="" coords="228,56,361,83"/>
+<area shape="rect" id="node4" href="$gc_2include_2gc_8h.html#ac0fc85cd6aabd28cd9483c12d4e8514f" title="GC_debug_realloc" alt="" coords="231,107,359,133"/>
+<area shape="rect" id="node5" href="$gc_2include_2gc_8h.html#a25ca94661cc879ab9b03068a785e6d0e" title="GC_debug_realloc_replacement" alt="" coords="409,107,616,133"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="GC_generic_malloc_ignore_off_page" name="GC_generic_malloc_ignore_off_page">
+<area shape="rect" id="node2" href="$mallocx_8c.html#a391f3554951a363ebd200b77326cff87" title="GC_malloc_ignore_off_page" alt="" coords="231,15,413,42"/>
+<area shape="rect" id="node4" href="$mallocx_8c.html#a85544ba328320419441daab4ab59c517" title="GC_malloc_atomic_ignore\l_off_page" alt="" coords="235,68,409,109"/>
+<area shape="rect" id="node3" href="$gc_2include_2gc_8h.html#af71b92497ed39a4a8588e28519b64d7a" title="GC_debug_malloc_ignore\l_off_page" alt="" coords="463,5,634,47"/>
+<area shape="rect" id="node5" href="$gc_2include_2gc_8h.html#aed8ecdf800e8a876666322c1ca84c2f9" title="GC_debug_malloc_atomic\l_ignore_off_page" alt="" coords="461,71,636,112"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="GC_aux_template::GC_out_of_line_malloc" name="GC_aux_template::GC_out_of_line_malloc">
+<area shape="rect" id="node2" href="$new__gc__alloc_8h.html#ab84b0e49f07fa2499f63dc9ed44a7c8f" title="GC_incr_bytes_allocd" alt="" coords="220,5,369,32"/>
+<area shape="rect" id="node3" href="$new__gc__alloc_8h.html#a24d35a8a50ff5f06502db7862fba6763" title="GC_incr_bytes_freed" alt="" coords="223,56,366,83"/>
+<area shape="rect" id="node4" href="$new__gc__alloc_8h.html#abb7d7bbf78f62bce7196c696707f332e" title="GC_generic_malloc_words\l_small" alt="" coords="207,107,383,149"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="GC_realloc" name="GC_realloc">
+<area shape="rect" id="node2" href="$gc_2include_2gc_8h.html#ac0fc85cd6aabd28cd9483c12d4e8514f" title="GC_debug_realloc" alt="" coords="140,5,268,32"/>
+<area shape="rect" id="node4" href="$_amiga_o_s_8c.html#a7c1ecf244dbbc680b785e85392d3c2b6" title="GC_amiga_realloc" alt="" coords="140,56,268,83"/>
+<area shape="rect" id="node3" href="$gc_2include_2gc_8h.html#a25ca94661cc879ab9b03068a785e6d0e" title="GC_debug_realloc_replacement" alt="" coords="316,5,523,32"/>
+</map>

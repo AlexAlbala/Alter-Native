@@ -1,0 +1,10 @@
+<map id="GC_reclaim_check" name="GC_reclaim_check">
+<area shape="rect" id="node2" href="$reclaim_8c.html#afccf6e87c1d8bdbe9ea41221a3dc78ad" title="GC_add_leaked" alt="" coords="185,81,300,108"/>
+<area shape="rect" id="node3" href="$dbg__mlc_8c.html#a4985b7b1cc5846b5fc372ada1a410071" title="GC_check_leaked" alt="" coords="348,56,476,83"/>
+<area shape="rect" id="node6" href="$gc__priv_8h.html#a00ea68d1c7f466442a29bfd963b12f86" title="GC_set_mark_bit" alt="" coords="550,107,673,133"/>
+<area shape="rect" id="node4" href="$dbg__mlc_8c.html#a1e8d4ec327bfee97d5936431e51c3ef6" title="GC_has_other_debug_info" alt="" coords="524,5,699,32"/>
+<area shape="rect" id="node7" href="$dbg__mlc_8c.html#a25d9083b1d677389672528b7e55c0ce6" title="GC_add_smashed" alt="" coords="547,56,676,83"/>
+<area shape="rect" id="node5" href="$gc_2include_2gc_8h.html#a499ad7765a60a7307ef93fddda6201a9" title="GC_size" alt="" coords="765,5,837,32"/>
+<area shape="rect" id="node8" href="$gc__priv_8h.html#acd61070bde5ffc7ab1df410140aa4514" title="GC_is_marked" alt="" coords="747,56,855,83"/>
+<area shape="rect" id="node9" href="$gc_2include_2gc_8h.html#a8b93cd0c8d9c312bbdf0e679d10b680a" title="GC_base" alt="" coords="763,107,839,133"/>
+</map>
