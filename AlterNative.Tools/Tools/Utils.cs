@@ -68,10 +68,7 @@ namespace AlterNative.Tools
 #if !CORE
             AttachConsole(-1);
 #endif
-            //Console.WriteLine(message);
-            Console.Out.WriteLine(message);
-            //TextWriter stdWriter = Console.Out;
-            //stdWriter.WriteLine(message);            
+            Console.Out.WriteLine(message);        
         }
 
 #if !CORE

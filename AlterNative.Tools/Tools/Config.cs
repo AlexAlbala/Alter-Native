@@ -8,7 +8,9 @@ namespace AlterNative
     public enum TargetType
     {
         Executable,
-        DynamicLinkLibrary
+        DynamicLinkLibrary,
+        SourceFile,
+        SourceDirectory
     }
 
     public class Config

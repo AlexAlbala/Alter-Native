@@ -2725,8 +2725,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             //If there is ArraySpecifier, get it and return the simpleType or primitiveType
             if (composedType.ArraySpecifiers.Any())
             {
-                if (!(currentMethod == "Main" && Resolver.IsChildOf(composedType, typeof(CSharp.ParameterDeclaration))))
-                {
+               // if (!(currentMethod == "acsacascasa" && Resolver.IsChildOf(composedType, typeof(CSharp.ParameterDeclaration))))
+                //{
                     bool multiDimensional = composedType.ArraySpecifiers.Count > 1;
                     int numDimensions = 0;
                     foreach (CSharp.ArraySpecifier spec in composedType.ArraySpecifiers)
@@ -2743,8 +2743,8 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                         type.TypeArguments.Add(new ExpressionType(new PrimitiveExpression(numDimensions)));
 
                     return EndNode(composedType, new PtrType(type));
-                }
-                Cache.AddRangeArraySpecifiers(composedType.ArraySpecifiers);
+                //}
+                //Cache.AddRangeArraySpecifiers(composedType.ArraySpecifiers);
             }
 
             if (composedType.HasNullableSpecifier)

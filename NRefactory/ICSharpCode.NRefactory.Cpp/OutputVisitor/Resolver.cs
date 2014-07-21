@@ -1059,6 +1059,14 @@ namespace ICSharpCode.NRefactory.Cpp
                 headerNode = null;
         }
 
+        /// <summary>
+        /// Returns if an identifier needs a dereference operation
+        /// </summary>
+        /// <param name="currentField_Variable">Variable or field to look for</param>
+        /// <param name="currentType">Current type</param>
+        /// <param name="currentMethod">CurrentMethod</param>
+        /// <param name="currentParameter">Parameter to look for</param>
+        /// <returns></returns>
         public static bool NeedsDereference(string currentField_Variable, string currentType, string currentMethod, string currentParameter)
         {
             return (IsPointer(currentField_Variable, currentType, currentMethod, currentParameter) && !IsUnsafe(currentField_Variable, currentType, currentMethod, currentParameter));
@@ -1073,8 +1081,6 @@ namespace ICSharpCode.NRefactory.Cpp
         /// <returns></returns>
         public static bool NeedsDereference(CSharp.AstNode node, string currentType, string currentMethod)
         {
-
-
             //This method can be implemented in a more optimized way, but I prefer distinguish all the cases for control better the process
             if (node is CSharp.IdentifierExpression)
             {
@@ -1168,10 +1174,6 @@ namespace ICSharpCode.NRefactory.Cpp
                                     if (ct.ArraySpecifiers.Any() && id.Equals("Array"))
                                         return false;
                                 };
-
-                                /*return !((fdecl.ReturnType is CSharp.PrimitiveType && id == "Object") ||
-                                    (ret == "Object" && Resolver.GetType(identifierExpression.Identifier, currentType, null, null).IsBasicType));*/
-
                                 return NeedsDereference(identifierExpression.Identifier, currentType, null, null);
                             }
                         }
@@ -1192,9 +1194,6 @@ namespace ICSharpCode.NRefactory.Cpp
                                     if (ct.ArraySpecifiers.Any() && id.Equals("Array"))
                                         return false;
                                 }
-
-                                /*return !((vdecl.Type is CSharp.PrimitiveType && id == "Object") ||
-                                    (ret == "Object" && Resolver.GetType(identifierExpression.Identifier, null, currentMethod, null).IsBasicType));*/
                                 return NeedsDereference(identifierExpression.Identifier, null, currentMethod, identifierExpression.Identifier);
                             }
                         }
@@ -1215,10 +1214,6 @@ namespace ICSharpCode.NRefactory.Cpp
                                     if (ct.ArraySpecifiers.Any() && id.Equals("Array"))
                                         return false;
                                 }
-
-                                /*return !((vdecl.Type is CSharp.PrimitiveType && id == "Object") ||
-                                    (ret == "Object" && Resolver.GetType(identifierExpression.Identifier, null, currentMethod, null).IsBasicType));*/
-
                                 return NeedsDereference(identifierExpression.Identifier, null, currentMethod, identifierExpression.Identifier);
                             }
                         }
@@ -1239,9 +1234,6 @@ namespace ICSharpCode.NRefactory.Cpp
                                     if (ct.ArraySpecifiers.Any() && id.Equals("Array"))
                                         return false;
                                 }
-
-                                /*return !((pdecl.Type is CSharp.PrimitiveType && id == "Object") ||
-                                    (ret == "Object" && Resolver.GetType(identifierExpression.Identifier, null, currentMethod, pdecl.Name).IsBasicType) ));*/
                                 return NeedsDereference(identifierExpression.Identifier, null, currentMethod, pdecl.Name);
                             }
                         }
