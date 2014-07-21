@@ -232,12 +232,12 @@ namespace RegressionTest
 
             string[,] arr = new string[tests.Length + 1, 7];
             arr[0, 0] = "NAME";
-            arr[0, 1] = "ALTERNATIVE";
-            arr[0, 2] = "FILE DIFFER";
-            arr[0, 3] = "CMAKE CODE";
-            arr[0, 4] = "COMPILE (" + Config.platform.ToString() + "|" + Config.compileMode.ToString() + ")";
+            arr[0, 1] = "X-LATE";
+            arr[0, 2] = "DIFF";
+            arr[0, 3] = "CMAKE";
+            arr[0, 4] = "COMPILE"; // (" + Config.platform.ToString() + "|" + Config.compileMode.ToString() + ")";
             arr[0, 5] = "OUTPUT";
-            arr[0, 6] = "TIME DIFFERENCE";
+            arr[0, 6] = "TIME";
             int i = 1;
             foreach (string _s in tests)
             {
@@ -248,7 +248,7 @@ namespace RegressionTest
                 arr[i, 1] = kvp.Value.alternative == 0 ? "#gSUCCESS" : (kvp.Value.alternative == -10 ? "#ySKIPPED" : "#rFAIL. Code: " + kvp.Value.alternative);
                 arr[i, 2] = kvp.Value.diffCode == 0 ? "#gNo Differ" : (kvp.Value.diffCode == 1 ? "#rDiffer" : (kvp.Value.diffCode == -10 ? "#ySKIPPED" : "#rError. Code: " + kvp.Value.diffCode));
                 arr[i, 3] = kvp.Value.cmakeCode == 0 ? "#gSUCCESS" : (kvp.Value.cmakeCode == -10 ? "#ySKIPPED" : "#rFAIL. Code: " + kvp.Value.cmakeCode);
-                arr[i, 4] = kvp.Value.msbuildCode == 0 ? "#gBUILD SUCCEEDED" : (kvp.Value.msbuildCode == -10 ? "#ySKIPPED" : "#rFAIL. Code: " + kvp.Value.msbuildCode);
+                arr[i, 4] = kvp.Value.msbuildCode == 0 ? "#gSUCCEESS" : (kvp.Value.msbuildCode == -10 ? "#ySKIPPED" : "#rFAIL. Code: " + kvp.Value.msbuildCode);
                 arr[i, 5] = kvp.Value.output == 0 ? "#gOK" : (kvp.Value.output == -10 ? "#ySKIPPED" : "#rFAIL");
                 arr[i, 6] = (kvp.Value.msTimeSpan >= 0 ? (kvp.Value.msTimeSpan == 0 ? "#y" : "#r") : "#g") + kvp.Value.msTimeSpan.ToString() + " ms " + "(" + kvp.Value.relativeTime.ToString("N2") + "%)";
 
