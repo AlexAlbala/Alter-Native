@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System;
 class ArrayPrinter
 {
@@ -21,24 +21,26 @@ class ArrayPrinter
 
     #region Private Methods
 
-    private static int GetMaxCellWidth(string[,] arrValues)
-    {
-        int maxWidth = 1;
+    private static int[] GetMaxCellWidths(string[,] arrValues) {
+        int columns = arrValues.GetLength(1);
+        int[] result = new int[columns];
 
-        for (int i = 0; i < arrValues.GetLength(0); i++)
+        for (int i = 0; i < arrValues.GetLength(1); i++)
         {
-            for (int j = 0; j < arrValues.GetLength(1); j++)
+            for (int j = 0; j < arrValues.GetLength(0); j++)
             {
-                int length = arrValues[i, j].Length;
-                if (length > maxWidth)
+                int length = arrValues[j,i].Length;
+                if(arrValues[j,i].StartsWith("#")) {
+                    length=length-2;
+                }
+                if (length > result[i])
                 {
-                    maxWidth = length;
+                    result[i] = length;
                 }
             }
         }
-	/*if(maxWidth > (int)(Console.BufferWidth/arrValues.GetLength(0)))
-		return (int)(Console.BufferWidth / arrValues.GetLength(0));*/
-        return maxWidth;
+        
+        return result;
     }
 
     private static string GetDataInTableFormat(string[,] arrValues)
@@ -51,9 +53,13 @@ class ArrayPrinter
         int dimension1Length = arrValues.GetLength(0);
         int dimension2Length = arrValues.GetLength(1);
 
-        int maxCellWidth = GetMaxCellWidth(arrValues);
+        int[] maxCellWidths = GetMaxCellWidths(arrValues);
 
-        int width = maxCellWidth * dimension2Length + dimension2Length + 2;
+        int width = dimension2Length + 2;
+        for(int i=0;i<dimension2Length;i++) {
+            width += maxCellWidths[i];
+        } 
+
         //if (width > Console.WindowWidth)
           //  Console.WindowWidth = width;
 
@@ -64,8 +70,9 @@ class ArrayPrinter
         }
         catch { }//Some consoles does not accept that parameter
 
-
-        int indentLength = (dimension2Length * maxCellWidth) + (dimension2Length - 1);
+        int indentLength = width - 3;
+         
+        
         //printing top line;
         Console.Write(string.Format("{0}{1}{2}{3}", cellLeftTop, Indent(indentLength), cellRightTop, System.Environment.NewLine));
         formattedString = string.Format("{0}{1}{2}{3}", cellLeftTop, Indent(indentLength), cellRightTop, System.Environment.NewLine);
@@ -77,24 +84,24 @@ class ArrayPrinter
             string line = cellVerticalJointLeft;
             for (int j = 0; j < dimension2Length; j++)
             {
-                string value = (isLeftAligned) ? arrValues[i, j].PadRight(maxCellWidth, ' ') : arrValues[i, j].PadLeft(maxCellWidth, ' ');
+                string value = (isLeftAligned) ? arrValues[i, j].PadRight(maxCellWidths[j], ' ') : arrValues[i, j].PadLeft(maxCellWidths[j], ' ');
                 if (value.Contains("#"))
                 {
                     int pos = value.IndexOf("#");
                     if (value[pos + 1] == 'r')
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        value = value.Replace("#r", "  ");
+                        value = value.Replace("#r", "");
                     }
                     else if (value[pos + 1] == 'g')
                     {
                         Console.ForegroundColor = ConsoleColor.Green;
-                        value = value.Replace("#g", "  ");
+                        value = value.Replace("#g", "");
                     }
                     else if (value[pos + 1] == 'y')
                     {
                         Console.ForegroundColor = ConsoleColor.Yellow;
-                        value = value.Replace("#y", "  ");
+                        value = value.Replace("#y", "");
                     }
                     else
                         Console.ResetColor();
@@ -107,7 +114,7 @@ class ArrayPrinter
                 Console.Write(cellVerticalLine);
 
                 lineWithValues += string.Format("{0}{1}", value, cellVerticalLine);
-                line += Indent(maxCellWidth);
+                line += Indent(maxCellWidths[j]);
                 if (j < (dimension2Length - 1))
                 {
                     line += cellTJoint;
