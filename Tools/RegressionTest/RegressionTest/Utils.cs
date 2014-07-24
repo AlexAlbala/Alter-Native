@@ -193,7 +193,7 @@ namespace RegressionTest
             string diffArgs = "-q " +
                 "-x CMakeLists.txt " +/*
                  "-x \"" + di.Name + "/Output/gc/*\" " +*/
-                    di1.FullName + " " + di2.FullName;
+                    di1.FullName + " " + di2.FullName + " --strip-trailing-cr";
 
             Utils.DebugMessage("DIFF COMMAND:");
             Utils.DebugMessage("diff " + diffArgs);
