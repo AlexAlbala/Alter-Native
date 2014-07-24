@@ -226,10 +226,6 @@ namespace RegressionTest
                 }
             }
 
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("******************************************************************** TEST RESULTS ***************************************************************");
-            Console.ResetColor();
-
             string[,] arr = new string[tests.Length + 1, 7];
             arr[0, 0] = "NAME";
             arr[0, 1] = "X-LATE";

@@ -75,6 +75,15 @@ class ArrayPrinter
 
         int indentLength = width - 3;
 
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        string headerAsterisk = "*".PadRight(width, '*');
+        string tableTitle = "Test Results:".PadLeft(width / 2, ' ');
+        tableTitle = tableTitle.PadRight(width - 2, ' ');
+        Console.WriteLine(headerAsterisk);
+        Console.WriteLine("*" + tableTitle + "*");
+        Console.WriteLine(headerAsterisk);
+
+        Console.ResetColor();
 
         //printing top line;
         Console.Write(string.Format("{0}{1}{2}{3}", cellLeftTop, Indent(indentLength), cellRightTop, System.Environment.NewLine));
