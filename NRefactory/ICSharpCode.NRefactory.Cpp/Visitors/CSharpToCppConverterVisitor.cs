@@ -1806,7 +1806,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
         AstNode CSharp.IAstVisitor<object, AstNode>.VisitSwitchStatement(CSharp.SwitchStatement switchStatement, object data)
         {
             var _switch = new SwitchStatement();
-            _switch.Expression = (Expression)switchStatement.Expression.AcceptVisitor(this, data);            
+            _switch.Expression = (Expression)switchStatement.Expression.AcceptVisitor(this, data);
             ConvertNodes(switchStatement.SwitchSections, _switch.SwitchSections);
 
             if (Resolver.IsStringSwitch(_switch))
@@ -1839,7 +1839,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
 
                 Cache.AddExtraHeaderNode(hm);
             }
-            
+
             return EndNode(switchStatement, _switch);
         }
 
@@ -2725,24 +2725,24 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
             //If there is ArraySpecifier, get it and return the simpleType or primitiveType
             if (composedType.ArraySpecifiers.Any())
             {
-               // if (!(currentMethod == "acsacascasa" && Resolver.IsChildOf(composedType, typeof(CSharp.ParameterDeclaration))))
+                // if (!(currentMethod == "acsacascasa" && Resolver.IsChildOf(composedType, typeof(CSharp.ParameterDeclaration))))
                 //{
-                    bool multiDimensional = composedType.ArraySpecifiers.Count > 1;
-                    int numDimensions = 0;
-                    foreach (CSharp.ArraySpecifier spec in composedType.ArraySpecifiers)
-                    {
-                        multiDimensional |= (spec.Dimensions > 1);
-                        numDimensions += spec.Dimensions;
-                    }
+                bool multiDimensional = composedType.ArraySpecifiers.Count > 1;
+                int numDimensions = 0;
+                foreach (CSharp.ArraySpecifier spec in composedType.ArraySpecifiers)
+                {
+                    multiDimensional |= (spec.Dimensions > 1);
+                    numDimensions += spec.Dimensions;
+                }
 
-                    SimpleType type = new SimpleType(multiDimensional ? Constants.ArrayNDType : Constants.ArrayType);
-                    AstType args = (AstType)composedType.BaseType.AcceptVisitor(this, data);
-                    type.TypeArguments.Add((args is PtrType) ? (AstType)(args as PtrType).Target.Clone() : (AstType)args.Clone());
+                SimpleType type = new SimpleType(multiDimensional ? Constants.ArrayNDType : Constants.ArrayType);
+                AstType args = (AstType)composedType.BaseType.AcceptVisitor(this, data);
+                type.TypeArguments.Add((args is PtrType) ? (AstType)(args as PtrType).Target.Clone() : (AstType)args.Clone());
 
-                    if (multiDimensional)
-                        type.TypeArguments.Add(new ExpressionType(new PrimitiveExpression(numDimensions)));
+                if (multiDimensional)
+                    type.TypeArguments.Add(new ExpressionType(new PrimitiveExpression(numDimensions)));
 
-                    return EndNode(composedType, new PtrType(type));
+                return EndNode(composedType, new PtrType(type));
                 //}
                 //Cache.AddRangeArraySpecifiers(composedType.ArraySpecifiers);
             }

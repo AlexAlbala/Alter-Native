@@ -21,7 +21,8 @@ class ArrayPrinter
 
     #region Private Methods
 
-    private static int[] GetMaxCellWidths(string[,] arrValues) {
+    private static int[] GetMaxCellWidths(string[,] arrValues)
+    {
         int columns = arrValues.GetLength(1);
         int[] result = new int[columns];
 
@@ -29,9 +30,10 @@ class ArrayPrinter
         {
             for (int j = 0; j < arrValues.GetLength(0); j++)
             {
-                int length = arrValues[j,i].Length;
-                if(arrValues[j,i].StartsWith("#")) {
-                    length=length-2;
+                int length = arrValues[j, i].Length;
+                if (arrValues[j, i].StartsWith("#"))
+                {
+                    length = length - 2;
                 }
                 if (length > result[i])
                 {
@@ -39,7 +41,7 @@ class ArrayPrinter
                 }
             }
         }
-        
+
         return result;
     }
 
@@ -56,23 +58,24 @@ class ArrayPrinter
         int[] maxCellWidths = GetMaxCellWidths(arrValues);
 
         int width = dimension2Length + 2;
-        for(int i=0;i<dimension2Length;i++) {
+        for (int i = 0; i < dimension2Length; i++)
+        {
             width += maxCellWidths[i];
-        } 
+        }
 
         //if (width > Console.WindowWidth)
-          //  Console.WindowWidth = width;
+        //  Console.WindowWidth = width;
 
         try
         {
             if (width > Console.BufferWidth)
-               Console.BufferWidth = width;
+                Console.BufferWidth = width;
         }
         catch { }//Some consoles does not accept that parameter
 
         int indentLength = width - 3;
-         
-        
+
+
         //printing top line;
         Console.Write(string.Format("{0}{1}{2}{3}", cellLeftTop, Indent(indentLength), cellRightTop, System.Environment.NewLine));
         formattedString = string.Format("{0}{1}{2}{3}", cellLeftTop, Indent(indentLength), cellRightTop, System.Environment.NewLine);
@@ -84,7 +87,7 @@ class ArrayPrinter
             string line = cellVerticalJointLeft;
             for (int j = 0; j < dimension2Length; j++)
             {
-                string value = (isLeftAligned) ? arrValues[i, j].PadRight(maxCellWidths[j], ' ') : arrValues[i, j].PadLeft(maxCellWidths[j], ' ');
+                string value = arrValues[i, j];
                 if (value.Contains("#"))
                 {
                     int pos = value.IndexOf("#");
@@ -108,7 +111,9 @@ class ArrayPrinter
                 }
                 else
                     Console.ResetColor();
-                
+
+                value = (isLeftAligned) ? value.PadRight(maxCellWidths[j], ' ') : value.PadLeft(maxCellWidths[j], ' ');
+
                 Console.Write(value);
                 Console.ResetColor();
                 Console.Write(cellVerticalLine);
