@@ -12,4 +12,4 @@
 	url = https://github.com/AlexAlbala/AlterNative-CXX-Lib
 [submodule "Tests/public"]
 	path = Tests/public
-	url = ../AlterNative-Tests
+	url = https://github.com/AlexAlbala/AlterNative-Tests
