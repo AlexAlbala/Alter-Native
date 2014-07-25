@@ -303,3 +303,12 @@ h1 small, h2 small, h3 small, h4 small, h5 small, h6 small, .h1 small, .h2 small
         text-align: left;
     }
 }
+
+.sponsors {
+    width: 50%;
+    margin: 12px auto 12px auto;
+}
+
+.sponsors.about {
+    margin-top: 20px;
+}
