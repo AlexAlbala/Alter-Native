@@ -15,4 +15,4 @@
 	url = https://github.com/AlexAlbala/AlterNative-Tests
 [submodule "Tests/private"]
 	path = Tests/private
-	url = https://github.com/AlexAlbala/AlterNative-pvtTests
+	url = git@github.com:AlexAlbala/AlterNative-pvtTests
