@@ -13,3 +13,6 @@
 [submodule "Tests/public"]
 	path = Tests/public
 	url = https://github.com/AlexAlbala/AlterNative-Tests
+[submodule "Tests/private"]
+	path = Tests/private
+	url = https://github.com/AlexAlbala/AlterNative-pvtTests
