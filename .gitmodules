@@ -10,6 +10,6 @@
 [submodule "Lib"]
 	path = Lib
 	url = https://github.com/AlexAlbala/AlterNative-CXX-Lib
-[submodule "Tests"]
+[submodule "Tests/public"]
 	path = Tests/public
 	url = git@github.com:AlexAlbala/AlterNative-Tests.git
