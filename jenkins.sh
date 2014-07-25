@@ -60,5 +60,8 @@ cp $ALTERNATIVE_LIB_BIN/src/public/gc/libgc-lib.a $ALTERNATIVE_LIB_BUILD/libfile
 
 cd $ALTERNATIVE_CPP_LIB_PATH
 
-cd $ALTERNATIVE_HOME/Tests
+cd $ALTERNATIVE_HOME/Tests/public
+mono RegressionTest.exe -R
+
+cd $ALTERNATIVE_HOME/Tests/private
 mono RegressionTest.exe -R
