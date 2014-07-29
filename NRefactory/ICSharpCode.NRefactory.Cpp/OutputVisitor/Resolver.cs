@@ -1099,7 +1099,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     //Check if is an expression like if(s == null) --> cannot translate to (*s == null)
                     var bin = (CSharp.BinaryOperatorExpression)GetParentOf(node, typeof(CSharp.BinaryOperatorExpression));
                     if (bin.Left is CSharp.NullReferenceExpression || bin.Right is CSharp.NullReferenceExpression)
-                        return false;
+                        return false;                    
 
                     return NeedsDereference(identifierExpression.Identifier, currentType, currentMethod, identifierExpression.Identifier);
                 }
@@ -1108,7 +1108,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 {
                     CSharp.AssignmentExpression asexpr = (CSharp.AssignmentExpression)Resolver.GetParentOf(node, typeof(CSharp.AssignmentExpression));
 
-                    if (asexpr.Operator != CSharp.AssignmentOperatorType.Assign)
+                    if(asexpr.Operator != CSharp.AssignmentOperatorType.Assign)
                     {
                         //avoid cases like myObj.myField += "Hello" --> to be *myObj.myField += *new String()
                         if (asexpr.Left is CSharp.MemberReferenceExpression)
@@ -1171,9 +1171,11 @@ namespace ICSharpCode.NRefactory.Cpp
                                 if (fdecl.ReturnType is CSharp.ComposedType)
                                 {
                                     CSharp.ComposedType ct = fdecl.ReturnType as CSharp.ComposedType;
-                                    if (ct.ArraySpecifiers.Any() && id.Equals("Array"))
+                                    if (ct.ArraySpecifiers.Any() && id.Equals(Constants.ArrayType))
                                         return false;
                                 };
+                                if (OneInheritsFromOther(id, ret))
+                                    return false;
                                 return NeedsDereference(identifierExpression.Identifier, currentType, null, null);
                             }
                         }
@@ -1191,9 +1193,11 @@ namespace ICSharpCode.NRefactory.Cpp
                                 if (vdecl.Type is CSharp.ComposedType)
                                 {
                                     CSharp.ComposedType ct = vdecl.Type as CSharp.ComposedType;
-                                    if (ct.ArraySpecifiers.Any() && id.Equals("Array"))
+                                    if (ct.ArraySpecifiers.Any() && id.Equals(Constants.ArrayType))
                                         return false;
                                 }
+                                if (OneInheritsFromOther(id, ret))
+                                    return false;
                                 return NeedsDereference(identifierExpression.Identifier, null, currentMethod, identifierExpression.Identifier);
                             }
                         }
@@ -1211,9 +1215,11 @@ namespace ICSharpCode.NRefactory.Cpp
                                 if (vdecl.Type is CSharp.ComposedType)
                                 {
                                     CSharp.ComposedType ct = vdecl.Type as CSharp.ComposedType;
-                                    if (ct.ArraySpecifiers.Any() && id.Equals("Array"))
+                                    if (ct.ArraySpecifiers.Any() && id.Equals(Constants.ArrayType))
                                         return false;
                                 }
+                                if (OneInheritsFromOther(id, ret))
+                                    return false;
                                 return NeedsDereference(identifierExpression.Identifier, null, currentMethod, identifierExpression.Identifier);
                             }
                         }
@@ -1231,9 +1237,11 @@ namespace ICSharpCode.NRefactory.Cpp
                                 if (pdecl.Type is CSharp.ComposedType)
                                 {
                                     CSharp.ComposedType ct = pdecl.Type as CSharp.ComposedType;
-                                    if (ct.ArraySpecifiers.Any() && id.Equals("Array"))
+                                    if (ct.ArraySpecifiers.Any() && id.Equals(Constants.ArrayType))
                                         return false;
                                 }
+                                if (OneInheritsFromOther(id, ret))
+                                    return false;
                                 return NeedsDereference(identifierExpression.Identifier, null, currentMethod, pdecl.Name);
                             }
                         }
@@ -1293,6 +1301,27 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             else //! IS IDENTIFIEREXPRESSION
                 return false;
+        }
+
+        public static bool OneInheritsFromOther(string one, string other)
+        {
+            var sym = Cache.GetSymbols();
+
+            foreach (var kvp in sym)
+            {
+                if (kvp.Key == one)
+                {
+                    TypeReference type = kvp.Value;
+                    TypeDefinition t = type.Resolve();
+
+                    if (t.BaseType.Name == other)
+                        return true;
+                    else
+                        return OneInheritsFromOther(one, t.BaseType.Name);
+                    
+                }
+            }
+            return false;
         }
 
         /// <summary>
