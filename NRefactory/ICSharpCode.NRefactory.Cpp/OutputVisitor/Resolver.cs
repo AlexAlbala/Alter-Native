@@ -1099,7 +1099,7 @@ namespace ICSharpCode.NRefactory.Cpp
                     //Check if is an expression like if(s == null) --> cannot translate to (*s == null)
                     var bin = (CSharp.BinaryOperatorExpression)GetParentOf(node, typeof(CSharp.BinaryOperatorExpression));
                     if (bin.Left is CSharp.NullReferenceExpression || bin.Right is CSharp.NullReferenceExpression)
-                        return false;                    
+                        return false;
 
                     return NeedsDereference(identifierExpression.Identifier, currentType, currentMethod, identifierExpression.Identifier);
                 }
@@ -1108,7 +1108,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 {
                     CSharp.AssignmentExpression asexpr = (CSharp.AssignmentExpression)Resolver.GetParentOf(node, typeof(CSharp.AssignmentExpression));
 
-                    if(asexpr.Operator != CSharp.AssignmentOperatorType.Assign)
+                    if (asexpr.Operator != CSharp.AssignmentOperatorType.Assign)
                     {
                         //avoid cases like myObj.myField += "Hello" --> to be *myObj.myField += *new String()
                         if (asexpr.Left is CSharp.MemberReferenceExpression)
@@ -1247,7 +1247,7 @@ namespace ICSharpCode.NRefactory.Cpp
                         }
                         return false;
                     }
-                }                
+                }
                 else//! IS CHILD OF VARIABLEINITIALIZER
                 {
                     return false;
@@ -1286,7 +1286,7 @@ namespace ICSharpCode.NRefactory.Cpp
             }
             else if (node is CSharp.ObjectCreateExpression)
             {
-                if (IsDirectChildOf(node, typeof(CSharp.BinaryOperatorExpression))) 
+                if (IsDirectChildOf(node, typeof(CSharp.BinaryOperatorExpression)))
                     return true;
 
                 return false;
@@ -1317,8 +1317,11 @@ namespace ICSharpCode.NRefactory.Cpp
                     if (t.BaseType.Name == other)
                         return true;
                     else
-                        return OneInheritsFromOther(one, t.BaseType.Name);
-                    
+                    {
+                        if (OneInheritsFromOther(t.BaseType.Name, other))
+                            return true;
+                    }
+
                 }
             }
             return false;
