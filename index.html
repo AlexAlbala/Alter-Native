@@ -234,76 +234,73 @@
         following the naming of the .NET class (<a
                 href="http://msdn.microsoft.com/en-us/library/vstudio/system.console">System.Console</a>).</p>
     <textarea id="code" name="code">
-        #include "Console.h"
-        #include "String.h"
+#include "Console.h"
+#include "String.h"
 
-        #include
-        <iostream>
+#include <iostream>
 
-            namespace System {
+namespace System {
 
-            void Console::Write(char* txt) {
-            std::cout << txt;
-            }
+    void Console::Write(char* txt) {
+        std::cout << txt;
+    }
 
-            void Console::Write(int i) {
-            std::cout << i;
-            }
+    void Console::Write(int i) {
+        std::cout << i;
+    }
 
-            void Console::Write(bool i) {
-            std::cout << (i ? "True" : "False");
-            }
+    void Console::Write(bool i) {
+        std::cout << (i ? "True" : "False");
+    }
 
-            void Console::Write(String* s) {
-            char* tmp = *s;
-            std::cout << tmp;
-            }
+    void Console::Write(String* s) {
+        char* tmp = *s;
+        std::cout << tmp;
+    }
 
-            void Console::WriteLine(char* txt) {
-            std::cout << txt << std::endl;
-            }
+    void Console::WriteLine(char* txt) {
+        std::cout << txt << std::endl;
+    }
 
-            void Console::WriteLine(Array
-            <char>* c) {
-                std::cout << c->GetData() << std::endl;
-                }
+    void Console::WriteLine(Array<char>* c) {
+        std::cout << c->GetData() << std::endl;
+    }
 
-                void Console::WriteLine(int i) {
-                std::cout << i << std::endl;
-                }
+    void Console::WriteLine(int i) {
+        std::cout << i << std::endl;
+    }
 
-                void Console::WriteLine(bool i) {
-                std::cout << (i ? "True" : "False") << std::endl;
-                }
+    void Console::WriteLine(bool i) {
+        std::cout << (i ? "True" : "False") << std::endl;
+    }
 
-                void Console::WriteLine(float f) {
-                std::cout << f << std::endl;
-                }
+    void Console::WriteLine(float f) {
+        std::cout << f << std::endl;
+    }
 
-                void Console::WriteLine(double d) {
-                std::cout << d << std::endl;
-                }
+    void Console::WriteLine(double d) {
+        std::cout << d << std::endl;
+    }
 
-                void Console::WriteLine(Object* o) {
-                WriteLine(o->ToString());
-                }
+    void Console::WriteLine(Object* o) {
+        WriteLine(o->ToString());
+    }
 
-                void Console::WriteLine(String* s) {
-                char* tmp = *s;
-                std::cout << tmp << std::endl;
-                }
+    void Console::WriteLine(String* s) {
+        char* tmp = *s;
+        std::cout << tmp << std::endl;
+    }
 
-                String* Console::ReadLine() {
-                char* tmp = new char[256];
-                std::cin.getline (tmp,256);
+    String* Console::ReadLine() {
+        char* tmp = new char[256];
+        std::cin.getline (tmp,256);
 
-                String* s = new String(tmp);
-                return s;
-                }
-
-                }
+        String* s = new String(tmp);
+        return s;
+    }
+}
     </textarea>
-    <br>
+<br>
 </div>
 <div class="inner-page">
     <div class="col-md-offset-onehalf col-md-9">
@@ -322,6 +319,9 @@
         </li>
         <li>
             Classes, methods and variables
+        </li>
+        <li>
+            Inheritance, polymorphism
         </li>
         <li>
             Forward declaration detection
@@ -503,18 +503,18 @@
             <div class="caption">
                 <h3>C# source code</h3>
                 <textarea id="cs-hello" name="cs-hello">
-                    using System;
+using System;
 
-                    namespace HelloWorld
-                    {
-                    public class Program
-                    {
-                    public static void Main(string[] args)
-                    {
-                    Console.WriteLine("Hello World");
-                    }
-                    }
-                    }</textarea>
+namespace HelloWorld
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            Console.WriteLine("Hello World");
+        }
+    }
+}</textarea>
             </div>
         </div>
     </div>
@@ -527,15 +527,15 @@
             <div class="caption">
                 <h3>C++ source code</h3>
                 <textarea id="cpp-hello" name="cpp-hello">
-                    #include "Program.h"
+#include "Program.h"
 
-                    namespace HelloWorld
-                    {
-                    void Program::Main(String* args[])
-                    {
-                    Console::WriteLine(new String("Hello World"));
-                    }
-                    }</textarea>
+namespace HelloWorld
+{
+    void Program::Main(String* args[])
+    {
+        Console::WriteLine(new String("Hello World"));
+    }
+}</textarea>
             </div>
         </div>
 
@@ -543,24 +543,20 @@
             <div class="caption">
                 <h3>C++ header code</h3>
                 <textarea id="hpp-hello" name="hpp-hello">
-                    #pragma once
-                    #include
-                    <System
-                    /System.h>
-                    #include
-                    <System
-                    /Console.h>
+#pragma once
+#include <System/System.h>
+#include <System/Console.h>
 
-                    using namespace System;
+using namespace System;
 
-                    namespace HelloWorld
-                    {
-                    class Program : public virtual Object
-                    {
-                    public:
-                    static void Main(String* args[]);
-                    };
-                    }</textarea>
+namespace HelloWorld
+{
+    class Program : public virtual Object
+    {
+        public:
+        static void Main(String* args[]);
+    };
+}</textarea>
 
             </div>
         </div>
@@ -589,46 +585,44 @@
         <div class="caption">
             <h3>C# source code</h3>
             <textarea id="cs-foreach" name="cs-foreach">
-                using System;
-                using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 
-                namespace ForEach
-                {
-                class A
-                {
-                public void f()
-                {
-                Console.WriteLine("I'm an object");
-                }
-                }
-                class Program
-                {
-                static void Main(string[] args)
-                {
-                List
-                <float> myList = new List
-                    <float>();
-                        myList.Add(1.0f);
-                        myList.Add(2.0f);
-                        myList.Add(3.0f);
+namespace ForEach
+{
+    class A
+    {
+        public void f()
+        {
+            Console.WriteLine("I'm an object");
+        }
+    }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            List<float> myList = new List<float>();
+            myList.Add(1.0f);
+            myList.Add(2.0f);
+            myList.Add(3.0f);
 
-                        foreach (float f in myList)
-                        {
-                        Console.WriteLine(f);
-                        }
+            foreach (float f in myList)
+            {
+                Console.WriteLine(f);
+            }
 
-                        List<A> myAList = new List<A>();
-                            myAList.Add(new A());
-                            myAList.Add(new A());
+            List<A> myAList = new List<A>();
+            myAList.Add(new A());
+            myAList.Add(new A());
 
-                            foreach (A a in myAList)
-                            {
-                            a.f();
-                            }
-                            }
-                            }
-                            }
-            </textarea>
+            foreach (A a in myAList)
+            {
+                a.f();
+            }
+        }
+    }
+}
+</textarea>
         </div>
     </div>
 </div>
@@ -644,31 +638,29 @@
     <div class="col-md-offset-onehalf col-sm-5 col-md-4half">
         <div class="caption">
             <h3>C++ source code</h3>
-            <textarea id="cpp-foreach" name="cpp-foreach">
-                #include "Program.h"
-                namespace ForEach {
-                void Program::Main(String* args[]){
-                List_T
-                <float>* myList = new List_T
-                    <float>();
-                        myList->Add((float)1.0);
-                        myList->Add((float)2.0);
-                        myList->Add((float)3.0);
-                        FOREACH(_F, myList){
-                        float f = *_F;
-                        Console::WriteLine(f);
-                        }
-                        List_T<A>* myAList = new List_T<A>();
-                            myAList->Add(new A());
-                            myAList->Add(new A());
-                            FOREACH(_A, myAList) {
-                            A deref_a = *_A;
-                            A* a = &deref_a;
-                            a->f();
-                            }
-                            }
-                            }
-            </textarea>
+<textarea id="cpp-foreach" name="cpp-foreach">
+#include "Program.h"
+namespace ForEach {
+    void Program::Main(String* args[]){
+        List_T<float>* myList = new List_T<float>();
+        myList->Add((float)1.0);
+        myList->Add((float)2.0);
+        myList->Add((float)3.0);
+        FOREACH(_F, myList){
+            float f = *_F;
+            Console::WriteLine(f);
+        }
+        List_T<A>* myAList = new List_T<A>();
+        myAList->Add(new A());
+        myAList->Add(new A());
+        FOREACH(_A, myAList) {
+            A deref_a = *_A;
+            A* a = &deref_a;
+            a->f();
+        }
+    }
+}
+</textarea>
         </div>
     </div>
 
@@ -676,27 +668,21 @@
         <div class="caption">
             <h3>C++ header code</h3>
             <textarea id="hpp-foreach" name="hpp-foreach">
-                #pragma once
-                #include
-                <System
-                /System.h>
-                #include
-                <System
-                /Collections/Generic/List.h>
-                #include
-                <System
-                /Console.h>
-                #include "A.h"
+#pragma once
+#include <System/System.h>
+#include <System/Collections/Generic/List.h>
+#include <System/Console.h>
+#include "A.h"
 
-                using namespace System::Collections::Generic;
-                using namespace System;
-                namespace ForEach {
-                class Program : public virtual Object
-                {
-                public:
-                static void Main(String* args[]);
-                };
-                }</textarea>
+using namespace System::Collections::Generic;
+using namespace System;
+namespace ForEach {
+    class Program : public virtual Object
+    {
+        public:
+        static void Main(String* args[]);
+    };
+}</textarea>
         </div>
     </div>
 </div>
@@ -719,12 +705,12 @@
         <div class="caption">
             <h3>C++ source code</h3>
             <textarea id="cpp-foreach-a" name="cpp-foreach-a">
-                #include "A.h"
-                namespace ForEach {
-                void A::f(){
-                Console::WriteLine(new String("I'm an object"));
-                }
-                }</textarea>
+#include "A.h"
+namespace ForEach {
+    void A::f(){
+    Console::WriteLine(new String("I'm an object"));
+    }
+}</textarea>
         </div>
     </div>
 
@@ -732,22 +718,18 @@
         <div class="caption">
             <h3>C++ header code</h3>
             <textarea id="hpp-foreach-a" name="hpp-foreach-a">
-                #pragma once
-                #include
-                <System
-                /System.h>
-                #include
-                <System
-                /Console.h>
+#pragma once
+#include <System/System.h>
+#include <System/Console.h>
 
-                using namespace System;
-                namespace ForEach {
-                class A : public virtual Object
-                {
-                public:
-                void f();
-                };
-                }</textarea>
+using namespace System;
+namespace ForEach {
+    class A : public virtual Object
+    {
+        public:
+        void f();
+    };
+}</textarea>
         </div>
     </div>
 </div>
@@ -806,30 +788,30 @@
         <p>After the installation of AlterNative we will write our C# code to be translated. We propose a simple
             program with one class and two methods</p>
         <textarea id="cs-tuto" name="cs-tuto">
-            using System;
+using System;
 
-            namespace Tutorial
-            {
-            public class Program
-            {
-            public static void Main(string[] args)
-            {
+namespace Tutorial
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
             Program p = new Program();
             int result = p.Sum(5, 10);
             p.PrintNumber(result);
-            }
+        }
 
-            public int Sum(int a, int b)
-            {
+        public int Sum(int a, int b)
+        {
             return a + b;
-            }
+        }
 
-            public void PrintNumber(int number)
-            {
+        public void PrintNumber(int number)
+        {
             Console.WriteLine(number);
-            }
-            }
-            }</textarea>
+        }
+    }
+}</textarea>
         <br>
 
         <p>Copy and paste this code and compile it. In Windows with msbuild (or Visual Studio), in Linux with Mono
@@ -924,34 +906,30 @@
             the method in charge of processing this node:</p>
         <br>
         <textarea id="cs-asexpr-1" name="cs-asexpr-1">
-            AstNode CSharp.IAstVisitor
-            <object
-            , AstNode>.VisitAsExpression(CSharp.AsExpression asExpression, object data)
-            {
+AstNode CSharp.IAstVisitor<object, AstNode>.VisitAsExpression(CSharp.AsExpression asExpression, object data)
+{
 
-            //Here the node should be processed
-            throw new NotImplementedException("As Expression is not implemented");
+    //Here the node should be processed
+    throw new NotImplementedException("As Expression is not implemented");
 
-            }</textarea>
+}</textarea>
         <br>
 
         <p>The process of our transformation is easy, we have to create an InvocationExpression node and fill it
             with the correct elements from AsExpression node.</p>
         <br>
         <textarea id="cs-asexpr-2" name="cs-asexpr-2">
-            AstNode CSharp.IAstVisitor
-            <object
-            , AstNode>.VisitAsExpression(CSharp.AsExpression asExpression, object data)
-            {
-            InvocationExpression invExpr = new InvocationExpression();
-            IdentifierExpression mref = new IdentifierExpression();
-            mref.TypeArguments.Add((AstType)asExpression.Type.AcceptVisitor(this, data));
-            mref.Identifier = "as_cast";
-            invExpr.Arguments.Add((Expression)asExpression.Expression.AcceptVisitor(this, data));
-            invExpr.Target = mref;
+AstNode CSharp.IAstVisitor<object, AstNode>.VisitAsExpression(CSharp.AsExpression asExpression, object data)
+{
+    InvocationExpression invExpr = new InvocationExpression();
+    IdentifierExpression mref = new IdentifierExpression();
+    mref.TypeArguments.Add((AstType)asExpression.Type.AcceptVisitor(this, data));
+    mref.Identifier = "as_cast";
+    invExpr.Arguments.Add((Expression)asExpression.Expression.AcceptVisitor(this, data));
+    invExpr.Target = mref;
 
-            return EndNode(asExpression, invExpr);
-            }</textarea>
+    return EndNode(asExpression, invExpr);
+}</textarea>
         <br>
 
         <p>The code above is a process that we call AST transformation. These AST transformations allows AlterNative
@@ -977,14 +955,14 @@
         </p>
         <br>
         <textarea id="cpp-asexpr" name="cpp-asexpr">
-            /*
-            Method for C# feature as cast
-            */
+/*
+Method for C# feature as cast
+*/
 
-            template < class T, class U >
-            T as_cast(U u) {
-            return dynamic_cast< T >(u);
-            };</textarea>
+template < class T, class U >
+T as_cast(U u) {
+    return dynamic_cast< T >(u);
+};</textarea>
         <br>
 
         <p>This feature supports a standard feature of C#, so we will implement it in the file System/support/asis.h
