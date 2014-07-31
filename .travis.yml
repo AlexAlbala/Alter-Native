@@ -20,7 +20,7 @@ script:
   - alternative new test
   - cd test
   - "[[ -f CMakeLists.txt && -f Program.cpp && -f Program.h && -f main.cpp ]]"
-  
+ 
 
 notifications:
  email: true
