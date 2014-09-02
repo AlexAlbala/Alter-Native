@@ -16,7 +16,11 @@ install:
  
 script:
   - source ./alternative.core-compile.sh
+  - ls
   - source ./alternative-init.sh
+  - ls AlterNative.Core.bin
+  - ls AlterNative.Core.bin/bin
+  - ls AlterNative.Core.bin/bin/Debug
   - alternative new test
   - cd test
   - "[[ -f CMakeLists.txt && -f Program.cpp && -f Program.h && -f main.cpp ]]"
