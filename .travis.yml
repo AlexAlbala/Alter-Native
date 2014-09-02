@@ -21,6 +21,7 @@ script:
   - ls AlterNative.Core.bin
   - ls AlterNative.Core.bin/bin
   - ls AlterNative.Core.bin/bin/Debug
+  - echo $ALTERNATIVE_BIN_PATH
   - alternative new test
   - cd test
   - "[[ -f CMakeLists.txt && -f Program.cpp && -f Program.h && -f main.cpp ]]"
