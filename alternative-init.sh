@@ -16,6 +16,6 @@ declare -x ALTERNATIVE_CPP_LIB_PATH=$ALTERNATIVE_HOME/Lib
 declare -x ALTERNATIVE_TOOLS_PATH=$ALTERNATIVE_HOME/Tools
 
 # Shell Scripts
-PATH=$PATH:$ALTERNATIVE_HOME/Tools/ShellScripts
+PATH=$PATH:$ALTERNATIVE_TOOLS_PATH/ShellScripts
 
-chmod +x $ALTERNATIVE_HOME/Tools/ShellScripts/alternative
+chmod +x $ALTERNATIVE_TOOLS_PATH/ShellScripts/alternative
