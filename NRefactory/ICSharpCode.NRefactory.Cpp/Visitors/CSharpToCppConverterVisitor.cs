@@ -345,6 +345,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     throw new Exception("Invalid value for BinaryOperatorType: " + binaryOperatorExpression.Operator);
             }
 
+            if (left is BinaryOperatorExpression) left = new ParenthesizedExpression(left);
+            if (right is BinaryOperatorExpression) right = new ParenthesizedExpression(right);
+
             return EndNode(binaryOperatorExpression, new BinaryOperatorExpression(left, op, right));
         }
 
