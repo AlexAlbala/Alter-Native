@@ -548,10 +548,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     newExpr.Arguments.Add(expr.Target.Clone());
 
                     foreach (Expression n in expr.Arguments)
-                    {
                         newExpr.Arguments.Add(n.Clone());
-                    }
-
 
                     return EndNode(invocationExpression, newExpr);
                 }
@@ -563,10 +560,7 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                     newExpr.Arguments.Add(expr.Target.Clone());
 
                     foreach (Expression n in expr.Arguments)
-                    {
                         newExpr.Arguments.Add(n.Clone());
-                    }
-
 
                     return EndNode(invocationExpression, newExpr);
                 }

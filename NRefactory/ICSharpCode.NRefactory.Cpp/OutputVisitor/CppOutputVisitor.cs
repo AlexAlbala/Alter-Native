@@ -93,6 +93,7 @@ namespace ICSharpCode.NRefactory.Cpp
             //Debug.Assert(containerStack.Count == 0 || node.Parent == containerStack.Peek() || containerStack.Peek().NodeType == NodeType.Pattern);
             if (positionStack.Count > 0)
                 WriteSpecialsUpToNode(node);
+
             containerStack.Push(node);
             positionStack.Push(node.FirstChild);
             formatter.StartNode(node);
