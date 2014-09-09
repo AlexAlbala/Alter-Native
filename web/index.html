@@ -1,56 +1,136 @@
-<!DOCTYPE HTML> 
- <html>
-   <head>
-     <title>Prueba 1</title>
-   </head>
-   <body>
-     <h1> lalalala primera p&aacute;gina guai </h1>
-	 <hr />
-	 <p> a que mola mucho </p>
-	 <ul type="disc">
-		 <li>&Iacute;tem 1</li>
-	 </ul>
-	 <ul type="circle">
-		 <li>&Iacute;tem 2</li>
-	 </ul>
-	 <ul type="square">
-		 <li>&Iacute;tem 3</li>
-	 </ul>
-	 <br/>
-	 <ol>
-		 <li>&Iacute;tem 1</li>
-		 <li>&Iacute;tem 2</li>
-		 <li>&Iacute;tem 3</li>
-	 </ol>
-	 <ol type="a">
-		 <li>&Iacute;tem 1</li>
-		 <li>&Iacute;tem 2</li>
-		 <li>&Iacute;tem 3</li>
-	 </ol>
-	 <ol type="i">
-		 <li>&Iacute;tem 1</li>
-		 <li>&Iacute;tem 2</li>
-		 <li>&Iacute;tem 3</li>
-	 </ol>
-	 
-	 <table border="1" cellpadding="5" cellspacing="0" width="25%">
-		 <tr>
-      		 <td width="50%">Fila 1, Celda 1</td><td width="50%">Fila 1, Celda 2</td>
-		 </tr>
-		 <tr>
-      		 <td width="50%">Fila 2, Celda 1</td><td width="50%">Fila 2, Celda 2</td>
-		 </tr>
-		 <tr>
-      		 <td width="50%">Fila 3, Celda 1</td><td width="50%">Fila 3, Celda 2</td>
-		 </tr>
-		 <tr>
-      		 <td width="50%">Fila 4, Celda 1</td><td width="50%">Fila 4, Celda 2</td>
-		 </tr>
-		 <tr>
-      		 <td width="50%">Fila 5, Celda 1</td><td width="50%">Fila 5, Celda 2</td>
-		 </tr>
-	 </table>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TFG MARIA</title>
+ 
+    <!-- CSS de Bootstrap -->
+    <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
 
-   </body>
- </html>
+    <!-- Custom styles for this template -->
+    <link href="lib/alternative/css/alternative.css" rel="stylesheet">
+    <link href="lib/codemirror/theme/midnight.css" rel="stylesheet">
+    <link href="lib/codemirror/theme/neat2.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Raleway:500' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Nunito:300' rel='stylesheet' type='text/css'>
+    <link href="fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="alternative/js/html5shiv.js"></script>
+    <script src="alternative/js/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="lib/codemirror/lib/codemirror.js"></script>
+    <link rel="stylesheet" href="lib/codemirror/lib/codemirror.css">
+    <script src="lib/codemirror/mode/clike/clike.js"></script>
+    <script>
+        CodeMirror.defaults.theme = "neat2";
+        //CodeMirror.defaults.theme = "midnight"; //COLOR DE ALEX
+    </script>
+
+    <!-- HOJA DE ESTILOS -->
+    <link href="styles/stylesheet.css" rel="stylesheet">
+
+  </head>
+  <body data-spy="scroll" data-target="#navbar">
+
+        <!-- Fixed navbar -->
+    <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#"><img class="img-responsive" src="lib/alternative/img/alternative.png"/></a>
+                <a class="navbar-brand" href="#">AlterNative</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="active">
+                        <a href="#home">Home</a>
+                    </li>
+                    <li>
+                        <a href="#description">Description</a>
+                    </li>
+                    <li>
+                        <a href="#examples">Examples</a>
+                    </li>
+                    <li>
+                        <a href="#tutorials">Tutorials</a>
+                    </li>
+                    <li>
+                        <a href="#contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!--/.nav-collapse --> </div>
+        </div>
+
+        <div class="container" id="container">
+            <h1 class="titulo-principal">Algo bonito</h1>
+            <div class="row col-md">
+                <div class="col-md-2 columna">
+                   <textarea id="folders" name="folders"> 
+                   </textarea>
+               </div>
+               <div class="col-md-5 columna">
+
+                  <textarea id="code" name="code">
+// A Hello World! program in C#.
+using System;
+namespace HelloWorld
+{
+    class Hello 
+    {
+        static void Main() 
+        {
+            Console.WriteLine("Hello World!");
+
+            // Keep the console window open in debug mode.
+            Console.WriteLine("Press any key to exit.");
+            Console.ReadKey();
+        }
+    }
+}
+                  </textarea>
+
+                  <button class="btn btn-primary col-md-12 margen-t10" type="button" id="btn-compile">Compilar</button>
+                </div>
+                <div class="col-md-5 columna">
+                  <textarea id="code2" name="code2">
+                  </textarea>
+
+              </div>
+          </div>
+      </div>
+
+    <!-- Librería jQuery requerida por los plugins de JavaScript -->
+    <script src="http://code.jquery.com/jquery.js"></script>
+
+    <!-- Todos los plugins JavaScript de Bootstrap (también puedes
+         incluir archivos JavaScript individuales de los únicos
+         plugins que utilices) -->
+    <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $('#btn-compile').click(function(){
+        $.post("compile-sharp", $("#code").val());
+        });
+    </script>
+
+    <script type="text/javascript">
+    var codeConsole = document.getElementById("code");
+    var codeConsoleMirror = CodeMirror.fromTextArea(codeConsole, {lineNumbers: true, readOnly: false, mode: "text/x-csharp"});
+
+    var codeConsole = document.getElementById("code2");
+    var codeConsoleMirror = CodeMirror.fromTextArea(codeConsole, {lineNumbers: true, readOnly: true, mode: "text/x-c++src"});
+
+    var codeConsole = document.getElementById("folders");
+    var codeConsoleMirror = CodeMirror.fromTextArea(codeConsole, {lineNumbers: true, readOnly: true, mode: "text/x-csharp"});
+    </script>
+  </body>
+</html>
