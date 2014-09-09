@@ -1301,6 +1301,13 @@ namespace ICSharpCode.NRefactory.Cpp
 
                 return false;
             }
+            else if (node is CSharp.ThisReferenceExpression)
+            {
+                if (IsDirectChildOf(node, typeof(CSharp.BinaryOperatorExpression)))
+                    return true;
+
+                return false;
+            }
             else //! IS IDENTIFIEREXPRESSION
                 return false;
         }
