@@ -73,6 +73,8 @@ namespace ICSharpCode.NRefactory.Cpp
             libraryMap.Add("StreamWriter", "<System/IO/StreamWriterCXX.h>");
             libraryMap.Add("FileStream", "<System/IO/FileStream.h>");
             libraryMap.Add("File", "<System/IO/File.h>");
+            libraryMap.Add("Stream", "<System/IO/Stream.h>");
+            libraryMap.Add("BinaryReader", "<System/IO/BinaryReader.h>");
             //*************************************************************//
 
             //********************** SYSTEM NET:

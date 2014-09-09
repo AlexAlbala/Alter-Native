@@ -2385,7 +2385,7 @@ namespace ICSharpCode.NRefactory.Cpp
                 Space();
             parameterDeclaration.NameToken.AcceptVisitor(this, data);
 
-            if (!parameterDeclaration.DefaultExpression.IsNull)
+            if (!parameterDeclaration.DefaultExpression.IsNull && Resolver.IsChildOf(parameterDeclaration, typeof(HeaderMethodDeclaration)))
             {
                 Space(policy.SpaceAroundAssignment);
                 WriteToken("=", ParameterDeclaration.Roles.Assign);

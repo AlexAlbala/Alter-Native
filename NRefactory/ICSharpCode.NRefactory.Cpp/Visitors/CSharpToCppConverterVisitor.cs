@@ -859,13 +859,13 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                         Operator = UnaryOperatorType.PostDecrement
                     };
                     break;
-                //case ICSharpCode.NRefactory.CSharp.UnaryOperatorType.AddressOf:
-                //    expr = new UnaryOperatorExpression()
-                //    {
-                //        Expression = (Expression)unaryOperatorExpression.Expression.AcceptVisitor(this, data),
-                //        Operator = UnaryOperatorType.AddressOf
-                //    };
-                //    break;
+                case ICSharpCode.NRefactory.CSharp.UnaryOperatorType.AddressOf:
+                    expr = new UnaryOperatorExpression()
+                    {
+                        Expression = (Expression)unaryOperatorExpression.Expression.AcceptVisitor(this, data),
+                        Operator = UnaryOperatorType.AddressOf
+                    };
+                    break;
                 case ICSharpCode.NRefactory.CSharp.UnaryOperatorType.Dereference:
                     expr = new UnaryOperatorExpression()
                    {
