@@ -1,2 +1,31 @@
-#container{padding-top:50px;}
-.titulo-principal{text-align: center;}
+.titulo-principal
+{
+	padding: 1em 0 1em 0;
+	text-align: center;
+	width: 100%;
+}
+
+#container
+{
+	margin-top: 50px; 
+	width: 100% !important;
+}
+
+.columna
+{
+	display: inline-block;
+	padding-left: 2px;
+	padding-right: 2px;
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.CodeMirror
+{
+    border: 1px inset #dee;
+}
+
+.margen-t10
+{
+	margin-top: 10px;
+}
