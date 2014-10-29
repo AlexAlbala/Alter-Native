@@ -8,7 +8,6 @@
  
     <!-- CSS de Bootstrap -->
     <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
-
     <!-- Custom styles for this template -->
     <link href="lib/alternative/css/alternative.css" rel="stylesheet">
     <link href="lib/codemirror/theme/midnight.css" rel="stylesheet">
@@ -16,6 +15,9 @@
     <link href='http://fonts.googleapis.com/css?family=Raleway:500' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Nunito:300' rel='stylesheet' type='text/css'>
     <link href="fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="lib/jquery/jqueryFileTree.css" rel="stylesheet" type="text/css">
+    <!-- HOJA DE ESTILOS -->
+    <link href="styles/stylesheet.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -24,15 +26,29 @@
     <![endif]-->
 
     <script src="lib/codemirror/lib/codemirror.js"></script>
-    <link rel="stylesheet" href="lib/codemirror/lib/codemirror.css">
+    <link href="lib/codemirror/lib/codemirror.css" rel="stylesheet">
     <script src="lib/codemirror/mode/clike/clike.js"></script>
     <script>
-        CodeMirror.defaults.theme = "neat2";
-        //CodeMirror.defaults.theme = "midnight"; //COLOR DE ALEX
+        CodeMirror.defaults.theme = "midnight";
     </script>
 
-    <!-- HOJA DE ESTILOS -->
-    <link href="styles/stylesheet.css" rel="stylesheet">
+    <!-- Librería jQuery requerida por los plugins de JavaScript -->
+    <script src="lib/jquery/jquery.js"></script>
+    <script src="lib/jquery/jquery.easing.js"></script>
+    <script src="lib/jquery/jqueryFileTree.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready( function() {
+            $('#folders').fileTree({ root: "../Alter-Native/temp/", folderEvent:'click' }, function(file) {
+                openFile(file);
+            });
+        });
+
+        function openFile(file){
+            var name = file;
+            alert(name);
+        } 
+    </script>
 
   </head>
   <body data-spy="scroll" data-target="#navbar">
@@ -74,11 +90,11 @@
         <div class="container" id="container">
             <h1 class="titulo-principal">Algo bonito</h1>
             <div class="row col-md">
-                <div class="col-md-2 columna">
-                   <textarea id="folders" name="folders"> 
-                   </textarea>
-               </div>
-               <div class="col-md-5 columna">
+                <div id ="folders" class="col-md-2 columna demo" >
+                    <ul class="jqueryFileTree">
+                    </ul>
+                </div>
+                <div class="col-md-4 columna">
 
                   <textarea id="code" name="code">
 // A Hello World! program in C#.
@@ -91,7 +107,7 @@ namespace HelloWorld
         {
             Console.WriteLine("Hello World!");
 
-            // Keep the console window open in debug mode.
+            //Keep the console window open in debug mode
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
         }
@@ -101,25 +117,23 @@ namespace HelloWorld
 
                   <button class="btn btn-primary col-md-12 margen-t10" type="button" id="btn-compile">Compilar</button>
                 </div>
-                <div class="col-md-5 columna">
+                <div class="col-md-4 columna">
                   <textarea id="code2" name="code2">
                   </textarea>
 
-              </div>
+                </div>
+                <div id ="folders2" class="col-md-2 columna demo" ></div>
           </div>
       </div>
-
-    <!-- Librería jQuery requerida por los plugins de JavaScript -->
-    <script src="http://code.jquery.com/jquery.js"></script>
 
     <!-- Todos los plugins JavaScript de Bootstrap (también puedes
          incluir archivos JavaScript individuales de los únicos
          plugins que utilices) -->
     <script src="lib/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript">
-        $('#btn-compile').click(function(){
-        $.post("compile-sharp", $("#code").val());
-        });
+    $('#btn-compile').click(function(){
+        $.post("compile-csharp", $("#code").val());
+    });
     </script>
 
     <script type="text/javascript">
@@ -128,9 +142,6 @@ namespace HelloWorld
 
     var codeConsole = document.getElementById("code2");
     var codeConsoleMirror = CodeMirror.fromTextArea(codeConsole, {lineNumbers: true, readOnly: true, mode: "text/x-c++src"});
-
-    var codeConsole = document.getElementById("folders");
-    var codeConsoleMirror = CodeMirror.fromTextArea(codeConsole, {lineNumbers: true, readOnly: true, mode: "text/x-csharp"});
     </script>
   </body>
 </html>
