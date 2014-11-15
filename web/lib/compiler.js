@@ -7,20 +7,23 @@ var _compile = function(req, res){
     });
 
     //leemos el post y lo guardamos en un archivo
-    var msg;
+    /*var msg = '';
     req.on('data', function(chunk) {
-      msg=chunk.toString();
+      msg+=chunk.toString();
     });
 
     req.on('end', function() {
-        fs.writeFile("code.cs", msg, function(err) {
+        fs.writeFileSync("code.cs", msg, function(err) {
             if(err) {
                 console.log(err);
             } else {
-               console.log("The file was saved!");
+                console.log("The file was saved!");
             }
         }); 
-    });
+    });*/
+
+    var msg = req.param('texto');
+    fs.writeFileSync("code.cs", msg); 
 
     //compilamos con el terminal
     terminal.stdin.write('csc code.cs\n');

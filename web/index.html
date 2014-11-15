@@ -38,6 +38,7 @@
     <script src="lib/jquery/jqueryFileTree.js"></script>
 
     <script type="text/javascript">
+        var CODE;
         $(document).ready( function() {
             $('#folders').fileTree({ root: "../Alter-Native/temp/", folderEvent:'click' }, function(file) {
                 openFile(file);
@@ -45,8 +46,10 @@
         });
 
         function openFile(file){
-            var name = file;
-            alert(name);
+            file2 = file.replace(/..\/Alter-Native/,"/file");
+            $.get(file2, function (data){
+                CODE.getDoc().setValue(data);
+            });
         } 
     </script>
 
@@ -132,16 +135,18 @@ namespace HelloWorld
     <script src="lib/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript">
     $('#btn-compile').click(function(){
-        $.post("compile-csharp", $("#code").val());
+        var txt =  $("#code").val();
+        $.post("compile-csharp", {texto:txt});
     });
     </script>
 
     <script type="text/javascript">
     var codeConsole = document.getElementById("code");
-    var codeConsoleMirror = CodeMirror.fromTextArea(codeConsole, {lineNumbers: true, readOnly: false, mode: "text/x-csharp"});
+    CODE = CodeMirror.fromTextArea(codeConsole, {lineNumbers: true, readOnly: false, mode: "text/x-csharp"});
+    //var codeConsoleMirror = CodeMirror.fromTextArea(codeConsole, {lineNumbers: true, readOnly: false, mode: "text/x-csharp"});
 
     var codeConsole = document.getElementById("code2");
-    var codeConsoleMirror = CodeMirror.fromTextArea(codeConsole, {lineNumbers: true, readOnly: true, mode: "text/x-c++src"});
+    var CODE2 = CodeMirror.fromTextArea(codeConsole, {lineNumbers: true, readOnly: true, mode: "text/x-c++src"});
     </script>
   </body>
 </html>
