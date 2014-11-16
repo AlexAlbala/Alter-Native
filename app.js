@@ -14,14 +14,16 @@ app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded()); // to support URL-encoded bodies
 app.use(session({name: "uCookie", secret: "test", resave: true, saveUninitialized: true}));
 
-app.use(express.static(__dirname + '/web'));
-app.use(express.static(__dirname + '/temp'));
 
-app.post('/getDir', require(__dirname + '/web/lib/jquery/jqueryFileTreeConnector.js').getDirList);
-app.post('/compile-csharp', require(__dirname + '/web/lib/compiler.js').compile);
+//app.post('/getDir', require(__dirname + '/hidden/jqueryFileTreeConnector.js').getDirList);
+app.post('/compile-csharp', require(__dirname + '/hidden/compiler.js').compile);
+app.post(/\/uFolder/, require(__dirname + '/hidden/serve.js').uLoad);
 
-app.get(/\/file/, require(__dirname + '/web/lib/serve.js').serve);
+app.get(/\/uFile/, require(__dirname + '/hidden/serve.js').uFile);
+app.get(/\/file/, require(__dirname + '/hidden/serve.js').serve);
  
+app.use(express.static(__dirname + '/web'));
+
 //step 2) create the server
 http.createServer(app)
 //step 3) listen for an HTTP request on port 3000
