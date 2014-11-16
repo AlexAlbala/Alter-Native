@@ -14,6 +14,7 @@ app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded()); // to support URL-encoded bodies
 app.use(session({name: "uCookie", secret: "test", resave: true, saveUninitialized: true}));
 
+if (!fs.existsSync(__dirname+'/hidden/users')) fs.mkdirSync(__dirname+'/hidden/users');
 
 //app.post('/getDir', require(__dirname + '/hidden/jqueryFileTreeConnector.js').getDirList);
 app.post('/compile-csharp', require(__dirname + '/hidden/compiler.js').compile);
