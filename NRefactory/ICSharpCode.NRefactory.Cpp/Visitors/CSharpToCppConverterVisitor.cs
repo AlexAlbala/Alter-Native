@@ -2812,6 +2812,9 @@ namespace ICSharpCode.NRefactory.Cpp.Visitors
                 case "decimal":
                     typeName = "float";
                     break;
+                case "long":
+                    typeName = "long";
+                    break;
                 //case "double":
                 // typeName = "float";
                 //break;

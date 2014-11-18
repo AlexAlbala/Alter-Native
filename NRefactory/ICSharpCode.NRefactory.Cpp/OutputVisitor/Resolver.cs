@@ -31,15 +31,25 @@ namespace ICSharpCode.NRefactory.Cpp
             libraryMap.Add("DateTime", "<System/DateTime.h>");
             libraryMap.Add("DateTimeKind", "<System/DateTimeKind.h>");
             libraryMap.Add("TimeSpan", "<System/TimeSpan.h>");
+            libraryMap.Add("StringComparison", "<System/StringComparison.h>");
+            libraryMap.Add("Buffer", "<System/Buffer.h>");
             //exceptions:
             libraryMap.Add("Exception", "<System/Exception.h>");
             //                          SystemExceptions
+            libraryMap.Add("SystemException", "<System/Exception/SystemException.h>");
             libraryMap.Add("NotImplementedException", "<System/Exception/SystemException/NotImplementedException.h>");
+            libraryMap.Add("NotSupportedException", "<System/Exception/SystemException/NotSupportedException.h>");
             libraryMap.Add("ArgumentException", "<System/Exception/SystemException/ArgumentException.h>");
             libraryMap.Add("ArgumentOutOfRangeException", "<System/Exception/SystemException/ArgumentException/ArgumentOutOfRangeException.h>");
             libraryMap.Add("ArgumentNullException", "<System/Exception/SystemException/ArgumentException/ArgumentNullException.h>");
             libraryMap.Add("InvalidOperationException", "<System/Exception/SystemException/InvalidOperationException.h>");
             libraryMap.Add("ObjectDisposedException", "<System/Exception/SystemException/InvalidOperationException/ObjectDisposedException.h>");
+            libraryMap.Add("SecurityException", "<System/Exception/SystemException/Security/SecurityException.h>");
+            libraryMap.Add("IOException", "<System/Exception/SystemException/IO/IOException.h>");
+            libraryMap.Add("IndexOutOfRangeException", "<System/Exception/SystemException/IndexOutOfRangeException.h>");
+
+            //                          ApplicationExceptions
+            libraryMap.Add("ApplicationException", "<System/Exception/ApplicationException.h>");
             //*************************************************************//
 
             //********************** SYSTEM COLLECTIONS:
@@ -75,6 +85,10 @@ namespace ICSharpCode.NRefactory.Cpp
             libraryMap.Add("File", "<System/IO/File.h>");
             libraryMap.Add("Stream", "<System/IO/Stream.h>");
             libraryMap.Add("BinaryReader", "<System/IO/BinaryReader.h>");
+            libraryMap.Add("FileMode", "<System/IO/FileMode.h>");
+            libraryMap.Add("FileAccess", "<System/IO/FileAccess.h>");
+            libraryMap.Add("FileShare", "<System/IO/FileShare.h>");
+            libraryMap.Add("FileOptions", "<System/IO/FileOptions.h>");
             //*************************************************************//
 
             //********************** SYSTEM NET:
@@ -85,6 +99,11 @@ namespace ICSharpCode.NRefactory.Cpp
             libraryMap.Add("SocketType", "<System/Net/Sockets/SocketType.h>");
             libraryMap.Add("AddressFamily", "<System/Net/Sockets/AddressFamily.h>");
             libraryMap.Add("ProtocolType", "<System/Net/Sockets/ProtocolType.h>");
+            //*************************************************************//
+
+            //********************** SYSTEM SECURITY:
+            libraryMap.Add("AccessControlActions", "<System/Security/AccessControl/AccessControlActions.h>");
+            libraryMap.Add("AccessControlSections", "<System/Security/AccessControl/AccessControlSections.h>");
             //*************************************************************//
 
 
@@ -126,6 +145,8 @@ namespace ICSharpCode.NRefactory.Cpp
 
             foreach (KeyValuePair<string, string> kvp in valueTypesInLibrary)
                 Cache.AddValueType(kvp.Key, kvp.Value);
+
+            
 
             Cache.InitLibrary(libraryMap);
         }
@@ -420,6 +441,23 @@ namespace ICSharpCode.NRefactory.Cpp
                 }
             }
             return false;
+        }
+
+        public static TypeDefinition ResolveMemberType(CSharp.MemberReferenceExpression mref)
+        {
+            foreach (var ann in mref.Annotations)
+            {
+                if (ann is ICSharpCode.Decompiler.Ast.TypeInformation)
+                {
+                    ICSharpCode.Decompiler.Ast.TypeInformation typeAn = ann as ICSharpCode.Decompiler.Ast.TypeInformation;
+                    if (typeAn.InferredType != null)
+                    {
+                        return typeAn.InferredType.Resolve();                        
+                    }
+                }
+            }
+            return null;            
+            
         }
 
         /// <summary>
@@ -1291,6 +1329,24 @@ namespace ICSharpCode.NRefactory.Cpp
                 if (IsDirectChildOf(node, typeof(CSharp.BinaryOperatorExpression)))
                     return true;
 
+                return false;
+            }
+            else if (node is CSharp.MemberReferenceExpression)
+            {
+                TypeDefinition type = ResolveMemberType(node as CSharp.MemberReferenceExpression);
+
+                if (type != null)
+                {
+                    if (!type.IsPrimitive && !type.IsEnum && IsDirectChildOf(node, typeof(CSharp.BinaryOperatorExpression)))
+                    {
+                        CSharp.BinaryOperatorExpression parent = (CSharp.BinaryOperatorExpression)GetParentOf(node, typeof(CSharp.BinaryOperatorExpression));
+                        if(parent.Operator == CSharp.BinaryOperatorType.Add || parent.Operator == CSharp.BinaryOperatorType.Subtract)
+                        {
+                            return true;
+                        }
+                        
+                    }
+                }
                 return false;
             }
             else if (node is CSharp.PrimitiveExpression)
