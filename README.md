@@ -160,3 +160,5 @@ Testing
 		alternative make example
 		cd build
 		./Blank
+
+* Finally, you can use the provided testbench at https://github.com/AlexAlbala/AlterNative-Tests. The submodule is configured on Tests/public directory.
