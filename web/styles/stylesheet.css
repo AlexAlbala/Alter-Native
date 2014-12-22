@@ -8,8 +8,9 @@
 #container
 {
 	margin-top: 50px; 
-	width: 100% !important;
+	width: auto;
 	margin-left: 25px;
+	margin-right: 25px;
 }
 
 .columna
@@ -21,6 +22,11 @@
 	margin-right: 0px;
 }
 
+.nav2
+{
+	height: 43px !important;
+}
+
 .CodeMirror
 {
     border: 1px inset #dee;
@@ -29,6 +35,11 @@
 .margen-t10
 {
 	margin-top: 10px;
+}
+
+.no-padding
+{
+	padding:0;
 }
 
 .demo
@@ -42,11 +53,61 @@
 	background: #FFF;
 	overflow: scroll;
 	padding: 5px;
-
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 11px;
 }
+
 #code
 {
 	font-size: 11px;
+}
+
+.filename
+{
+	padding-top: 8px;
+}
+
+.filename input
+{
+	font-size: 13px;
+	height: auto;
+	width: 150px;
+}
+
+#search
+{
+	padding: 4px 7px;
+	height: auto;
+	width: 150px;
+	margin-top: -6px;
+	font-size: 11px;	
+}
+
+#search-button
+{
+	padding-top: 3px;
+	padding-right: 24px;
+	color: rgb(66, 139, 202);	
+	font-size: 14px;
+	height: 26px;
+	line-height: 14px;
+	position: relative;
+	text-align: left;
+	top: 1px;
+	width: 14px;
+}
+
+#tests
+{
+	color: #333;
+}
+
+.win p{
+	font-family: Consolas;
+	font-size: 10px;
+}
+
+.scroll{
+	overflow-y: scroll;
+	max-height: 15em;
 }

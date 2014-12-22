@@ -5,7 +5,6 @@ path = require('path'),//helps with file paths
 fs = require('fs');//helps with file system tasks
 express = require('express');
 session = require('express-session');
-//routes = require('./routes');
 
 app = express();
 
@@ -16,13 +15,19 @@ app.use(session({name: "uCookie", secret: "test", resave: true, saveUninitialize
 
 if (!fs.existsSync(__dirname+'/hidden/users')) fs.mkdirSync(__dirname+'/hidden/users');
 
-//app.post('/getDir', require(__dirname + '/hidden/jqueryFileTreeConnector.js').getDirList);
-app.post('/compile-csharp', require(__dirname + '/hidden/compiler.js').compile);
-app.post(/\/uFolder/, require(__dirname + '/hidden/serve.js').uLoad);
+//app.post('/compile-csharp', require(__dirname + '/hidden/compiler.js').compile);
+app.post(/\/uFolder/, require(__dirname + '/hidden/fileStorage.js').uLoad);
+app.post('/rename', require(__dirname + '/hidden/fileStorage.js').rename);
+app.post('/save', require(__dirname + '/hidden/fileStorage.js').save);
+app.post('/delete', require(__dirname + '/hidden/fileStorage.js').delete);
+app.post('/load-tests', require(__dirname + '/hidden/fileStorage.js').loadTests);
+app.post('/serve-test', require(__dirname + '/hidden/fileStorage.js').serveTest);
 
-app.get(/\/uFile/, require(__dirname + '/hidden/serve.js').uFile);
-app.get(/\/file/, require(__dirname + '/hidden/serve.js').serve);
- 
+app.get(/\/uFile/, require(__dirname + '/hidden/fileStorage.js').uFile);
+app.get('/compile-csharp', require(__dirname + '/hidden/compiler.js').compile);
+app.get('/consola', require(__dirname + '/hidden/compiler.js').consola);
+app.get('/zip', require(__dirname + '/hidden/compiler.js').zip);
+
 app.use(express.static(__dirname + '/web'));
 
 //step 2) create the server

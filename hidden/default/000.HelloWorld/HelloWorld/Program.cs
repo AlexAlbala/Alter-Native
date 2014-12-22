@@ -1,7 +1,5 @@
-/*Aquí va un comentario chachi PRO*/
-
-// A Hello World! program in C#.
 using System;
+
 namespace HelloWorld
 {
     class Hello 

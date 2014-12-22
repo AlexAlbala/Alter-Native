@@ -5,7 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>TFG MARIA</title>
- 
+
+    <link href="lib/jquery/jquery-ui.min.css" rel="stylesheet" media="screen">
+    <link href="lib/jquery/jquery-ui.theme.min.css" rel="stylesheet" media="screen">
     <!-- CSS de Bootstrap -->
     <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <!-- Custom styles for this template -->
@@ -34,6 +36,7 @@
 
     <!-- Librería jQuery requerida por los plugins de JavaScript -->
     <script src="lib/jquery/jquery.js"></script>
+    <script src="lib/jquery/jquery-ui.min.js"></script>
     <script src="lib/jquery/jquery.easing.js"></script>
     <script src="lib/jquery/jqueryFileTree.js"></script>
 
@@ -76,30 +79,65 @@
 
         <div class="container" id="container">
             <h1 class="titulo-principal">Algo bonito</h1>
-            <div class="row col-md">
-                <div id ="folders" class="col-md-2 columna demo" >
+            <div class="row col-md-6">
+                <div class="collapse navbar-collapse no-padding" id="bs-example-navbar-collapse-1">
+                    <ul class="nav nav-pills nav2">
+                        <li class="col-md-4">
+                            <ul class="nav nav-pills nav2 row">
+                                <li>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" id="tests" data-toggle="dropdown" aria-expanded="true">Load  <span class="caret"></span></button>
+                                        <ul class="dropdown-menu scroll" role="menu" aria-labelledby="tests" id="testList">
+                                            
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><a href="#" title="Create new folder"><span class="glyphicon glyphicon-folder-open"></span></a></li>
+                                <li><a href="#" title="Create new file"><span class="glyphicon glyphicon-file"></span></a></li>
+                            </ul>
+                        </li>
+                        <li class="filename"><input type="text"></li> 
+                        <li><a href="#" title="Rename" id="rename"><span class="glyphicon glyphicon-edit"></span></a></li>   
+                        
+                        <!--<li class="margen-t10" id="filename"></li> 
+                        <li role="presentation"><a href="#" title="Rename" id="rename"><span class="glyphicon glyphicon-edit"></span></a></li>-->
+                        
+                        
+                        <li><a href="#" title="Save" id="save"><span class="glyphicon glyphicon-floppy-disk"></span></a></li>
+                        <li><a href="#" title="Delete" id="delete"><span class="glyphicon glyphicon-trash"></span></a></li>
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+                <div class="col-md-2 columna demo folders" >
                     <ul class="jqueryFileTree">
                     </ul>
                 </div>
-                <div class="col-md-4 columna">
-
-                  <textarea id="code" name="code"></textarea>
-
-                  <button class="btn btn-primary col-md-12 margen-t10" type="button" id="btn-compile">Compilar</button>
+                <div class="col-md-8 columna">
+                    <textarea id="code" name="code"></textarea>
+                    <button class="btn btn-primary col-md-12 margen-t10" type="button" id="btn-compile">Compilar</button>
                 </div>
-                <div class="col-md-4 columna">
-                  <textarea id="code2" name="code2">
-                  </textarea>
-
+            </div>
+            <div class="row col-md-6">
+                <div class="collapse navbar-collapse no-padding" id="bs-example-navbar-collapse-1">
+                    <ul class="nav nav-pills nav2">
+                        <li role="presentation" class="pull-right"><a href="zip" title="Download" id="download"><span class="glyphicon glyphicon-download"></span></a></li>
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+                <div class="col-md-8 columna">
+                    <textarea id="code2" name="code2">
+                    </textarea>
                 </div>
-                <div id ="folders2" class="col-md-2 columna demo" ></div>
-          </div>
+                <div class="col-md-2 columna demo folders2" ></div>
+            </div>
       </div>
 
+      <!-- CONSOLA -->
+      <div class="win"><p></p></div>
+      
     <!-- Todos los plugins JavaScript de Bootstrap (también puedes
          incluir archivos JavaScript individuales de los únicos
          plugins que utilices) -->
     <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="lib/bootstrap/js/bootstrap-jquery-toaster.js"></script>
     <script src="lib/index.js"></script>
   </body>
 </html>
