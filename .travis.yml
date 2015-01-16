@@ -5,8 +5,9 @@ os:
   - osx
 #whitelist
 branches:
-  only:
-    - master
+  except:
+    - test-web    
+    - Docker
     
 git:
   submodules: false
