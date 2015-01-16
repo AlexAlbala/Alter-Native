@@ -113,6 +113,8 @@ namespace AlterNative
             var opts = new OptionSet() {
             {"v", "Increase the verbosity of debug messages",
             v => Config.Verbose = v!= null},
+            {"s|sharp", "Decompile to C#",
+            v => Config.ToCSharp = v!= null},
             {"r", "Compiles in release mode",
             v => Config.Release = v!= null},
             {"R", "Recursive mode. The dependencies are decompiled",
@@ -212,9 +214,17 @@ namespace AlterNative
             //Each visitor is responsible of changing the file if necessary (from here it is ipmossible to know the file names)
             ICSharpCode.Decompiler.ITextOutput textOutput = new ICSharpCode.ILSpy.FileTextOutput(outputDir);
             FileWritterManager.WorkingPath = outputDir;
-
+            
+            ICSharpCode.ILSpy.Language lang = null;
             //CONFIGURE OUTPUT LANGUAGE
-            ICSharpCode.ILSpy.Language lang = OutputLanguage("CXX");
+            if (Config.ToCSharp)
+            {
+                 lang = OutputLanguage("C#");
+            }
+            else
+            {
+                lang = OutputLanguage("CXX");
+            }
 
             if (Config.RecursiveDependencies)
             {

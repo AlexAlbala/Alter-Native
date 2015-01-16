@@ -1458,6 +1458,7 @@ namespace ICSharpCode.NRefactory.CSharp
 		
 		public void VisitTypeDeclaration(TypeDeclaration typeDeclaration)
 		{
+            formatter.ChangeFile(typeDeclaration.Name + ".cs");
 			StartNode(typeDeclaration);
 			WriteAttributes(typeDeclaration.Attributes);
 			WriteModifiers(typeDeclaration.ModifierTokens);
@@ -1514,6 +1515,7 @@ namespace ICSharpCode.NRefactory.CSharp
 			OptionalSemicolon();
 			NewLine();
 			EndNode(typeDeclaration);
+            formatter.Close();
 		}
 		
 		public void VisitUsingAliasDeclaration(UsingAliasDeclaration usingAliasDeclaration)
@@ -2298,6 +2300,7 @@ namespace ICSharpCode.NRefactory.CSharp
 		
 		public void VisitCompilationUnit(CompilationUnit compilationUnit)
 		{
+            //formatter.ChangeFile(compilationUnit.FileName + ".cs");
 			// don't do node tracking as we visit all children directly
 			foreach (AstNode node in compilationUnit.Children) {
 				node.AcceptVisitor(this);

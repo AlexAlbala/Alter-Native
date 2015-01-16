@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -54,7 +54,8 @@ namespace ICSharpCode.ILSpy
 
         public NRefactory.TextLocation Location
         {
-            get { throw new NotImplementedException(); }
+            //get { throw new NotImplementedException(); }
+            get { return new NRefactory.TextLocation(); }
         }
 
         public void Indent()
@@ -126,3 +127,4 @@ namespace ICSharpCode.ILSpy
         }
     }
 }
+*/

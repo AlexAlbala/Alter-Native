@@ -78,5 +78,11 @@ namespace AlterNative
             get;
             set;
         }
+
+        public static bool ToCSharp
+        {
+            get;
+            set;
+        }
     }
 }

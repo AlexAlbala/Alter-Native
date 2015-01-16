@@ -14,7 +14,7 @@ namespace ICSharpCode.NRefactory.Cpp
         public static bool boostLink = false;
 
         static Resolver()
-        {
+        {            
             Dictionary<string, string> libraryMap = new Dictionary<string, string>();
 
             //********************** SYSTEM:

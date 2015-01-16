@@ -20,17 +20,16 @@ using System;
 using System.Collections.Generic;
 using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.ILAst;
-using ICSharpCode.NRefactory.Cpp;
-using ICSharpCode.NRefactory.Cpp.Ast;
-using ICSharpCode.ILSpy;
 using Mono.Cecil;
+using ICSharpCode.NRefactory.CSharp;
+using ICSharpCode.ILSpy;
 
-namespace ICSharpCode.ILSpy.Cpp
+namespace ICSharpCode.Decompiler.Ast
 {
     /// <summary>
     /// Description of CppTextOutputFormatter.
     /// </summary>
-    public class CppTextOutputFormatter : IOutputFormatter
+    public class FileTextOutputFormatter : IOutputFormatter
     {
         int indentation;
         bool needsIndent = true;
@@ -40,7 +39,7 @@ namespace ICSharpCode.ILSpy.Cpp
         readonly ITextOutput output;
         readonly Stack<AstNode> nodeStack = new Stack<AstNode>();
 
-        public CppTextOutputFormatter(ITextOutput output)
+        public FileTextOutputFormatter(ITextOutput output)
         {
             if (output == null)
                 throw new ArgumentNullException("output");
@@ -144,7 +143,7 @@ namespace ICSharpCode.ILSpy.Cpp
         {
             AstNode node = nodeStack.Peek();
             MemberReference memberRef = node.Annotation<MemberReference>();
-            if (memberRef == null && node.Role == AstNode.Roles.TargetExpression && (node.Parent is InvocationExpression || node.Parent is ObjectCreateExpression))
+            if (memberRef == null && node.Role == Roles.TargetExpression && (node.Parent is InvocationExpression || node.Parent is ObjectCreateExpression))
             {
                 memberRef = node.Parent.Annotation<MemberReference>();
             }
@@ -218,7 +217,7 @@ namespace ICSharpCode.ILSpy.Cpp
         {
             // Attach member reference to token only if there's no identifier in the current node.
             MemberReference memberRef = GetCurrentMemberReference();
-            if (memberRef != null && nodeStack.Peek().GetChildByRole(AstNode.Roles.Identifier).IsNull)
+            if (memberRef != null && nodeStack.Peek().GetChildByRole(Roles.Identifier).IsNull)
                 output.WriteReference(token, memberRef);
             else
                 output.Write(token);
@@ -271,7 +270,6 @@ namespace ICSharpCode.ILSpy.Cpp
                 node is EventDeclaration ||
                 node is DelegateDeclaration ||
                 node is OperatorDeclaration ||
-                node is MemberDeclaration ||
                 node is TypeDeclaration;
         }
 

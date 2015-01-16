@@ -48,6 +48,9 @@ namespace ICSharpCode.NRefactory.CSharp
 		
 		void OpenBrace(BraceStyle style);
 		void CloseBrace(BraceStyle style);
+
+        void ChangeFile(string path);
+        void Close();
 		
 		void Indent();
 		void Unindent();

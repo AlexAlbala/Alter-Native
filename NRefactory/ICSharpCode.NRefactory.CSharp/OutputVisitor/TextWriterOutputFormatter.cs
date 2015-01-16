@@ -231,5 +231,17 @@ namespace ICSharpCode.NRefactory.CSharp
 		public virtual void EndNode(AstNode node)
 		{
 		}
-	}
+
+
+        public void ChangeFile(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public void Close()
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

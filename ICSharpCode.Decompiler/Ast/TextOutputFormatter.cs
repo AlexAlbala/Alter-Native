@@ -332,5 +332,17 @@ namespace ICSharpCode.Decompiler.Ast
 		{
 			return node is EntityDeclaration;
 		}
-	}
+
+
+        public void ChangeFile(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public void Close()
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
