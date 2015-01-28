@@ -6,7 +6,7 @@ using ICSharpCode.Decompiler;
 using System.IO;
 using System.Diagnostics;
 
-namespace ICSharpCode.ILSpy
+namespace ICSharpCode.Decompiler
 {
     public class FileTextOutput : ITextOutput
     {

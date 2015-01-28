@@ -48,7 +48,6 @@
     <Compile Include="Cpp\ILSpyEnvironmentProvider.cs" />
     <Compile Include="DecompilationOptions.cs" />
     <Compile Include="ExtensionMethods.cs" />
-    <Compile Include="FileTextOutput.cs" />
     <Compile Include="Fusion.cs" />
     <Compile Include="GacInterop.cs" />
     <Compile Include="ILSpySettings.cs" />

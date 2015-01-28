@@ -212,7 +212,7 @@ namespace AlterNative
         {
             Utils.WriteToConsole("Decompiling assembly: " + adef.FullName);
             //Each visitor is responsible of changing the file if necessary (from here it is ipmossible to know the file names)
-            ICSharpCode.Decompiler.ITextOutput textOutput = new ICSharpCode.ILSpy.FileTextOutput(outputDir);
+            ICSharpCode.Decompiler.ITextOutput textOutput = new ICSharpCode.Decompiler.FileTextOutput(outputDir);
             FileWritterManager.WorkingPath = outputDir;
             
             ICSharpCode.ILSpy.Language lang = null;
