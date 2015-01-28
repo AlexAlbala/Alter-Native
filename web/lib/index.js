@@ -24,17 +24,15 @@ function loadFolders2(){
     $('.folders2').fileTree({ root: "./uFolder/output/", script: 'uFolder', folderEvent:'click'}, function(file) {
         openFile(file, 'output');
     });
-    
 }
 
 $('#rename').click(function(){
-    var newname = $('.filename input').val() ;	//hay que poner un nombre nuevo desde la web
-    alert("newname = "+ newname +" path = "+path);
+    var newname = $('.filename input').val() ;
+    //alert("newname = "+ newname +" path = "+path);
     $.post("rename", {name:newname, dir:path}, function(data){
     	$.toaster({ priority : 'success', title : 'Success', message : 'Name changed!'});
-    	$('.folders').addClass('oldtree').removeClass('folders').hide().before($('<div>').addClass('folders').addClass('col-md-2').addClass('columna').addClass('demo'));
+    	//$('.folders').addClass('oldtree').removeClass('folders').hide().before($('<div>').addClass('folders').addClass('col-md-2').addClass('columna').addClass('demo'));
         loadFolders1();
-    	openFile(data);
     });
 });
 
@@ -43,9 +41,8 @@ $('#save').click(function(){
     $.post("save", {text:txt, dir:path}, function(data){
         name=path.substring(path.lastIndexOf('/')+1);
     	$.toaster({ priority : 'success', title : 'Success', message : 'File "'+name+'" saved!'});
-        //location.reload();
-        $('.folders').addClass('oldtree').removeClass('folders').hide().before($('<div>').addClass('folders').addClass('col-md-2').addClass('columna').addClass('demo'));
-        loadFolders1();
+        //$('.folders').addClass('oldtree').removeClass('folders').hide().before($('<div>').addClass('folders').addClass('col-md-2').addClass('columna').addClass('demo'));
+        //loadFolders1();
     });
 });
 
@@ -84,7 +81,12 @@ $('#btn-compile').click(function(){
     
 });
 
-loadFolders1();
+$('#file').change(function(){
+
+    alert(this.value);
+});
+
+$('#upload').fancybox({type:'iframe', width:500, height:100});
 
 var codeConsole = document.getElementById("code");
 CODE = CodeMirror.fromTextArea(codeConsole, {lineNumbers: true, readOnly: false, mode: "text/x-csharp"});
@@ -108,6 +110,10 @@ $(document).ready(function (){
         $('#testList').html(data);
         $('[cargar]').off('click', funcionCargar).on('click', funcionCargar);
     });
+
+    loadFolders1();
+    loadFolders2();
+
     /*setInterval(function(){
         $('.folders2').addClass('oldtree').removeClass('folders2').hide().before($('<div>').addClass('folders2').addClass('col-md-2').addClass('columna').addClass('demo'));
         loadFolders2();

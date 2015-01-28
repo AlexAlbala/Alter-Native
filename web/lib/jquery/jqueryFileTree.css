@@ -40,6 +40,7 @@ UL.jqueryFileTree A:hover {
 .jqueryFileTree LI.ext_bat { background: url(images/application.png) left top no-repeat; }
 .jqueryFileTree LI.ext_bmp { background: url(images/picture.png) left top no-repeat; }
 .jqueryFileTree LI.ext_c { background: url(images/code.png) left top no-repeat; }
+.jqueryFileTree LI.ext_cs { background: url(images/code.png) left top no-repeat; }
 .jqueryFileTree LI.ext_cfm { background: url(images/code.png) left top no-repeat; }
 .jqueryFileTree LI.ext_cgi { background: url(images/code.png) left top no-repeat; }
 .jqueryFileTree LI.ext_com { background: url(images/application.png) left top no-repeat; }

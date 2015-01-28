@@ -18,6 +18,7 @@
     <link href='http://fonts.googleapis.com/css?family=Nunito:300' rel='stylesheet' type='text/css'>
     <link href="fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <link href="lib/jquery/jqueryFileTree.css" rel="stylesheet" type="text/css">
+    <link href="lib/fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css">
     <!-- HOJA DE ESTILOS -->
     <link href="styles/stylesheet.css" rel="stylesheet">
 
@@ -39,6 +40,7 @@
     <script src="lib/jquery/jquery-ui.min.js"></script>
     <script src="lib/jquery/jquery.easing.js"></script>
     <script src="lib/jquery/jqueryFileTree.js"></script>
+    <script src="lib/fancybox/jquery.fancybox.pack.js"></script>
 
   </head>
   <body data-spy="scroll" data-target="#navbar">
@@ -74,64 +76,82 @@
                     </li>
                 </ul>
             </div>
-            <!--/.nav-collapse --> </div>
+            <!--/.nav-collapse --> 
         </div>
+    </div>
 
-        <div class="container" id="container">
-            <h1 class="titulo-principal">Algo bonito</h1>
-            <div class="row col-md-6">
-                <div class="collapse navbar-collapse no-padding" id="bs-example-navbar-collapse-1">
-                    <ul class="nav nav-pills nav2">
-                        <li class="col-md-4">
-                            <ul class="nav nav-pills nav2 row">
-                                <li>
-                                    <div class="dropdown">
-                                        <button class="btn btn-default dropdown-toggle" type="button" id="tests" data-toggle="dropdown" aria-expanded="true">Load  <span class="caret"></span></button>
-                                        <ul class="dropdown-menu scroll" role="menu" aria-labelledby="tests" id="testList">
-                                            
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li><a href="#" title="Create new folder"><span class="glyphicon glyphicon-folder-open"></span></a></li>
-                                <li><a href="#" title="Create new file"><span class="glyphicon glyphicon-file"></span></a></li>
-                            </ul>
-                        </li>
-                        <li class="filename"><input type="text"></li> 
-                        <li><a href="#" title="Rename" id="rename"><span class="glyphicon glyphicon-edit"></span></a></li>   
-                        
-                        <!--<li class="margen-t10" id="filename"></li> 
-                        <li role="presentation"><a href="#" title="Rename" id="rename"><span class="glyphicon glyphicon-edit"></span></a></li>-->
-                        
-                        
-                        <li><a href="#" title="Save" id="save"><span class="glyphicon glyphicon-floppy-disk"></span></a></li>
-                        <li><a href="#" title="Delete" id="delete"><span class="glyphicon glyphicon-trash"></span></a></li>
-                    </ul>
-                </div><!-- /.navbar-collapse -->
-                <div class="col-md-2 columna demo folders" >
-                    <ul class="jqueryFileTree">
-                    </ul>
-                </div>
-                <div class="col-md-8 columna">
-                    <textarea id="code" name="code"></textarea>
-                    <button class="btn btn-primary col-md-12 margen-t10" type="button" id="btn-compile">Compilar</button>
-                </div>
+    <div class="container" id="container">
+        <h1 class="titulo-principal">AlterNative</h1>
+        <div class="row col-md-6">
+            <div class="collapse navbar-collapse no-padding" id="bs-example-navbar-collapse-1">
+                <ul class="nav nav-pills nav2">
+                    <li class="col-md-4">
+                        <ul class="nav nav-pills nav2 row">
+                            <li>
+                                <div class="dropdown">
+                                    <button class="btn btn-default dropdown-toggle" title="Load an existing example project" type="button" id="tests" data-toggle="dropdown" aria-expanded="true">Load  <span class="caret"></span></button>
+                                    <ul class="dropdown-menu scroll" role="menu" aria-labelledby="tests" id="testList">
+                                        
+                                    </ul>
+                                </div>
+                            </li>
+                            <li><a href='/uploadForm.html' title="Upload .exe or .dll file and decompile it" id="upload"><span class="glyphicon glyphicon-upload"></span></a></li>
+                            <li><a href="#" title="Create new project (this will delete all)"><span class="glyphicon glyphicon-folder-open"></span></a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#" title="Create new file"><span class="glyphicon glyphicon-file"></span></a></li>
+                    <li class="filename" title="This is the name of the file opened"><input type="text"></li> 
+                    <li><a href="#" title="Rename file" id="rename"><span class="glyphicon glyphicon-edit"></span></a></li>   
+                    
+                    <!--<li class="margen-t10" id="filename"></li> 
+                    <li role="presentation"><a href="#" title="Rename" id="rename"><span class="glyphicon glyphicon-edit"></span></a></li>-->
+                    
+                    
+                    <li><a href="#" title="Save file" id="save"><span class="glyphicon glyphicon-floppy-disk"></span></a></li>
+                    <li><a href="#" title="Delete file" id="delete"><span class="glyphicon glyphicon-trash"></span></a></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+            <div class="col-md-2 columna demo folders" >
+                <ul class="jqueryFileTree">
+                </ul>
             </div>
-            <div class="row col-md-6">
-                <div class="collapse navbar-collapse no-padding" id="bs-example-navbar-collapse-1">
-                    <ul class="nav nav-pills nav2">
-                        <li role="presentation" class="pull-right"><a href="zip" title="Download" id="download"><span class="glyphicon glyphicon-download"></span></a></li>
-                    </ul>
-                </div><!-- /.navbar-collapse -->
-                <div class="col-md-8 columna">
-                    <textarea id="code2" name="code2">
-                    </textarea>
-                </div>
-                <div class="col-md-2 columna demo folders2" ></div>
+            <div class="col-md-8 columna">
+                <textarea id="code" name="code"></textarea>
+                <button class="btn btn-primary col-md-12 margen-t10" type="button" id="btn-compile">Compilar</button>
             </div>
-      </div>
+        </div>
+        <div class="row col-md-6">
+            <div class="collapse navbar-collapse no-padding" id="bs-example-navbar-collapse-1">
+                <ul class="nav nav-pills nav2">
+                    <li role="presentation" class="pull-right"><a href="/zip" title="Download" id="download"><span class="glyphicon glyphicon-download"></span></a></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+            <div class="col-md-8 columna">
+                <textarea id="code2" name="code2">
+                </textarea>
+            </div>
+            <div class="col-md-2 columna demo folders2" ></div>
+        </div>
+    </div>
 
       <!-- CONSOLA -->
       <div class="win"><p></p></div>
+
+    <div>
+        <br><br>
+    </div>
+    <nav class="navbar navbar-default navbar-static-bottom" role="navigation" style="margin-bottom:0;">
+        <p class="navbar-text">With the support of:</p>
+        <div class="navbar-header">
+            <a class="navbar-brand-bottom" href="http://www.alteraid.com" target="_blank"><img class="img-responsive" src="lib/alternative/img/alteraid.png"/></a>
+        </div>
+        <p class="navbar-text"> and </p>
+
+        <div class="navbar-header">
+            <a class="navbar-brand-bottom" href="http://www.upc.edu" target="_blank"><img class="img-responsive" src="lib/alternative/img/logoUPC.gif"/></a>
+        </div>
+        <p class="navbar-text pull-right">© 2015 AlterNative</p>
+    </nav>
       
     <!-- Todos los plugins JavaScript de Bootstrap (también puedes
          incluir archivos JavaScript individuales de los únicos

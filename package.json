@@ -8,7 +8,9 @@
   "dependencies": {
     "express": "~4.9.0",
     "body-parser": "*",
+    "multer": "*",
     "express-session": "~1.9.1",
-    "jquery" : "*"
+    "jquery" : "*",
+    "node-zip" : "*"
   }
 }

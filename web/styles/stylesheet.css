@@ -1,3 +1,7 @@
+body {
+	min-height: inherit !important;
+}
+
 .titulo-principal
 {
 	padding: 1em 0 1em 0;
@@ -110,4 +114,12 @@
 .scroll{
 	overflow-y: scroll;
 	max-height: 15em;
+}
+
+.fancybox-skin{
+	border-radius: 5px !important;
+}
+
+.fancybox-title > .child{
+	border-radius: 10px !important;
 }

@@ -66,12 +66,37 @@ var _compile = function(req, res){
     funciona.write('exit\n');
 }
 
+var fillZipFile = function(zip, src, dst){
+    content = fs.readdirSync(src);
+    content.forEach(function (f){
+        if (fs.statSync(src+f).isDirectory()){
+            zip.folder(dst+f);
+            fillZipFile(zip, src+f+'/', dst+f+'/');
+        }
+        else
+        {
+            zip.file(dst+f, fs.readFileSync(src+f));
+        }
+    });
+    return zip;
+}
+
 var _zip = function(req,res){
     var zip = new require('node-zip')();
-    zip.folder(__dirname+'/users/'+req.sessionID+'/output');
-    var data = zip.generate({base64:false,compression:'DEFLATE'});
-    fs.writeFileSync('./AlterNative-out.zip', data, 'binary');
-    
+    var zipFilled = fillZipFile(zip, path+req.sessionID+'/output/', '');
+
+    var data = zipFilled.generate({base64:false, compression:'DEFLATE'});
+    fs.writeFileSync(path+req.sessionID+'/AlterNative-out.zip', data, 'binary');
+
+    /*y = require('child_process').exec('cmd', function(error, stdout, stderr){
+        console.log(stdout);
+        res.end();
+    });
+
+    funciona = y.stdin;
+    funciona.write('cd '+__dirname + '/users/' + req.sessionID+'\n');
+    funciona.write('.\..\..\zip.exe -r out /output\n');*/
+
     var header = {
         "Content-Type": "application/x-zip",
         "Pragma": "public",
@@ -82,8 +107,16 @@ var _zip = function(req,res){
         "Content-Transfer-Encoding": "binary"
     };
 
-    res.writeHead(200, header);
-    res.end(data);
+    //res.writeHead(200, header);
+    //res.write(data, 'binary');
+    
+    res.set('Pragma', 'public');
+    res.set('Expires', '0');
+    res.set('Cache-Control', 'private, must-revalidate, post-check=0, pre-check=0');
+    res.set('Transfer-Encoding', 'chunked');
+    res.set('Content-Transfer-Encoding', 'binary');
+    
+    res.download(path+req.sessionID+'/AlterNative-out.zip');
 }
 
 module.exports.compile = _compile;

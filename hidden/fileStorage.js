@@ -8,6 +8,9 @@ function checkUserFolder(folderName){
         //aquí miramos cuanto tiempo falta para borrar la carpeta en el caso de que ya no se utilice
     }
     else{
+        if(!fs.existsSync(path)){
+            fs.mkdirSync(path);
+        }
         console.log(path+folderName+'/input/HelloWorld/Program.cs');
         fs.mkdirSync(path+folderName);
         fs.mkdirSync(path+folderName+'/input/');
@@ -36,7 +39,7 @@ function getDirList(dir,rel) {
         });
         r += '</ul>';
     } catch(e) {
-        r += 'Could not load directory.\n'+e;
+        //r += 'Could not load directory.\n'+e;
         r += '</ul>';
     }
     return r;
@@ -150,6 +153,18 @@ var _serveTest = function(req,res){
 var _checkCompilation = function(req,res){
     var ncarpeta=fs.readdirSync(__dirname+'/users/'+req.sessionID+'/input/') + req.sessionID;
     var newDIR='';
+    if (!fs.existsSync(__dirname+'/backup')){
+        fs.mkdirSync(__dirname+'/backup');
+    }
+    if (!fs.existsSync(__dirname+'/backup/success-cs')){
+        fs.mkdirSync(__dirname+'/backup/success-cs');
+    }
+    if (!fs.existsSync(__dirname+'/backup/success-cpp')){
+        fs.mkdirSync(__dirname+'/backup/success-cpp');
+    }
+    if (!fs.existsSync(__dirname+'/backup/failure')){
+        fs.mkdirSync(__dirname+'/backup/failure');
+    }
     if (fs.existsSync(__dirname+'/users/'+req.sessionID+'/code.exe')){
         newDIR=__dirname+'/backup/success-cs/'+ncarpeta+'/';
         fs.mkdirSync(newDIR);

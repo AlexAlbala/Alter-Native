@@ -120,6 +120,10 @@ h1 small, h2 small, h3 small, h4 small, h5 small, h6 small, .h1 small, .h2 small
         margin-left: 12.499999995%;
     }
 
+    .col-md-4half{
+        width: 37.49%;
+    }
+
     .inner-page {
         padding-top: 30px;
         padding-bottom: 30px;
@@ -269,6 +273,11 @@ h1 small, h2 small, h3 small, h4 small, h5 small, h6 small, .h1 small, .h2 small
     margin-top: -13px;
     width: 50px;
 }
+.navbar-brand-bottom > img {
+    display: block;
+    height: 30px;
+    margin-top: 10px;
+}
 .caption > a { color: #494F55; }
 .caption > a:visited { color: #494F55; }
 .caption > a:hover { color: #494F55; text-decoration: none; }
@@ -293,4 +302,13 @@ h1 small, h2 small, h3 small, h4 small, h5 small, h6 small, .h1 small, .h2 small
         padding: 0;
         text-align: left;
     }
+}
+
+.sponsors {
+    width: 50%;
+    margin: 12px auto 12px auto;
+}
+
+.sponsors.about {
+    margin-top: 20px;
 }

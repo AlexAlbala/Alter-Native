@@ -3,14 +3,18 @@ var
 http = require('http'),//helps with http methods
 path = require('path'),//helps with file paths
 fs = require('fs');//helps with file system tasks
-express = require('express');
-session = require('express-session');
+express = require('express'),
+session = require('express-session'),
 
 app = express();
 
-var bodyParser = require('body-parser')
-app.use(bodyParser.json());       // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded()); // to support URL-encoded bodies
+var
+bodyParser = require('body-parser'),
+multer = require('multer'); 
+app.use(bodyParser.json());		// to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({ extended: true }));		// to support URL-encoded bodies
+app.use(multer());		// for parsing multipart/form-data
+
 app.use(session({name: "uCookie", secret: "test", resave: true, saveUninitialized: true}));
 
 if (!fs.existsSync(__dirname+'/hidden/users')) fs.mkdirSync(__dirname+'/hidden/users');
