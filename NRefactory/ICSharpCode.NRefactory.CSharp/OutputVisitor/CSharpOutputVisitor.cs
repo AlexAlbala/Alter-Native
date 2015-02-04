@@ -1457,8 +1457,7 @@ namespace ICSharpCode.NRefactory.CSharp
 		}
 		
 		public void VisitTypeDeclaration(TypeDeclaration typeDeclaration)
-		{
-            formatter.ChangeFile(typeDeclaration.Name + ".cs");
+		{            
 			StartNode(typeDeclaration);
 			WriteAttributes(typeDeclaration.Attributes);
 			WriteModifiers(typeDeclaration.ModifierTokens);
@@ -1515,7 +1514,6 @@ namespace ICSharpCode.NRefactory.CSharp
 			OptionalSemicolon();
 			NewLine();
 			EndNode(typeDeclaration);
-            formatter.Close();
 		}
 		
 		public void VisitUsingAliasDeclaration(UsingAliasDeclaration usingAliasDeclaration)
@@ -1533,7 +1531,7 @@ namespace ICSharpCode.NRefactory.CSharp
 		
 		public void VisitUsingDeclaration(UsingDeclaration usingDeclaration)
 		{
-			StartNode(usingDeclaration);
+			StartNode(usingDeclaration);            
 			WriteKeyword(UsingDeclaration.UsingKeywordRole);
 			usingDeclaration.Import.AcceptVisitor(this);
 			Semicolon();
@@ -2300,11 +2298,26 @@ namespace ICSharpCode.NRefactory.CSharp
 		
 		public void VisitCompilationUnit(CompilationUnit compilationUnit)
 		{
-            //formatter.ChangeFile(compilationUnit.FileName + ".cs");
+            String name = "";
+            var nDecl = compilationUnit.Children.FirstOrDefault<AstNode>(x => { return (x is NamespaceDeclaration); });
+            if (nDecl != null)
+            {
+                TypeDeclaration tdecl = (TypeDeclaration)nDecl.Children.FirstOrDefault<AstNode>(x => { return (x is TypeDeclaration); });
+                name = tdecl.Name;
+            }
+            else
+            {
+                TypeDeclaration tdecl = (TypeDeclaration)compilationUnit.Children.FirstOrDefault<AstNode>(x => { return (x is TypeDeclaration); });
+                name = tdecl.Name;
+            }
+            formatter.ChangeFile(name + ".cs");
+            
 			// don't do node tracking as we visit all children directly
 			foreach (AstNode node in compilationUnit.Children) {
 				node.AcceptVisitor(this);
 			}
+
+            formatter.Close();
 		}
 		
 		public void VisitSimpleType(SimpleType simpleType)
