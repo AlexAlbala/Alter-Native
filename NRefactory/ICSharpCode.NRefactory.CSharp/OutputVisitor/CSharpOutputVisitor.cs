@@ -2308,7 +2308,10 @@ namespace ICSharpCode.NRefactory.CSharp
             else
             {
                 TypeDeclaration tdecl = (TypeDeclaration)compilationUnit.Children.FirstOrDefault<AstNode>(x => { return (x is TypeDeclaration); });
-                name = tdecl.Name;
+                if (tdecl != null)
+                {
+                    name = tdecl.Name;
+                }
             }
             formatter.ChangeFile(name + ".cs");
             
