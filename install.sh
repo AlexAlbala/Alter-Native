@@ -1,4 +1,4 @@
-#/bin/bash
+#/usr/bin/env bash
 
 source ./alternative-init.sh
 source ./alternative.core-compile.sh

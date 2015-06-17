@@ -1,4 +1,4 @@
-#/bin/bash
+#/usr/bin/env bash
 
 # ALTERNATIVE_PATH
 declare -x ALTERNATIVE_HOME=`pwd`
