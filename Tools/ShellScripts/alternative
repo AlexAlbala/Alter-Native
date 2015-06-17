@@ -1,2 +1,2 @@
-#/bin/env bash
+#/usr/bin/env bash
 mono $ALTERNATIVE_BIN_PATH/AlterNative.Core.exe $*
