@@ -13,6 +13,7 @@ git:
   submodules: false
 
 install:
+  - sudo apt-get update
   - sudo apt-get install mono-devel mono-gmcs
  
 script:
