@@ -1,7 +1,7 @@
 ##################################################
 #Find boost libraries
 ##################################################
-SET(Boost_USE_STATIC_LIBS        ON)
+SET(Boost_USE_STATIC_LIBS        OFF)
 SET(Boost_USE_MULTITHREADED      ON)
 SET(Boost_USE_STATIC_RUNTIME    OFF)
 
