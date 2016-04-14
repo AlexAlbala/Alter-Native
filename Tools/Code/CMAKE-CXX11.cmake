@@ -1,7 +1,10 @@
 ##################################################
 #Enable C++11 mode
 ##################################################
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR CMAKE_COMPILER_IS_GNUCXX)
+if(DEFINED ENV{NDK})
+    message(STATUS "NDK detected. Assuming Crystal NDK 3.1 or higher is used.")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++11")
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR CMAKE_COMPILER_IS_GNUCXX)
     include(CheckCXXCompilerFlag)
     check_cxx_compiler_flag(--std=c++11 SUPPORTS_STD_CXX11)
     check_cxx_compiler_flag(--std=c++0x SUPPORTS_STD_CXX01)

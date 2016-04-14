@@ -133,6 +133,7 @@ namespace ICSharpCode.NRefactory.Cpp
             //TODO.....
             List<string> predefinedRemoveIncludes = new List<string>();
             predefinedRemoveIncludes.Add("IntPtr");
+            predefinedRemoveIncludes.Add("CordovaGenerator");
 
             foreach (string s in predefinedRemoveIncludes)
                 RemoveInclude(s);
