@@ -4,8 +4,23 @@ using namespace System;
 using namespace <ENTRY_NAMESPACE>;
 <endif>
 
+#include \<iostream>      // std::cout
+#include \<locale>        // std::locale
+#include \<stdexcept>      // std::runtime_error
+
 int main(int argc, char *argv[])
 {
+std::locale loc;     // initialized to locale::classic()
+
+	try {
+		loc = std::locale("");
+	} catch (std::runtime_error) {
+		loc = std::locale (loc, "", std::locale::ctype);
+	}
+
+	std::locale::global(loc);
+	std::cout.imbue(loc);
+
 	GC::Init();
 	Array\<String>* args = new Array\<String>(argc);
 	for(int i = 0; i \< argc; i++)
