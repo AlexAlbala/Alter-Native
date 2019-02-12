@@ -6,15 +6,15 @@ os:
 
 sudo: yes
 
-#matrix:
-#  allow_failures:
-#    - os: osx
+matrix:
+  allow_failures:
+    - os: osx
 
 #  include:
 #    - os: linux
 #      dist: trusty
 #    - os: osx
-#    osx_image: xcode7.2
+#      osx_image: xcode7.2
 
 #whitelist
 branches:
@@ -25,19 +25,10 @@ branches:
 git:
   submodules: false
 
-#before_install:
-#  - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
-#  - git submodule update --init --recursive
 
 install:
-  #!/bin/bash
-  if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
-    # Install some custom requirements on macOS
-  else
-    # Install some custom requirements on Linux
-    - sudo apt-get update
-    - sudo apt-get install mono-devel mono-gmcs
-  fi
+  - sudo apt-get update
+  - sudo apt-get install mono-devel mono-gmcs
 
 script:
   - source ./alternative.core-compile.sh
