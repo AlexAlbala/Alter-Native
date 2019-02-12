@@ -19,8 +19,8 @@ sudo: yes
 #whitelist
 branches:
   except:
-	- test-web
-	- Docker
+    - test-web
+    - Docker
 
 git:
   submodules: false
@@ -32,11 +32,11 @@ git:
 install:
   #!/bin/bash
   if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
-	# Install some custom requirements on macOS
+    # Install some custom requirements on macOS
   else
-	# Install some custom requirements on Linux
-	- sudo apt-get update
-	- sudo apt-get install mono-devel mono-gmcs
+    # Install some custom requirements on Linux
+    - sudo apt-get update
+    - sudo apt-get install mono-devel mono-gmcs
   fi
 
 script:
