@@ -35,7 +35,7 @@ namespace ICSharpCode.NRefactory.Cpp
     public class DelegateCreateExpression : ObjectCreateExpression
     {        
 
-        public bool isGCPtr
+        public new bool isGCPtr
         {
             get;
             set;
@@ -47,33 +47,33 @@ namespace ICSharpCode.NRefactory.Cpp
             set;
         }
 
-        public CppTokenNode NewToken
+        public new CppTokenNode NewToken
         {
             get { return GetChildByRole(Roles.Keyword); }
         }
 
-        public AstType Type
+        public new AstType Type
         {
             get { return GetChildByRole(Roles.Type); }
             set { SetChildByRole(Roles.Type, value); }
         }
 
-        public CppTokenNode LParToken
+        public new CppTokenNode LParToken
         {
             get { return GetChildByRole(Roles.LPar); }
         }
 
-        public AstNodeCollection<Expression> Arguments
+        public new AstNodeCollection<Expression> Arguments
         {
             get { return GetChildrenByRole(Roles.Argument); }
         }
 
-        public CppTokenNode RParToken
+        public new CppTokenNode RParToken
         {
             get { return GetChildByRole(Roles.RPar); }
         }
 
-        public ArrayInitializerExpression Initializer
+        public new ArrayInitializerExpression Initializer
         {
             get { return GetChildByRole(InitializerRole); }
             set { SetChildByRole(InitializerRole, value); }

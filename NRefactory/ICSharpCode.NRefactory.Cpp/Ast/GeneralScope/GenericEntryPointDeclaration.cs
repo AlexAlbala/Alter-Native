@@ -34,13 +34,13 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
             }
         }
 
-        public ClassType ClassType
+        public new ClassType ClassType
         {
             get;
             set;
         }
 
-        public string Name
+        public new string Name
         {
             get
             {
@@ -52,7 +52,7 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
             }
         }
 
-        public Identifier NameToken
+        public new Identifier NameToken
         {
             get
             {
@@ -64,12 +64,12 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
             }
         }
 
-        public AstNodeCollection<TypeParameterDeclaration> TypeParameters
+        public new AstNodeCollection<TypeParameterDeclaration> TypeParameters
         {
             get { return GetChildrenByRole(Roles.TypeParameter); }
         }
 
-        public AstNodeCollection<AstType> BaseTypes
+        public new AstNodeCollection<AstType> BaseTypes
         {
             get { return GetChildrenByRole(BaseTypeRole); }
         }
@@ -78,17 +78,17 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
         //    get { return GetChildrenByRole (Roles.Constraint); }
         //}
 
-        public CppTokenNode LBraceToken
+        public new CppTokenNode LBraceToken
         {
             get { return GetChildByRole(Roles.LBrace); }
         }
 
-        public AstNodeCollection<AttributedNode> Members
+        public new AstNodeCollection<AttributedNode> Members
         {
             get { return GetChildrenByRole(MemberRole); }
         }
 
-        public CppTokenNode RBraceToken
+        public new CppTokenNode RBraceToken
         {
             get { return GetChildByRole(Roles.RBrace); }
         }

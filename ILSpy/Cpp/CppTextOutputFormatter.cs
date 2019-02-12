@@ -32,7 +32,6 @@ namespace ICSharpCode.ILSpy.Cpp
     /// </summary>
     public class CppTextOutputFormatter : IOutputFormatter
     {
-        int indentation;
         bool needsIndent = true;
         bool isAtStartOfLine = true;
         public string IndentationString { get; set; }
@@ -396,6 +395,7 @@ namespace ICSharpCode.ILSpy.Cpp
 
         protected void WriteIndentation()
         {
+            int indentation = 0;
             if (needsIndent)
             {
                 needsIndent = false;

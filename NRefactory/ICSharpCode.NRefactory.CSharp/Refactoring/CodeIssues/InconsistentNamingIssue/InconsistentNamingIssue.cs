@@ -48,7 +48,7 @@ namespace ICSharpCode.NRefactory.CSharp.Refactoring
 		{
 			readonly InconsistentNamingIssue inspector;
 			readonly NamingConventionService service;
-			List<NamingRule> rules;
+			//List<NamingRule> rules;
 
 			public GatherVisitor (BaseRefactoringContext ctx, InconsistentNamingIssue inspector) : base (ctx)
 			{

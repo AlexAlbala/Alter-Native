@@ -13,7 +13,7 @@ namespace ICSharpCode.NRefactory.Cpp.Ast
     {
         public readonly static Role<AstType> ArgumentTypeRole = new Role<AstType>("ArgumentType", AstType.Null);
 
-        public AstNodeCollection<AstType> TypeParameters
+        public new AstNodeCollection<AstType> TypeParameters
         {
             get { return GetChildrenByRole(ArgumentTypeRole); }
         }
