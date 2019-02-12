@@ -6,6 +6,16 @@ os:
   
 sudo: yes
 
+matrix:
+  allow_failures:
+    - os: osx
+    
+#  include:
+#    - os: linux
+#      dist: trusty
+#    - os: osx
+#      osx_image: xcode7.2
+      
 #whitelist
 branches:
   except:
