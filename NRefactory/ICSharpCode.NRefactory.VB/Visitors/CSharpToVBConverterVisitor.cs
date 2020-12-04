@@ -774,8 +774,6 @@ namespace ICSharpCode.NRefactory.VB.Visitors
 		{
 			var op = new GroupByQueryOperator();
 			
-			throw new NotImplementedException();
-			
 			return EndNode(queryGroupClause, op);
 		}
 		

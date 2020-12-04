@@ -11,12 +11,12 @@ namespace ICSharpCode.NRefactory.Cpp
         public static readonly Role<CppTokenNode> EqualToken = new Role<CppTokenNode>("Equal", CppTokenNode.Null);
         public static readonly Role<CppTokenNode> ZeroToken = new Role<CppTokenNode>("Zero", CppTokenNode.Null);
 
-        public AstNodeCollection<TypeParameterDeclaration> TypeParameters
+        public new AstNodeCollection<TypeParameterDeclaration> TypeParameters
         {
             get { return GetChildrenByRole(Roles.TypeParameter); }
         }
 
-        public CppTokenNode LParToken
+        public new CppTokenNode LParToken
         {
             get { return GetChildByRole(Roles.LPar); }
         }
@@ -27,17 +27,17 @@ namespace ICSharpCode.NRefactory.Cpp
             set;
         }
 
-        public AstNodeCollection<ParameterDeclaration> Parameters
+        public new AstNodeCollection<ParameterDeclaration> Parameters
         {
             get { return GetChildrenByRole(Roles.Parameter); }
         }
 
-        public CppTokenNode RParToken
+        public new CppTokenNode RParToken
         {
             get { return GetChildByRole(Roles.RPar); }
         }
 
-        public bool IsExtensionMethod
+        public new bool IsExtensionMethod
         {
             get
             {

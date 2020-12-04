@@ -335,7 +335,7 @@ namespace ICSharpCode.NRefactory.CSharp.Completion
 			return result;
 		}
 		
-		public int GetCurrentParameterIndex(int triggerOffset, int endOffset)
+		public new int GetCurrentParameterIndex(int triggerOffset, int endOffset)
 		{
 			char lastChar = document.GetCharAt(endOffset - 1);
 			if (lastChar == '(' || lastChar == '<') { 
